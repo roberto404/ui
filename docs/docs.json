@@ -1,0 +1,851 @@
+{
+  "./src/grid/pure/grid.jsx": {
+    "description": "Grid Pure Component\n\n@example\nimport Grid from '@1studio/ui/grid/grid'\nconst gridData = [\n  { id: 1, name: 'Megan J. Cushman', gender: 1, visits: '2017-07-23' },\n  { id: 2, name: 'Taylor R. Fallin', gender: 2, visits: '2017-07-22' },\n  { id: 3, name: 'Jose C. Rosado', gender: 1, visits: '2017-07-20' },\n  { id: 4, name: 'Sammy C. Brandt', gender: 1, visits: '2017-07-10' },\n];\n\n<Grid data={gridData} />\n\n@example\nconst gridData = [\n  { id: 1, name: 'Megan J. Cushman', gender: 1, visits: '2017-07-23' },\n  { id: 2, name: 'Taylor R. Fallin', gender: 2, visits: '2017-07-22' },\n  { id: 3, name: 'Jose C. Rosado', gender: 1, visits: '2017-07-20' },\n  { id: 4, name: 'Sammy C. Brandt', gender: 1, visits: '2017-07-10' },\n];\nconst gridSettings =\n  {\n    hook:\n    {\n      name: 'Name',\n      visits:\n      {\n        title: 'Visits',\n        format: ({ value }) => new Date(value).toLocaleDateString(),\n      },\n      gender:\n      {\n        title: 'Gender',\n        format: ({ value, config }) => config.gender[value],\n      },\n    },\n    helper:\n    {\n      gender: { 1: 'male', 2: 'female' },\n    },\n    order:\n    {\n      column: 'name',\n      order: 'desc'\n    }\n  };\n<Grid\n  data={gridData}\n  hook={gridSettings.hook}\n  helper={gridSettings.helper}\n/>",
+    "methods": [
+      {
+        "name": "onClickGridHandler",
+        "docblock": "Handling the grid is on focus\nIf it is focus enable shortcuts",
+        "modifiers": [],
+        "params": [
+          {
+            "name": "event"
+          }
+        ],
+        "returns": null,
+        "description": "Handling the grid is on focus\nIf it is focus enable shortcuts"
+      },
+      {
+        "name": "onKeyArrowHandler",
+        "docblock": "Handling KeyDown Arrow Up and down\n@param  {integer} direction +1 or -1\n@return {function}           handler",
+        "modifiers": [],
+        "params": [
+          {
+            "name": "direction",
+            "description": "+1 or -1",
+            "type": {
+              "name": "integer"
+            }
+          }
+        ],
+        "returns": {
+          "description": "handler",
+          "type": {
+            "name": "function"
+          }
+        },
+        "description": "Handling KeyDown Arrow Up and down"
+      },
+      {
+        "name": "setActiveRecords",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "records",
+            "type": null
+          }
+        ],
+        "returns": null
+      },
+      {
+        "name": "getColumns",
+        "docblock": "Figure out which columns are displayed and show only those\n@return {array} array of columns\n@example\n// => [id, title, status]",
+        "modifiers": [],
+        "params": [],
+        "returns": {
+          "description": "array of columns",
+          "type": {
+            "name": "array"
+          }
+        },
+        "description": "Figure out which columns are displayed and show only those"
+      },
+      {
+        "name": "addShortcuts",
+        "docblock": "Add necessary keyboard shortcuts",
+        "modifiers": [],
+        "params": [],
+        "returns": null,
+        "description": "Add necessary keyboard shortcuts"
+      },
+      {
+        "name": "renderOrderArrow",
+        "docblock": "Render the Table Header Order direction indicator\n@private\n@return {ReactElement} SVG icon",
+        "modifiers": [],
+        "params": [],
+        "returns": {
+          "description": "SVG icon",
+          "type": {
+            "name": "ReactElement"
+          }
+        },
+        "description": "Render the Table Header Order direction indicator"
+      },
+      {
+        "name": "renderHeaders",
+        "docblock": "Render the title row of table\n@private\n@return {ReactElement} TableRow dom node",
+        "modifiers": [],
+        "params": [],
+        "returns": {
+          "description": "TableRow dom node",
+          "type": {
+            "name": "ReactElement"
+          }
+        },
+        "description": "Render the title row of table"
+      },
+      {
+        "name": "renderCell",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "record",
+            "type": null
+          },
+          {
+            "name": "index",
+            "type": null
+          },
+          {
+            "name": "column",
+            "type": null
+          }
+        ],
+        "returns": null
+      },
+      {
+        "name": "renderRow",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "record",
+            "type": null
+          },
+          {
+            "name": "index",
+            "type": null
+          },
+          {
+            "name": "columns",
+            "type": null
+          }
+        ],
+        "returns": null
+      },
+      {
+        "name": "renderRows",
+        "docblock": "Render the rows of table\n@private\n@return {ReactElement} Table Row dom node",
+        "modifiers": [],
+        "params": [],
+        "returns": {
+          "description": "Table Row dom node",
+          "type": {
+            "name": "ReactElement"
+          }
+        },
+        "description": "Render the rows of table"
+      }
+    ],
+    "props": {
+      "data": {
+        "type": {
+          "name": "arrayOf",
+          "value": {
+            "name": "object"
+          }
+        },
+        "required": false,
+        "description": "Content of the Grid\n@example\n   [\n     { id: 1, name: 'Megan J. Cushman', gender: 1, visits: '2017-07-23' },\n     ...,\n   ];",
+        "defaultValue": {
+          "value": "[]",
+          "computed": false
+        }
+      },
+      "hook": {
+        "type": {
+          "name": "objectOf",
+          "value": {
+            "name": "union",
+            "value": [
+              {
+                "name": "string"
+              },
+              {
+                "name": "object"
+              }
+            ]
+          }
+        },
+        "required": false,
+        "description": "Determine visible column,\nChange column title and format the columns value\n@example\n{\n name: 'Name',\n visits:\n {\n   title: 'Visits',\n   format: ({ value }) => new Date(value).toLocaleDateString(),\n   status: 1,\n   width: '50%',\n }\n}\n\n// ->\n@type {string}\ntitle: change rawData key to custom column title.\n\n@type {function}\n@param {string} column record key\ntooltip: create help badge to title, onClick call this function\n\n@type {function}\n@param {object} object {\n column: current record key\n columnHook: current column hook props\n helper: table helpers\n record: current row = data.record\n value: current row and column value = record key value\n data: current visible data = paginated data\n index: record index within data\n }\n@return {string}\nformat: change the record value\n\n@type {number}\nstatus: determine the visibility of columns\n\n@type {string}\nwidth: cell relative width in percent Eg: '50%'",
+        "defaultValue": {
+          "value": "{}",
+          "computed": false
+        }
+      },
+      "helper": {
+        "type": {
+          "name": "objectOf",
+          "value": {
+            "name": "union",
+            "value": [
+              {
+                "name": "object"
+              },
+              {
+                "name": "arrayOf",
+                "value": {
+                  "name": "shape",
+                  "value": {
+                    "id": {
+                      "name": "union",
+                      "value": [
+                        {
+                          "name": "string"
+                        },
+                        {
+                          "name": "number"
+                        }
+                      ],
+                      "required": false
+                    },
+                    "title": {
+                      "name": "string",
+                      "required": false
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "required": false,
+        "description": "Serve data for hook\n\n@example\n{\n userId: { 1: 'John', 2: 'Doe', ... },\n}\nor\n{\n userId: [\n   { id: 1, title: 'John' },\n   { id: 2, title: 'Doe' },\n ]\n}",
+        "defaultValue": {
+          "value": "{}",
+          "computed": false
+        }
+      },
+      "orderColumn": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "string"
+            },
+            {
+              "name": "func"
+            }
+          ]
+        },
+        "required": false,
+        "description": "Column title indicator, which shows ordered column\nOrder direction will show in this column title",
+        "defaultValue": {
+          "value": "''",
+          "computed": false
+        }
+      },
+      "orderDirection": {
+        "type": {
+          "name": "enum",
+          "value": [
+            {
+              "value": "'asc'",
+              "computed": false
+            },
+            {
+              "value": "'desc'",
+              "computed": false
+            },
+            {
+              "value": "''",
+              "computed": false
+            }
+          ]
+        },
+        "required": false,
+        "description": "Column title indicator, which shows order direction",
+        "defaultValue": {
+          "value": "''",
+          "computed": false
+        }
+      },
+      "noResults": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "string"
+            },
+            {
+              "name": "element"
+            }
+          ]
+        },
+        "required": false,
+        "description": "This text appear when data props is empty",
+        "defaultValue": {
+          "value": "'No Results.'",
+          "computed": false
+        }
+      },
+      "rowElement": {
+        "type": {
+          "name": "func"
+        },
+        "required": false,
+        "description": "Custom grid row componet\n@example\nconst Row = ({ data, columns }) => (\n <tr>\n  {columns.map(column => <td key={column}>{data[column]}</td>)}\n </tr>\n);\n\nRow.propTypes =\n{\n data: PropTypes.objectOf(PropTypes.oneOfType([\n   PropTypes.string,\n   PropTypes.number,\n ])).isRequired,\n columns: PropTypes.arrayOf(PropTypes.string),\n};\n\nRow.defaultProps =\n{\n columns: [],\n};\n\n<Grid\nrowElement={Row}\n/>",
+        "defaultValue": {
+          "value": "({ children, onClick, data, className }) =>\n  <div className={className} onClick={onClick}>{children}</div>",
+          "computed": false
+        }
+      },
+      "onClickCell": {
+        "type": {
+          "name": "func"
+        },
+        "required": false,
+        "description": "OnClickCell handler\n@param {int} rowIndex number of row\n@param {int} colIndex number of cell\n@example\n   <Grid\n     onClickCell={(rowIndex, colIndex) => console.log(rowIndex, colIndex)}\n     />",
+        "defaultValue": {
+          "value": "function() {}",
+          "computed": false
+        }
+      },
+      "onChangeOrder": {
+        "type": {
+          "name": "func"
+        },
+        "required": false,
+        "description": "OnChangeOrder handler\n@param {string} columnId\n@example\n   <Grid\n     onChangeOrder={columnId => console.log(columnId)}\n     />",
+        "defaultValue": {
+          "value": "function() {}",
+          "computed": false
+        }
+      },
+      "showHeader": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Determine visiblity of table's header",
+        "defaultValue": {
+          "value": "true",
+          "computed": false
+        }
+      },
+      "selectable": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Enable select one item from grid",
+        "defaultValue": {
+          "value": "false",
+          "computed": false
+        }
+      },
+      "multipleSelect": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Enable select more than one item from grid",
+        "defaultValue": {
+          "value": "true",
+          "computed": false
+        }
+      },
+      "expandSelect": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "When select a new record it is automatically expand the selection list",
+        "defaultValue": {
+          "value": "false",
+          "computed": false
+        }
+      },
+      "checkboxSelect": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "false",
+          "computed": false
+        }
+      },
+      "className": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "'grid'",
+          "computed": false
+        }
+      },
+      "headClassName": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "'thead'",
+          "computed": false
+        }
+      },
+      "bodyClassName": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "'tbody'",
+          "computed": false
+        }
+      },
+      "height": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "''",
+          "computed": false
+        }
+      },
+      "freezeHeader": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Always visible header, you must set height",
+        "defaultValue": {
+          "value": "false",
+          "computed": false
+        }
+      },
+      "infinity": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Enable infinity scroll (ReactList)\nUITableView Inspired\nhttps://github.com/coderiety/react-list",
+        "defaultValue": {
+          "value": "false",
+          "computed": false
+        }
+      }
+    }
+  },
+  "./src/grid/pure/gridDate.jsx": {
+    "description": "Grid Date Component.\n\n\n@example\n<GridDate\n  id=\"start\"\n/>",
+    "methods": [],
+    "props": {
+      "id": {
+        "defaultValue": {
+          "value": "'GridInput'",
+          "computed": false
+        }
+      }
+    }
+  },
+  "./src/grid/pure/gridDownload.jsx": {
+    "description": "Grid Download Component\n\n@example\n<GridDownload />",
+    "methods": [],
+    "props": {
+      "label": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "string"
+            },
+            {
+              "name": "object"
+            }
+          ]
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "'Download'",
+          "computed": false
+        }
+      },
+      "className": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "''",
+          "computed": false
+        }
+      }
+    }
+  },
+  "./src/grid/pure/gridFieldGroupBy.jsx": {
+    "description": "Grid Dropdown Component.\n\nCollect unique data from rawData and connected to grid state via Redux.\n\n@example\n<GridFieldGroupBy\n  id=\"category\"\n  label=\"Category\"\n  ?grid=\"robot\"\n/>",
+    "methods": [],
+    "props": {
+      "id": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Redux form state id",
+        "defaultValue": {
+          "value": "'fieldGroupByFilter'",
+          "computed": false
+        }
+      },
+      "label": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Filter label",
+        "defaultValue": {
+          "value": "''",
+          "computed": false
+        }
+      },
+      "placeholder": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Field placeholder",
+        "defaultValue": {
+          "value": "''",
+          "computed": false
+        }
+      },
+      "helper": {
+        "type": {
+          "name": "arrayOf",
+          "value": {
+            "name": "object"
+          }
+        },
+        "required": false,
+        "description": "Change dropdown id to title from helper object",
+        "defaultValue": {
+          "value": "[]",
+          "computed": false
+        }
+      },
+      "reducer": {
+        "type": {
+          "name": "func"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "(result, record, id) =>\n{\n  if (Array.isArray(record[id]))\n  {\n    record[id].forEach((field) =>\n    {\n      if (result.indexOf(field) === -1)\n      {\n        result.push(field);\n      }\n    });\n  }\n  else if (typeof record[id] === 'string' && result.indexOf(record[id]) === -1)\n  {\n    result.push(record[id]);\n  }\n  return result;\n}",
+          "computed": false
+        }
+      }
+    }
+  },
+  "./src/grid/pure/gridOrder.jsx": {
+    "description": "[OrderMenu description]",
+    "methods": [
+      {
+        "name": "onChangeListener",
+        "docblock": "Invoke every Redux changes",
+        "modifiers": [],
+        "params": [],
+        "returns": null,
+        "description": "Invoke every Redux changes"
+      },
+      {
+        "name": "getGridOrder",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "context",
+            "type": null
+          }
+        ],
+        "returns": null
+      }
+    ],
+    "props": {
+      "children": {
+        "defaultValue": {
+          "value": "<div\n  className=\"button w-auto outline shadow embed-angle-down-gray\"\n>\n  <IconOrder />\n  Rendezés\n</div>",
+          "computed": false
+        }
+      }
+    }
+  },
+  "./src/grid/pure/gridSelect.jsx": {
+    "description": "Grid Date Component.\n\n\n@example",
+    "methods": [],
+    "props": {
+      "id": {
+        "defaultValue": {
+          "value": "'GridSelect'",
+          "computed": false
+        }
+      }
+    }
+  },
+  "./src/grid/pure/gridSelectGroupBy.jsx": {
+    "description": "Grid Select Component.\n\nCollect unique data from rawData and connected to grid state via Redux.\n\n@example\n<GridSelectGroupBy\n  id=\"category\"\n  label=\"Category\"\n  ?grid=\"robot\"\n/>",
+    "methods": [],
+    "props": {
+      "id": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Redux form state id",
+        "defaultValue": {
+          "value": "'dropdownGroupByFilter'",
+          "computed": false
+        }
+      },
+      "label": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Filter label",
+        "defaultValue": {
+          "value": "''",
+          "computed": false
+        }
+      },
+      "placeholder": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Field placeholder",
+        "defaultValue": {
+          "value": "''",
+          "computed": false
+        }
+      },
+      "helper": {
+        "type": {
+          "name": "arrayOf",
+          "value": {
+            "name": "object"
+          }
+        },
+        "required": false,
+        "description": "Change dropdown id to title from helper object",
+        "defaultValue": {
+          "value": "[]",
+          "computed": false
+        }
+      },
+      "reducer": {
+        "type": {
+          "name": "func"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "(result, record, id) =>\n{\n  if (Array.isArray(record[id]))\n  {\n    record[id].forEach((field) =>\n    {\n      if (result.indexOf(field) === -1)\n      {\n        result.push(field);\n      }\n    });\n  }\n  else if (typeof record[id] === 'string' && result.indexOf(record[id]) === -1)\n  {\n    result.push(record[id]);\n  }\n  return result;\n}",
+          "computed": false
+        }
+      }
+    }
+  },
+  "./src/grid/pure/gridSelectableButton.jsx": {
+    "description": "",
+    "methods": [
+      {
+        "name": "onChangeListener",
+        "docblock": "Invoke every Redux changes",
+        "modifiers": [],
+        "params": [],
+        "returns": null,
+        "description": "Invoke every Redux changes"
+      },
+      {
+        "name": "onClickButtonHandler",
+        "docblock": "Value change handler.\n\n@private\n@param  {string} value Current value of the field\n@return {void}",
+        "modifiers": [],
+        "params": [],
+        "returns": {
+          "description": null,
+          "type": {
+            "name": "void"
+          }
+        },
+        "description": "Value change handler."
+      },
+      {
+        "name": "getSelectedItems",
+        "docblock": null,
+        "modifiers": [],
+        "params": [],
+        "returns": null
+      }
+    ],
+    "props": {
+      "className": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "field custom classes",
+        "defaultValue": {
+          "value": "'primary'",
+          "computed": false
+        }
+      },
+      "label": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "'global.submit'",
+          "computed": false
+        }
+      },
+      "onClick": {
+        "type": {
+          "name": "func"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "() =>\n{}",
+          "computed": false
+        }
+      }
+    }
+  },
+  "./src/grid/pure/nestedList.jsx": {
+    "description": "NestedList Component\n\n@example\n// Use classic UI level component\n\nimport NestedList from '/grid/pure/nestedList';\nimport Connect from '/grid/connect';\n\nconst groupBy: ['category', 'date']\n\n<Connect\n  id=\"products\"\n  UI={NestedList}\n  uiProps={{\n    groupBy,\n  }}\n/>\n\n// ->\n<div class=\"nested-list\">\n <div class=\"group level-0\">\n  <h1>category#1</h1>\n  <div class=\"items\">...</div>\n </div>\n <div class=\"group level-0\">\n  <h1>category#1</h1>\n  <div class=\"items\">...</div>\n </div>\n</div>\n\n@example\n// Use private different UI level component\n\nconst foo = 'bar';\n\nconst Level1 = ({ index, level, items, children }) => <div className={`level-${level}`}>{children}</div>\nconst Level2 = ({ index, level, items, children }) => <div>{index}: {foo}</div>\n\n<Connect\n  id=\"products\"\n  UI={NestedList}\n  uiProps={{\n    groupBy,\n    UI: [Level1, Level2]\n  }}\n/>\n// ->\n<div class=\"level-0\">\n <div>category#1: bar</div>\n <div>category#1: bar</div>\n</div>",
+    "methods": [],
+    "props": {
+      "UI": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "func"
+            },
+            {
+              "name": "arrayOf",
+              "value": {
+                "name": "func"
+              }
+            }
+          ]
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "({ index, children, level }) =>\n(\n  <div className={`group level${level}`}>\n    <h1>{index}</h1>\n    <div className=\"items\">{children}</div>\n  </div>\n)",
+          "computed": false
+        }
+      },
+      "className": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "'nested-list'",
+          "computed": false
+        }
+      }
+    }
+  },
+  "./src/grid/pure/rows.jsx": {
+    "description": "",
+    "methods": [],
+    "props": {
+      "title": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "string"
+            },
+            {
+              "name": "element"
+            }
+          ]
+        },
+        "required": true,
+        "description": ""
+      },
+      "subtitle": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "string"
+            },
+            {
+              "name": "element"
+            }
+          ]
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "''",
+          "computed": false
+        }
+      },
+      "img": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "''",
+          "computed": false
+        }
+      },
+      "action": {
+        "type": {
+          "name": "element"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "''",
+          "computed": false
+        }
+      },
+      "onClick": {
+        "type": {
+          "name": "func"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "() =>\n{}",
+          "computed": false
+        }
+      }
+    }
+  }
+}
