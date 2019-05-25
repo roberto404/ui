@@ -1,0 +1,54 @@
+
+.menu
+{
+  min-width: 20rem;
+
+  .item
+  {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 1.2rem;
+    border-bottom: 1px solid $white-dark;
+    padding-left: 2.8rem; // active-icon overwrite
+
+    &:last-child
+    {
+      border: none;
+    }
+
+    &.clickable
+    {
+      cursor: pointer;
+
+      &:hover
+      {
+        background-color: $blue-dark;
+        color: white;
+      }
+    }
+
+    &.active
+    {
+      @extend .embed-checkmark-black;
+      background-size: 1.5rem;
+      background-repeat: no-repeat;
+      background-position-x: 0.5rem;
+      background-position-y: center;
+
+      &:hover
+      {
+        @extend .embed-checkmark-white;
+      }
+    }
+
+    svg
+    {
+      width: 2rem;
+      height: 2rem;
+      margin: -1rem 1rem -1rem 0;
+      fill: $green;
+    }
+  }
+}

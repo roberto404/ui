@@ -1,0 +1,34 @@
+.embed
+{
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+[class^="embed-"],
+[class*=" embed-"]
+{
+  @extend .embed;
+}
+
+[class^="icon-"],
+[class*=" icon-"],
+.icon
+{
+  padding-left: 1.4em;
+  background-position-x: left;
+  background-position-y: center;
+  background-size: 1rem;
+  background-repeat: no-repeat;
+}
+
+.embed-80
+{
+  @extend .embed;
+  background-size: 80%;
+}
+.embed-50
+{
+  @extend .embed;
+  background-size: 50%;
+}

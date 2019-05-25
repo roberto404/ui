@@ -1,0 +1,8 @@
+import React from 'react';
+
+export default props =>
+(
+  <svg version="1.0" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" {...props} >
+    <path d="M0,0.003h4.5452h90.9096H100v4.5452v90.9037v4.5452h-4.5452H4.5452H0v-4.5452V4.5481V0.003z M9.0904,9.0933 v36.3615h36.3615V9.0933H9.0904z M9.0904,54.5452v36.3615h36.3615V54.5452H9.0904z M54.5422,9.0933v36.3615h36.3674V9.0933H54.5422z M54.5422,54.5452v36.3615h36.3674V54.5452H54.5422z" />
+  </svg>
+);

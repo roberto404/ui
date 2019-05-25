@@ -1,0 +1,79 @@
+
+@mixin respond-to($media)
+{
+  // @if $media == mobile
+  // {
+  //     @media only screen and (max-width: $break-small - 1) { @content; }
+  // }
+  // @else if $media == tablet
+  // {
+  //     @media only screen and (min-width: $break-small) and (max-width: $break-large - 1) { @content; }
+  // }
+  @if $media == mobile
+  {
+    @media only screen and (max-width: $break-large - 1) { @content; }
+  }
+  @else if $media == desktop
+  {
+    @media only screen and (min-width: $break-large) { @content; }
+  }
+}
+
+@mixin orient-to($state)
+{
+  @if $state == portrait
+  {
+    @media screen and (orientation: portrait) { @content; }
+  }
+  @else if $state == landscape
+  {
+    @media screen and (orientation: landscape) { @content; }
+  }
+}
+
+// body setup
+
+html
+{
+    @include respond-to(mobile)
+    {
+        font-size: $baseFontSizeMobile;
+    }
+
+    // @include respond-to(tablet)
+    // {
+    //     font-size: $baseFontSizeTablet;
+    // }
+
+    @include respond-to(desktop)
+    {
+        font-size: $baseFontSizeDesktop;
+    }
+}
+
+
+/*
+  JS detect display size.
+ */
+#respond-to
+{
+  // @include respond-to(handheld)
+  // {
+  //   content: 'handheld'
+  // }
+
+  @include respond-to(mobile)
+  {
+    content: 'mobile'
+  }
+
+  // @include respond-to(tablet)
+  // {
+  //   content: 'tablet'
+  // }
+
+  @include respond-to(desktop)
+  {
+    content: 'desktop'
+  }
+}

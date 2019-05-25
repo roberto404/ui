@@ -1,0 +1,75 @@
+.card
+{
+  margin-bottom: 2rem;
+  padding: 2rem;
+  @extend .rounded;
+
+  background-color: $white-light;
+  border-bottom: 1px solid $gray-light;
+
+
+  > .title
+  {
+    position: relative;
+    left: -2rem;
+    padding: 0 2rem 1rem 2rem;
+    margin-bottom: 2rem;
+    width: calc(100% + 4rem);
+    border-bottom: 1px solid $white-dark;
+
+    .caption
+    {
+      padding-top: .5rem;
+      font-weight: 200;
+      font-size: .8em;
+      color: $gray;
+    }
+  }
+
+  > .section
+  {
+    margin: 3rem 0 3rem 0;
+
+    position: relative;
+    text-align: center;
+    background: white;
+    color: $gray;
+    font-size: .85em;
+    font-weight: 200;
+
+    &::before
+    {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: $gray-light;
+      transform: translateY(calc(.5em - 1px));
+    }
+
+    span
+    {
+      display: inline-block;
+      background: white;
+      position: relative;
+      padding: 0 2em;
+    }
+
+    &.yellow
+    {
+      color: $yellow;
+
+      &::before
+      {
+        background: $yellow;
+      }
+    }
+  }
+
+  .thead >div >div
+  {
+    background-color: $white-dark;
+  }
+
+}

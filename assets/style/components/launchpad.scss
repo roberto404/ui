@@ -1,0 +1,63 @@
+.launchpad
+{
+  .visiting-card
+  {
+    padding-bottom: 0;
+  }
+
+  .menu
+  {
+    .table
+    {
+      border-top: 1px solid $black-light;
+
+      @include respond-to(desktop)
+      {
+        &:hover
+        {
+          color: white;
+          background: $black;
+        }
+      }
+
+      &.active
+      {
+        color: white;
+        background: $black;
+      }
+
+      &.highlighted
+      {
+        border-left: 4px $yellow solid;
+      }
+    }
+
+    [class^="col-"],
+    [class*=" col-"]
+    {
+      padding: 0.45rem;
+
+      @include respond-to(mobile)
+      {
+        padding: 0.7rem;
+      }
+    }
+
+    svg
+    {
+      width: 1.5rem;
+      height: 1.5rem;
+      // width: 100%;
+
+      path
+      {
+        fill: $yellow;
+      }
+    }
+
+    &:last-child
+    {
+      border-bottom: 1px solid $black-light;
+    }
+  }
+}

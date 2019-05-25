@@ -1,0 +1,284 @@
+.flex
+{
+  display: flex;
+}
+
+.column
+{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
+.grow
+{
+  display: flex;
+  flex-grow: 1;
+}
+
+.wrap
+{
+  flex-wrap: wrap;
+}
+
+.nowrap
+{
+  flex-wrap: nowrap;
+}
+
+.v-right
+{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.v-left
+{
+  display: flex;
+  justify-content: flex-start;
+}
+
+.h-center
+{
+  display: flex;
+  align-items: center;
+}
+
+.v-center
+{
+  display: flex;
+  justify-content: center;
+}
+
+.block
+{
+  display: block;
+}
+
+.inline-block
+{
+  display: inline-block;
+}
+
+
+.table
+{
+  display: table;
+  width: 100%;
+
+  > *
+  {
+    display: table-cell;
+    vertical-align: top;
+  }
+
+  &.v-center > *
+  {
+    vertical-align: middle;
+  }
+}
+
+table
+{
+  width: 100%;
+
+  td
+  {
+    vertical-align: top;
+  }
+}
+
+.hidden
+{
+  display: none;
+}
+
+.overflow
+{
+  overflow: hidden;
+}
+
+.scroll
+{
+  overflow: scroll;
+}
+
+.scroll-y
+{
+  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.pointer
+{
+  cursor: pointer;
+}
+
+
+.no-select
+{
+  user-select: none;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-touch-callout: none;
+  cursor: default;
+}
+
+.selectable,
+.selectable > *
+{
+  user-select: initial;
+}
+
+.ratio
+{
+  @include aspect-ratio(1,1);
+}
+
+
+.flip-vertical
+{
+  transform: scale(-1, 1);
+}
+
+.flip-horizontal
+{
+  transform: scaleX(-1);
+  filter: FlipH;
+  -ms-filter: "FlipH";
+}
+
+.pin,
+[class^="pin-"],
+[class*=" pin-"]
+{
+  position: fixed;
+  z-index: 1;
+}
+
+.pin {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.pin-none {
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+}
+
+.pin-y {
+  top: 50%;
+  transform: translate(0, -50%);
+  // top: 0;
+  // bottom: 0;
+}
+
+.pin-x {
+  left: 50%;
+  transform: translate(-50%);
+  // right: 0;
+  // left: 0;
+}
+
+.pin-t {
+  top: 0;
+}
+
+.pin-r {
+  right: 0;
+}
+
+.pin-b {
+  bottom: 0;
+}
+
+.pin-l {
+  left: 0;
+}
+
+.pin-bl {
+  bottom: 0;
+  left: 0;
+}
+
+.pin-br {
+  bottom: 0;
+  right: 0;
+}
+
+.fixed {
+  position: fixed;
+  z-index: 1;
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.zoom-1\.1 {
+  font-size: 110%;
+}
+
+@include respond-to(mobile)
+{
+  .mobile\:hidden {
+    display: none;
+  }
+
+  .mobile\:hide {
+    display: none;
+  }
+
+  .mobile\:fixed {
+    position: fixed;
+  }
+
+  .mobil\:absolute {
+    position: absolute;
+  }
+
+  .mobile\:pin-l {
+    left: 0;
+  }
+}
+
+
+@include respond-to(desktop)
+{
+  .desktop\:hidden {
+    display: none;
+  }
+
+  .desktop\:hide {
+    display: none;
+  }
+
+  .desktop\:fixed {
+    position: fixed;
+  }
+
+  .desktop\:absolute {
+    position: absolute;
+  }
+}
+
+
+@include orient-to(landscape)
+{
+  .landscape\:hidden {
+    display: none;
+  }
+
+  .landscape\:absolute {
+    position: absolute;
+  }
+}

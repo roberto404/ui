@@ -1,0 +1,22 @@
+.rates
+{
+  svg
+  {
+    margin: -0.05em !important;
+    width: 1.4em;
+    height: 1.4em;
+
+    path
+    {
+      fill: $black;
+    }
+
+    &:not(.active)
+    {
+      path
+      {
+        fill: $gray;
+      }
+    }
+  }
+}

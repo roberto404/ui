@@ -1,0 +1,225 @@
+.text-white
+{
+  color: $white;
+}
+
+.bold
+{
+  font-weight: bold;
+}
+
+.light
+{
+  font-weight: 300;
+}
+
+.heavy
+{
+  font-weight: 900;
+}
+
+.uppercase
+{
+  text-transform: uppercase;
+}
+
+.lowercase
+{
+  text-transform: lowercase;
+}
+
+.italic
+{
+  font-style: italic;
+}
+
+.underline
+{
+  text-decoration: underline;
+}
+
+.strikethrough
+{
+  text-decoration: line-through;
+}
+
+.no-underline
+{
+  text-decoration: none;
+}
+
+.nowarp
+{
+  white-space: nowrap;
+}
+
+.colon:after
+{
+  content: ':';
+  display: inline-block;
+  margin-right: 0.3em;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+h1,
+.h1
+{
+  margin: 1.5em 0;
+  font-size: 3em;
+}
+
+h2,
+.h2
+{
+  margin: 1.2em 0;
+  font-size: 1.5em;
+}
+
+h3,
+.h3
+{
+  margin: 1em 0;
+  font-size: 1em;
+  color: $yellow;
+  text-transform: uppercase;
+}
+
+.text-black
+{
+  color: $black;
+}
+
+.text-black-light
+{
+  color: $black-light;
+}
+
+.text-white
+{
+  color: $white;
+}
+
+.text-gray
+{
+  color: $gray;
+}
+
+.text-gray-light
+{
+  color: $gray-light;
+}
+
+.text-gray-dark
+{
+  color: $gray-dark;
+}
+
+.text-green
+{
+  color: $green;
+}
+.text-yellow
+{
+  color: $yellow;
+}
+.text-red
+{
+  color: $red;
+}
+.text-blue
+{
+  color: $blue;
+}
+.text-blue-dark
+{
+  color: $blue-dark;
+}
+
+.text-yellow-light
+{
+  color: $yellow-light;
+}
+
+.highlight-red
+{
+  display: inline-block;
+  background-color: $red;
+  color: white;
+  @extend .px-1\/2;
+}
+
+.text-xs {
+  font-size: 0.75em;
+}
+
+.text-s {
+  font-size: 0.875em;
+}
+
+.text-m {
+  font-size: 1.25em;
+}
+
+.text-l {
+  font-size: 1.5em;
+}
+
+.text-xl {
+  font-size: 1.75em;
+}
+
+
+.text-xxl {
+  font-size: 2em;
+}
+
+.text-line-m
+{
+  line-height: 1.25em;
+}
+
+.text-line-l
+{
+  line-height: 1.5em;
+}
+
+
+@include respond-to(mobile)
+{
+  .mobile\:text-left {
+    text-align: left;
+  }
+  .mobile\:text-right {
+    text-align: right;
+  }
+  .mobile\:text-xs {
+    font-size: 0.55em;
+  }
+  .mobile\:text-s {
+    font-size: 0.85em;
+  }
+  .mobile\:text-m {
+    font-size: 1.25em;
+  }
+  .mobile\:text-l {
+    font-size: 1.5em;
+  }
+  .mobile\:text-xl {
+    font-size: 1.75em;
+  }
+}

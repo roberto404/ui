@@ -1,0 +1,90 @@
+.pager
+{
+  @extend .no-select;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // margin: 2rem 0 2rem 0;
+
+  > div
+  {
+    display: table-cell;
+  }
+
+  .prev,
+  .next
+  {
+    padding: 0 4rem;
+
+    @include respond-to('mobile')
+    {
+      padding: 0 1rem;
+    }
+
+    button
+    {
+      @extend .embed-angle-down-gray;
+      padding: 0;
+      border: 0;
+      background-color: transparent;
+      width: .85em;
+      height: .85em;
+      transform: rotate(90deg);
+
+      &:not(.active)
+      {
+        visibility: hidden;
+      }
+    }
+
+    span
+    {
+      display: none;
+    }
+  }
+
+  .pages
+  {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: -0.25em;
+
+    a
+    {
+      // padding: 7px 9px;
+      padding: 0.5em 0.75em;
+      margin: 0 0.33rem;
+      margin-bottom: 0.25em;
+      font-size: .85em;
+      display: inline-block;
+      color: $black;
+      text-decoration: none;
+      border: 2px solid transparent;
+      cursor: pointer;
+      border-radius: 3px;
+
+      &:not(.active):hover
+      {
+        color: $yellow;
+        // border-color: $gray-dark;
+      }
+
+      &.active
+      {
+        cursor: default;
+        color: $white-dark;
+        background-color: $yellow;
+      }
+    }
+  }
+
+  .next
+  {
+    button
+    {
+      transform: rotate(-90deg);
+    }
+  }
+}

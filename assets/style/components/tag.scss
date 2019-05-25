@@ -1,0 +1,16 @@
+.tag
+{
+  font-size: 75%;
+  background-color: $yellow;
+  color: $black;
+  padding: 0.5rem 0.7rem 0.3rem 0.7rem;
+  margin-bottom: .3rem;
+  text-transform: uppercase;
+  display: inline-block;
+
+  &.red
+  {
+    color: $white;
+    background-color: $red;
+  }
+}

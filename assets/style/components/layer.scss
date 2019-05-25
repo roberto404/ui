@@ -1,0 +1,358 @@
+
+$layer-padding: 1.5rem;
+
+
+.layer
+{
+  bottom: 0; left: 0; top: 0; right: 0;
+  margin: 0;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  display: flex;
+
+  // style
+  background-color: rgba(0, 0, 0, 0.8);
+
+  // transition
+  opacity: 1;
+  will-change: opacity;
+  transition: opacity 400ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+
+
+  .container
+  {
+    box-sizing: border-box;
+    position: relative;
+    transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+    transform-origin: left top 0px;
+    transform: scale(1, 1) translate(0px, 0px);
+
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+    &:not(.no-padding)
+    {
+      padding: $layer-padding;
+    }
+
+    .close
+    {
+      position: absolute;
+      top: $layer-padding;
+      right: $layer-padding;
+      cursor: pointer;
+
+      width: $layer-padding / 3 * 2;
+      height: $layer-padding / 3 * 2;
+
+      svg path
+      {
+        fill: black;
+      }
+
+      @include respond-to(desktop)
+      {
+        border-radius: 100%;
+        background-color: rgba(0,0,0,0.2);
+
+        svg
+        {
+          transform: scale(.5);
+
+          path
+          {
+            fill: white;
+          }
+        }
+      }
+
+    }
+  }
+
+
+  &.no-padding .container
+  {
+    padding: 0;
+  }
+
+  &:not(.active)
+  {
+    display: none;
+  }
+
+  &:not(.closeable),
+  &.no-close,
+  {
+    .close
+    {
+      display: none;
+    }
+  }
+
+  &.bordered
+  {
+    .container
+    {
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.07);
+      border-radius: 3px;
+    }
+  }
+
+  // Methods
+
+  @include respond-to(desktop)
+  {
+    &.dialog
+    {
+      justify-content: center;
+      align-items: center;
+
+      .container
+      {
+        background: white;
+        width: 75%;
+        max-width: 768px;
+        max-height: 100vh;
+        overflow-y: scroll;
+        overflow-x: hidden;
+
+        -ms-overflow-style: none;  // IE 10+
+        overflow: -moz-scrollbars-none;  // Firefox
+
+        &::-webkit-scrollbar
+        {
+          display: none;
+        }
+
+        .wrapper
+        {
+          width: 100%;
+        }
+      }
+
+      &.narrow
+      {
+        .container
+        {
+          width: 450px;
+        }
+      }
+
+      &.window
+      {
+        .container
+        {
+          padding: 0;
+          background-color: $gray-light;
+        }
+
+        .title
+        {
+          margin: 0;
+          text-align: left;
+          padding: $layer-padding;
+          text-transform: uppercase;
+          font-size: $layer-padding / 3 * 2;
+          background: $yellow;
+
+          svg
+          {
+            height: 1.2rem;
+            margin-right: 0.5rem;
+          }
+
+        }
+
+        .close
+        {
+          background-color: white;
+
+          svg path
+          {
+            fill: $yellow;
+          }
+        }
+      }
+
+      &:not(.active)
+      {
+        .container
+        {
+          transform: translate(0px, -30%);
+        }
+      }
+    }
+  }
+
+  @include respond-to(mobile)
+  {
+    &.dialog
+    {
+      background: white;
+
+      .container
+      {
+        position: inherit;
+        width: 100%;
+
+        overflow-y: auto;
+        height: 100%;
+
+        .content
+        {
+          width: 100%;
+        }
+      }
+
+      &.centered
+      {
+        .container
+        {
+          height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+    }
+  }
+
+  &.fullscreen
+  {
+    background: white;
+
+    .container
+    {
+      position: inherit;
+      width: 100%;
+
+      overflow-y: auto;
+      height: 100%;
+
+      .content
+      {
+        width: 100%;
+      }
+    }
+
+    &.centered
+    {
+      .container
+      {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+
+  &.sidebar
+  {
+    z-index: 1002;
+
+    // display: flex;
+
+    background: red;
+
+    width: 100vw;
+    bottom: 0px;
+
+    height: inherit;
+    top: inherit;
+    left: inherit;
+    right: inherit;
+    margin: inherit;
+
+    .content
+    {
+      width: 100vw;
+    }
+  }
+
+  &.popover
+  {
+    justify-content: center;
+    align-items: center;
+
+    // position: absolute;
+    background-color: rgba(0, 0, 0, 0);
+    position: absolute;
+
+    .container
+    {
+      background: white;
+      position: absolute;
+      border-radius: 4px;
+      box-shadow: 0px 2px 16px 0px $gray-light;
+
+      overflow-y: auto;
+      max-height: 80vh;
+      height: fit-content;
+      // left: 0px;
+
+      .wrapper
+      {
+        width: 100%;
+      }
+    }
+  }
+}
+
+body.layer-fullscreen
+{
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  height: auto;
+  background-color: white;
+
+  .application
+  {
+    padding: 0;
+    margin: 0;
+
+    > *:not(.layer)
+    {
+      display: none !important;
+    }
+
+    .layer
+    {
+      position: static;
+      overflow: visible;
+      height: auto;
+    }
+  }
+}
+
+@include respond-to(mobile)
+{
+  body.layer-dialog
+  {
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    height: auto;
+    background-color: white;
+
+    .application
+    {
+      padding: 0;
+      margin: 0;
+
+      > *:not(.layer)
+      {
+        display: none !important;
+      }
+
+      .layer
+      {
+        position: static;
+        overflow: visible;
+        height: auto;
+      }
+    }
+  }
+}

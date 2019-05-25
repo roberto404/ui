@@ -1,0 +1,382 @@
+button,
+.button
+{
+  font-family: $font;
+  @extend .no-select;
+  display: block;
+  width: 100%;
+  padding: 1em;
+  position: relative;
+  border-radius: 4px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+  font-size: .8em;
+  text-align: center;
+  text-transform: uppercase;
+  color: $gray-dark;
+  // background: $white-dark;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+
+  &:hover
+  {
+    color: $yellow;
+  }
+
+  svg
+  {
+    width: 1.5em;
+    height: 1.5em;
+    margin: -.5em 0 -.5em 0;
+    position: relative;
+    top: -1px;
+
+    &:first-child
+    {
+      margin-right: .75em;
+    }
+
+
+    &:last-child:not(:first-child)
+    {
+      margin-left: .75em;
+      margin-right: -.5em;
+    }
+  }
+
+  &:not(.no-fill)
+  {
+    svg
+    {
+      polygon,
+      path
+      {
+        fill: $gray-dark;
+      }
+
+      rectangle,
+      circle,
+      line
+      {
+        stroke: $gray-dark;
+      }
+    }
+
+    &:hover svg path
+    {
+      fill: $yellow;
+    }
+  }
+
+  &.small
+  {
+    font-size: .6em;
+  }
+  &.large
+  {
+    font-size: .9em;
+  }
+
+  &.green,
+  &.yellow,
+  &.blue,
+  &.white,
+  &.red,
+  &.black,
+  &.gray
+  {
+    color: white;
+
+    &:not(.no-fill)
+    {
+      svg,
+      &:hover svg
+      {
+        polygon,
+        path
+        {
+          fill: white;
+        }
+
+        rectangle,
+        circle,
+        line
+        {
+          stroke: white;
+        }
+      }
+    }
+  }
+
+  &.white
+  {
+    background-color: $white-light;
+    color: $black;
+
+    &:hover
+    {
+      background: $white-dark;
+    }
+  }
+
+  &.yellow
+  {
+    background-color: $yellow;
+
+    &:hover
+    {
+      background-color: $yellow-dark;
+    }
+  }
+
+  &.blue
+  {
+    background-color: $blue;
+
+    &:hover
+    {
+      background-color: $blue-dark;
+    }
+  }
+
+  &.green
+  {
+    background-color: $green;
+
+    &:hover
+    {
+      background-color: $green-dark;
+    }
+  }
+
+  &.red
+  {
+    background-color: $red;
+
+    &:hover
+    {
+      background-color: $red-dark;
+    }
+  }
+
+  &.gray
+  {
+    background-color: $gray;
+
+    &:hover
+    {
+      background-color: $gray-dark;
+    }
+  }
+
+  &.black
+  {
+    background-color: $black;
+
+    &:hover
+    {
+      background-color: black;
+    }
+  }
+
+  &.primary
+  {
+    @extend .yellow;
+  }
+
+  &.secondary
+  {
+    @extend .blue;
+  }
+
+  &.warn
+  {
+    @extend .red;
+  }
+
+  &.disabled
+  {
+    color: $white;
+    background-color: $gray-light;
+    cursor: no-drop;
+
+    &:hover
+    {
+      background-color: $gray-light;
+    }
+  }
+
+  &.outline
+  {
+    background-color: transparent;
+    border: 2px solid $white-dark;
+    padding: calc(1em - 2px);
+
+    &:hover
+    {
+      border-color: $yellow;
+    }
+
+    &.yellow
+    {
+      border-color: $yellow;
+      color: $yellow;
+
+      &:hover
+      {
+        color: white;
+        background-color: $yellow;
+      }
+
+      &:not(:hover) svg path { fill: $yellow };
+    }
+
+    &.blue
+    {
+      border-color: $blue;
+      color: $blue;
+
+      &:hover
+      {
+        color: white;
+        background-color: $blue;
+      }
+
+      &:not(:hover) svg path { fill: $blue };
+    }
+
+    &.green
+    {
+      border-color: $green;
+      color: $green;
+
+      &:hover
+      {
+        color: white;
+        background-color: $green;
+      }
+
+      &:not(:hover) svg path { fill: $green };
+    }
+
+    &.red
+    {
+      border-color: $red;
+      color: $red;
+
+      &:hover
+      {
+        color: white;
+        background-color: $red;
+      }
+
+      &:not(:hover) svg path { fill: $red };
+    }
+
+    &.black
+    {
+      border-color: $black;
+      color: $black;
+
+      &:hover
+      {
+        color: white;
+        background-color: $black;
+      }
+
+      &:not(:hover) svg path { fill: $black };
+    }
+
+    &.gray
+    {
+      border-color: $gray;
+      color: $gray;
+
+      &:hover
+      {
+        color: white;
+        background-color: $gray;
+      }
+
+      &:not(:hover) svg path { fill: $gray };
+    }
+  }
+
+  &.action
+  {
+    display: inline-block;
+    border-radius: 100%;
+    width: 4em;
+    height: 4em;
+    overflow: hidden;
+
+    svg
+    {
+      top: 0;
+      margin: 0;
+    }
+
+    &.shadow
+    {
+      box-shadow: 0 3px 9px 0 rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  // right-action-icon
+
+  &[class^="embed-"],
+  &[class*=" embed-"]
+  {
+    padding-right: 3rem;
+    background-position: calc(100% - 1rem) center;
+    background-size: 1rem;
+    background-repeat: no-repeat;
+  }
+}
+
+.buttons
+{
+  &.action
+  {
+    width: 4em !important; // column overwrite width
+    @extend .m-3;
+    @extend .pin-br;
+    @extend .fixed;
+    @extend .column;
+    @extend .v-center;
+    @extend .h-center;
+
+    button
+    {
+      @extend .action;
+
+      &:not(:last-child)
+      {
+        @extend .hidden;
+      }
+
+      &:last-child
+      {
+        @extend .mt-1\/2;
+        @extend .button.red;
+        @extend .button.large;
+        @extend .button.shadow;
+      }
+    }
+
+    &:hover
+    {
+      button:not(:last-child)
+      {
+        @extend .block;
+        @extend .button.gray;
+        @extend .button.small;
+        @extend .mb-1;
+      }
+    }
+  }
+}

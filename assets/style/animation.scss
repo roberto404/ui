@@ -1,0 +1,132 @@
+
+.spinning
+{
+    animation: animation_sping 1.5s infinite linear;
+}
+
+@keyframes animation_sping
+{
+    0% {transform: rotate(-180deg);}
+}
+
+.bouncing
+{
+    -webkit-animation: animation_bouce 1.4s infinite ease-in-out;
+    animation: animation_bouce 1.4s infinite ease-in-out;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+@keyframes animation_bouce
+{
+    0%,100%,80% { transform:scale(0); -webkit-transform:scale(0)}
+    40% { transform:scale(1); -webkit-transform:scale(1)}
+}
+
+
+.fading
+{
+    animation: animation_fade 1.5s infinite cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+@keyframes animation_fade
+{
+    0%
+    {
+        opacity: 0;
+    }
+    50%
+    {
+        opacity: 1;
+    }
+    100%
+    {
+        opacity: 0;
+    }
+}
+
+.flipping
+{
+    animation: animation_flip 0.5s ease both;
+}
+
+@keyframes animation_flip
+{
+    0%
+    {
+        opacity: 0;
+        transform-origin: top center;
+        transform: rotateX(-90deg);
+    }
+    5%
+    {
+        opacity: 1;
+    }
+    80%
+    {
+        transform: rotateX(8deg);
+    }
+    83%
+    {
+        transform: rotateX(6deg);
+    }
+    92%
+    {
+        transform: rotateX(-3deg);
+    }
+    100%
+    {
+        transform-origin: top center;
+        transform: rotateX(0deg);
+    }
+}
+
+.shaking
+{
+    animation: animation_shake .5s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+@keyframes animation_shake
+{
+    8%, 41%
+    {
+        -webkit-transform: translateX(-10px);
+    }
+    25%, 58%
+    {
+        -webkit-transform: translateX(10px);
+    }
+    75%
+    {
+        -webkit-transform: translateX(-5px);
+    }
+    92%
+    {
+        -webkit-transform: translateX(5px);
+    }
+    0%, 100%
+    {
+        -webkit-transform: translateX(0);
+    }
+}
+
+.flashing-once
+{
+  animation: animation_flashing 1s normal forwards;
+}
+
+@keyframes animation_flashing
+{
+  0%
+  {
+    background-color: $yellow-light;
+  }
+  30%
+  {
+    background-color: $yellow-light;
+  }
+  100%
+  {
+    background-color: transparent;
+  }
+}

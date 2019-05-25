@@ -1,0 +1,23 @@
+.layer.preload
+{
+  .content
+  {
+    padding: 20vh 0;
+
+    .wrapper
+    {
+      width: 100%;
+      text-align: center;
+
+      div
+      {
+        width: 3rem;
+        height: 3rem;
+        display: inline-block;
+        @extend .spinning;
+        // @extend *.scsslogo-color;
+      }
+    }
+  }
+
+}

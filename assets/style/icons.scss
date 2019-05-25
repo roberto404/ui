@@ -1,0 +1,51 @@
+
+.embed-arrow-down,
+.icon-arrow-down
+{
+  @include icon('arrow-down');
+}
+
+.embed-arrow-down-gray
+{
+  @include icon('arrow-down', $gray);
+}
+
+.embed-arrow-down-white
+{
+  @include icon('arrow-down', white);
+}
+
+.embed-angle-down
+{
+  @include icon('angle-down');
+}
+
+.embed-angle-down-gray
+{
+  @include icon('angle-down', $gray);
+}
+
+.embed-angle-down-white
+{
+  @include icon('angle-down', white);
+}
+
+.embed-lock
+{
+  @include icon('lock');
+}
+
+.embed-checkmark-black
+{
+  @include icon('checkmark', $black);
+}
+
+.embed-checkmark-white
+{
+  @include icon('checkmark', $white);
+}
+
+.embed-minus-white
+{
+  @include icon('minus', $white);
+}

@@ -1,0 +1,99 @@
+.calendar
+{
+  @extend .no-select;
+
+  *
+  {
+    font-family: $font;
+  }
+
+  &.month
+  {
+    #xaxis
+    {
+      text
+      {
+        fill: $gray;
+      }
+    }
+
+    #days
+    {
+      rect
+      {
+        fill: transparent;
+        // transition: fill 0.4s ease-out;
+      }
+
+      text
+      {
+        fill: $black;
+        pointer-events: none;
+      }
+
+      .visible
+      {
+        rect
+        {
+          fill: white;
+          stroke: $black-light;
+        }
+
+        &:not(.inactive)
+        {
+          rect
+          {
+            cursor: pointer;
+          }
+
+          &:hover
+          {
+            rect
+            {
+              fill: $yellow-light;
+            }
+          }
+        }
+      }
+
+      .inactive
+      {
+        rect
+        {
+          fill: transparent;
+          cursor: disallow;
+        }
+
+        text
+        {
+          fill: $black-light;
+        }
+      }
+
+      .active
+      {
+        rect
+        {
+          fill: $yellow;
+          stroke: $yellow;
+        }
+      }
+
+      .engaged
+      {
+        rect
+        {
+          fill: url(#pattern-checkers);
+        }
+      }
+    }
+  }
+}
+
+#pattern-checkers
+{
+  .checker
+  {
+     fill: #fac700;
+  }
+}

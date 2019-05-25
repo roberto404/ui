@@ -1,0 +1,213 @@
+hr
+{
+  border: 0.5px solid $gray-light;
+  margin: 2rem 0;
+}
+
+
+.rounded
+{
+  border-radius: 4px;
+}
+
+.circle
+{
+  border-radius: 100%;
+}
+
+.shadow
+{
+  box-shadow: 0 2px 0px 0 rgba(0,0,0,0.06);
+}
+
+.shadow-outer
+{
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2);
+}
+
+.border
+{
+  border: 1px solid $black-light;
+}
+
+.border-bottom
+{
+  border-bottom: 1px solid $black-light;
+}
+
+.border-top
+{
+  border-top: 1px solid $black-light;
+}
+
+.border-right
+{
+  border-right: 1px solid $black-light;
+}
+
+.border-left
+{
+  border-left: 1px solid $black-light;
+}
+
+.border-none
+{
+  border-style: none;
+}
+
+.border-0
+{
+  border-width: 0;
+}
+
+.border-1
+{
+  border-width: 1px;
+}
+
+.border-2
+{
+  border-width: 2px;
+}
+
+.border-3
+{
+  border-width: 3px;
+}
+
+.border-blue
+{
+  border-color: $blue;
+}
+
+.border-yellow
+{
+  border-color: $yellow;
+}
+
+.border-gray
+{
+  border-color: $gray;
+}
+
+.border-white
+{
+  border-color: $white;
+}
+
+.border-gray-light
+{
+  border-color: $gray-light;
+}
+
+.bg-black,
+.hover\:bg-black:hover
+{
+  background-color: $black;
+}
+
+.bg-white,
+.hover\:bg-white:hover
+{
+  background-color: $white;
+}
+
+.bg-white-light,
+.hover\:bg-white-light:hover
+{
+  background-color: $white-light;
+}
+
+.bg-white-semi-light,
+.hover\:bg-white-semi-light:hover
+{
+  background-color: $white-semi-light
+}
+
+.bg-white-dark,
+.hover\:bg-white-dark:hover
+{
+  background-color: $white-dark;
+}
+
+.bg-gray,
+.hover\:bg-gray:hover
+{
+  background-color: $gray;
+}
+
+.bg-gray-dark,
+.hover\:bg-gray-dark:hover
+{
+  background-color: $gray-dark;
+}
+
+.bg-gray-light,
+.hover\:bg-gray-light:hover
+{
+  background-color: $gray-light;
+}
+
+.bg-green,
+.hover\:bg-green:hover
+{
+  background-color: $green;
+}
+
+.bg-red,
+.hover\:bg-red:hover
+{
+  background-color: $red;
+}
+
+.bg-transparent,
+.hover\:bg-transparent:hover
+{
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.bg-yellow,
+.hover\:bg-yellow:hover
+{
+  background-color: $yellow;
+}
+
+.bg-yellow-dark,
+.hover\:bg-yellow-dark:hover
+{
+  background-color: $yellow-dark;
+}
+
+.fill-white *
+{
+  fill: $white;
+}
+
+.fill-gray *
+{
+  fill: $gray;
+}
+
+.fill-yellow *
+{
+  fill: $yellow;
+}
+
+
+
+@include respond-to(mobile)
+{
+  .mobile\:border-none
+  {
+    border-style: none;
+  }
+}
+
+
+@include respond-to(desktop)
+{
+  .desktop\:border-none
+  {
+    border-style: none;
+  }
+}

@@ -1,0 +1,47 @@
+.modal
+{
+  text-align: center;
+
+  > .title
+  {
+    font-size: 24px;
+    margin: 20px 0 30px 0;
+    font-weight: 600%;
+    line-height: 120%;
+    color: $black;
+  }
+
+  &.error .title
+  {
+    color: $red;
+  }
+
+  .caption
+  {
+    text-align: center;
+    font-size: 12px;
+    margin-top: 20px;
+  }
+
+  button,
+  .button
+  {
+    &:not([class*=" w-"])
+    {
+      width: 50%;
+    }
+    margin: 3rem auto 1em auto;
+
+    @include respond-to(mobile)
+    {
+      &:last-child
+      {
+        margin-top: 0rem
+      }
+      &:first-child
+      {
+        margin-top: 3rem
+      }
+    }
+  }
+}

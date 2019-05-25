@@ -1,0 +1,59 @@
+
+// --> functions
+@import "functions.scss";
+
+// --> reset all default style !!! not working with Material UI
+@import "reset.scss";
+
+// --> add default style
+@import "normalize.scss";
+
+// --> setup responsive function
+@import "responsive.scss";
+
+// --> usefull animations
+@import "animation.scss";
+
+// --> embed images
+@import "embed.scss";
+
+// --> project component (layer, modal, button, card ...)
+@import "components/components";
+
+// --> project view layout styles
+@import "views/views";
+
+// --> Tailwind concept: https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.css
+@import "utilities/utilities";
+
+
+html
+{
+  scroll-behavior: smooth;
+}
+
+body
+{
+  font-family: $font;
+  font-size: 1.6rem;
+  color: $black;
+  background-color: $white;
+
+  @include respond-to(mobile)
+  {
+    font-size: 1.5rem;
+  }
+}
+
+// Normalize
+// ----------------------
+
+*
+{
+  box-sizing: border-box;
+}
+
+*:focus
+{
+  outline: none;
+}

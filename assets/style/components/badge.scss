@@ -1,0 +1,14 @@
+
+
+.badge
+{
+  position: absolute;
+  background: $red;
+  left: calc(100% + .5em);
+  top: -40%;
+  color: white;
+  padding: 1px 3px;
+  border-radius: 3px;
+  font-size: 80%;
+  white-space: nowrap;
+}

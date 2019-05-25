@@ -1,0 +1,21 @@
+- const CONFIG = htmlWebpackPlugin.options.templateConfig;
+- const NOW = Date.now();
+
+doctype html
+html
+  head
+    meta(charset=CONFIG.charset)
+    meta(name='robots' content='index, follow')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no')
+
+    title #{CONFIG.title}
+    
+    if htmlWebpackPlugin.options.inject === false
+      link(rel='stylesheet', href=CONFIG.baseDir + CONFIG.staticFilePrefix + NOW + '.css')
+      
+  body
+    
+    div#Application
+    
+    if htmlWebpackPlugin.options.inject === false
+      script(src=CONFIG.baseDir + CONFIG.staticFilePrefix + NOW + '.js')

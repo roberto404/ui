@@ -1,0 +1,171 @@
+$blue: #00548f;
+$blueLight: #00a6da;
+$blueExtraLight: #26BAE8;
+$blueDark: #00548f;
+$black: #111111;
+$gray: #e8e8e8;
+$grayLight: #F2F2F2;
+$red: #C71818;
+
+article,
+.article
+{
+	font-size: em(15);
+	font-family: "Open Sans";
+	line-height: normal;
+	text-align: justify;
+
+	h1
+	{
+		font-size: em(40);
+		font-weight: 200;
+		text-transform: uppercase;
+		color: $blue;
+		margin: em(10) 0;
+		text-align: center;
+	}
+
+	h2
+	{
+		font-size: em(24);
+		font-weight: 600;
+		color: $blue;
+		margin: em(18) 0 em(12) 0;
+	}
+
+	h3
+	{
+		font-size: em(22);
+		font-weight: normal;
+		margin: em(18) 0 em(12) 0;
+	}
+
+	h4
+	{
+		font-size: em(20);
+		font-weight: normal;
+		margin: em(18) 0 em(12) 0;
+	}
+
+	h5
+	{
+		font-size: em(18);
+		font-weight: normal;
+		margin: em(18) 0 em(12) 0;
+	}
+
+	h6
+	{
+		font-size: em(12);
+		font-weight: normal;
+	}
+
+	p
+	{
+	    margin: em(12) em(0);
+	}
+
+	ul,ol
+	{
+	    list-style: disc;
+	    margin-left: em(20);
+	}
+
+	// a
+	// {
+	//     color: $blue;
+	//     font-weight: bold;
+	//     text-decoration: underline;
+
+	//     &:hover, &:active
+	//     {
+	//         color: $blueLight;
+	//     }
+	// }
+
+
+    em
+    {
+        font-style: italic;
+    }
+
+	.content
+	{
+		margin-bottom: em(50);
+	}
+
+	table
+	{
+		width: 100%;
+
+		tr
+		{
+			border-bottom: 1px solid white;
+			text-align: center;
+
+			th
+			{
+				background-color: $blueLight !important;
+				color: white;
+				padding: em(12);
+
+				&:first-child
+				{
+					border-right: 1px solid white;
+				}
+			}
+			td
+			{
+				background-color: #ccf3ff;
+				color: $blue;
+				padding: em(12);
+			}
+
+			td:first-child
+			{
+				border-right: 1px solid white;
+			}
+
+			&:nth-child(2n+1)
+			{
+				td, th
+				{
+					background-color: $gray;
+				}
+			}
+
+		}
+	}
+}
+
+
+
+.blue
+{
+	color: $blue !important;
+}
+
+.bluelight
+{
+	color: $blueLight !important;
+}
+
+.red
+{
+	color: $red !important;
+}
+
+
+@include respond-to(mobile)
+{
+    .article
+    {
+        font-size: 14px;
+        padding: 0 em(20);
+
+        h1
+        {
+        	font-size: em(30);
+        }
+    }
+}

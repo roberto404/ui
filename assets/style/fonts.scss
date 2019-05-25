@@ -1,0 +1,19 @@
+
+/*
+100	Thin (Hairline)
+200	Extra Light (Ultra Light)
+300	Light
+400	Normal
+500	Medium
+600	Semi Bold (Demi Bold)
+700	Bold
+800	Extra Bold (Ultra Bold)
+900	Black (Heavy)
+ */
+
+@include font-face("Roboto", "/fonts/Roboto/Roboto-Thin-webfont", 100);
+@include font-face("Roboto", "/fonts/Roboto/Roboto-Light-webfont", 300);
+@include font-face("Roboto", "/fonts/Roboto/Roboto-Regular-webfont", normal);
+@include font-face("Roboto", "/fonts/Roboto/Roboto-Medium-webfont", 500);
+@include font-face("Roboto", "/fonts/Roboto/Roboto-Bold-webfont", bold);
+@include font-face("Roboto", "/fonts/Roboto/Roboto-Black-webfont", 900);
