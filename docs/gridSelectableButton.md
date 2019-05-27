@@ -1,5 +1,5 @@
-``
-==
+`Grid (selectable) Button Component`
+====================================
 
 
 Props

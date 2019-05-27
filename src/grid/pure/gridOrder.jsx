@@ -16,7 +16,8 @@ import IconUp from '../../icon/mui/navigation/expand_less';
 
 
 /**
- * [OrderMenu description]
+ * Grid Order Component
+ * Ordering grid by Dropdown button
  */
 class OrderMenu extends Component
 {
@@ -106,6 +107,8 @@ class OrderMenu extends Component
     );
   }
 }
+
+
 
 OrderMenu.defaultProps =
 {

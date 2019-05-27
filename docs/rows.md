@@ -1,6 +1,6 @@
-``
-==
-
+`Grid helper Row Component`
+===========================
+Avatar | title, subtitle | action
 
 Props
 -----

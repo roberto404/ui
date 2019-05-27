@@ -15,7 +15,7 @@ import Select from '../../form/pure/select';
 
 
 /**
-* Grid Date Component.
+* Grid Select Component.
 *
 *
 * @example

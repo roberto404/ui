@@ -1,6 +1,6 @@
 {
   "./src/grid/pure/grid.jsx": {
-    "description": "Grid Pure Component\n\n@example\nimport Grid from '@1studio/ui/grid/grid'\nconst gridData = [\n  { id: 1, name: 'Megan J. Cushman', gender: 1, visits: '2017-07-23' },\n  { id: 2, name: 'Taylor R. Fallin', gender: 2, visits: '2017-07-22' },\n  { id: 3, name: 'Jose C. Rosado', gender: 1, visits: '2017-07-20' },\n  { id: 4, name: 'Sammy C. Brandt', gender: 1, visits: '2017-07-10' },\n];\n\n<Grid data={gridData} />\n\n@example\nconst gridData = [\n  { id: 1, name: 'Megan J. Cushman', gender: 1, visits: '2017-07-23' },\n  { id: 2, name: 'Taylor R. Fallin', gender: 2, visits: '2017-07-22' },\n  { id: 3, name: 'Jose C. Rosado', gender: 1, visits: '2017-07-20' },\n  { id: 4, name: 'Sammy C. Brandt', gender: 1, visits: '2017-07-10' },\n];\nconst gridSettings =\n  {\n    hook:\n    {\n      name: 'Name',\n      visits:\n      {\n        title: 'Visits',\n        format: ({ value }) => new Date(value).toLocaleDateString(),\n      },\n      gender:\n      {\n        title: 'Gender',\n        format: ({ value, config }) => config.gender[value],\n      },\n    },\n    helper:\n    {\n      gender: { 1: 'male', 2: 'female' },\n    },\n    order:\n    {\n      column: 'name',\n      order: 'desc'\n    }\n  };\n<Grid\n  data={gridData}\n  hook={gridSettings.hook}\n  helper={gridSettings.helper}\n/>",
+    "description": "Grid Component\n\n@example\nimport Grid from '@1studio/ui/grid/grid'\nconst gridData = [\n  { id: 1, name: 'Megan J. Cushman', gender: 1, visits: '2017-07-23' },\n  { id: 2, name: 'Taylor R. Fallin', gender: 2, visits: '2017-07-22' },\n  { id: 3, name: 'Jose C. Rosado', gender: 1, visits: '2017-07-20' },\n  { id: 4, name: 'Sammy C. Brandt', gender: 1, visits: '2017-07-10' },\n];\n\n<Grid data={gridData} />\n\n@example\nconst gridData = [\n  { id: 1, name: 'Megan J. Cushman', gender: 1, visits: '2017-07-23' },\n  { id: 2, name: 'Taylor R. Fallin', gender: 2, visits: '2017-07-22' },\n  { id: 3, name: 'Jose C. Rosado', gender: 1, visits: '2017-07-20' },\n  { id: 4, name: 'Sammy C. Brandt', gender: 1, visits: '2017-07-10' },\n];\nconst gridSettings =\n  {\n    hook:\n    {\n      name: 'Name',\n      visits:\n      {\n        title: 'Visits',\n        format: ({ value }) => new Date(value).toLocaleDateString(),\n      },\n      gender:\n      {\n        title: 'Gender',\n        format: ({ value, config }) => config.gender[value],\n      },\n    },\n    helper:\n    {\n      gender: { 1: 'male', 2: 'female' },\n    },\n    order:\n    {\n      column: 'name',\n      order: 'desc'\n    }\n  };\n<Grid\n  data={gridData}\n  hook={gridSettings.hook}\n  helper={gridSettings.helper}\n/>",
     "methods": [
       {
         "name": "onClickGridHandler",
@@ -34,6 +34,13 @@
           }
         },
         "description": "Handling KeyDown Arrow Up and down"
+      },
+      {
+        "name": "onKeySelectAllHandler",
+        "docblock": null,
+        "modifiers": [],
+        "params": [],
+        "returns": null
       },
       {
         "name": "setActiveRecords",
@@ -149,6 +156,17 @@
       }
     ],
     "props": {
+      "id": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "''",
+          "computed": false
+        }
+      },
       "data": {
         "type": {
           "name": "arrayOf",
@@ -496,7 +514,7 @@
     }
   },
   "./src/grid/pure/gridFieldGroupBy.jsx": {
-    "description": "Grid Dropdown Component.\n\nCollect unique data from rawData and connected to grid state via Redux.\n\n@example\n<GridFieldGroupBy\n  id=\"category\"\n  label=\"Category\"\n  ?grid=\"robot\"\n/>",
+    "description": "Grid GridFieldGroupBy Component.\n\nCollect unique data from rawData and connected to grid state via Redux.\n\n@example\n<GridFieldGroupBy\n  id=\"category\"\n  label=\"Category\"\n  ?grid=\"robot\"\n/>",
     "methods": [],
     "props": {
       "id": {
@@ -560,7 +578,7 @@
     }
   },
   "./src/grid/pure/gridOrder.jsx": {
-    "description": "[OrderMenu description]",
+    "description": "Grid Order Component\nOrdering grid by Dropdown button",
     "methods": [
       {
         "name": "onChangeListener",
@@ -593,7 +611,7 @@
     }
   },
   "./src/grid/pure/gridSelect.jsx": {
-    "description": "Grid Date Component.\n\n\n@example",
+    "description": "Grid Select Component.\n\n\n@example",
     "methods": [],
     "props": {
       "id": {
@@ -605,7 +623,7 @@
     }
   },
   "./src/grid/pure/gridSelectGroupBy.jsx": {
-    "description": "Grid Select Component.\n\nCollect unique data from rawData and connected to grid state via Redux.\n\n@example\n<GridSelectGroupBy\n  id=\"category\"\n  label=\"Category\"\n  ?grid=\"robot\"\n/>",
+    "description": "Grid SelectGroupBy Component.\n\nCollect unique data from rawData and connected to grid state via Redux.\n\n@example\n<GridSelectGroupBy\n  id=\"category\"\n  label=\"Category\"\n  ?grid=\"robot\"\n/>",
     "methods": [],
     "props": {
       "id": {
@@ -662,14 +680,14 @@
         "required": false,
         "description": "",
         "defaultValue": {
-          "value": "(result, record, id) =>\n{\n  if (Array.isArray(record[id]))\n  {\n    record[id].forEach((field) =>\n    {\n      if (result.indexOf(field) === -1)\n      {\n        result.push(field);\n      }\n    });\n  }\n  else if (typeof record[id] === 'string' && result.indexOf(record[id]) === -1)\n  {\n    result.push(record[id]);\n  }\n  return result;\n}",
+          "value": "(result, record, id) =>\n{\n  if (Array.isArray(record[id]))\n  {\n    record[id].forEach((field) =>\n    {\n      if (result.indexOf(field) === -1)\n      {\n        result.push(field);\n      }\n    });\n  }\n  else if (['string', 'number'].indexOf(typeof record[id]) !== -1)\n  {\n    const value = record[id].toString();\n\n    if (result.indexOf(value) === -1)\n    {\n      result.push(value);\n    }\n  }\n  return result;\n}",
           "computed": false
         }
       }
     }
   },
   "./src/grid/pure/gridSelectableButton.jsx": {
-    "description": "",
+    "description": "Grid (selectable) Button Component",
     "methods": [
       {
         "name": "onChangeListener",
@@ -776,7 +794,7 @@
     }
   },
   "./src/grid/pure/rows.jsx": {
-    "description": "",
+    "description": "Grid helper Row Component\nAvatar | title, subtitle | action",
     "methods": [],
     "props": {
       "title": {

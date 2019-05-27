@@ -10,8 +10,9 @@ import { setValues } from '../../form/actions';
 import { FORM_PREFIX } from '../constants';
 
 /**
-*/
-class selectableGridButton extends Component
+ * Grid (selectable) Button Component
+ */
+class SelectableGridButton extends Component
 {
   constructor(props)
   {
@@ -109,7 +110,7 @@ class selectableGridButton extends Component
  * propTypes
  * @type {Object}
  */
-selectableGridButton.propTypes =
+SelectableGridButton.propTypes =
 {
   /**
    * field custom classes
@@ -123,7 +124,7 @@ selectableGridButton.propTypes =
  * defaultProps
  * @type {Object}
  */
-selectableGridButton.defaultProps =
+SelectableGridButton.defaultProps =
 {
   className: 'primary',
   label: 'global.submit',
@@ -131,10 +132,10 @@ selectableGridButton.defaultProps =
   {},
 };
 
-selectableGridButton.contextTypes =
+SelectableGridButton.contextTypes =
 {
   grid: PropTypes.string,
   store: PropTypes.object,
 };
 
-export default selectableGridButton;
+export default SelectableGridButton;

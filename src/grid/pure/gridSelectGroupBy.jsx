@@ -17,7 +17,7 @@ import Select from '../../form/pure/select';
 
 
 /**
-* Grid Select Component.
+* Grid SelectGroupBy Component.
 *
 * Collect unique data from rawData and connected to grid state via Redux.
 *

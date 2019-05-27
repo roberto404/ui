@@ -1,5 +1,5 @@
-`Grid Select Component.`
-========================
+`Grid SelectGroupBy Component.`
+===============================
 
 Collect unique data from rawData and connected to grid state via Redux.
 
@@ -21,7 +21,7 @@ Props
 | id | string |  | 'dropdownGroupByFilter' |
 | label | string |  | '' |
 | placeholder | string |  | '' |
-| reducer | func |  | (result, record, id) =><br>{<br>  if (Array.isArray(record[id]))<br>  {<br>    record[id].forEach((field) =><br>    {<br>      if (result.indexOf(field) === -1)<br>      {<br>        result.push(field);<br>      }<br>    });<br>  }<br>  else if (typeof record[id] === 'string' && result.indexOf(record[id]) === -1)<br>  {<br>    result.push(record[id]);<br>  }<br>  return result;<br>} |
+| reducer | func |  | (result, record, id) =><br>{<br>  if (Array.isArray(record[id]))<br>  {<br>    record[id].forEach((field) =><br>    {<br>      if (result.indexOf(field) === -1)<br>      {<br>        result.push(field);<br>      }<br>    });<br>  }<br>  else if (['string', 'number'].indexOf(typeof record[id]) !== -1)<br>  {<br>    const value = record[id].toString();<br><br>    if (result.indexOf(value) === -1)<br>    {<br>      result.push(value);<br>    }<br>  }<br>  return result;<br>} |
 
 ### `helper`
 
@@ -74,9 +74,14 @@ defaultValue: `(result, record, id) =>
       }
     });
   }
-  else if (typeof record[id] === 'string' && result.indexOf(record[id]) === -1)
+  else if (['string', 'number'].indexOf(typeof record[id]) !== -1)
   {
-    result.push(record[id]);
+    const value = record[id].toString();
+
+    if (result.indexOf(value) === -1)
+    {
+      result.push(value);
+    }
   }
   return result;
 }`

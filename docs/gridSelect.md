@@ -1,5 +1,5 @@
-`Grid Date Component.`
-======================
+`Grid Select Component.`
+========================
 
 
 

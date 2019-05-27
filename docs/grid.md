@@ -1,5 +1,5 @@
-`Grid Pure Component`
-=====================
+`Grid Component`
+================
 
 
 ```javascript
@@ -70,6 +70,7 @@ Props
 | height | string |  | '' |
 | helper | objectOf[object Object] |  | {} |
 | hook | objectOf[object Object] |  | {} |
+| id | string |  | '' |
 | infinity | bool |  | false |
 | multipleSelect | bool |  | true |
 | noResults | union(string,element) |  | 'No Results.' |
@@ -216,6 +217,12 @@ width: cell relative width in percent Eg: '50%'
 
 type: `objectOf[object Object]`
 defaultValue: `{}`
+
+
+### `id`
+
+type: `string`
+defaultValue: `''`
 
 
 ### `infinity`

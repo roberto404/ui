@@ -1,6 +1,6 @@
-`[OrderMenu description]`
-=========================
-
+`Grid Order Component`
+======================
+Ordering grid by Dropdown button
 
 Props
 -----

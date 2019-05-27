@@ -1,5 +1,5 @@
-`Grid Dropdown Component.`
-==========================
+`Grid GridFieldGroupBy Component.`
+==================================
 
 Collect unique data from rawData and connected to grid state via Redux.
 

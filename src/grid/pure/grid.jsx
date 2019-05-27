@@ -19,7 +19,7 @@ import { FORM_PREFIX } from '../constants';
 
 
 /**
-* Grid Pure Component
+* Grid Component
 *
 * @example
 * import Grid from '@1studio/ui/grid/grid'

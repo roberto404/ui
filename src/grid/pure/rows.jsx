@@ -3,6 +3,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
+/**
+ * Grid helper Row Component
+ * Avatar | title, subtitle | action
+ */
 export const RowAvatarTitleAction = ({ title, subtitle, img, action, onClick }) =>
 {
   const RowClasses = classNames({
