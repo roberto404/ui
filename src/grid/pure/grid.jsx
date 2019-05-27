@@ -81,7 +81,13 @@ class Grid extends Component
      * Grid props which store in redux Form with this key
      * @type {string}
      */
-    this.formId = FORM_PREFIX + (props.id || context.grid || '');
+    this.gridId = props.id || context.grid || '';
+
+    /**
+     * Grid props which store in redux Form with this key
+     * @type {string}
+     */
+    this.formId = FORM_PREFIX + this.gridId;
 
     /**
      * Rows of table is clickable
@@ -309,8 +315,7 @@ class Grid extends Component
 
     const {
       store,
-      id,
-    } = this.context.store;
+    } = this.context;
 
     const nodeTableHeaderColumns = this.getColumns().map((column) =>
     {
@@ -383,9 +388,11 @@ class Grid extends Component
         }
         else
         {
+          const data = state.grid[this.gridId] ? state.grid[this.gridId].data : this.props.data;
+
           store.dispatch(setValues({
             id: this.formId,
-            value: state.grid[id].data.map(record => record.id),
+            value: data.map(({ id }) => id),
           }));
         }
       };
@@ -393,8 +400,8 @@ class Grid extends Component
       const Checkbox = connect(
         ({ grid, form }) =>
         {
-          const formLength = (form[this.formId] || []).length;
-          const gridLength = (grid[id].data || []).length;
+          const formLength = form[this.formId] ? form[this.formId].length : 0;
+          const gridLength = grid[this.gridId] ? grid[this.gridId].data.length : 0;
 
           return ({
             status: formLength && Math.floor((formLength + gridLength) / gridLength),
@@ -480,7 +487,6 @@ class Grid extends Component
 
     const {
       store,
-      id,
     } = this.context;
 
     /**
@@ -520,21 +526,24 @@ class Grid extends Component
 
         if (event.shiftKey)
         {
+          const grid = store.getState().grid[this.gridId];
+          const data = grid ? grid.rawData : this.props.data;
+
           if (isNewItem)
           {
-            store.getState().grid[id].rawData.some((data) =>
+            data.some(({ id }) =>
             {
               // this item selected yet
-              if (form.indexOf(data.id) !== -1)
+              if (form.indexOf(id) !== -1)
               {
                 value = [];
               }
               else
               {
-                value.push(data.id);
+                value.push(id);
               }
 
-              return (record.id === data.id);
+              return (record.id === id);
             });
 
             value = form.concat(value);
@@ -544,20 +553,20 @@ class Grid extends Component
             // if the selected item found
             let found = false;
 
-            store.getState().grid[id].rawData.some((data) =>
+            data.some(({ id }) =>
             {
               // end of iterate, current item selected yet
-              if (found && form.indexOf(data.id) === -1)
+              if (found && form.indexOf(id) === -1)
               {
                 return true;
               }
               // current item selected yet.
-              else if (found && form.indexOf(data.id) !== -1)
+              else if (found && form.indexOf(id) !== -1)
               {
-                value.push(data.id);
+                value.push(id);
               }
               // found clicked item
-              else if (!found && record.id === data.id)
+              else if (!found && record.id === id)
               {
                 value = [];
                 found = true;
