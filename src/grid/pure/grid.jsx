@@ -81,7 +81,7 @@ class Grid extends Component
      * Grid props which store in redux Form with this key
      * @type {string}
      */
-    this.formId = FORM_PREFIX + context.id;
+    this.formId = FORM_PREFIX + (props.id || context.grid || '');
 
     /**
      * Rows of table is clickable
@@ -690,6 +690,7 @@ class Grid extends Component
 
 Grid.propTypes =
 {
+  id: PropTypes.string,
   /**
    * Content of the Grid
    * @example
@@ -878,6 +879,7 @@ Grid.propTypes =
  */
 Grid.defaultProps =
 {
+  id: '',
   data: [],
   showHeader: true,
   selectable: false,
@@ -906,7 +908,7 @@ Grid.defaultProps =
 Grid.contextTypes =
 {
   store: PropTypes.object,
-  id: PropTypes.string,
+  grid: PropTypes.string,
   addListener: PropTypes.func,
   removeListener: PropTypes.func,
   addShortcuts: PropTypes.func,
