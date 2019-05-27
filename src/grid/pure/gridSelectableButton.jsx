@@ -5,6 +5,9 @@ import classNames from 'classnames';
 
 import { setValues } from '../../form/actions';
 
+/* !- Constans */
+
+import { FORM_PREFIX } from '../constants';
 
 /**
 */
@@ -65,19 +68,20 @@ class selectableGridButton extends Component
   onClickButtonHandler = () =>
   {
     const items = this.getSelectedItems();
-    const records = this.context.store.getState().grid[this.context.id].data
-      .filter(record => items.indexOf(record.id) !== -1);
+
+    const records = this.context.store.getState().grid[this.context.grid].data
+      .filter(({ id }) => items.indexOf(id) !== -1);
 
     if (this.props.onClick(records) !== false)
     {
-      this.context.store.dispatch(setValues({ id: this.context.id }));
+      this.context.store.dispatch(setValues({ id: this.context.grid }));
     }
   }
 
   /* !- Privates */
 
   getSelectedItems = () =>
-    (this.context.store.getState().form || {})[this.context.id] || [];
+    (this.context.store.getState().form || {})[FORM_PREFIX + this.context.grid] || [];
 
   /**
    * This method is called when render the Component instance.
@@ -129,7 +133,7 @@ selectableGridButton.defaultProps =
 
 selectableGridButton.contextTypes =
 {
-  id: PropTypes.string,
+  grid: PropTypes.string,
   store: PropTypes.object,
 };
 
