@@ -152,7 +152,7 @@ class Grid extends Component
   onKeyArrowHandler = direction => () =>
   {
     const state = this.context.store.getState();
-    const grid = state.grid[this.context.id];
+    const grid = state.grid[this.context.grid];
 
     const activeRecords = state.form[this.formId];
 
@@ -184,7 +184,7 @@ class Grid extends Component
 
   onKeySelectAllHandler = () =>
   {
-    const grid = this.context.store.getState().grid[this.context.id];
+    const grid = this.context.store.getState().grid[this.context.grid];
 
     if (grid)
     {
@@ -641,7 +641,7 @@ class Grid extends Component
           <ReactList
             length={data.length}
             itemRenderer={index => this.renderRow(data[index], index, columns)}
-            type="variable"
+            type="uniform"
           />
         );
       }
