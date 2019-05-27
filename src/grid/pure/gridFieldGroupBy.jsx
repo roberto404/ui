@@ -34,7 +34,7 @@ const GridFieldGroupBy = (props, context) =>
 
   const fetchData = () =>
   {
-    const grid = context.store.getState().grid[context.id] || {};
+    const grid = context.store.getState().grid[context.grid] || {};
 
     return (
       reduce(
@@ -132,7 +132,7 @@ GridFieldGroupBy.defaultProps =
 
 GridFieldGroupBy.contextTypes =
 {
-  id: PropTypes.string,
+  grid: PropTypes.string,
   store: PropTypes.object,
 };
 
