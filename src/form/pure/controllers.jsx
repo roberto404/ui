@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 /* !- Redux Actions */
 
-import { modal } from '/Users/roberto/Dropbox/Sites/ui/src/layer/actions';
+import { modal } from '../../layer/actions';
 
 
 /* !- React Elements */
