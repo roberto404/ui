@@ -48,3 +48,9 @@ export const modifyUserData = (user = {}) =>
 //     setData(response.data, response.settings),
 //   );
 //
+//
+
+
+/* !- Alias actions */
+
+export const logout = eraseUser();
