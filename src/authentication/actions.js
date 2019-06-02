@@ -53,4 +53,4 @@ export const modifyUserData = (user = {}) =>
 
 /* !- Alias actions */
 
-export const logout = eraseUser();
+export const logout = eraseUser;
