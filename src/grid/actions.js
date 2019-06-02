@@ -35,7 +35,9 @@ export const fetchData = (
   {
     if (isEmpty(response))
     {
-      return {};
+      return {
+        type: 'SET_GRID_DATA',
+      };
     }
 
     const isExtend = (response.data && response.settings);

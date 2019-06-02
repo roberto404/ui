@@ -92,7 +92,6 @@ const reducers = (state = {}, action = {}) =>
         if (!model.data)
         {
           return state;
-          // todo???
         }
 
         model.data = action.data;
