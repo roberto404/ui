@@ -1,3 +1,4 @@
+import isEmpty from 'lodash/isEmpty';
 
 /**
  * Load database to grid
@@ -32,6 +33,11 @@ export const fetchData = (
 ) =>
   fetchApi(optionsApi).then((response) =>
   {
+    if (isEmpty(response))
+    {
+      return {};
+    }
+
     const isExtend = (response.data && response.settings);
 
     return setData(
