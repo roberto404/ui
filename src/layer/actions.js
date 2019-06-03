@@ -242,7 +242,7 @@ export const menu = (props = {}, event: SyntheticEvent<> | {} = {}) =>
     const rect = target.getBoundingClientRect();
     const left = rect.left + window.scrollX;
     const top = rect.top + window.scrollY;
-    const xCenter = (left + rect.width) / 2;
+    const xCenter = left + (rect.width / 2);
     const xWindow = (left -  window.scrollX) / window.innerWidth;
     const yWindow = (top -  window.scrollY) / window.innerHeight;
 
