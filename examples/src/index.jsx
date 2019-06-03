@@ -21,12 +21,17 @@ import store from '@1studio/ui/store';
 
 /* !- Example: Grid */
 
-import Example from './grid/static';
+// import Example from './grid/static';
 // import Example from './grid/connect';
 // import Example from './grid/dynamic';
 // import Example from './grid/filters';
 // import Example from './grid/extra';
 // import Example from './grid/complex';
+
+/* !- Example: Grid */
+
+import Example from './layer/actions';
+
 
 
 /* !- Assets */
