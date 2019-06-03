@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import $ from 'jquery';
+
 
 /**
  * @fileOverview Redux Layer Actions
@@ -108,7 +108,7 @@ export const popover = (element: React.Element, event: {} = {}) =>
     containerStyle = {
       left: target.offsetLeft,
       top: target.offsetTop + target.offsetHeight,
-    }
+    };
   }
 
   // if (event.pageX)
@@ -234,6 +234,7 @@ export const preload = (props = {}) =>
 export const menu = (props = {}, event: SyntheticEvent<> | {} = {}) =>
 {
   let containerStyle = {};
+
   const target = event.currentTarget;
 
   if (target)
@@ -241,24 +242,47 @@ export const menu = (props = {}, event: SyntheticEvent<> | {} = {}) =>
     const rect = target.getBoundingClientRect();
     const left = rect.left + window.scrollX;
     const top = rect.top + window.scrollY;
-    const xCenter = left + rect.width / 2;
+    const xCenter = (left + rect.width) / 2;
+    const xWindow = (left -  window.scrollX) / window.innerWidth;
+    const yWindow = (top -  window.scrollY) / window.innerHeight;
 
-    containerStyle = {
-      transform: 'translateX(-50%)',
-      left: xCenter + 'px',
-      top: (top + rect.height + 6) + 'px',
-    };
+    if (xWindow < 0.2)
+    {
+      containerStyle.left = left;
+      containerStyle.transform = '';
+    }
+    else if (xWindow > 0.8)
+    {
+      containerStyle.left = left + rect.width;
+      containerStyle.transform = 'translateX(-100%)';
+    }
+    else
+    {
+      containerStyle.left = `${xCenter}px`;
+      containerStyle.transform = 'translateX(-50%)';
+    }
+
+    if (yWindow > 0.6)
+    {
+      containerStyle.top = `${top - 6}px`;
+      containerStyle.transform += ' translateY(-100%)';
+    }
+    else
+    {
+      containerStyle.top = `${top + rect.height + 6}px`;
+    }
+
   }
 
   return ({
     type: 'SET_LAYER',
     active: true,
     method: 'popover',
-    element: <Menu {...props} />,
+    element: <Menu {...props} />, // eslint-disable-line
     options: { className: 'no-padding no-close' },
-    containerStyle
+    containerStyle,
   });
-}
+};
 
 
 /* !- Alias actions */

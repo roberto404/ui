@@ -104,7 +104,7 @@ Item.defaultProps =
  *    id: 1,
  *    title: 'one',
  *    handler: ({ id, title }, event) => id,
- *    icon: 'i-className',
+ *    icon: IconLogout,
  *    className: 'first',
  *    childs: {}
  *  }]
@@ -155,7 +155,10 @@ class Menu extends Component
  */
 Menu.propTypes =
 {
-  label: PropTypes.string,
+  label: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.string,
+  ]),
   /**
    * Menu items
    * @example
