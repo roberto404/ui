@@ -95,8 +95,15 @@ class Dropdown extends Field
     // Check Active, which different in multiple mode
     const isActive = id => Array.isArray(value) ? value.indexOf(id) !== -1 : id === value;
 
+    const data = [...this.data];
+
+    if (this.props.placeholder && !find(this.data, i => i.id === 0))
+    {
+      data.unshift({ id: 0, title: this.props.placeholder });
+    }
+
     this.context.store.dispatch(menu({
-      items: this.data.map(item =>
+      items: data.map(item =>
         ({
           ...item,
           className: item.className + (isActive(item.id) ? ' active' : ''),
