@@ -9,43 +9,32 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { IntlProvider } from 'react-intl';
 
 
-/* !- React Elements */
-
-import Layer from '@1studio/ui/layer';
-
-
 /* !- Redux Store */
 
-import store from '@1studio/ui/store';
+import store from '../../src/store';
 
 
-/* !- Example: Grid */
+/* !- Locale */
 
-// import Example from './grid/static';
-// import Example from './grid/connect';
-// import Example from './grid/dynamic';
-// import Example from './grid/filters';
-// import Example from './grid/extra';
-// import Example from './grid/complex';
+import locale from '../../src/locale';
 
-/* !- Example: Grid */
+locale('hu');
 
-import Example from './layer/actions';
 
+/* !- Application */
+
+import App from './app'; // eslint-disable-line
 
 
 /* !- Assets */
 
-require('@1studio/ui/assets/style/index.scss');
+require('../../assets/style/index.scss');
 
 
 render(
   <ReduxProvider store={store()}>
     <IntlProvider locale="en">
-      <div>
-        <Example />
-        <Layer />
-      </div>
+      <App />
     </IntlProvider>
   </ReduxProvider>,
   document.getElementById('Application'),

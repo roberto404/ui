@@ -2,11 +2,27 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+
+/* !- React Actions */
+
+import * as LayerActions from '../../../src/layer/actions';
+
+
 /* !- React Elements */
 
-import LayerActions from '@1studio/ui/layer/actions';
+import CalendarMonthInterval from '../../../src/form/pure/calendarMonthInterval';
+import IconLogout from '../../../src/icon/mui/action/lock';
 
-import IconLogout from '@1studio/ui/icon/mui/action/lock';
+
+const PopoverComponent = () =>
+(
+  <div style={{ width: '200px', height: '200px' }}><CalendarMonthInterval /></div>
+);
+
+const DialogComponent = () =>
+(
+  <div>Hello Dialog!</div>
+);
 
 
 /**
@@ -26,9 +42,15 @@ const Example = ({
   menu,
 }) =>
 {
-  const onClickMenuHandler = ({ id, title }, event) =>
+  const onClickPreloadHandler = (element) =>
   {
-    console.log(id, title, event);
+    preload(element);
+    setTimeout(() => hide(), 3 * 1000);
+  }
+
+  const onClickMenuHandler = ({ id, title }) =>
+  {
+    console.log(id, title);
     flush();
   };
 
@@ -43,14 +65,55 @@ const Example = ({
     ],
   };
 
+  const modalProps = {
+    title: 'Title of Modal',
+    content: 'Content of Modal',
+    icon: IconLogout,
+    className: 'green',
+    button: {
+      title: 'Primary',
+      handler: () => flush(),
+    },
+    buttonSecondary: {
+      title: 'Secondary',
+      handler: () => modal(modalProps),
+    },
+  };
+
   return (
     <div className="p-2">
       <h1>Layer actions</h1>
+
+      <h2>Preload</h2>
+      <button className="outline gray w-auto" onClick={() => onClickPreloadHandler()}>Preload</button>
+      <br />
+      <button className="outline gray w-auto" onClick={() => onClickPreloadHandler(<div className="preloader two-balls" />)}>Custom preload</button>
+      <br />
+      <button className="outline gray w-auto" onClick={event => onClickPreloadHandler(event)}>Positioning Preload</button>
+
+      <h2>Dialog</h2>
+      <button className="outline gray w-auto" onClick={() => dialog(DialogComponent)}>Dialog</button>
+
+      <h2>Modal</h2>
+      <button className="outline gray w-auto" onClick={() => modal(modalProps)}>Modal</button>
+      <br />
+
+      <h2>Fullscreen</h2>
+      <button className="outline gray w-auto" onClick={() => fullscreen(DialogComponent)}>Fullscreen</button>
+
+      <h2>Popover</h2>
+      <button
+        className="outline gray w-auto"
+        onClick={event => popover(PopoverComponent, event)}
+      >
+        Popover
+      </button>
+
       <h2>Menu</h2>
       <button className="outline gray w-auto" onClick={event => menu(menuProps, event)}>Menu</button>
     </div>
   );
-}
+};
 
 
 export default connect(
