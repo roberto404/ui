@@ -32,7 +32,7 @@ const Modal = (
     content,
     button,
     buttonSecondary,
-    classes,
+    className,
   },
 ) =>
 {
@@ -41,13 +41,18 @@ const Modal = (
     console.log('onClickButtonHandler');
   };
 
-  const modalClasses = (classes) ? `modal ${classes}` : 'modal';
+  const modalClasses = classNames({
+    modal: true,
+    [className]: true,
+  });
 
   return (
     <div className={modalClasses}>
 
       { icon &&
-      <div className={`icon ${icon}`} />
+      <div className="icon">
+        {icon()}
+      </div>
       }
 
       { title &&
@@ -64,23 +69,27 @@ const Modal = (
       <div className="content">{content}</div>
       }
 
-      { buttonSecondary &&
-      <div
-        className="button"
-        onClick={buttonSecondary.handler}
-      >
-        {buttonSecondary.title}
-      </div>
-      }
+      <div className="buttons">
 
-      { button &&
-        <div
-          className="button secondary"
-          onClick={button.handler}
-        >
-          {button.title}
-        </div>
-      }
+        { button &&
+          <button
+            className="button secondary"
+            onClick={button.handler}
+          >
+            {button.title}
+          </button>
+        }
+
+        { buttonSecondary &&
+          <button
+            className="button"
+            onClick={buttonSecondary.handler}
+          >
+            {buttonSecondary.title}
+          </button>
+        }
+
+      </div>
 
     </div>
   );

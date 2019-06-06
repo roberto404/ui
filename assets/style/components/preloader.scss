@@ -1,0 +1,50 @@
+
+
+// default
+[class="preloader"]
+{
+  height: 2em;
+  width: 2em;
+  animation: spin .8s infinite cubic-bezier(.45,.05,.55,.95);
+  @include icon('preloader');
+}
+
+.preloader
+{
+  // https://tobiasahlin.com/spinkit/
+  &.two-balls
+  {
+    height: 4em;
+    width: 4em;
+    position: relative;
+    animation: spin 2.0s infinite linear;
+
+    &::before
+    {
+      content: ' ';
+      width: 60%;
+      height: 60%;
+      display: inline-block;
+      position: absolute;
+      top: 0;
+      background-color: #333;
+      border-radius: 100%;
+      animation: bounce 2.0s infinite ease-in-out;
+    }
+
+    &::after
+    {
+      content: ' ';
+      width: 60%;
+      height: 60%;
+      display: inline-block;
+      position: absolute;
+      top: auto;
+      bottom: 0;
+      background-color: #333;
+      border-radius: 100%;
+      animation: bounce 2.0s infinite ease-in-out;
+      animation-delay: -1.0s;
+    }
+  }
+}

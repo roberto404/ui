@@ -1,56 +1,85 @@
 
 .spinning
 {
-    animation: animation_sping 1.5s infinite linear;
+  animation: spin 1.5s infinite linear;
 }
 
-@keyframes animation_sping
+@keyframes spin
 {
-    0% {transform: rotate(-180deg);}
+  0% {
+    transform: rotate(0deg)
+  }
+
+  to {
+    transform: rotate(360deg)
+  }
 }
 
 .bouncing
 {
-    -webkit-animation: animation_bouce 1.4s infinite ease-in-out;
-    animation: animation_bouce 1.4s infinite ease-in-out;
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;
+  animation: bounce 1.4s infinite ease-in-out;
+  animation-fill-mode: both;
 }
 
-@keyframes animation_bouce
+@keyframes bounce
 {
-    0%,100%,80% { transform:scale(0); -webkit-transform:scale(0)}
-    40% { transform:scale(1); -webkit-transform:scale(1)}
+  0%, 100% {
+    transform: scale(0.0);
+  } 50% {
+    transform: scale(1.0);
+  }
 }
 
 
 .fading
 {
-    animation: animation_fade 1.5s infinite cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    animation: fade 1.5s infinite cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
-@keyframes animation_fade
+@keyframes fade
 {
-    0%
-    {
-        opacity: 0;
-    }
-    50%
-    {
-        opacity: 1;
-    }
-    100%
-    {
-        opacity: 0;
-    }
+  0%
+  {
+    opacity: 0;
+  }
+  50%
+  {
+    opacity: 1;
+  }
+  100%
+  {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeinout
+{
+  0%,to {
+    opacity: 0
+  }
+
+  50% {
+    opacity: 1
+  }
+}
+
+@keyframes fadein
+{
+  0% {
+    opacity: 0
+  }
+
+  to {
+    opacity: 1
+  }
 }
 
 .flipping
 {
-    animation: animation_flip 0.5s ease both;
+  animation: flip 0.5s ease both;
 }
 
-@keyframes animation_flip
+@keyframes flip
 {
     0%
     {
@@ -83,10 +112,10 @@
 
 .shaking
 {
-    animation: animation_shake .5s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  animation: shake .5s cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
-@keyframes animation_shake
+@keyframes shake
 {
     8%, 41%
     {
@@ -112,10 +141,10 @@
 
 .flashing-once
 {
-  animation: animation_flashing 1s normal forwards;
+  animation: flash 1s normal forwards;
 }
 
-@keyframes animation_flashing
+@keyframes flash
 {
   0%
   {
@@ -128,5 +157,27 @@
   100%
   {
     background-color: transparent;
+  }
+}
+
+.pulsing
+{
+  animation: pulse .8s infinite cubic-bezier(.45,.05,.55,.95);
+}
+
+@keyframes pulse
+{
+  0% {
+    transform: scale(.5);
+    opacity: 0
+  }
+
+  45% {
+    opacity: .5
+  }
+
+  90%,to {
+    transform: scale(1.25);
+    opacity: 0
   }
 }

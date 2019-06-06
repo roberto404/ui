@@ -2,7 +2,6 @@
 
 import React from 'react';
 
-
 /**
  * @fileOverview Redux Layer Actions
  * @namespace Actions/Layer
@@ -15,18 +14,75 @@ import Modal from './modal';
 import Preload from './preload';
 import Menu from './menu';
 
-// type ActionType =
-// {
-//   type: string,
-//   items: {},
-//   form?: string,
-// };
-//
-// type ItemsType =
-// {
-//   id?: string,
-//   value?: string | number
-// }
+
+/* !- Constants */
+
+const getPositionsElement = (target) =>
+{
+  if (!target)
+  {
+    return {};
+  }
+
+  const rect = target.getBoundingClientRect();
+  const positions = {
+    bottom: rect.bottom,
+    height: rect.height,
+    left: rect.left,
+    right: rect.right,
+    top: rect.top,
+    width: rect.width,
+    x: rect.x,
+    y: rect.y,
+    center: {},
+    screen: {},
+  };
+
+  positions.left += window.scrollX;
+  positions.top += window.scrollY;
+  positions.center.x = positions.left + (positions.width / 2);
+  positions.center.y = positions.top + (positions.height / 2);
+  positions.screen.x = (positions.left - window.scrollX) / window.innerWidth;
+  positions.screen.y = (positions.top - window.scrollY) / window.innerHeight;
+
+  return positions;
+};
+
+const getDynamicPopoverStyle = (target) =>
+{
+  const style = {};
+  const { screen, left, top, center, width, height } = getPositionsElement(target);
+
+  if (screen.x < 0.2)
+  {
+    style.left = left;
+    style.transform = '';
+  }
+  else if (screen.x > 0.8)
+  {
+    style.left = left + width;
+    style.transform = 'translateX(-100%)';
+  }
+  else
+  {
+    style.left = `${center.x}px`;
+    style.transform = 'translateX(-50%)';
+  }
+
+  if (screen.y > 0.6)
+  {
+    style.top = `${top - 6}px`;
+    style.transform += ' translateY(-100%)';
+  }
+  else
+  {
+    style.top = `${top + height + 6}px`;
+  }
+
+  return style;
+};
+
+
 
 /**
  * Create and show dialog layer.
@@ -96,35 +152,16 @@ export const sidebar = (element: React.Element) =>
  * @param {ReactElement} element Layer (popover) content
  * @param {object} event
  */
-export const popover = (element: React.Element, event: {} = {}) =>
+export const popover = (element: React.Element, event: {} = {}, options = {}) =>
 {
   let containerStyle = {};
 
-  if (event.currentTarget)
+  const target = event.currentTarget;
+
+  if (target)
   {
-    // const elementBounding = event.currentTarget.getBoundingClientRect();
-    const target = event.currentTarget;
-
-    containerStyle = {
-      left: target.offsetLeft,
-      top: target.offsetTop + target.offsetHeight,
-    };
+    containerStyle = getDynamicPopoverStyle(target);
   }
-
-  // if (event.pageX)
-  // {
-  //   containerStyle = {
-  //     left: event.pageX,
-  //     top: event.pageY,
-  //   };
-  // }
-  // else if (target.x || target.y)
-  // {
-  //   containerStyle = {
-  //     left: target.x || 0,
-  //     top: target.y || 0,
-  //   };
-  // }
 
   return ({
     type: 'SET_LAYER',
@@ -133,6 +170,7 @@ export const popover = (element: React.Element, event: {} = {}) =>
     closeable: true,
     containerStyle,
     element,
+    options,
   });
 };
 
@@ -208,82 +246,56 @@ export const flush = () =>
  * modal();
  */
 export const modal = (props = {}, options = {}) =>
-{
-  return {
-    type: 'SET_LAYER',
-    active: true,
-    method: 'dialog',
-    element: Modal(props),
-    options,
-  };
-};
+({
+  type: 'SET_LAYER',
+  active: true,
+  method: 'dialog',
+  element: <Modal {...props} />,
+  options,
+});
 
-export const preload = (props = {}) =>
+/**
+ * Preloader layer
+ * @since 1.0.0
+ * @memberof Actions/Layer
+ *
+ * @param  {ReactElement} [element] change default element
+ * @example
+ * preload(<div>Loading...</div>)
+ */
+export const preload = (element: React.Element, event: SyntheticEvent<>) =>
 {
-  return {
-    type: 'SET_LAYER',
-    active: true,
-    method: 'dialog',
-    closeable: false,
-    element: Preload(props),
-    options: { className: 'preload' }
-  };
-};
-
-
-export const menu = (props = {}, event: SyntheticEvent<> | {} = {}) =>
-{
+  const target = event || React.isValidElement(element) ? null : element;
   let containerStyle = {};
-
-  const target = event.currentTarget;
 
   if (target)
   {
-    const rect = target.getBoundingClientRect();
-    const left = rect.left + window.scrollX;
-    const top = rect.top + window.scrollY;
-    const xCenter = left + (rect.width / 2);
-    const xWindow = (left -  window.scrollX) / window.innerWidth;
-    const yWindow = (top -  window.scrollY) / window.innerHeight;
+    const { center } = getPositionsElement(target.target);
 
-    if (xWindow < 0.2)
-    {
-      containerStyle.left = left;
-      containerStyle.transform = '';
-    }
-    else if (xWindow > 0.8)
-    {
-      containerStyle.left = left + rect.width;
-      containerStyle.transform = 'translateX(-100%)';
-    }
-    else
-    {
-      containerStyle.left = `${xCenter}px`;
-      containerStyle.transform = 'translateX(-50%)';
-    }
-
-    if (yWindow > 0.6)
-    {
-      containerStyle.top = `${top - 6}px`;
-      containerStyle.transform += ' translateY(-100%)';
-    }
-    else
-    {
-      containerStyle.top = `${top + rect.height + 6}px`;
-    }
-
+    containerStyle = {
+      top: `${center.y}px`,
+      left: `${center.x}px`,
+    };
   }
 
   return ({
     type: 'SET_LAYER',
     active: true,
-    method: 'popover',
-    element: <Menu {...props} />, // eslint-disable-line
-    options: { className: 'no-padding no-close' },
+    method: 'preload',
+    closeable: false,
+    element: <Preload element={React.isValidElement(element) ? element : undefined} />,
+    // options: { className: 'preload' },
     containerStyle,
   });
 };
 
+/**
+ * Menu is a special popover
+ * @param  {Object} [props={}] { id, title, handler, icon }
+ * @param  {Event} event
+ */
+export const menu = (props = {}, event: SyntheticEvent<> | {} = {}) =>
+  popover(<Menu {...props} />, event, { className: 'no-padding no-close' });
 
 /* !- Alias actions */
 

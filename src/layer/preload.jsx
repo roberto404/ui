@@ -1,22 +1,23 @@
 
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 /**
- * Layer Redux Stateless Component
- *
- * Connected to layer state via Redux.
- * @example
+ * Preloading Layer Component
  */
 const Preload = (
   {
-    element
+    element,
   },
-) =>
-{
-  return (
-    <div />
-  );
+) => element;
+
+
+Preload.propTypes = {
+  element: PropTypes.element,
+};
+
+Preload.defaultProps = {
+  element: <div className="preloader" />,
 };
 
 export default Preload;

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import $ from 'jquery';
-import isEmpty from 'lodash/isEmpty';
 
 
 /* !- Actions */
@@ -14,7 +13,7 @@ import * as Actions from './actions';
 
 /* !- React Element */
 
-import IconClose from '../icon/close';
+import IconClose from '../icon/mui/navigation/close';
 
 
 /* !- Constants */
@@ -24,9 +23,8 @@ import {
 } from './constants';
 
 /**
- * Layer Redux Stateless Component.
- * Connected to layer state via Redux.
- * @example
+ * Layer Component
+ * Connect to layer state via Redux.
  */
 const Layer = (
   {
@@ -120,12 +118,14 @@ const Layer = (
         <div className="close" onClick={onClickCloseHandler}>
           <IconClose />
         </div>
+
         <div className="content">
           <div className="wrapper">
             { React.isValidElement(element) && element }
             { typeof element === 'function' && element() }
           </div>
         </div>
+
       </div>
     </div>
   );
@@ -141,6 +141,8 @@ Layer.propTypes =
   ]),
   closeable: PropTypes.bool,
   close: PropTypes.func.isRequired,
+  className: PropTypes.string,
+  containerStyle: PropTypes.objectOf(PropTypes.string),
 };
 
 Layer.defaultProps =
@@ -150,6 +152,7 @@ Layer.defaultProps =
   element: <div />,
   className: '',
   closeable: true,
+  containerStyle: {},
 };
 
 

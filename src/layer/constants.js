@@ -1,4 +1,4 @@
-export const AVAILABLE_METHODS = ['popover', 'fullscreen', 'dialog', 'sidebar'];
+export const AVAILABLE_METHODS = ['popover', 'fullscreen', 'dialog', 'sidebar', 'preload'];
 export const DEFAULT_METHOD = 'dialog';
 
 

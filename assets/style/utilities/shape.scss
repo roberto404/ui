@@ -193,6 +193,21 @@ hr
   fill: $yellow;
 }
 
+.fill-blue *
+{
+  fill: $blue;
+}
+
+.fill-red *
+{
+  fill: $red;
+}
+
+.fill-green *
+{
+  fill: $green;
+}
+
 
 
 @include respond-to(mobile)
