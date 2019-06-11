@@ -15,11 +15,11 @@ import Layer from '../../src/layer';
 // import Example from './grid/dynamic';
 // import Example from './grid/filters';
 // import Example from './grid/extra';
-// import Example from './grid/complex';
+import Example from './grid/complex';
 
 /* !- Example: Layer */
 
-import Example from './layer/actions';
+// import Example from './layer/actions';
 
 
 /* !- Example: Calendar */

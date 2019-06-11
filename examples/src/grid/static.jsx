@@ -33,7 +33,7 @@ export default () => (
       helper={SETTINGS.helper}
       orderColumn="gender"
       orderDirection="desc"
-      onClickCell={(rowIndex, colIndex) => console.log(rowIndex, colIndex)}
+      onClickCell={(record, index) => console.log(record, index)}
       onChangeOrder={columnId => console.log(columnId)}
     />
 

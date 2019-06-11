@@ -104,12 +104,11 @@
   .thead .checkbox,
   .tbody .checkbox
   {
-    // width: 2em;
+    width: auto !important;
     padding: 1.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    // background: red;
 
     &::after
     {
@@ -117,6 +116,8 @@
       border-radius: 2px;
       width: 1.5rem;
       height: 1.5rem;
+      min-width: 1.5rem;
+      min-height: 1.5rem;
       display: block;
       content: "";
       border: 1px solid $gray;

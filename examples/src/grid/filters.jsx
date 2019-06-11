@@ -15,6 +15,7 @@ import GridFieldGroupBy from '@1studio/ui/grid/pure/gridFieldGroupBy';
 import {
   Input,
   Button,
+  Dropdown,
 } from '@1studio/ui/form/pure/intl';
 
 
@@ -55,10 +56,19 @@ const Example = () =>
       <GridFieldGroupBy
         id="gender"
         placeholder="Gender"
-        helper={[{ id: 1, title: 'Female' }, { id: 2, title: 'Male' }]}
+        helper={[{ id: 1, title: 'Male' }, { id: 2, title: 'Femail' }]}
       />
       <GridDate
         id="visit"
+      />
+      <Dropdown
+        id="gender"
+        label="Gender"
+        placeholder="Show all"
+        data={[
+          { id: '1', title: 'Male' },
+          { id: '2', title: 'Female' },
+        ]}
       />
     </div>
 
