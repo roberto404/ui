@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { connect } from 'react-redux';
 
 
 /* !- React Elements */
@@ -15,7 +14,7 @@ import {
 } from '@1studio/ui/form/pure/intl';
 
 
-/* !- React Actions */
+/* !- Redux Actions */
 
 import { dialog } from '../../../src/layer/actions';
 

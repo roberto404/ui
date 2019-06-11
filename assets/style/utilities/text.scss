@@ -53,6 +53,11 @@
   white-space: nowrap;
 }
 
+.ellipsis
+{
+  text-overflow: ellipsis;
+}
+
 .colon:after
 {
   content: ':';
