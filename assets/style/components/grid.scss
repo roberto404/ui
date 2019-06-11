@@ -5,8 +5,6 @@
   .thead > div
   {
     display: flex;
-
-    // .card .label
     position: relative;
     left: -2rem;
     padding: 0 2rem;
@@ -105,7 +103,9 @@
   .tbody .checkbox
   {
     width: auto !important;
-    padding: 1.5rem;
+    font-size: 100% !important;
+    padding: 1.5rem !important;
+    min-width: 5rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -116,8 +116,6 @@
       border-radius: 2px;
       width: 1.5rem;
       height: 1.5rem;
-      min-width: 1.5rem;
-      min-height: 1.5rem;
       display: block;
       content: "";
       border: 1px solid $gray;
