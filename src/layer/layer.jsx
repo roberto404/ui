@@ -142,7 +142,7 @@ Layer.propTypes =
   closeable: PropTypes.bool,
   close: PropTypes.func.isRequired,
   className: PropTypes.string,
-  containerStyle: PropTypes.objectOf(PropTypes.string),
+  containerStyle: PropTypes.objectOf(PropTypes.number),
 };
 
 Layer.defaultProps =
