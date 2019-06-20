@@ -104,6 +104,12 @@ class Grid extends Component
 
   componentDidMount()
   {
+    // listen form changes
+    if (this.context.store)
+    {
+      this.unsubscribe = this.context.store.subscribe(() => this.onChangeListener());
+    }
+
     if (this.context.addListener)
     {
       this.context.addListener('click', this.onClickGridHandler);
@@ -113,6 +119,11 @@ class Grid extends Component
 
   componentWillUnmount()
   {
+    if (this.unsubscribe)
+    {
+      this.unsubscribe();
+    }
+
     if (this.context.removeListener)
     {
       this.context.removeListener(this.onClickGridHandler);
@@ -120,13 +131,54 @@ class Grid extends Component
     }
   }
 
+  onChangeListener()
+  {
+    const store = this.context.store.getState();
+    const gridSelectedItemIds = store.form[this.formId];
+
+    if (gridSelectedItemIds && this.elementBody)
+    {
+      const lastSelectedItemId = gridSelectedItemIds[gridSelectedItemIds.length - 1];
+
+      const lastSelectedItemIndex =
+        store.grid[this.context.grid].data.findIndex(({ id }) => id === lastSelectedItemId);
+
+      const itemHeight =
+        this.elementBody.children[0].children[0].children[0].children[0].offsetHeight;
+
+      const bodyHeight = this.element.offsetHeight;
+
+      const itemScrollTop = itemHeight * lastSelectedItemIndex;
+
+      if (lastSelectedItemIndex === -1)
+      {
+        this.element.scrollTop = 0;
+      }
+      else if (
+        // out bottom
+        (this.element.scrollTop + bodyHeight < itemScrollTop + itemHeight)
+        // out top
+        || (this.element.scrollTop > itemScrollTop)
+      )
+      {
+        this.element.scrollTop = itemScrollTop - (bodyHeight / 2) + (itemHeight / 2);
+      }
+    }
+  }
+
+
   /**
    * Handling the grid is on focus
    * If it is focus enable shortcuts
    */
   onClickGridHandler = (event) =>
   {
-    const isFocus = document.querySelector('div[data-view="list"] .tbody').contains(event.target);
+    if (!this.elementBody)
+    {
+      return;
+    }
+
+    const isFocus = this.elementBody.contains(event.target);
 
     if (this.state.focus !== isFocus)
     {
@@ -149,8 +201,9 @@ class Grid extends Component
    * @param  {integer} direction +1 or -1
    * @return {function}           handler
    */
-  onKeyArrowHandler = direction => () =>
+  onKeyArrowHandler = direction => event =>
   {
+    event.preventDefault();
     const state = this.context.store.getState();
     const grid = state.grid[this.context.grid];
 
@@ -194,11 +247,15 @@ class Grid extends Component
 
   setActiveRecords = (records) =>
   {
+    const recordsArray = Array.isArray(records) ? records : [records];
+
+    console.log(recordsArray[0]);
+    // previousElementSibling;
     // document.querySelector('div[data-view="list"] .scroll-y').scrollTop = 1000;
 
     this.context.store.dispatch(setValues({
       id: this.formId,
-      value: Array.isArray(records) ? records.map(({ id }) => id) : [records.id],
+      value: recordsArray.map(({ id }) => id),
     }));
   }
 
@@ -429,7 +486,6 @@ class Grid extends Component
     );
   };
 
-
   renderCell = (record, index, column) =>
   {
     const {
@@ -598,9 +654,13 @@ class Grid extends Component
       selectable ?
         connect(
           ({ form }) =>
-          ({
-            className: (form[this.formId] || []).indexOf(record.id) !== -1 ? 'active' : '',
-          }),
+          {
+            const isActive = (form[this.formId] || []).indexOf(record.id) !== -1;
+
+            return {
+              className: isActive ? 'active' : '',
+            };
+          },
         )(rowElement)
         :
         rowElement,
@@ -657,7 +717,15 @@ class Grid extends Component
       });
 
       return (
-        <div className={bodyClasses}>{nodeTableRows}</div>
+        <div
+          className={bodyClasses}
+          ref={(ref) =>
+          {
+            this.elementBody = ref;
+          }}
+        >
+          {nodeTableRows}
+        </div>
       );
     }
 
@@ -688,6 +756,10 @@ class Grid extends Component
       <div
         className={gridClassName}
         style={{ height }}
+        ref={(ref) =>
+        {
+          this.element = ref;
+        }}
       >
         { showHeader === true && this.renderHeaders() }
         { this.renderRows() }
