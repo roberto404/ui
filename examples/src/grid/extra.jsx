@@ -33,6 +33,10 @@ const Example = () =>
     settings={SETTINGS}
     className="p-4"
   >
+    <Connect
+      UI={({ rawData }) => <div className="tag text-white">Total: {rawData.length}</div>}
+    />
+
     <GridOrder
       data={[
         { id: 'name', title: 'Name' },
