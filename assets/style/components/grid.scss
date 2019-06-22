@@ -71,10 +71,9 @@
       border-bottom: none;
     }
 
-    &:hover
+    &:hover:not(.active)
     {
       background-color: $gray-light;
-      // background-color: rgb(255,249,238);
     }
 
     > div
@@ -84,18 +83,18 @@
       line-height: 140%;
       width: -webkit-fill-available;
     }
+  }
 
-    &.active
-    {
-      background: rgba(0, 94, 212, 1);
-      color: white;
-      border-top-left-radius: 4px;
-      border-bottom-left-radius: 4px;
+  .tbody .active
+  {
+    background: rgba(0, 94, 212, 1);
+    color: white;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
 
-      // background: linear-gradient(to left, rgba(169, 209, 255, 1) 4px, #e1efff 4px);
-      // background: linear-gradient(to left, $yellow-dark 4px, $yellow-light 4px);
-      border-bottom: 1px solid $white-dark;
-    }
+    // background: linear-gradient(to left, rgba(169, 209, 255, 1) 4px, #e1efff 4px);
+    // background: linear-gradient(to left, $yellow-dark 4px, $yellow-light 4px);
+    border-bottom: 1px solid $white-dark;
   }
 
   .thead .checkbox,

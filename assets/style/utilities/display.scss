@@ -228,6 +228,18 @@ table
   font-size: 110%;
 }
 
+.zoom-1\.5 {
+  font-size: 150%;
+}
+
+.zoom-2 {
+  font-size: 200%;
+}
+
+.zoom-2\.5 {
+  font-size: 250%;
+}
+
 @include respond-to(mobile)
 {
   .mobile\:hidden {
