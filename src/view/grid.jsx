@@ -115,18 +115,20 @@ class GridView extends Component
         .fetchData(this.onLoad, this.id, this.settings, this.id)
         .then((action) =>
         {
+          const grid = this.context.store.getState().grid[this.id];
+
           if (this.props.onLoad)
           {
             if (typeof this.props.onLoad === 'function')
             {
-              this.props.onLoad(action);
+              this.props.onLoad({ action, grid });
             }
             else
             {
               switch (this.props.onLoad)
               {
                 case 'selectFirst':
-                  this.props.setValues({ id: FORM_PREFIX + this.id, value: [action.data[0].id] });
+                  this.props.setValues({ id: FORM_PREFIX + this.id, value: [grid.data[0].id] });
                   break;
                 default:
               }
