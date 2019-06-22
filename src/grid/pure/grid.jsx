@@ -140,28 +140,34 @@ class Grid extends Component
     {
       const lastSelectedItemId = gridSelectedItemIds[gridSelectedItemIds.length - 1];
 
-      const lastSelectedItemIndex =
-        store.grid[this.context.grid].data.findIndex(({ id }) => id === lastSelectedItemId);
-
-      const itemHeight =
-        this.elementBody.children[0].children[0].children[0].children[0].offsetHeight;
-
-      const bodyHeight = this.element.offsetHeight;
-
-      const itemScrollTop = itemHeight * lastSelectedItemIndex;
-
-      if (lastSelectedItemIndex === -1)
+      if (this.lastSelectedItemId !== lastSelectedItemId)
       {
-        this.element.scrollTop = 0;
-      }
-      else if (
-        // out bottom
-        (this.element.scrollTop + bodyHeight < itemScrollTop + itemHeight)
-        // out top
-        || (this.element.scrollTop > itemScrollTop)
-      )
-      {
-        this.element.scrollTop = itemScrollTop - (bodyHeight / 2) + (itemHeight / 2);
+        this.lastSelectedItemId = lastSelectedItemId;
+
+        const lastSelectedItemIndex =
+          store.grid[this.context.grid].data.findIndex(({ id }) => id === lastSelectedItemId);
+
+        const itemHeight = this.props.infinity ?
+          this.elementBody.children[0].children[0].children[0].children[0].offsetHeight :
+          this.elementBody.children[0].offsetHeight;
+
+        const bodyHeight = this.element.offsetHeight;
+
+        const itemScrollTop = itemHeight * lastSelectedItemIndex;
+
+        if (lastSelectedItemIndex === -1)
+        {
+          this.element.scrollTop = 0;
+        }
+        else if (
+          // out bottom
+          (this.element.scrollTop + bodyHeight < itemScrollTop + itemHeight)
+          // out top
+          || (this.element.scrollTop > itemScrollTop)
+        )
+        {
+          this.element.scrollTop = itemScrollTop - (bodyHeight / 2) + (itemHeight / 2);
+        }
       }
     }
   }
@@ -310,9 +316,19 @@ class Grid extends Component
             description: 'Grid Arrow Up',
           },
           {
+            keyCode: 'ArrowLeft',
+            handler: this.onKeyArrowHandler(-1),
+            description: 'Grid Arrow Left',
+          },
+          {
             keyCode: 'ArrowDown',
             handler: this.onKeyArrowHandler(+1),
             description: 'Grid Arrow Down',
+          },
+          {
+            keyCode: 'ArrowRight',
+            handler: this.onKeyArrowHandler(+1),
+            description: 'Grid Arrow Right',
           },
           {
             keyCode: 'CTRL+A',
