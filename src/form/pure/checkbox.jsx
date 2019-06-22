@@ -177,7 +177,7 @@ class Checkbox extends Field
               { /* slugify: Cannot use props.id because JSON data use same id (see rs/features) */ }
               <input
                 type="checkbox"
-                id={`${slugify(this.props.label)}-${id}`}
+                id={`${slugify(this.props.id)}-${slugify(this.props.label)}-${id}`}
                 name={slugify(this.props.label)}
                 value={id.toString()}
                 checked={this.getStatus(id.toString()) !== 0}
@@ -188,7 +188,7 @@ class Checkbox extends Field
                 }}
               />
 
-              <label htmlFor={`${slugify(this.props.label)}-${id}`}>{title}</label>
+              <label htmlFor={`${slugify(this.props.id)}-${slugify(this.props.label)}-${id}`}>{title}</label>
             </div>
           ),
         )}
