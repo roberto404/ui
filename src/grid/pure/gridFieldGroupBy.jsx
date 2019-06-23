@@ -30,10 +30,12 @@ import Dropdown from '../../form/pure/dropdown';
 */
 const GridFieldGroupBy = (props, context) =>
 {
-  const { helper, id, reducer } = props;
+  const { id, reducer } = props;
+
 
   const fetchData = () =>
   {
+    const helper = typeof props.helper === 'function' ? props.helper() : props.helper;
     const grid = context.store.getState().grid[context.grid] || {};
 
     return (
