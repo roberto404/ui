@@ -100,6 +100,11 @@ const Submit = (props, context) =>
     }
   }
 
+  if (props.children)
+  {
+    return React.cloneElement(props.children, { onClick: onClickButtonHandler });
+  }
+
   const label = (typeof props.label === 'string') ?
     props.intl.formatMessage({ id: props.label }) : props.label;
 
