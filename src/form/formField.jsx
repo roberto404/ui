@@ -206,8 +206,11 @@ class FormField extends Component
     const value = props.stateFormat(this.getValue(props));
     const error = this.getError();
 
+    const isChanged = Array.isArray(props.id) ?
+      JSON.stringify(this.state.value) !== JSON.stringify(value) : this.state.value !== value;
+
     if (
-      (typeof value !== 'undefined' && this.state.value !== value) ||
+      (typeof value !== 'undefined' && isChanged) ||
       this.state.error !== error
     )
     {
@@ -315,16 +318,33 @@ class FormField extends Component
     const state = context.store.getState().form;
     const form = props.form || context.form;
 
-    if (!form)
+    // handling multiple id (like: calendarInterval)
+    const ids = Array.isArray(props.id) ? props.id : [props.id];
+
+    const values = ids.map((id) => {
+      if (!form)
+      {
+        return state[id] || props.value;
+      }
+      else if (!state[form] || typeof state[form][id] === 'undefined')
+      {
+        return props.value;
+      }
+
+      return state[form][id];
+    });
+
+    // normal case
+    if (values.length === 1)
     {
-      return state[props.id] || props.value;
-    }
-    else if (!state[form] || typeof state[form][props.id] === 'undefined')
-    {
-      return props.value;
+      return values[0];
     }
 
-    return state[form][props.id];
+    // multiple id
+    return values.reduce(
+      (result, value, index) => ({ ...result, [ids[index]]: value }),
+      {},
+    );
   }
 
   /**
@@ -493,8 +513,13 @@ FormField.propTypes =
   form: PropTypes.string,
   /**
    * References id
+   * // => multiple id
+   * id={['start', 'end']}
    */
-  id: PropTypes.string.isRequired,
+  id: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ]).isRequired,
   /**
    * Initial value of the field (via setValues form redux action).
    * Will not apply, if the redux value defined yet.
