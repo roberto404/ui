@@ -72,7 +72,7 @@ const Controllers = (
       modal({
         title: intl ? intl.formatMessage({ id: 'modal.delete.title' }) : 'Biztosan törölni kívánja a teljes adatlapot?',
         content: intl ? intl.formatMessage({ id: 'modal.delete.content' }) : 'A törlés visszavonhatatlan művelet.',
-        icon: <IconDelete />,
+        // icon: <IconDelete />,
         button:
         {
           title: intl ? intl.formatMessage({ id: 'global.delete' }) : 'Törlés',
