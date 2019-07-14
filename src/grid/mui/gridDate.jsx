@@ -12,15 +12,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Popover from 'material-ui/Popover';
 import Paper from 'material-ui/Paper';
 import { List, ListItem } from 'material-ui/List';
-import Subheader from 'material-ui/Subheader';
-import Divider from 'material-ui/Divider';
 
-import {
-  Table,
-  TableBody,
-  TableRow,
-  TableRowColumn,
-} from 'material-ui/Table';
 
 import IconDone from 'material-ui/svg-icons/action/done';
 import { pinkA400 } from 'material-ui/styles/colors';

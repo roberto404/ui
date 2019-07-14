@@ -25,6 +25,7 @@ const GridDate = (
     id,
     label,
     changeValue,
+    disableTime,
   },
 ) =>
 {
@@ -41,6 +42,7 @@ const GridDate = (
           label={label}
         />
       </div>
+      { disableTime === false &&
       <div className="col-1-2">
         <Time
           id={id}
@@ -51,6 +53,7 @@ const GridDate = (
           label={label}
         />
       </div>
+      }
     </div>
   );
 };
@@ -74,6 +77,7 @@ GridDate.propTypes =
    * @param {integer} nextPage
    */
   changeValue: PropTypes.func.isRequired,
+  disableTime: PropTypes.bool,
 };
 
 /**
@@ -82,8 +86,9 @@ GridDate.propTypes =
  */
 GridDate.defaultProps =
 {
-  id: 'search',
-  label: 'Search',
+  disableTime: false,
+  id: 'date',
+  label: 'date',
 };
 
 const mapStateToProps = ({ grid, form }, { id, autocomplete, label }) =>

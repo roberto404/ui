@@ -18,13 +18,13 @@ import IconArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
  <Pagination
     page={1}
     totalPage={2}
-    onChange={(page)=>goToPage(page)}
+    onChangePage={(page)=>goToPage(page)}
   />
  */
 const Pagination = ({
   page,
   totalPage,
-  onChange,
+  onChangePage,
 }) =>
 {
   const nextPageAvailable = (page < totalPage);
@@ -38,7 +38,7 @@ const Pagination = ({
    */
   const onClickPrevHandler = () =>
   {
-    onChange(page - 1);
+    onChangePage(page - 1);
   };
 
   /**
@@ -52,7 +52,7 @@ const Pagination = ({
 
     if (value)
     {
-      onChange(value);
+      onChangePage(value);
     }
     else
     {
@@ -66,7 +66,7 @@ const Pagination = ({
    */
   const onClickNextHandler = () =>
   {
-    onChange(page + 1);
+    onChangePage(page + 1);
   };
 
   if (typeof totalPage !== 'number' || totalPage < 1)
@@ -114,7 +114,7 @@ Pagination.propTypes =
 {
   page: PropTypes.number.isRequired,
   totalPage: PropTypes.number.isRequired,
-  onChange: PropTypes.func.isRequired,
+  onChangePage: PropTypes.func.isRequired,
 };
 
 Pagination.defaultProps =
