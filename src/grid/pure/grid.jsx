@@ -686,6 +686,7 @@ class Grid extends Component
         columns,
         onClickCell,
         onClick: onClickTableRowHandler,
+        dispatch: store.dispatch,
       },
       nodeTableRowColumns,
     );
