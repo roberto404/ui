@@ -35,11 +35,10 @@ button,
     position: relative;
     top: -1px;
 
-    &:first-child
+    &:first-child:not(:last-child)
     {
       margin-right: .75em;
     }
-
 
     &:last-child:not(:first-child)
     {

@@ -11,9 +11,9 @@
 900	Black (Heavy)
  */
 
-@include font-face("Roboto", "/fonts/Roboto/Roboto-Thin-webfont", 100);
-@include font-face("Roboto", "/fonts/Roboto/Roboto-Light-webfont", 300);
-@include font-face("Roboto", "/fonts/Roboto/Roboto-Regular-webfont", normal);
-@include font-face("Roboto", "/fonts/Roboto/Roboto-Medium-webfont", 500);
-@include font-face("Roboto", "/fonts/Roboto/Roboto-Bold-webfont", bold);
-@include font-face("Roboto", "/fonts/Roboto/Roboto-Black-webfont", 900);
+@include font-face("Roboto", "/fonts/Roboto/Roboto-Thin", 100);
+@include font-face("Roboto", "/fonts/Roboto/Roboto-Light", 300);
+@include font-face("Roboto", "/fonts/Roboto/Roboto-Regular", normal);
+@include font-face("Roboto", "/fonts/Roboto/Roboto-Medium", 500);
+@include font-face("Roboto", "/fonts/Roboto/Roboto-Bold", bold);
+@include font-face("Roboto", "/fonts/Roboto/Roboto-Black", 900);
