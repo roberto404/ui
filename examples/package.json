@@ -11,8 +11,10 @@
   "author": "Robert Gulyas <robert@1studio.hu> (http://www.1studio.hu/)",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@1studio/ui": "~1.0.3",
-    "@1studio/utils": "~3.7.0",
+    "@1studio/ui": "^1.0.0",
+    "@1studio/utils": "^3.0.0",
+    "moment": "2.24.0",
+    "prop-types": "15.7.2",
     "react": "15.6.1",
     "react-dom": "15.6.1",
     "react-intl": "~2.4.0",
