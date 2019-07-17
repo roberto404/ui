@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import produceNumericArray from '@1studio/utils/array/produceNumericArray';
 
-moment.locale('ro');
 
 /* !- React Elements */
 
