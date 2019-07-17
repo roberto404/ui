@@ -1,11 +1,12 @@
 
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import React from 'react';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 
 
 /* !- Constants */
+
+import types from './types';
 
 const DEFAULT_STYLE = {
   fill: '#d9d9d9',
@@ -16,68 +17,125 @@ const DEFAULT_STYLE = {
 
 
 /**
- * Calendar component
+ * Day
  */
-class Days extends Component
+export const Day = ({
+  i,
+  className,
+  firstDayIndex,
+  lastDayIndex,
+  rectangle,
+  text,
+}) => (
+  <g
+    className={className}
+  >
+    {rectangle}
+    { i >= firstDayIndex && i < lastDayIndex && text }
+  </g>
+);
+
+/**
+ * propTypes
+ * @type {Object}
+ */
+Day.propTypes =
 {
-  render()
+  firstDayIndex: types.firstDayIndex.isRequired,
+  lastDayIndex: types.lastDayIndex.isRequired,
+  className: PropTypes.string.isRequired,
+  i: PropTypes.number.isRequired,
+  rectangle: PropTypes.element.isRequired,
+  text: PropTypes.element.isRequired,
+};
+
+/**
+ * defaultProps
+ * @type {Object}
+ */
+Day.defaultProps =
+{
+};
+
+/**
+ * Days
+ */
+const Days = ({
+  rowNum,
+  colNum,
+  rowHeight,
+  colWidth,
+  firstDayIndex,
+  lastDayIndex,
+  calendarCoord,
+  startDate,
+  className,
+  onClick,
+  UI,
+}) =>
+{
+  const days = [];
+
+  for (let i = 0; i < rowNum * colNum; i += 1)
   {
-    const days = [];
-    const {
-      rowNum,
-      colNum,
-      rowHeight,
+    const row = Math.floor(i / colNum);
+    const col = i % colNum;
+    const x = calendarCoord.x + (col * colWidth);
+    const y = calendarCoord.y + (row * rowHeight);
+    const isThisMonth = i >= firstDayIndex && i < lastDayIndex;
+    const day = isThisMonth ? i + 1 - firstDayIndex : '';
+    const date = moment(startDate).add(day - 1, 'days').unix() * 1000;
+
+    /**
+     * className of day
+     */
+    const dayClassName = ['day'];
+
+    if (isThisMonth)
+    {
+      dayClassName.push('visible');
+    }
+
+    Object
+      .keys(className)
+      .forEach((index) =>
+      {
+        if (className[index].indexOf(day) !== -1)
+        {
+          dayClassName.push(index);
+        }
+      });
+
+    const props = {
+      i,
+      className: dayClassName.join(', '),
+      x,
+      y,
       colWidth,
+      rowHeight,
+      onClick,
+      date,
       firstDayIndex,
       lastDayIndex,
-      calendarCoord,
-      startDate,
-      // moment,
-    } = this.props;
+      day,
+      isThisMonth,
+    };
 
-    for (let i = 0; i < rowNum * colNum; i += 1)
-    {
-      const row = Math.floor(i / colNum);
-      const col = i % colNum;
-      const x = calendarCoord.x + (col * colWidth);
-      const y = calendarCoord.y + (row * rowHeight);
-      const isThisMonth = i >= firstDayIndex && i < lastDayIndex;
-      const day = isThisMonth ? i + 1 - firstDayIndex : '';
-      const date = moment(startDate).add(day - 1, 'days').unix() * 1000;
-
-
-      const dayClassNames = {
-        day: true,
-        visible: isThisMonth,
-      };
-
-      Object
-        .keys(this.props.classNames)
-        .forEach((index) =>
-        {
-          if (this.props.classNames[index].indexOf(day) !== -1)
-          {
-            dayClassNames[index] = true;
-          }
-        });
-
-
-      const dayClasses = classNames(dayClassNames);
-
-      days.push(
-        <g
-          key={i}
-          className={dayClasses}
-        >
+    days.push(
+      <UI
+        key={i}
+        {...props}
+        rectangle={
           <rect
             x={x}
             y={y}
             width={colWidth}
             height={rowHeight}
             fill={DEFAULT_STYLE.fill}
-            onClick={() => this.props.onChange(date)}
+            onClick={() => onClick({ date, className: dayClassName })}
           />
-          { i >= firstDayIndex && i < lastDayIndex &&
+        }
+        text={
           <text
             x={x + (colWidth / 2)}
             y={y + (rowHeight / 2)}
@@ -89,40 +147,17 @@ class Days extends Component
           >
             {day}
           </text>
-          }
-        </g>,
-      );
-    }
-
-    return (
-      <g id="days">
-        {days}
-        {/* <rect
-          x={this.context.calendarCoord.x}
-          y={this.context.calendarCoord.y}
-          width={this.context.calendarWidth}
-          height={this.context.calendarHeight}
-          fill="red"
-          fillOpacity="1"
-          ref={(ref) =>
-          {
-            this.calendar = ref;
-          }}
-        /> */}
-        {/* <g id="items">
-          { this.getDays().map(event =>
-            (
-              <Rectangle
-                {...event}
-                key={`${event.id}-${event.col}`}
-              />
-            ),
-          )}
-        </g> */}
-      </g>
+        }
+      />,
     );
   }
-}
+
+  return (
+    <g id="days">
+      {days}
+    </g>
+  );
+};
 
 /**
  * propTypes
@@ -130,6 +165,17 @@ class Days extends Component
  */
 Days.propTypes =
 {
+  rowNum: types.rowNum.isRequired,
+  colNum: types.colNum.isRequired,
+  rowHeight: types.rowHeight.isRequired,
+  colWidth: types.colWidth.isRequired,
+  firstDayIndex: types.firstDayIndex.isRequired,
+  lastDayIndex: types.lastDayIndex.isRequired,
+  calendarCoord: types.calendarCoord.isRequired,
+  startDate: types.startDate.isRequired,
+  className: types.className.isRequired,
+  onClick: types.onClick.isRequired,
+  UI: types.UI.isRequired,
 };
 
 /**

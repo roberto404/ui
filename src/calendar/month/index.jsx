@@ -6,7 +6,7 @@ import moment from 'moment';
 
 /* !- React Elements */
 
-import Days from './days';
+import Days, { Day } from './days';
 import Title from './title';
 import XAxis from './xaxis';
 
@@ -16,23 +16,18 @@ import XAxis from './xaxis';
  */
 class Calendar extends Component
 {
-  constructor(props, context)
+  constructor(props)
   {
     super(props);
 
-    this.state = this.compileState(props, context);
+    this.state = this.compileState(props);
   }
 
   componentDidMount()
   {
     if (!this.props.width)
     {
-      this.setState(
-        this.compileState({
-          ...this.props,
-          width: this.element.offsetWidth,
-        }),
-      );
+      this.applyContainerDimension();
     }
   }
 
@@ -48,28 +43,40 @@ class Calendar extends Component
 
   /**
    * Determine state
-   * @param  {Object} props {width, height}
-   * @param  {Object} context {moment}
+   * @param  {Object} props
+   *  - className: apply function and generate object { active: [5, 6, 7], ... }
+   *  - width
+   *  - height
+   *  - colNum
+   *  - startDate
+   *  - endDate
+   *  - firstDayIndex
+   *  - lastDayIndex
+   *  - startDateAbsolute
+   *  - rowNum
+   *  - calendarCoord
+   *  - colWidth
+   *  - rowHeight
+   *  - calendarHeight
+   *  - calendarWidth
    */
-  compileState(props, context = this.context)
+  compileState(props)
   {
+    const startDate = new Date(props.year, props.month - 1, 1);
+
+    const className = (typeof this.props.className === 'function') ?
+      this.props.className(new Date(startDate)) : this.props.className;
+
     const next = {
-      // moment: context.moment,
-      classNames: props.classNames,
+      className,
       width: props.width,
       height: props.height || props.width,
       colNum: 7,
-      startDate: new Date(props.year, props.month - 1, 1),
+      UI: props.UI,
+      startDate,
     };
-    next.endDate = moment(next.startDate).endOf('month').toDate();
 
-    // year validate
-    // mounth validate
-    //
-    //
-    //
-    //
-    //
+    next.endDate = moment(next.startDate).endOf('month').toDate();
 
     /**
      * First day rectangle index of current month
@@ -91,8 +98,24 @@ class Calendar extends Component
 
     next.calendarHeight = next.rowHeight * next.rowNum;
     next.calendarWidth = next.colWidth * next.colNum;
+
     return next;
   }
+
+
+  /**
+   * Apply width of container DOM
+   */
+  applyContainerDimension()
+  {
+    this.setState(
+      this.compileState({
+        ...this.props,
+        width: this.element.offsetWidth,
+      }),
+    );
+  }
+
 
   render()
   {
@@ -124,7 +147,7 @@ class Calendar extends Component
 
           <Days
             {...this.state}
-            onChange={this.props.onChange}
+            onClick={this.props.onClick}
           />
         </svg>
         }
@@ -142,121 +165,79 @@ Calendar.propTypes =
   /**
    * Value of SVG #id
    */
-  // id: PropTypes.string.isRequired,
+  id: PropTypes.string,
+  /**
+   * Year
+   */
+  year: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
+  /**
+   * Month
+   */
+  month: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
   /**
    * SVG canvas width
    */
-  width: PropTypes.number,
+  width: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+  ]),
   /**
    * SVG canvas height
    */
-  height: PropTypes.number,
-  /**
-   * x-Axis visibility
-   */
-  // xAxis: PropTypes.bool,
-
-  /**
-   * Invoke when hover events, default layer popup
-   */
-  // onEventMouseEnter: PropTypes.oneOfType([
-  //   PropTypes.func,
-  //   PropTypes.oneOf(['']),
-  // ]),
-
-  /**
-   * Invoke when hover off
-   */
-  // onEventMouseLeave: PropTypes.oneOfType([
-  //   PropTypes.func,
-  //   PropTypes.oneOf(['']),
-  // ]),
-
+  height: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+  ]),
   /**
    * Days classes
    * @example
-   * classNames={{
+   * className={{
    *   active: [5, 6, 7],
    *   inactive: [2, 3, 4],
    * }}
+   *
+   * // -> function
+   * () => ({ active: [], inactive: [] })
    */
-  classNames: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.number)),
+  className: PropTypes.oneOfType([
+    PropTypes.objectOf(PropTypes.arrayOf(PropTypes.number)),
+    PropTypes.func,
+  ]),
+  /**
+   * Disable Year and Month
+   */
+  disableTitle: PropTypes.bool,
+  /**
+   * Invoke when click to day
+   * @type {Object}
+   */
+  onClick: PropTypes.func,
+  /**
+   * Custom day UI
+   * @example
+   * ({ rectangle, text, className, x, y, colWidth, rowHeight, isThisMonth, day }) => (
+     <g className={className}>
+       {rectangle}
+       {text}
+       { isThisMonth && day > 18 && day < 24 &&
+       <circle
+         cx={x + colWidth - (colWidth / 5)}
+         cy={y + rowHeight - (colWidth / 5)}
+         r={colWidth / 10}
+         fill="red"
+       />
+       }
+     </g>
+   )
+   */
+  UI: PropTypes.func,
 };
-
-//
-// /**
-//  * [id description]
-//  */
-// id: PropTypes.string,
-// /**
-//  * SVG canvas width
-//  */
-// svgWidth: PropTypes.number,
-// /**
-//  * SVG canvas height
-//  */
-// svgHeight: PropTypes.number,
-// /**
-//  * Calendar start date
-//  */
-// startDate: PropTypes.instanceOf(Date),
-// /**
-//  * Calendar end date
-//  */
-// endDate: PropTypes.instanceOf(Date),
-// /**
-//  * X axis start hour
-//  */
-// startHour: PropTypes.number,
-// /**
-//  * X axis finish hour
-//  */
-// endHour: PropTypes.number,
-// /**
-//  * Relative top right coordinates where calendar start
-//  * @type {[type]}
-//  */
-// calendarCoord: PropTypes.shape({ x: PropTypes.number, y: PropTypes.number }),
-// /**
-//  * Relative calendar width
-//  */
-// calendarWidth: PropTypes.number,
-// /**
-//  * Relative calendar height
-//  */
-// calendarHeight: PropTypes.number,
-// /**
-//  * Total rows number
-//  */
-// rowNum: PropTypes.number,
-// /**
-//  * Total columns number
-//  */
-// colNum: PropTypes.number,
-// /**
-//  * One row height
-//  */
-// rowHeight: PropTypes.number,
-// /**
-//  * One column width
-//  */
-// colWidth: PropTypes.number,
-// /**
-//  * Handler when create new calendar event
-//  */
-// onAddEvent: PropTypes.func,
-// /**
-//  * Handler when edit current calendar event
-//  */
-// onEditEvent: PropTypes.func,
-//
-// onEventMouseEnter: PropTypes.func,
-// onEventMouseLeave: PropTypes.func,
-//
-// firstDayIndex: PropTypes.number,
-// lastDay: PropTypes.number,
-// lastDayIndex: PropTypes.number,
-// classNames: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.number)),
 
 
 /**
@@ -265,22 +246,15 @@ Calendar.propTypes =
  */
 Calendar.defaultProps =
 {
+  id: 'calendar',
   width: 0,
   height: 0,
-  // xAxis: true,
-  // yAxis: true,
-  // onEventMouseEnter: '',
-  // onEventMouseLeave: '',
-  classNames: {},
+  className: {},
   disableTitle: false,
+  year: new Date().getFullYear(),
+  month: new Date().getMonth() + 1,
+  onClick: () => null,
+  UI: Day,
 };
-
-
-
-
-// Calendar.contextTypes =
-// {
-//   moment: PropTypes.func.isRequired,
-// };
 
 export default Calendar;

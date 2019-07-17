@@ -1,10 +1,11 @@
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import moment from 'moment';
 
 
 /* !- Constants */
+
+import types from './types';
 
 const DEFAULT_STYLE = {
   fill: '#d9d9d9',
@@ -25,7 +26,6 @@ const xAxis = (
   calendarCoord,
   firstDayIndex,
   startDate,
-  // moment,
 },
 ) =>
 {
@@ -65,6 +65,12 @@ const xAxis = (
  */
 xAxis.propTypes =
 {
+  rowHeight: types.rowHeight.isRequired,
+  colWidth: types.colWidth.isRequired,
+  colNum: types.colNum.isRequired,
+  calendarCoord: types.calendarCoord.isRequired,
+  firstDayIndex: types.firstDayIndex.isRequired,
+  startDate: types.startDate.isRequired,
 };
 
 /**
