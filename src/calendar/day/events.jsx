@@ -33,7 +33,7 @@ class Events extends Component
   {
     super(props);
 
-    this.state = context.store.getState().grid[context.id];
+    this.state = context.store.getState().grid[context.id] || { data: [] };
   }
 
   componentDidMount = () =>
@@ -225,7 +225,6 @@ Events.contextTypes =
   // rowNum: PropTypes.number,
   colNum: PropTypes.number,
   onAddEvent: PropTypes.func,
-  moment: PropTypes.func.isRequired,
 };
 
 export default Events;

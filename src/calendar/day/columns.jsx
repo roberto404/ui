@@ -1,6 +1,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 
 /* !- Constants */
@@ -10,7 +11,7 @@ const DEFAULT_STYLE = {
   colorWeekend: 'white',
 };
 
-import { ONE_DAY } from './constants';
+import { ONE_DAY } from '../constants';
 
 /**
  * Columns component
@@ -23,7 +24,6 @@ const Columns = (
     colWidth,
     calendarHeight,
     colNum,
-    moment,
   },
 ) =>
 {
@@ -57,7 +57,6 @@ Columns.contextTypes =
   calendarCoord: PropTypes.object.isRequired,
   calendarHeight: PropTypes.number.isRequired,
   colNum: PropTypes.number,
-  moment: PropTypes.func,
 };
 
 

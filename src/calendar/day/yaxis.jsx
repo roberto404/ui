@@ -10,7 +10,7 @@ import Label from './yaxisLabel';
 
 /* !- Constants */
 
-import { ONE_DAY } from './constants';
+import { ONE_DAY } from '../constants';
 
 
 

@@ -1,11 +1,13 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 
 /* !- Redux Actions */
 
-import * as LayerActions from '../layer/actions';
+import * as LayerActions from '../../layer/actions';
+
 
 /* !- React Elements */
 
@@ -15,12 +17,12 @@ import XAxis from './xaxis';
 import XGrid from './xgrid';
 import YAxis from './yaxis';
 import YGrid from './ygrid';
-import ToolTip from './tooltip';
+import ToolTip from './toolTip';
 
 
 /* !- Constants */
 
-import { ONE_DAY, DATE_FORMAT_HTML5 } from './constants';
+import { ONE_DAY, DATE_FORMAT_HTML5 } from '../constants';
 
 
 /**
@@ -68,27 +70,19 @@ class Calendar extends Component
       {
         if (data.project)
         {
-          this.context.store.dispatch(LayerActions.popover(<ToolTip title={data.project} />, { event } ));
+          this.context.store.dispatch(
+            LayerActions.popover(<ToolTip title={data.project} />, { event }),
+          );
         }
       }),
       onEventMouseLeave: this.props.onEventMouseLeave || (() =>
       {
         if (this.context.store.getState().layer.element.props.id === 'ToolTip')
         {
-          this.context.store.dispatch(LayerActions.close())
+          this.context.store.dispatch(LayerActions.close());
         }
       }),
     };
-  }
-
-  componentWillReceiveProps(nextProps)
-  {
-    this.setState(
-      this.init({
-        ...nextProps,
-        width: nextProps.width || this.element.offsetWidth,
-      }),
-    );
   }
 
   componentDidMount()
@@ -104,6 +98,16 @@ class Calendar extends Component
     }
   }
 
+  componentWillReceiveProps(nextProps)
+  {
+    this.setState(
+      this.init({
+        ...nextProps,
+        width: nextProps.width || this.element.offsetWidth,
+      }),
+    );
+  }
+
   /**
    * Determine context
    * @param  {Object} props {width, height, start, end}
@@ -115,8 +119,8 @@ class Calendar extends Component
       height: props.height,
     };
 
-    next.startDate = context.moment(`${props.start}T0:00`, DATE_FORMAT_HTML5).toDate();
-    next.endDate = context.moment(`${props.end}T23:59`, DATE_FORMAT_HTML5).toDate();
+    next.startDate = moment(`${props.start}T0:00`, DATE_FORMAT_HTML5).toDate();
+    next.endDate = moment(`${props.end}T23:59`, DATE_FORMAT_HTML5).toDate();
 
     next.calendarCoord = {
       x: state.xAxisWidth * +props.xAxis,
@@ -317,7 +321,6 @@ Calendar.childContextTypes =
 
 Calendar.contextTypes =
 {
-  moment: PropTypes.func.isRequired,
   store: PropTypes.object.isRequired,
 };
 

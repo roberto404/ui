@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import capitalizeFirstLetter from '@1studio/utils/string/capitalizeFirstLetter';
 
-moment.locale('hu');
 
 
 /* !- Constants */

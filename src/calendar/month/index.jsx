@@ -16,29 +16,12 @@ import XAxis from './xaxis';
  */
 class Calendar extends Component
 {
-  constructor(props)
-  {
-    super(props);
-
-    this.state = this.compileState(props);
-  }
-
   componentDidMount()
   {
     if (!this.props.width)
     {
-      this.applyContainerDimension();
+      this.forceUpdate();
     }
-  }
-
-  componentWillReceiveProps(nextProps)
-  {
-    this.setState(
-      this.compileState({
-        ...nextProps,
-        width: nextProps.width || this.element.offsetWidth,
-      }),
-    );
   }
 
   /**
@@ -102,23 +85,13 @@ class Calendar extends Component
     return next;
   }
 
-
-  /**
-   * Apply width of container DOM
-   */
-  applyContainerDimension()
-  {
-    this.setState(
-      this.compileState({
-        ...this.props,
-        width: this.element.offsetWidth,
-      }),
-    );
-  }
-
-
   render()
   {
+    const state = this.compileState({
+      ...this.props,
+      width: this.props.width || this.element ? this.element.offsetWidth : 200,
+    });
+
     return (
       <div
         className="calendar month"
@@ -127,26 +100,26 @@ class Calendar extends Component
           this.element = ref;
         }}
       >
-        { this.state.colWidth > 0 &&
+        { state.colWidth > 0 &&
         <svg
           id={this.props.id}
-          width={this.state.width}
-          height={this.state.height}
+          width={state.width}
+          height={state.height}
         >
           { this.props.disableTitle === false &&
           <Title
-            label={moment(this.state.startDate).format('YYYY. MMMM')}
+            label={moment(state.startDate).format('YYYY. MMMM')}
             center={{
-              x: this.state.calendarWidth / 2,
-              y: this.state.rowHeight / 2,
+              x: state.calendarWidth / 2,
+              y: state.rowHeight / 2,
             }}
           />
           }
 
-          <XAxis {...this.state} />
+          <XAxis {...state} />
 
           <Days
-            {...this.state}
+            {...state}
             onClick={this.props.onClick}
           />
         </svg>

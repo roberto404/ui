@@ -10,7 +10,7 @@ import {
   ONE_DAY,
   ONE_HOUR,
   Y_MOVEMENT_ACCURANCY,
-} from './constants';
+} from '../constants';
 
 
 /**

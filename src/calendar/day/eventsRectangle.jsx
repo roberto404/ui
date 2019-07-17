@@ -498,7 +498,6 @@ EventsRectangle.contextTypes =
   // colNum: PropTypes.number,
   onEditEvent: PropTypes.func.isRequired,
   onAddEvent: PropTypes.func.isRequired,
-  moment: PropTypes.func.isRequired,
   onEventMouseEnter: PropTypes.func.isRequired,
   onEventMouseLeave: PropTypes.func.isRequired,
 };
