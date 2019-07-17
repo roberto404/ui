@@ -5,7 +5,7 @@ import moment from 'moment';
 
 /* !- Components */
 
-import IconArrowForward from '../../../src/icon/mui/navigation/arrow_forward';
+import IconArrowForward from '../../icon/mui/navigation/arrow_forward';
 
 
 /* !- Actions */
