@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 import Field from '../formField';
-import CalendarMonth from './calendarMonth';
+// import CalendarMonth from './calendarMonth';
+import CalendarMonth from '../../calendar/month/';
 
-import moment from 'moment';
 
 /* !- Redux Actions */
 
@@ -20,7 +21,6 @@ import * as FormActions from '../actions';
  * @example
  *
  * <CalendarMonthInterval
- *   id="dayselect"
  *   year={2019}
  *   month={8}
  *   width={200}
@@ -28,16 +28,26 @@ import * as FormActions from '../actions';
  */
 class CalendarMonthInterval extends Field
 {
-  getDateInterval()
+  /**
+   * Return start and end {Date}
+   * @param  {Object} [defaults={}] { start: new Date(), end: newDate()}
+   * @return {[Object]}               { startDate: {Date}, endDate {Date} }
+   */
+  getDateInterval(defaults = {})
   {
-    const { moment } = this.context;
-    const { dateFormat } = this.props;
-    const start = this.getValue({ id: 'start' })// || moment().startOf('day').format(dateFormat);
-    const end = this.getValue({ id: 'end' })// || moment().startOf('day').add(1, 'days').format(dateFormat);
+    const {
+      dateFormat,
+      fromId,
+      toId,
+      form,
+    } = this.props;
+
+    const start = this.getValue({ id: fromId, form });
+    const end = this.getValue({ id: toId, form });
 
     return {
-      startDate: start ? moment(start, dateFormat).toDate() : undefined,
-      endDate: end ? moment(end, dateFormat).toDate() : undefined,
+      startDate: start ? moment(start, dateFormat).toDate() : defaults.start,
+      endDate: end ? moment(end, dateFormat).toDate() : defaults.end,
     };
   }
 
@@ -78,83 +88,129 @@ class CalendarMonthInterval extends Field
 
   /**
    * @override FormField
-   * @todo  forceUpdate-et le kellene cserelni h csak akkor fusson ha props.formId v props.toId valtozott
+   * @TODO  forceUpdate-et le kellene cserelni h csak akkor fusson ha props.formId v props.toId valtozott
    */
   onChangeListener = (props = this.props) =>
   {
     this.forceUpdate();
   }
 
-  onChangeHandler = ({ value }) =>
+  /**
+   * Invoke when click day of calendar
+   * @param  {interger} date Unixtime
+   */
+  onChangeCalendarHandler = ({ date }) =>
   {
     const {
       fromId,
       toId,
-      dateFormat
+      dateFormat,
+      intervalLength,
     } = this.props;
 
-    const { moment } = this.context;
+    const { startDate, endDate } = this.getDateInterval({
+      start: moment(date).startOf('day').toDate(),
+      end: moment(date).startOf('day').add(intervalLength ? intervalLength - 1 : 1, 'days').toDate(),
+    });
 
-    const start = this.getValue({ id: 'start' }) || moment().startOf('day').format(dateFormat);
-    const end = this.getValue({ id: 'end' }) || moment().startOf('day').add(1, 'days').format(dateFormat);
+    /**
+     * New selected date value
+     * @type {Date}
+     */
+    const selectedDate = new Date(date);
 
-    const startDate = moment(start, dateFormat).toDate();
-    const endDate = moment(end, dateFormat).toDate();
-
-    // TODO
-    // const { startDate, endDate } = this.getDateInterval();
-
-    const currentDate = moment(value).toDate();
-    const activePeriod = moment(endDate).diff(startDate);
-    let dateFrom = value;
+    /**
+     * Calculated new values (start, end)
+     */
+    let dateFrom = moment(startDate).format(dateFormat);
     let dateTo = moment(endDate).format(dateFormat);
 
-    // out of current period : before
-    if (
-      currentDate < startDate
-      || (currentDate > endDate && currentDate.getDay() === startDate.getDay())
+    if (intervalLength)
+    {
+      dateFrom = moment(date).format(dateFormat);
+      dateTo = moment(date).add(intervalLength - 1, 'days').format(dateFormat);
+    }
+    // out of current period same day => moving selection
+    else if (
+      startDate.getTime() !== endDate.getTime()
+      && (selectedDate < startDate || selectedDate > endDate)
+      && selectedDate.getDay() === startDate.getDay()
     )
     {
-      dateTo = moment(currentDate.getTime() + activePeriod).format(dateFormat);
+      const intervalDiff = moment(endDate).diff(startDate);
+      dateFrom = moment(date).format(dateFormat);
+      dateTo = moment(selectedDate.getTime() + intervalDiff).format(dateFormat);
     }
-    // : after
-    else if (currentDate > endDate)
+    // : before <= expand selection
+    else if (selectedDate < startDate)
     {
-      dateFrom = moment(startDate).format(dateFormat);
-      dateTo = value;
+      dateFrom = moment(date).format(dateFormat);
+    }
+    // : after <= expand selection
+    else if (selectedDate > endDate)
+    {
+      dateTo = moment(date).format(dateFormat);
     }
     // first day in period
-    else if (currentDate.getTime() === startDate.getTime())
+    else if (selectedDate.getTime() === startDate.getTime())
     {
-      dateTo = value;
+      dateTo = moment(date).format(dateFormat);
     }
     // in period
-    else if (currentDate < endDate && currentDate > startDate)
+    else if (selectedDate < endDate && selectedDate > startDate)
     {
-      dateFrom = moment(startDate).format(dateFormat);
-      dateTo = value;
+      dateTo = moment(date).format(dateFormat);
+    }
+    else
+    {
+      dateFrom = dateTo;
     }
 
     this.props.setValues({
       [fromId]: dateFrom,
       [toId]: dateTo,
-    }, this.context.form);
+    }, this.context.form || this.props.form);
   }
 
   render()
   {
     return (
       <CalendarMonth
+        {...this.props}
         id={`${this.props.fromId}-${this.props.toId}`}
-        year={this.props.year}
-        month={this.props.month}
-        classNames={this.getActiveClasses}
-        onChange={this.onChangeHandler}
-        dateFormat={this.props.dateFormat}
+        className={this.getActiveClasses}
+        onClick={this.onChangeCalendarHandler}
       />
     );
   }
 }
+
+CalendarMonthInterval.propTypes =
+{
+  ...CalendarMonthInterval.propTypes, // FormField
+  /**
+   * This value determine interval days length. User cannot select different size.
+   * Default (0) user determine length of interval.
+   */
+  intervalLength: PropTypes.number,
+  /**
+  * Unique form id to Start value
+  */
+  fromId: PropTypes.string,
+  /**
+  * Unique form id to End value
+  */
+  toId: PropTypes.string,
+  year: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+  ]),
+  month: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+  ]),
+  dateFormat: PropTypes.string,
+};
 
 /**
  * defaultProps
@@ -162,22 +218,22 @@ class CalendarMonthInterval extends Field
  */
 CalendarMonthInterval.defaultProps =
 {
+  ...CalendarMonthInterval.defaultProps,
+  id: 'start', // use value props
   fromId: 'start',
   toId: 'end',
   year: new Date().getFullYear(),
   month: new Date().getMonth() + 1,
   dateFormat: 'YYYY-MM-DDTHH:mm',
+  intervalLength: 0,
 };
 
-CalendarMonthInterval.contextTypes =
-{
-  ...CalendarMonthInterval.contextTypes,
-  moment: PropTypes.func,
-};
+// CalendarMonthInterval.defaultProps.id = CalendarMonthInterval.props.fromId;
+
 
 export default connect(
   null,
   {
     setValues: FormActions.setValues,
-  }
+  },
 )(CalendarMonthInterval);

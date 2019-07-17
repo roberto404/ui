@@ -3,16 +3,15 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 
 
-
 /* !- React Elements */
 
 import Field from '../formField';
 import CalendarMonth from '../../calendar/month';
 
 
-
 /* !- Constants */
 
+import types from '../../calendar/month/types';
 import { DATE_FORMAT_HTML5 } from '../../calendar/constants';
 
 
@@ -27,7 +26,6 @@ import { DATE_FORMAT_HTML5 } from '../../calendar/constants';
 export const fetchData = (field, onChange, value, width, initDate) =>
   (page) =>
   {
-    console.log(initDate);
     // const initDate = page === 0 && value ? value : undefined;
     const items = [];
 
@@ -51,7 +49,6 @@ export const fetchData = (field, onChange, value, width, initDate) =>
 
     return items;
   };
-
 
 
 /**
@@ -104,7 +101,7 @@ class CalendarMonthForm extends Field
    * @param  {Object} event
    * @return {void}
    */
-  onChangeDateHandler = (date) =>
+  onChangeDateHandler = ({ date }) =>
   {
     const valueDate = moment(this.getValue());
     const selectedDate = moment(date);
@@ -148,11 +145,11 @@ class CalendarMonthForm extends Field
   render()
   {
     const startDate = new Date(this.props.year, this.props.month - 1, 1);
-    const valueDate = moment(this.getValue(), this.props.dateFormat);
-    const active = [parseInt(valueDate.format('D'))];
+    const valueMoment = moment(this.getValue(), this.props.dateFormat);
+    const active = [parseInt(valueMoment.format('D'))];
 
-    const classNames = (typeof this.props.classNames === 'function') ?
-      this.props.classNames(startDate) : this.props.classNames;
+    const className = (typeof this.props.className === 'function') ?
+      this.props.className(startDate) : this.props.className;
 
     return (
       <div
@@ -167,15 +164,14 @@ class CalendarMonthForm extends Field
 
         <CalendarMonth
           {...this.props}
-          year={parseInt(valueDate.format('YYYY'))}
-          month={parseInt(valueDate.format('M'))}
-          classNames={{
+          year={parseInt(valueMoment.format('YYYY'))}
+          month={parseInt(valueMoment.format('M'))}
+          className={{
             active,
-            ...classNames,
+            ...className,
           }}
-          onChange={this.onChangeDateHandler}
+          onClick={this.onChangeDateHandler}
         />
-
 
         { this.state.error &&
           <div className="error">{this.state.error}</div>
@@ -205,6 +201,10 @@ CalendarMonthForm.propTypes =
    * SVG height
    */
   height: PropTypes.number,
+  /**
+   * Calendar Classes
+   */
+  className: types.className,
 };
 
 /**
@@ -218,6 +218,7 @@ CalendarMonthForm.defaultProps =
   width: 0,
   height: 0,
   dateFormat: DATE_FORMAT_HTML5,
+  className: {},
 };
 
 export default CalendarMonthForm;
