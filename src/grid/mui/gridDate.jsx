@@ -29,7 +29,6 @@ from '../../form/mui';
 import { setValues } from '../../form/actions';
 
 
-moment.locale('hu');
 
 /**
  * Grid Date Filter Stateless Component

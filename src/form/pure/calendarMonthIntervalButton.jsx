@@ -22,14 +22,16 @@ import { setValues } from '../../form/actions';
 /**
  * Display two continuous calendar
  */
-export const DoubleIntervalCalendar = ({ id, year, month }) =>
+export const DoubleIntervalCalendar = ({ id, year, month, intervalLength, UI }) =>
 (
-  <div className="grid-2">
+  <div className="grid-4">
     <div className="col-1-2" style={{ width: '50%' }}>
       <Calendar
         id={id[0]}
         year={year}
         month={month}
+        UI={UI}
+        intervalLength={intervalLength}
       />
     </div>
     <div className="col-1-2" style={{ width: '50%' }}>
@@ -37,6 +39,8 @@ export const DoubleIntervalCalendar = ({ id, year, month }) =>
         id={id[1]}
         year={month === 12 ? year + 1 : year}
         month={month === 12 ? 1 : month + 1}
+        UI={UI}
+        intervalLength={intervalLength}
       />
     </div>
   </div>
@@ -73,9 +77,9 @@ export class CalendarMonthIntervalButton extends Field
     event.preventDefault();
 
     this.context.store.dispatch(popover(
-      <div style={{ width: '400px' }}>
+      <div style={{ width: '90vw' }}>
         <DoubleIntervalCalendar
-          id={this.props.id}
+          {...this.props}
         />
       </div>,
       event,

@@ -31,7 +31,6 @@ import { DATE_FORMAT_HTML5 } from '../../calendar/constants';
 
 import moment from 'moment';
 
-moment.locale('hu');
 
 
 

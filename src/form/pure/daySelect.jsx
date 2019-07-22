@@ -5,7 +5,6 @@ import capitalizeFirstLetter from '@1studio/utils/string/capitalizeFirstLetter';
 import classNames from 'classnames';
 
 import moment from 'moment';
-moment.locale('hu');
 
 
 /* !- React Elements */
