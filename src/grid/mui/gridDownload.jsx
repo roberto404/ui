@@ -19,20 +19,20 @@ import IconDownload from 'material-ui/svg-icons/file/cloud-download';
 * @example
 * <GridDownload />
 */
-const GridDownload = ({ label, className }, { store, id }) =>
+const GridDownload = ({ label, className }, { store, grid }) =>
 {
   const onClickDownloadHandler = () =>
   {
-    const grid = store.getState().grid[id];
+    const gridState = store.getState().grid[grid];
 
-    if (grid)
+    if (gridState)
     {
       const filename = location.pathname.substring(location.pathname.lastIndexOf('/') + 1);
-      const model = clone(grid.model);
+      const model = clone(gridState.model);
 
       model.paginate = { limit: 0 };
 
-      const csv = toCSV(model.results, grid.hook);
+      const csv = toCSV(model.results, gridState.hook);
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
       saveAs(blob, `${filename}.csv`);
@@ -60,7 +60,7 @@ GridDownload.propTypes =
     PropTypes.object,
   ]),
   className: PropTypes.string,
-}
+};
 
 /**
  * defaultProps
