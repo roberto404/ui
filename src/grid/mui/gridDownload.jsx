@@ -80,7 +80,7 @@ GridDownload.defaultProps =
 GridDownload.contextTypes =
 {
   store: PropTypes.object,
-  id: PropTypes.string,
+  grid: PropTypes.string,
 };
 
 

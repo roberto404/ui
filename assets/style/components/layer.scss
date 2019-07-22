@@ -54,8 +54,8 @@ body[class*=" layer-"]
       right: $layer-padding;
       cursor: pointer;
 
-      width: $layer-padding;
-      height: $layer-padding;
+      width: $layer-padding * 2;
+      height: $layer-padding * 2;
 
       svg path
       {
