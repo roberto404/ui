@@ -86,3 +86,20 @@ export const SETTINGS =
     },
   ],
   };
+
+
+  export const HOOK_LIST = {
+    id:
+    {
+      title: 'Termék',
+      width: '100%',
+      align: 'left',
+      format: ({ record }) =>
+      (
+        <div className="pl-1">
+          <div className="ellipsis">{record.name}</div>
+          <div className="text-s text-gray light ellipsis" style={{ height: '1.5em' }}>{record.visits}</div>
+        </div>
+      ),
+    },
+  };
