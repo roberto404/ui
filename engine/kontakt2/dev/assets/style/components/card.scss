@@ -1,0 +1,13 @@
+.card
+{
+  .title.hidden-all
+  {
+    border: none;
+    text-align: center;
+
+    ~ *
+    {
+      display: none;
+    }
+  }
+}

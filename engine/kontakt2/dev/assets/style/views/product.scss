@@ -1,0 +1,72 @@
+
+// component and form
+
+.product
+{
+  // height: 28em;
+  // overflow: hidden;
+
+  .ellipsis
+  {
+    height: 1.2em;
+  }
+
+  .image
+  {
+    margin: 0 auto 2rem auto;
+    height: 270px;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+  }
+
+  // favorite
+  svg
+  {
+    width: 1.5em;
+    height: 1.5em;
+    margin-left: auto;
+    margin-top: auto;
+    fill: $black-light;
+    margin-bottom: 0.25em;
+
+    &.active
+    {
+      fill: $yellow;
+    }
+  }
+}
+
+// Grid
+
+#product
+{
+  .field.dropdown-field.active.inline-block button
+  {
+    background-color: $blue-dark;
+    border-color: $blue-dark;
+    color: white;
+    font-weight: bold;
+  }
+
+
+  [data-view="card"]
+  {
+    .infinity > div > div > div
+    {
+      display: flex;
+      flex-wrap: wrap;
+
+      width: calc(100% + 4rem);
+      margin-bottom: -6rem;
+
+      > *
+      {
+        padding-right: 2rem;
+        padding-bottom: 8rem;
+      }
+    }
+  }
+
+}

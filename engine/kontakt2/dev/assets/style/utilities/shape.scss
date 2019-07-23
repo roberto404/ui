@@ -1,0 +1,26 @@
+.border-double-gray
+{
+  border: 2px solid white;
+  box-shadow: 0px 0px 0px 1.5px rgba(152, 169, 188, 1)
+}
+
+
+/* Ripple effect */
+// .ripple
+// {
+//   background-position: center;
+//   transition: background-color 0.8s, border-color 0.1s;
+// }
+//
+// .ripple:active
+// {
+//   background-color: #f8fafb;
+//   background-size: 100%;
+//   transition: background-color 0s, border-color 0.8s;
+// }
+//
+// button,
+// .button
+// {
+//   @extend .ripple;
+// }

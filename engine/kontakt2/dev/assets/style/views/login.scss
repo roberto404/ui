@@ -1,0 +1,45 @@
+form.login
+{
+
+  button
+  {
+    width: 100%;
+  }
+
+  .label
+  {
+    display: none;
+  }
+
+  .error
+  {
+    text-align: left;
+  }
+
+  input::placeholder
+  {
+    color: $black-light;
+  }
+}
+
+.logged
+{
+  overflow-y: hidden;
+}
+
+.editor
+{
+  @include respond-to(desktop)
+  {
+    min-height: 100vh;
+  }
+
+  overflow-y: hidden;
+}
+
+.display
+{
+  background: url("/images/bg_login.jpg");
+  background-position: center center;
+  background-size: cover;
+}

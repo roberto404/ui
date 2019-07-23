@@ -1,0 +1,26 @@
+<?php
+
+header("HTTP/1.1 307 Moved temporarily");
+
+$pattern = '/^\/api\/v[0-9]+\/.+/i';
+
+if (preg_match_all($pattern, $_SERVER['REQUEST_URI'], $matches, PREG_SET_ORDER, 0))
+{
+  header('Content-Type: application/json');
+
+  echo '{
+    "status": "ERROR",
+    "version": "3.0.0",
+    "count": "0",
+    "code": "maintenance.title",
+    "message": "Az oldalon rendszerfrissítési munkák folynak. A frissítés várhatólag néhány percet fog igénybe vennni. Megértését köszönjük.",
+    "more": "A frissítés várhatólag néhány percet fog igénybe vennni. Megértését köszönjük."
+  }';
+}
+else
+{
+  echo '
+    <h1>Az oldalon rendszerfrissítési munkák folynak.</h1>
+    <p>A frissítés várhatólag néhány percet fog igénybe vennni. Megértését köszönjük.</p>
+  ';
+}

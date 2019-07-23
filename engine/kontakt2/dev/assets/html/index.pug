@@ -1,0 +1,36 @@
+- const CONFIG = htmlWebpackPlugin.options.templateConfig;
+- const NOW = Date.now();
+
+doctype html
+html(
+  lang=CONFIG.language
+  data-regionCode=CONFIG.regionCode
+  data-regionName=CONFIG.regionName
+  data-token=CONFIG.token
+)
+  head
+    //- base(href=CONFIG.baseDir)
+    meta(charset=CONFIG.charset)
+    meta(name='robots' content='index, follow')
+    meta(name='viewport' content='width=device-width, user-scalable=no')
+
+    // Apple
+    meta(name='apple-mobile-web-app-capable' content='yes')
+    meta(name='apple-mobile-web-app-status-bar-style' content='black-translucent')
+    meta(name='format-detection' content='telephone=no')
+
+    // Microsoft
+    meta(name='msapplication-tap-highlight' content='no')
+
+    // Common
+    title #{CONFIG.title}
+    
+    if htmlWebpackPlugin.options.inject === false
+      link(rel='stylesheet', href=CONFIG.baseDir + CONFIG.staticFilePrefix + NOW + '.css')
+
+    if htmlWebpackPlugin.options.inject === false
+      script(src=CONFIG.baseDir + CONFIG.staticFilePrefix + NOW + '.js')      
+
+  body
+
+    div#Application
