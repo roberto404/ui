@@ -38,12 +38,12 @@ const getPositionsElement = (target) =>
     screen: {},
   };
 
-  positions.left += window.scrollX;
-  positions.top += window.scrollY;
+  positions.left += window.pageXOffset;
+  positions.top += window.pageYOffset;
   positions.center.x = positions.left + (positions.width / 2);
   positions.center.y = positions.top + (positions.height / 2);
-  positions.screen.x = (positions.left - window.scrollX) / window.innerWidth;
-  positions.screen.y = (positions.top - window.scrollY) / window.innerHeight;
+  positions.screen.x = (positions.left - window.pageXOffset) / window.innerWidth;
+  positions.screen.y = (positions.top - window.pageYOffset) / window.innerHeight;
 
   return positions;
 };
