@@ -1,7 +1,7 @@
 {
-  "name": "@1studio/admin",
+  "name": "@1studio/kontakt2",
   "version": "0.0.0-semantically-released",
-  "description": "Administration",
+  "description": "Kontakt 2",
   "main": "index.js",
   "scripts": {
     "clean": "rimraf build && mkdir build && ls -p ./src | grep -v / | grep -v '.jsx\\?$' | xargs -I '$1' cp ./src/'$1' ./build/",
@@ -24,10 +24,7 @@
     "build:prod": "webpack --env.prod -p",
     "build:debug": "webpack --display-error-details",
     "prewatch": "npm run build",
-    "watch": "node_modules/.bin/webpack-dev-server --env.dev",
-    "precommit": "npm run validate",
-    "commit": "git-cz",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "watch": "node_modules/.bin/webpack-dev-server --env.dev"
   },
   "repository": {
     "type": "git",
@@ -56,12 +53,9 @@
     "babel-watch": "2.0.7",
     "benchmark": "2.1.4",
     "chai": "^4.0.2",
-    "codecov.io": "0.1.6",
-    "commitizen": "2.9.6",
     "config-yml": "0.8.0",
     "core-js": "2.5.3",
     "css-loader": "0.28.7",
-    "cz-conventional-changelog": "2.0.0",
     "deep-freeze": "0.0.1",
     "documentation": "5.0.1",
     "eslint": "^3.19.0",
@@ -73,8 +67,6 @@
     "extract-text-webpack-plugin": "2.1.2",
     "html-webpack-plugin": "2.30.1",
     "js-yaml": "3.10.0",
-    "jsdoc-dash-template": "2.0.1",
-    "minami": "^1.2.3",
     "mocha": "^3.4.2",
     "node-sass": "4.7.2",
     "nyc": "^11.0.3",
@@ -84,7 +76,6 @@
     "pug-loader": "2.3.0",
     "rimraf": "^2.6.1",
     "sass-loader": "6.0.6",
-    "semantic-release": "8.2.0",
     "style-loader": "0.19.0",
     "transform-loader": "0.2.4",
     "uglify-js": "3.6.0",
@@ -97,9 +88,6 @@
     "@1studio/utils": "3.*.*",
     "blob-stream": "0.1.3",
     "classnames": "2.2.5",
-    "fast-levenshtein": "2.0.6",
-    "fs": "0.0.1-security",
-    "levenshtein": "1.0.5",
     "lodash": "4.17.11",
     "moment": "2.24.0",
     "pdfkit": "0.8.3",
@@ -113,10 +101,5 @@
     "redux": "3.7.2",
     "superagent": "4.0.*",
     "svg-to-pdfkit": "0.1.7"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   }
 }
