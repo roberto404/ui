@@ -59,6 +59,7 @@ const Caroussel = (
   height,
   className,
   autoplay,
+  disablePages,
 },
 ) =>
 {
@@ -125,7 +126,7 @@ const Caroussel = (
       />
       }
 
-      { totalPage > 1 &&
+      { totalPage > 1 && disablePages === false &&
       <Pages
         totalPage={remakeTotalPage}
         page={remakePage}
@@ -151,6 +152,7 @@ Caroussel.propTypes =
   Slide: PropTypes.func,
   className: PropTypes.string,
   autoplay: PropTypes.number,
+  disablePages: PropTypes.bool,
 };
 
 /**
@@ -166,6 +168,7 @@ Caroussel.defaultProps =
   className: '',
   Slide,
   autoplay: 0,
+  disablePages: false,
 };
 
 
