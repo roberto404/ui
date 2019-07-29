@@ -39,6 +39,7 @@ SlideHelperComponent.propTypes =
   ]).isRequired,
   url: PropTypes.string.isRequired,
   href: PropTypes.string.isRequired,
+  active: PropTypes.bool.isRequired,
 };
 
 
@@ -54,7 +55,7 @@ SlideHelperComponent.propTypes =
  * const items = [
  * {
  *  id: 1,
- *  element: <img src='/sample.png' />, // {ReactElement}
+ *  slide: <img src='/sample.png' />, // {ReactElement}
  * }, ...
  * ];
  * setData(items, {}, 'sample');
@@ -109,13 +110,12 @@ class Slides extends Component
     }
   }
 
-  // autoplay miatt inaktivalva, de valoszinuleg a dinamikus karusszel használja... ugy kene egy feltetel bele
-  // kattintható default SlideHelperComponent ha aktív akkor nem lesz link, ezért betöltés után neki false érték kell.
+
   componentWillReceiveProps(nextProps)
   {
     if (!isEqual(this.props.rawData, nextProps.rawData))
     {
-      this.setState({ active: false });
+      this.setState({ active: true });
     }
     else if (this.state.active === true)
     {
@@ -314,6 +314,10 @@ Slides.propTypes =
    */
   Slide: PropTypes.func,
   /**
+   * Auto paginate in second
+   */
+  autoplay: PropTypes.number,
+  /**
    * Redux grid prop
    * @private
    */
@@ -331,6 +335,11 @@ Slides.propTypes =
    */
   page: PropTypes.number.isRequired,
   /**
+   * Redux grid prop
+   * @private
+   */
+  totalPage: PropTypes.number.isRequired,
+  /**
    * Redux action
    * @private
    */
@@ -340,10 +349,6 @@ Slides.propTypes =
    * @private
    */
   setSettings: PropTypes.func.isRequired,
-  /**
-   * Auto paginate in second
-   */
-  autoplay: PropTypes.number,
 };
 
 /**
@@ -354,6 +359,7 @@ Slides.defaultProps =
 {
   rawData: [],
   page: 0,
+  totalPage: 0,
   transition: 'left 0.4s ease-out',
   onPaginate: false,
   visibleSlides: 1,
