@@ -22,12 +22,42 @@ export const CAROUSSEL_SETTINGS = {
   },
 };
 
-const fetchData = (page) =>
+/**
+ * Create infinite caroussel by static data
+ * @param  {[integer]} page current Caroussel page
+ * @param  {[array]} data static data
+ * @return {[array]}      active three data
+ */
+const fetchData = (page, data) =>
 {
   const items = [];
-  return items;
-}
+  const length = data.length;
 
+  for (let i = 0; i < 3; i += 1)
+  {
+    /**
+    * infinite loop determine current loop position
+    */
+    const index = (page - 1 + i) % (length);
+
+    /**
+    * negative position
+    * @example
+    * index === -1
+    * => data[length + index] // data last element.
+    */
+    if (index < 0)
+    {
+      items.push(data[length + index]);
+    }
+    else
+    {
+      items.push(data[index]);
+    }
+  }
+
+  return items;
+};
 
 /**
  * 1. Automatically
@@ -38,11 +68,12 @@ const fetchData = (page) =>
  * When the paginate transition finished call props.fetchData which give next three element.
  *
  * @example
- * 1. Automatically
+ * 1. Automatically with static data
  *
- * GridActions.setData([{ id: 1, slide: <div /> }, ...], {}, 'sample');
- *
- * <DynamicCaroussel id='sample' />
+ * <DynamicCaroussel
+ *  id='sample'
+ *  data={[{ id: 1, slide: <div /> }, ...]}
+ * />
  *
  * @example
  * 2. Manual usage
@@ -61,49 +92,31 @@ const fetchData = (page) =>
  *   return items;
  *  }}
  * />
- *
- *
- * @todo 1. auto
  */
 class DynamicCaroussel extends Component
 {
-  constructor(props)
-  {
-    super(props);
-
-    this.state = {
-      in: false,
-      width: 0,
-    };
-  }
-
   componentWillMount()
   {
-    this.context.store.dispatch(
-      setData(
-        this.props.fetchData(this.carousselPage),
-        CAROUSSEL_SETTINGS,
-        this.props.id,
-      ));
+    // Enable caroussel settings and create datas if it is non-static
+    this.updateSlides(this.props);
   }
 
   componentWillReceiveProps(nextProps)
   {
+    this.updateSlides(nextProps);
+  }
+
+  updateSlides = (props) =>
+  {
     this.context.store.dispatch(
       setData(
-        nextProps.fetchData(this.carousselPage),
+        props.fetchData(this.carousselPage, props.data),
         CAROUSSEL_SETTINGS,
-        nextProps.id,
+        props.id,
       ));
   }
 
   carousselPage = 0;
-
-  // componentWillReceiveProps(nextProps)
-  // {
-  //   this.carousselPage += (nextProps.page - 2);
-  //   this.props.setData(fetchData(this.carousselPage), CAROUSSEL_SETTINGS);
-  // }
 
   transitionEndListener = () =>
   {
@@ -117,7 +130,7 @@ class DynamicCaroussel extends Component
 
       this.context.store.dispatch(
         setData(
-          this.props.fetchData(this.carousselPage),
+          this.props.fetchData(this.carousselPage, this.props.data),
           CAROUSSEL_SETTINGS,
           this.props.id,
         ));
@@ -129,7 +142,8 @@ class DynamicCaroussel extends Component
   {
     return (
       <Caroussel
-        id={this.props.id}
+        {...this.props}
+        disablePages
         onPaginate={this.transitionEndListener}
       />
     );
@@ -139,12 +153,19 @@ class DynamicCaroussel extends Component
 DynamicCaroussel.propTypes =
 {
   id: PropTypes.string.isRequired,
+  data: PropTypes.arrayOf(PropTypes.object),
+  /**
+  * Pull the "visible" slides
+  * @param {integer} page
+  * @param {data} array static data
+  */
   fetchData: PropTypes.func,
 };
 
 
 DynamicCaroussel.defaultProps =
 {
+  data: [],
   fetchData,
 };
 
