@@ -97,9 +97,10 @@ class UserController extends AppController
         )
       ));
 
+
       if ($user)
       {
-        $this->respond($this->startUserSession($user));
+        $this->createResponse($this->startUserSession($user));
       }
     }
 
@@ -146,7 +147,7 @@ class UserController extends AppController
 
       if ($user)
       {
-        $this->respond($this->startUserSession($user));
+        $this->createResponse($this->startUserSession($user));
       }
     }
 

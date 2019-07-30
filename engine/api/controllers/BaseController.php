@@ -37,21 +37,20 @@ class BaseController extends Controller
 
     $this->eventsManager = new EventsManager();
 
-    // parse jsonFields
-    if ($this->jsonFields)
-    {
-      $this->eventsManager->attach(
-        'controller:respond',
-        function (Event $event, $component, $data)
+    $this->eventsManager->attach(
+      'controller:respond',
+      function (Event $event, $component, $data)
+      {
+        $records = [];
+
+        // only one record [Object]
+        if (!isset($data['records'][0]))
         {
-          $records = [];
+          $data['records'] = [$data['records']];
+        }
 
-          // only one record [Object]
-          if (!isset($data['records'][0]))
-          {
-            $data['records'] = [$data['records']];
-          }
-
+        if ($this->jsonFields)
+        {
           foreach ($data['records'] as $record)
           {
             foreach ($this->jsonFields as $field)
@@ -64,14 +63,14 @@ class BaseController extends Controller
             }
             $records[] = $record;
           }
-
-          $component->createResponse(
-            count($records) === 1 ? $records[0] : $records,
-            array('config' => $this->setConfig())
-          );
         }
-      );
-    }
+
+        return $component->createResponse(
+          count($records) ? $records : $data['records'],
+          $data['meta']
+        );
+      }
+    );
   }
 
   /**
@@ -450,8 +449,6 @@ class BaseController extends Controller
       $this,
       array("records" => $records, "meta" => $meta, "error" => $error)
     );
-
-    $this->createResponse($records, $meta, $error);
   }
 
   protected function createResponse($records, $meta = array(), $error = false)
