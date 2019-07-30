@@ -91,6 +91,8 @@ class Select extends Field
               onBlur={this.onBlurHandler}
               onFocus={this.onFocusHandler}
 
+              disabled={this.props.disabled}
+
               ref={(ref) =>
               {
                 this.element = ref;
