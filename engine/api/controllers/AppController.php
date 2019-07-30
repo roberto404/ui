@@ -48,12 +48,12 @@ class AppController extends BaseController
   }
 
 
-  public function ReadOne($id, $columns = false)
+  public function ReadOne($filters = 0, $columns = false)
   {
-    $filters = $this->getPermissionFilter();
-    $filters[] = "id = {$id}";
+    $appFilters = $this->getPermissionFilter();
+    $appFilters[] = "id = {$filters}";
 
-    return parent::ReadOne($filters, $columns);
+    return parent::ReadOne($appFilters, $columns);
   }
 
 
