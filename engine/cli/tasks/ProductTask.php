@@ -1184,7 +1184,7 @@ class ProductTask extends \Phalcon\CLI\Task
       return 'Wronng update mode';
     }
 
-    $cmd = '/opt/php-7.3.1/bin/php -d memory_limit=512M /home/site_betars/public_html/artisan sync:products --type=' . $mode;
+    $cmd = '/opt/php-7.3.7/bin/php -d memory_limit=512M /home/site_betars/public_html/artisan sync:products --type=' . $mode;
 
     while (@ ob_end_flush()); // end all output buffers if any
 
