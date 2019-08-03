@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
+
+/* !- Actions */
+
+import * as layerActions from '../../layer/actions';
 
 /* !- React Elements */
 
@@ -31,9 +34,24 @@ class Button extends Field
    * @emits
    * @return {void}
    */
-  onChangeButtonHandler = () =>
+  onChangeButtonHandler = (event) =>
   {
-    this.onChangeHandler(!this.state.value);
+    event.preventDefault();
+
+    if (this.props.popover)
+    {
+      const layerElement = React.isValidElement(this.props.popover) ?
+        this.props.popover : React.createElement(this.props.popover, { id: this.props.id });
+
+      this.context.store.dispatch(layerActions.popover(
+        <div className="px-4">{layerElement}</div>,
+        event,
+      ));
+    }
+    else if (this.props.onClick(event))
+    {
+      this.onChangeHandler(!this.state.value);
+    }
   }
 
   /* !- Renders */
@@ -46,15 +64,12 @@ class Button extends Field
   render()
   {
     const { data, placeholder } = this.props;
-    let value = placeholder;
 
-    if (typeof data === 'object')
+    let value = this.state.value;
+
+    if (typeof data === 'object' && data[+this.state.value])
     {
-      value = data[+this.state.value] || placeholder;
-    }
-    else if (typeof data === 'function')
-    {
-      value = data(this.state.value);
+      value = data[+this.state.value];
     }
 
     return (
@@ -62,11 +77,25 @@ class Button extends Field
 
         { this.label }
 
-        <button
-          onClick={this.onChangeButtonHandler}
-        >
-          { value }
-        </button>
+        <div className="table">
+
+          { this.state.prefix &&
+          <div className="prefix">{this.state.prefix}</div>
+          }
+
+          <button
+            className={this.props.buttonClassName}
+            onClick={this.onChangeButtonHandler}
+          >
+            { this.props.icon && React.createElement(this.props.icon)}
+            <span>{ value || placeholder }</span>
+          </button>
+
+          { this.props.postfix &&
+          <div className="postfix">{this.state.postfix}</div>
+          }
+
+        </div>
 
         { this.state.error &&
           <div className="error">{this.state.error}</div>
@@ -75,5 +104,28 @@ class Button extends Field
     );
   }
 }
+
+Button.propTypes = {
+  ...Button.propTypes,
+  data: PropTypes.shape({
+    0: PropTypes.string,
+    1: PropTypes.string,
+  }),
+  onClick: PropTypes.func,
+  popover: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.element,
+  ]),
+};
+
+Button.defaultProps = {
+  ...Button.defaultProps,
+  onClick: () => true,
+  data: {},
+};
+
+Button.contextTypes = {
+  store: PropTypes.object,
+};
 
 export default Button;
