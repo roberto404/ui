@@ -101,11 +101,6 @@ class DynamicCaroussel extends Component
     this.updateSlides(this.props);
   }
 
-  componentWillReceiveProps(nextProps)
-  {
-    this.updateSlides(nextProps);
-  }
-
   updateSlides = (props) =>
   {
     this.context.store.dispatch(
