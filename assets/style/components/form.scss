@@ -25,7 +25,6 @@
     margin-bottom: 2.5rem;
   }
 
-
   /* !- Label */
 
   .label
@@ -43,6 +42,37 @@
         content: "*";
       }
     }
+  }
+
+
+  /* !- Prefix */
+
+  .prefix
+  {
+    padding-right: 1rem;
+  }
+
+  .postfix
+  {
+    padding-left: 1rem;
+  }
+
+  .prefix,
+  .postfix
+  {
+    // background: #f8fafb;
+
+    svg
+    {
+      width: 1.5em;
+      height: 1.5em;
+    }
+  }
+
+
+  .table
+  {
+    position: relative;
   }
 
   /* !- Button */
@@ -82,7 +112,8 @@
 
   input:not([type="radio"]):not([type="checkbox"]),
   textarea,
-  select
+  select,
+  button.input
   {
     @extend .rounded;
     border: 1px solid $gray-light;
@@ -161,8 +192,6 @@
   }
 
 
-
-
   /* !- Checkbox */
 
   &.checkbox-field,
@@ -192,7 +221,6 @@
       @extend .flashing-once;
     }
   }
-
 
 
   /* !- Toggle */
@@ -401,78 +429,76 @@
     }
   }
 
+
+  /* !- DateTime */
+
   &.date-field
   {
-    > div
-    {
-      max-width: 200px;
+    // max-width: 200px;
 
-      &:not(:first-child)
+    // > div
+    // {
+    //   max-width: 200px;
+    //
+    //   &:not(:first-child)
+    //   {
+    //     margin: 0 auto;
+    //   }
+    // }
+    //
+    // .pager button
+    // {
+    //   top: 5%;
+    // }
+    //
+    // .pages,
+    // .field .error
+    // {
+    //   display: none;
+    // }
+    //
+    // .label
+    // {
+    //   margin-bottom: 1em;
+    // }
+    //
+    // .calendar-month-field
+    // {
+    //   svg > text
+    //   {
+    //     font-size: 1em;
+    //   }
+    // }
+
+    .date-fields
+    {
+      display: flex;
+
+      .select-field
       {
-        margin: 0 auto;
-      }
-    }
+        width: 100%;
 
-    .pager button
-    {
-      top: 5%;
-    }
-
-    .pages,
-    .field .error
-    {
-      display: none;
-    }
-
-    .label
-    {
-      margin-bottom: 1em;
-    }
-
-    .calendar-month-field
-    {
-      svg > text
-      {
-        font-size: 1em;
+        &:not(:first-child)
+        {
+          padding-left: 1rem;
+        }
       }
     }
 
     .time-fields
     {
-      @extend .grid;
-      @extend .v-center;
-      @extend .h-center;
+      display: flex;
+      align-items: center;
 
-      > *
+      .select-field
       {
-        @extend .col-5-12;
-
-        select
-        {
-          padding-left: 1em;
-        }
-
-        &.time-colon
-        {
-          @extend .col-2-12;
-        }
+        width: 40%;
       }
 
-      .prefix
+      .time-colon
       {
-        position: static;
-        padding-top: 0;
-        padding-bottom: 0.25rem;
-      }
-
-      .field .table
-      {
-        display: block;
-
-        > *
-        {
-          display: block;
-        }
+        text-align: center;
+        width: 20%;
       }
     }
   }
@@ -557,39 +583,20 @@
     vertical-align: middle;
   }
 
-  .prefix,
-  .postfix
+  &.prefix-inside,
+  &.postfix-inside
   {
-    width: 1px;
-    color: $black;
-    padding-top: calc(.8rem + 1px); /* rem = imput padding, px = input border width */
-    white-space: nowrap;
-
-    svg
-    {
-      width: 1.5em;
-
-      path
-      {
-        fill: $black;
-      }
-    }
-  }
-  .prefix
-  {
-    padding-right: .5rem;
-  }
-  .postfix
-  {
-    padding-left: .5rem;
-  }
-
-  &.prefix-inside
-  {
-    .prefix
+    .prefix,
+    .postfix
     {
       position: absolute;
-      margin-left: 1rem;
+      top: 0;
+      bottom: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      width: auto;
+      padding: 0 1rem;
 
       svg
       {
@@ -598,10 +605,29 @@
       }
     }
 
+
+    .postfix
+    {
+      right: 0;
+    }
+  }
+
+
+  &.prefix-inside
+  {
     select,
     input
     {
-      padding-left: 3rem;
+      padding-left: 4rem !important;
+    }
+  }
+
+  &.postfix-inside
+  {
+    select,
+    input
+    {
+      padding-right: 4rem !important;
     }
   }
 
@@ -793,28 +819,28 @@
       width: 200em;
     }
 
-    // &.button-field
-    // {
-    //   padding: 0;
-    //
-    //   button
-    //   {
-    //     padding: 0 1em;
-    //     height: 100%;
-    //     border-radius: 0;
-    //     border: none;
-    //
-    //     background-color: transparent !important;
-    //     font-size: .75em;
-    //     text-transform: uppercase;
-    //     color: $gray-dark;
-    //
-    //     > *
-    //     {
-    //       font-size: 100%;
-    //     }
-    //   }
-    // }
+    &.button-field
+    {
+      padding: 0;
+
+      button
+      {
+        padding: 0 1em;
+        height: 100%;
+        border-radius: 0;
+        border: none;
+
+        background-color: transparent !important;
+        font-size: .75em;
+        text-transform: uppercase;
+        color: $gray-dark;
+
+        > *
+        {
+          font-size: 100%;
+        }
+      }
+    }
 
     &.active
     {
@@ -833,6 +859,11 @@
       {
         font-weight: bold;
         color: $white-light;
+      }
+
+      svg *
+      {
+        fill: white;
       }
     }
   }

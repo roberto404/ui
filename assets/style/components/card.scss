@@ -8,7 +8,8 @@
   border-bottom: 1px solid $gray-light;
 
 
-  > .title
+  > .title,
+  .card-title
   {
     position: relative;
     left: -2rem;
