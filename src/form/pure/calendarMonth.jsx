@@ -26,12 +26,12 @@ import { DATE_FORMAT_HTML5 } from '../../calendar/constants';
 export const fetchData = (field, onChange, value, width, initDate) =>
   (page) =>
   {
-    // const initDate = page === 0 && value ? value : undefined;
     const items = [];
 
-    for (let i = 0; i < 3; i += 1)
+    for (let i = -1; i < 2; i += 1)
     {
-      const actualPage = i + page - 1;
+      const actualPage = page + i;
+      const actualDate = moment(initDate).add(actualPage, 'months');
 
       items.push({
         id: i,
@@ -39,10 +39,11 @@ export const fetchData = (field, onChange, value, width, initDate) =>
           id={field}
           dateFormat={DATE_FORMAT_HTML5}
           value={value}
-          year={moment(initDate).add(actualPage, 'months').format('YYYY')}
-          month={moment(initDate).add(actualPage, 'months').format('M')}
+          year={actualDate.format('YYYY')}
+          month={actualDate.format('MM')}
           width={width}
           onChange={onChange}
+          freezeMonth
         />,
       });
     }
@@ -109,9 +110,12 @@ class CalendarMonthForm extends Field
     selectedDate.hour(parseInt(valueDate.format('H')));
     selectedDate.minute(parseInt(valueDate.format('m')));
 
-    this.onChangeHandler(
-      selectedDate.format(this.props.dateFormat),
-    );
+    const value = selectedDate.format(this.props.dateFormat);
+
+    if (this.props.onClick({ value }))
+    {
+      this.onChangeHandler(value);
+    }
   }
 
   componentDidMount()
@@ -145,11 +149,19 @@ class CalendarMonthForm extends Field
   render()
   {
     const startDate = new Date(this.props.year, this.props.month - 1, 1);
-    const valueMoment = moment(this.getValue(), this.props.dateFormat);
-    const active = [parseInt(valueMoment.format('D'))];
+    const valueMoment = moment(this.getValue(this.props), this.props.dateFormat);
 
     const className = (typeof this.props.className === 'function') ?
       this.props.className(startDate) : this.props.className;
+
+    const active = this.props.freezeMonth === false || valueMoment.format('YYYYMM') === moment(startDate).format('YYYYMM') ?
+      [parseInt(valueMoment.format('D'))] : [];
+
+    const year = (this.props.freezeMonth) ?
+      startDate.getFullYear() : valueMoment.toDate().getFullYear();
+
+    const month = (this.props.freezeMonth) ?
+      startDate.getMonth() : valueMoment.toDate().getMonth();
 
     return (
       <div
@@ -164,8 +176,8 @@ class CalendarMonthForm extends Field
 
         <CalendarMonth
           {...this.props}
-          year={parseInt(valueMoment.format('YYYY'))}
-          month={parseInt(valueMoment.format('M'))}
+          month={month + 1}
+          year={year}
           className={{
             active,
             ...className,
@@ -205,6 +217,13 @@ CalendarMonthForm.propTypes =
    * Calendar Classes
    */
   className: types.className,
+  /**
+   * CalendarMonth always visible the start date.
+   * Sometime important the change of the month has no effect on it.
+   * For example caroussel calendar
+   */
+  freezeMonth: PropTypes.bool,
+  onClick: PropTypes.func,
 };
 
 /**
@@ -219,6 +238,10 @@ CalendarMonthForm.defaultProps =
   height: 0,
   dateFormat: DATE_FORMAT_HTML5,
   className: {},
+  year: new Date().getFullYear(),
+  month: new Date().getMonth() + 1,
+  freezeMonth: false,
+  onClick: () => true,
 };
 
 export default CalendarMonthForm;

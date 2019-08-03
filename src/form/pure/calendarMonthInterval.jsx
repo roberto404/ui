@@ -10,7 +10,44 @@ import CalendarMonth from '../../calendar/month/';
 
 /* !- Redux Actions */
 
-import * as FormActions from '../actions';
+import { setValues } from '../actions';
+
+
+/**
+ * CalendarMonthInterval Dynamic Caroussel helper
+ * @param  {String} field Form field name, which store selected date value
+ * @param  {Function} [onChange] invoke when value change
+ * @param  {String} [value=current week] start value
+ * @param  {Integer} [width] component width, default 100%
+ * @return {Function}       Dynamic Caroussel component fetchData props
+ */
+export const fetchData = (field, onChange, value, width, initDate) =>
+  (page) =>
+  {
+    const items = [];
+
+    for (let i = -1; i < 2; i += 1)
+    {
+      const actualPage = page + i;
+      const actualDate = moment(initDate).add(actualPage, 'months');
+
+      items.push({
+        id: i,
+        slide: <CalendarMonthInterval
+          id={field}
+          // dateFormat={DATE_FORMAT_HTML5}
+          value={value}
+          year={actualDate.format('YYYY')}
+          month={actualDate.format('MM')}
+          width={width}
+          onChange={onChange}
+          freezeMonth
+        />,
+      });
+    }
+
+    return items;
+  };
 
 
 /**
@@ -166,10 +203,10 @@ class CalendarMonthInterval extends Field
       dateFrom = dateTo;
     }
 
-    this.props.setValues({
+    this.context.store.dispatch(setValues({
       [fromId]: dateFrom,
       [toId]: dateTo,
-    }, this.context.form || this.props.form);
+    }, this.context.form || this.props.form));
   }
 
   render()
@@ -228,12 +265,10 @@ CalendarMonthInterval.defaultProps =
   intervalLength: 0,
 };
 
-// CalendarMonthInterval.defaultProps.id = CalendarMonthInterval.props.fromId;
+CalendarMonthInterval.contextTypes =
+{
+  store: PropTypes.object,
+};
 
 
-export default connect(
-  null,
-  {
-    setValues: FormActions.setValues,
-  },
-)(CalendarMonthInterval);
+export default CalendarMonthInterval;

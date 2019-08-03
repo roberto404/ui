@@ -89,7 +89,7 @@ class Calendar extends Component
   {
     const state = this.compileState({
       ...this.props,
-      width: this.props.width || this.element ? this.element.offsetWidth : 200,
+      width: this.props.width || (this.element ? this.element.offsetWidth : 200),
     });
 
     return (

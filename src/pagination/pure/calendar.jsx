@@ -2,6 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import isEmpty from 'lodash/isEmpty';
 
 /* !- Components */
 
@@ -37,6 +38,8 @@ export const CalendarPager = (
 {
   id,
   days,
+  months,
+  date,
   form,
   className,
   children,
@@ -55,14 +58,49 @@ context,
 
     const ids = Array.isArray(id) ? id : [id];
 
-    ids.forEach((formStateId) =>
+    ids.forEach((formStateId, index) =>
     {
-      const date = (formId ? formState[formId] || {} : formState)[formStateId];
+      let momentDate;
 
-      if (date)
+      if (date instanceof Date || !isEmpty(date))
       {
-        const value = moment(date, DATE_FORMAT_HTML5).add(days, 'days').format(DATE_FORMAT_HTML5);
-        store.dispatch(setValues({ id: formStateId, value }, formId));
+        if (date instanceof Date)
+        {
+          momentDate = moment(date);
+        }
+        else if (Array.isArray(date))
+        {
+          momentDate = moment(date[index]);
+        }
+        else if (typeof date === 'object')
+        {
+          momentDate = moment(date[formStateId]);
+        }
+      }
+      else
+      {
+        const value = (formId ? formState[formId] || {} : formState)[formStateId];
+
+        momentDate = moment(value, DATE_FORMAT_HTML5);
+
+        if (months)
+        {
+          momentDate.add(months, 'months');
+        }
+        else
+        {
+          momentDate.add(days, 'days');
+        }
+      }
+
+      if (momentDate && !isNaN(momentDate.toDate()))
+      {
+        store.dispatch(
+          setValues({
+            id: formStateId,
+            value: momentDate.format(DATE_FORMAT_HTML5),
+          }, formId),
+        );
       }
     });
   };
@@ -86,6 +124,12 @@ CalendarPager.propTypes =
     PropTypes.arrayOf(PropTypes.string),
   ]),
   days: PropTypes.number,
+  months: PropTypes.number,
+  date: PropTypes.oneOfType([
+    PropTypes.instanceOf(Date),
+    PropTypes.arrayOf(PropTypes.instanceOf(Date)),
+    PropTypes.objectOf(PropTypes.instanceOf(Date)),
+  ]),
   form: PropTypes.string,
   className: PropTypes.string,
   children: PropTypes.element,
@@ -95,6 +139,8 @@ CalendarPager.defaultProps =
 {
   id: 'start',
   days: 1,
+  months: 0,
+  date: [],
   form: '',
   className: 'outline w-auto shadow',
   children: <IconArrowForward />,
