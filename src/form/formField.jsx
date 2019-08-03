@@ -58,7 +58,9 @@ class FormField extends Component
   componentWillMount()
   {
     const form = this.props.form || this.context.form;
-    const formState = this.context.store.getState().form[form];
+    const store = this.context.store.getState();
+
+    const formState = form ? store.form[form] : store.form;
 
     if (this.props.value && (!formState || !formState[this.props.id]))
     {
