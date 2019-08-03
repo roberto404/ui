@@ -52,7 +52,6 @@ class Input extends Field
           <input
             id={this.props.id}
             name={this.props.name}
-
             value={Array.isArray(this.state.value) ? '' : this.state.value}
             type={this.props.type}
             disabled={this.props.disabled}
