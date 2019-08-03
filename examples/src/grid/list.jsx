@@ -46,7 +46,9 @@ const ExampleForm = () =>
   >
     <Plain id="name" />
     <Input id="name" />
-    <Submit api={fakeApi}><SubmitButton /></Submit>
+    <Submit api={fakeApi}>
+
+    </Submit>
   </Form>
 );
 
@@ -93,7 +95,7 @@ const Example = () =>
     <div
       className="card mb-0 p-0 shadow-outer border border-white grid grow scroll-y"
     >
-      <div data-view="list" className="grid grow">
+      <div className="grid grow">
         <div className="col-1-3 bg-white-semi-light">
           <Connect
             UI={Grid}
