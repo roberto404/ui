@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import moment from 'moment';
 
 
@@ -9,10 +10,12 @@ import Input from './input';
 import Button from './button';
 import Pager from '../../pagination/pure/calendar';
 import DynamicCaroussel from '../../caroussel/dynamicCaroussel';
-import { fetchData } from './calendarMonthInterval';
-
+import CalendarMonthInterval, { fetchData } from './calendarMonthInterval';
 
 import IconCalendar from '../../icon/mui/action/calendar_today';
+
+
+/* !- Constans */
 
 import { DATE_FORMAT_HTML5, isDateL, isDateHTML5 } from '../../calendar/constants';
 
@@ -20,46 +23,46 @@ import { DATE_FORMAT_HTML5, isDateL, isDateHTML5 } from '../../calendar/constant
 /**
  * CalendarMonthInterval with caroussel pager
  */
-const CalendarMonthIntervalCaroussel = ({ id, onChange }) => (
+const CalendarMonthIntervalCaroussel = props => (
   <div className="grid-2">
     <div className="col-1-5">
       <Pager
-        id={['start', 'end']}
+        id={[props.fromId, props.toId]}
         date={[new Date(), new Date()]}
         className="border border-gray-light white mb-1 py-1"
       >
         Ma
       </Pager>
       <Pager
-        id={['start', 'end']}
+        id={[props.fromId, props.toId]}
         date={[moment().subtract(1, 'days').toDate(), moment().subtract(1, 'days').toDate()]}
         className="border border-gray-light white mb-1 py-1"
       >
         Tegnap
       </Pager>
       <Pager
-        id={['start', 'end']}
+        id={[props.fromId, props.toId]}
         date={[moment().startOf('week').toDate(), moment().endOf('week').toDate()]}
         className="border border-gray-light white mb-1 py-1"
       >
         Héten
       </Pager>
       <Pager
-        id={['start', 'end']}
+        id={[props.fromId, props.toId]}
         date={[moment().subtract(1, 'weeks').startOf('week').toDate(), moment().subtract(1, 'weeks').endOf('week').toDate()]}
         className="border border-gray-light white mb-1 py-1"
       >
         Múlt héten
       </Pager>
       <Pager
-        id={['start', 'end']}
+        id={[props.fromId, props.toId]}
         date={[moment().startOf('month').toDate(), moment().endOf('month').toDate()]}
         className="border border-gray-light white mb-1 py-1"
       >
         Hónapban
       </Pager>
       <Pager
-        id={['start', 'end']}
+        id={[props.fromId, props.toId]}
         date={[moment().subtract(1, 'months').startOf('month').toDate(), moment().subtract(1, 'months').endOf('month').toDate()]}
         className="border border-gray-light white mb-1 py-1"
       >
@@ -68,7 +71,7 @@ const CalendarMonthIntervalCaroussel = ({ id, onChange }) => (
     </div>
     <div className="col-2-5">
       <Input
-        id="start"
+        id={props.fromId}
         format={value => isDateL(value) ? moment(value, 'l').format(DATE_FORMAT_HTML5) : value}
         stateFormat={value => isDateHTML5(value) ? moment(value).format('l') : value}
         prefix={<IconCalendar className="fill-gray" />}
@@ -76,14 +79,14 @@ const CalendarMonthIntervalCaroussel = ({ id, onChange }) => (
         // tabIndex="-1"
       />
       <DynamicCaroussel
-        id={`${id}-1`}
-        fetchData={fetchData(id, onChange)}
+        id={props.fromId}
+        fetchData={fetchData(props)}
         className="field calendar-month-field"
       />
     </div>
     <div className="col-2-5">
       <Input
-        id="end"
+        id={props.toId}
         format={value => isDateL(value) ? moment(value, 'l').format(DATE_FORMAT_HTML5) : value}
         stateFormat={value => isDateHTML5(value) ? moment(value).format('l') : value}
         prefix={<IconCalendar className="fill-gray" />}
@@ -91,8 +94,8 @@ const CalendarMonthIntervalCaroussel = ({ id, onChange }) => (
         // tabIndex="-2"
       />
       <DynamicCaroussel
-        id={`${id}-2`}
-        fetchData={fetchData(id, onChange, undefined, undefined, moment().add(1, 'months').toDate())}
+        id={props.toId}
+        fetchData={fetchData({ ...props, initDate: moment().add(1, 'months').toDate() })}
         className="field calendar-month-field"
       />
     </div>
@@ -107,6 +110,7 @@ CalendarMonthIntervalCaroussel.propTypes =
 {
   id: PropTypes.string,
   onChange: PropTypes.func,
+  ...CalendarMonthInterval.propTypes,
 };
 
 /**
@@ -118,35 +122,42 @@ CalendarMonthIntervalCaroussel.defaultProps =
   id: 'calendarMonthCaroussel',
   onChange: () =>
   {},
+  ...CalendarMonthInterval.defaultProps,
 };
+
+
+/**
+ * CalendarMonthIntervalCarousselButton connected data.
+ * for button value updating
+ */
+const mapStateToProps = ({ form }, { fromId, toId }) => ({
+  start: form[fromId],
+  end: form[toId],
+});
 
 /**
  * Button invoke CalendarMonthIntervalCaroussel on popover
  */
-export const CalendarMonthIntervalCarousselButton = ({ id }, { store }) =>
+export const CalendarMonthIntervalCarousselButton = connect(mapStateToProps)((props) =>
 {
-  const getFormatedValue = () =>
-  {
-    const formState = store.getState().form;
+  const { start, end } = props;
 
-    const { start, end } = formState;
-
-    return isDateHTML5(start) && isDateHTML5(end) ?
-      `${moment(start, DATE_FORMAT_HTML5).format('LL')} - ${moment(end, DATE_FORMAT_HTML5).format('LL')}`
-      : '';
-  };
+  const value = isDateHTML5(start) && isDateHTML5(end) ?
+    `${moment(start, DATE_FORMAT_HTML5).format('LL')} - ${moment(end, DATE_FORMAT_HTML5).format('LL')}`
+    : '';
 
   return (
     <Button
-      id={id}
-      placeholder="placeholder.select"
-      className="w-content"
+      id={props.id}
       buttonClassName="shadow outline fill-gray"
-      popover={CalendarMonthIntervalCaroussel}
-      stateFormat={getFormatedValue}
+      {...props}
+      data={{}}
+      popover={<CalendarMonthIntervalCaroussel {...props} />}
+      value={value}
     />
   );
-};
+});
+
 
 /**
  * propTypes
@@ -155,6 +166,7 @@ export const CalendarMonthIntervalCarousselButton = ({ id }, { store }) =>
 CalendarMonthIntervalCarousselButton.propTypes =
 {
   id: PropTypes.string,
+  ...CalendarMonthInterval.propTypes,
 };
 
 /**
@@ -164,15 +176,9 @@ CalendarMonthIntervalCarousselButton.propTypes =
 CalendarMonthIntervalCarousselButton.defaultProps =
 {
   id: 'calendarMonthIntervalCarousselButton',
-};
-
-/**
- * defaultProps
- * @type {Object}
- */
-CalendarMonthIntervalCarousselButton.contextTypes =
-{
-  store: PropTypes.object,
+  ...CalendarMonthInterval.defaultProps,
+  placeholder: 'placeholder.select',
+  className: 'w-content',
 };
 
 export default CalendarMonthIntervalCaroussel;

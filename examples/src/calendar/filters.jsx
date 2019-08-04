@@ -38,6 +38,10 @@ const Example = () =>
 
       <CalendarMonthIntervalCarousselButton
         id="CalendarMonthIntervalCarousselButton"
+        label="szállítás"
+        fromId="a"
+        toId="b"
+        placeholder="placeholder"
       />
     </div>
   </div>

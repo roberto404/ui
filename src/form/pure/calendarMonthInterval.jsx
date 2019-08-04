@@ -21,7 +21,7 @@ import { setValues } from '../actions';
  * @param  {Integer} [width] component width, default 100%
  * @return {Function}       Dynamic Caroussel component fetchData props
  */
-export const fetchData = (field, onChange, value, width, initDate) =>
+export const fetchData = props =>
   (page) =>
   {
     const items = [];
@@ -29,20 +29,18 @@ export const fetchData = (field, onChange, value, width, initDate) =>
     for (let i = -1; i < 2; i += 1)
     {
       const actualPage = page + i;
-      const actualDate = moment(initDate).add(actualPage, 'months');
+      const actualDate = moment(props.initDate).add(actualPage, 'months');
 
       items.push({
         id: i,
-        slide: <CalendarMonthInterval
-          id={field}
-          // dateFormat={DATE_FORMAT_HTML5}
-          value={value}
-          year={actualDate.format('YYYY')}
-          month={actualDate.format('MM')}
-          width={width}
-          onChange={onChange}
-          freezeMonth
-        />,
+        slide: (
+          <CalendarMonthInterval
+            {...props}
+            year={actualDate.format('YYYY')}
+            month={actualDate.format('MM')}
+            freezeMonth
+          />
+        ),
       });
     }
 
