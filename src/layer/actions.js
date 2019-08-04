@@ -53,12 +53,12 @@ const getDynamicPopoverStyle = (target) =>
   const style = {};
   const { screen, left, top, center, width, height } = getPositionsElement(target);
 
-  if (screen.x < 0.2)
+  if (screen.x < 0.3)
   {
     style.left = left;
     style.transform = '';
   }
-  else if (screen.x > 0.8)
+  else if (screen.x > 0.7)
   {
     style.left = left + width;
     style.transform = 'translateX(-100%)';
