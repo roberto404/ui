@@ -44,7 +44,7 @@ class Button extends Field
         this.props.popover : React.createElement(this.props.popover, { id: this.props.id });
 
       this.context.store.dispatch(layerActions.popover(
-        <div className="px-4">{layerElement}</div>,
+        <div className="pr-4">{layerElement}</div>,
         event,
       ));
     }
@@ -73,7 +73,10 @@ class Button extends Field
     }
 
     return (
-      <div className={this.getClasses('button')}>
+      <div
+        className={`${this.getClasses('button')} pointer`}
+        onClick={this.onChangeButtonHandler}
+      >
 
         { this.label }
 
@@ -85,7 +88,6 @@ class Button extends Field
 
           <button
             className={this.props.buttonClassName}
-            onClick={this.onChangeButtonHandler}
           >
             { this.props.icon && React.createElement(this.props.icon)}
             <span>{ value || placeholder }</span>
