@@ -9,6 +9,7 @@ import CalendarMonthCaroussel, { CalendarMonthCarousselButton } from '../../../s
 import { CalendarMonthIntervalCarousselButton } from '../../../src/form/pure/calendarMonthIntervalCaroussel';
 import DynamicCaroussel from '../../../src/caroussel/dynamicCaroussel';
 import { fetchData } from '../../../src/form/pure/calendarMonthInterval';
+import IconCalendar from '../../../src/icon/mui/action/calendar_today';
 
 
 /* !- Constants */
@@ -44,6 +45,13 @@ const Example = () =>
       buttonClassName="shadow outline fill-gray"
       popover={CalendarMonthCaroussel}
       stateFormat={value => value ? moment(value).format('LL') : ''}
+    />
+
+    <h2>On button</h2>
+    <CalendarMonthCarousselButton
+      className="w-auto"
+      buttonClassName="input text-left fill-gray"
+      icon={IconCalendar}
     />
 
     <h2>Two month Interval from sketch</h2>

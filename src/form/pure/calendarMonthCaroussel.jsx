@@ -46,15 +46,16 @@ CalendarMonthCaroussel.defaultProps =
 /**
  * Button invoke CalendarMonthIntervalCaroussel on popover
  */
-export const CalendarMonthCarousselButton = ({ id }) =>
+export const CalendarMonthCarousselButton = (props) =>
 (
   <Button
-    id={id}
+    id={props.id}
     placeholder="placeholder.select"
     className="w-content"
     buttonClassName="shadow outline fill-gray"
     popover={CalendarMonthCaroussel}
     stateFormat={value => value ? moment(value).format('LL') : ''} // eslint-disable-line
+    {...props}
   />
 );
 
