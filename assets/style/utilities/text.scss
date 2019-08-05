@@ -28,6 +28,11 @@
   text-transform: lowercase;
 }
 
+.firstcase:first-letter
+{
+  text-transform: capitalize !important;
+}
+
 .italic
 {
   font-style: italic;

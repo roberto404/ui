@@ -12,9 +12,9 @@ import Form,
   DateTime,
   Dropdown,
   Button,
-  Submit,
-  CalendarMonthButton,
   CalendarMonth,
+  CalendarMonthButton,
+  Plain,
 }
 from '../../../src/form/pure/intl';
 
@@ -28,24 +28,25 @@ const ExampleForm = () =>
 (
   <Form
     id="example"
-    className="p-2"
+    className="p-2 flat"
   >
     <Input
       id="input"
       label="Input"
       postfix={<IconFavorite />}
-      className="postfix-inside fill-blue"
+      className="postfix-inside fill-gray"
     />
-
     <Radio
       id="radio"
       label="Radio"
       data={[
         { id: 1, title: 'Option #1' },
         { id: 2, title: 'Option #2' },
+        { id: 3, title: 'Option #3' },
+        { id: 4, title: 'Option #4' },
+        { id: 5, title: 'Option #5' },
       ]}
     />
-
     <Checkbox
       id="checkbox"
       label="Checkbox"
@@ -54,123 +55,102 @@ const ExampleForm = () =>
         { id: 2, title: 'Option #2' },
       ]}
     />
-
     <Toggle
       id="toggle"
       label="Toggle"
     />
-
     <Select
       id="select"
       label="Select"
+      placeholder="Please select"
       data={[
         { id: 1, title: 'Option #1' },
         { id: 2, title: 'Option #2' },
       ]}
     />
-
     <Dropdown
       id="dropdown"
       label="Dropdown"
       placeholder="Please select"
       data={[{ id: 1, title: '#1' }, { id: 2, title: '#2' }]}
     />
-
-    <Dropdown
-      id="dropdown-multiple"
-      label="Multiple Dropdown"
-      placeholder="Please select"
-      data={[{ id: 1, title: '#1' }, { id: 2, title: '#2' }]}
-      multiple
-    />
-
     <Textarea
       id="textarea"
-      label="textarea"
+      label="Textarea"
     />
-
     <DateTime
       id="date"
-      label="date"
+      label="Date"
       disableTime
     />
-
-    <DateTime
-      id="time"
-      label="time"
-      disableDate
-    />
-
-    <DateTime
-      id="year-month"
-      label="year/month"
-      disableTime
-      disableDay
-    />
-
     <Button
       id="button"
-      label="button"
+      label="Button"
       data={{
         0: 'off',
         1: 'on',
       }}
-      buttonClassName="blue"
+      buttonClassName="border border-gray-light shadow white"
       icon={IconFavorite}
     />
-
-    <Button
-      id="button2"
-      label="button"
-      data={{
-        0: 'off',
-        1: 'on',
-      }}
-      buttonClassName="blue"
-      postfix={<IconFavorite />}
-    />
-
     <CalendarMonthButton
-      id="dateOfBirth"
-      label="field.dateOfBirth"
-      placeholder="placeholder.dateOfBirth"
+      id="calendar"
+      label="Calendar"
+      placeholder="Please select"
       buttonClassName="input"
       stateFormat={value => value ? moment(value, DATE_FORMAT_HTML5).format('LL') : ''}
     />
-
-    {/*
-
-
-    <Multiple
-      id="multiple"
-      label="Multiple"
-      placeholder="Please select"
-      data={[{ id: 1, title: 'elso' }, { id: 2, title: 'masodik' }]}
+    <CalendarMonth
+      id="calendar"
+      label="Calendar"
+      width="200"
     />
-    <Multiple
-      id="nested_menu"
-      label="Nested"
-      placeholder="Please select"
-      data={[
-        {
-          id: 1,
-          title: 'first item',
-          children: [
-            { id: 11, title: '1.1' },
-            { id: 12, title: '1.2' },
-          ],
-        },
-        {
-          id: 2,
-          title: 'second item',
-          children: [
-            { id: 21, title: '2.1' },
-            { id: 22, title: '2.2' },
-          ],
-        },
-      ]}
-    />*/}
 
+    <Plain
+      id="input"
+      label="Input"
+      postfix={<IconFavorite />}
+      className="postfix-inside fill-red"
+    />
+    <Plain
+      id="radio"
+      label="Radio"
+    />
+    <Plain
+      id="checkbox"
+      label="Checkbox"
+      stateFormat={value => value.length}
+    />
+    <Plain
+      id="toggle"
+      label="Toggle"
+      stateFormat={value => value.toString()}
+    />
+    <Plain
+      id="select"
+      label="Select"
+    />
+    <Plain
+      id="dropdown"
+      label="Dropdown"
+    />
+    <Plain
+      id="textarea"
+      label="Textarea"
+    />
+    <Plain
+      id="date"
+      label="Date"
+    />
+    <Plain
+      id="button"
+      label="Button"
+      stateFormat={value => value.toString()}
+    />
+    <Plain
+      id="calendar"
+      label="Calendar"
+    />
 
   </Form>
 );

@@ -10,6 +10,7 @@ import Layer from '../../src/layer';
 
 /* !- Example: Style */
 
+// import Example from './style/avatar';
 // import Example from './style/buttons';
 // import Example from './style/screen';
 
@@ -17,8 +18,11 @@ import Layer from '../../src/layer';
 /* !- Example: Form */
 
 // import Example from './form/basic';
-// import Example from './form/fields';
+import Example from './form/fields';
 // import Example from './form/submit';
+// import Example from './form/connect';
+// import Example from './form/flat';
+
 
 
 /* !- Example: Grid */
@@ -51,9 +55,7 @@ import Layer from '../../src/layer';
 // import Example from './calendar/static';
 // import Example from './calendar/dynamic';
 // import Example from './calendar/caroussel';
-import Example from './calendar/filters';
-
-
+// import Example from './calendar/filters';
 
 
 

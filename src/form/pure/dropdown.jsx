@@ -170,6 +170,7 @@ Dropdown.defaultProps =
   ...Dropdown.defaultProps,
   multiple: false,
   placeholder: 'Kérem válasszon.',
+  buttonClassName: 'input shadow firstcase v-left embed-arrow-down text-black',
 };
 
 export default Dropdown;

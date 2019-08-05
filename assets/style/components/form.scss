@@ -192,6 +192,21 @@
   }
 
 
+  /* !- Plain */
+
+  &.plain-field
+  {
+    font-family: $font;
+    line-height: 150%;
+
+    .table div:not(.postfix):not(.prefix)
+    {
+      padding-left: 1rem;
+      font-size: .85em;
+      white-space: pre-wrap;
+    }
+  }
+
   /* !- Checkbox */
 
   &.checkbox-field,
@@ -482,6 +497,11 @@
         {
           padding-left: 1rem;
         }
+
+        select
+        {
+          min-width: 6em;
+        }
       }
     }
 
@@ -499,6 +519,11 @@
       {
         text-align: center;
         width: 20%;
+      }
+
+      select
+      {
+        min-width: 6em;
       }
     }
   }
@@ -528,10 +553,6 @@
       }
     }
   }
-
-
-
-
 
 
 
@@ -647,13 +668,6 @@
 
 
 
-  &.plain-field
-  {
-    font-family: $font;
-    font-size: .85em;
-    line-height: 150%;
-  }
-
 
   /* !- Slider */
 
@@ -718,6 +732,67 @@
         }
       }
     }
+  }
+}
+
+
+/* !- Flat */
+/**
+ * Flat form field appearance like OSX contact
+ */
+
+.form.flat > .field
+{
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid $gray-light;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  font-size: 90%;
+
+  > div
+  {
+    margin: 0;
+  }
+
+  .label
+  {
+    min-width: 15rem;
+    max-width: 15rem;
+    text-align: right;
+    padding-right: 1rem;
+    font-weight: bold;
+    color: $gray;
+  }
+
+  &.plain-field
+  {
+    align-items: flex-start;
+  }
+
+  &.toggle-field button
+  {
+    font-size: 70%;
+  }
+
+  &.button-field
+  {
+    width: 100%;
+
+    .table
+    {
+      text-align: left;
+
+      button
+      {
+        width: fit-content;
+      }
+    }
+  }
+
+  .field
+  {
+    margin-bottom: 0;
   }
 }
 
