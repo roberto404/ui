@@ -14,13 +14,14 @@ import IconCalendar from '../../icon/mui/action/calendar_today';
  * Button form field.
  * CalendarDateTime open on layer.
  */
-const CalendarMonthButton = props => (
+const CalendarMonthButton = (props, { form }) =>
+(
   <Button
     id={props.id}
     placeholder="placeholder.select"
     className="w-content"
     buttonClassName="shadow outline fill-gray"
-    popover={CalendarDateTime}
+    popover={<CalendarDateTime id={props.id} form={form} />}
     stateFormat={value => value ? moment(value).format('LL') : ''} // eslint-disable-line
     icon={IconCalendar}
     {...props}
@@ -45,6 +46,10 @@ CalendarMonthButton.propTypes =
 CalendarMonthButton.defaultProps =
 {
   id: 'calendarDateTimeButton',
+};
+
+CalendarMonthButton.contextTypes = {
+  form: PropTypes.string,
 };
 
 export default CalendarMonthButton;

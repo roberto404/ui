@@ -126,8 +126,4 @@ Button.defaultProps = {
   data: {},
 };
 
-Button.contextTypes = {
-  store: PropTypes.object,
-};
-
 export default Button;
