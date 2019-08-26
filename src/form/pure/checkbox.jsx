@@ -163,7 +163,7 @@ class Checkbox extends Field
   {
     // this.data = ((typeof this.props.data === 'function') ? this.props.data(this.state, this.getValue()) : this.props.data) || [];
 
-    return (
+    return super.render() || (
       <div className={this.getClasses('checkbox')}>
 
         { this.label }

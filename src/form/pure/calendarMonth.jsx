@@ -163,7 +163,7 @@ class CalendarMonthForm extends Field
     const month = (this.props.freezeMonth) ?
       startDate.getMonth() : valueMoment.toDate().getMonth();
 
-    return (
+    return super.render() || (
       <div
         className="field calendar-month-field"
         ref={(ref) =>

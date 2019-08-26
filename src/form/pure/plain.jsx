@@ -4,7 +4,10 @@ import React from 'react';
 
 /* !- React Elements */
 
-import Field from '../../form/formField';
+import Field from '../formField';
+
+import IconFalse from '../../icon/mui/content/remove';
+import IconTrue from '../../icon/mui/action/done';
 
 
 /**
@@ -25,8 +28,35 @@ class Plain extends Field
   {
     const { intl, multipleData } = this.props;
     const multipleDataText = () => intl ? intl.formatMessage({ id: multipleData }) : multipleData;
-    const placeholder = Array.isArray(this.state.value) ? multipleDataText() : this.state.placeholder;
-    const value = (Array.isArray(this.state.value) ? '' : this.state.value) || placeholder;
+    const placeholder =
+      Array.isArray(this.state.value) ? multipleDataText() : this.state.placeholder;
+
+    let value = this.state.value;
+    const data = this.getData();
+
+    // checkbox, radio
+    if (data.length)
+    {
+      const values = Array.isArray(value) ? value : [value];
+
+      value =
+        values
+          .map(v => data.find(({ id }) => id.toString() === v.toString()).title)
+          .join(', ');
+    }
+    // toggle, button
+    else if (typeof value === 'boolean')
+    {
+      // button data
+      if (typeof data[+value] !== 'undefined')
+      {
+        value = data[+value];
+      }
+      else
+      {
+        value = value ? <IconTrue className="w-1 h-1" /> : <IconFalse className="w-1 h-1" />;
+      }
+    }
 
     return (
       <div className={this.getClasses('plain')}>
@@ -43,7 +73,7 @@ class Plain extends Field
             <div dangerouslySetInnerHTML={{ '__html': value }} />
           }
           { !this.props.dangerouslySetInnerHTML &&
-            <div>{value}</div>
+            <div>{value || placeholder}</div>
           }
 
           { this.props.postfix &&

@@ -127,10 +127,10 @@ class Dropdown extends Field
     value = Array.isArray(value) ? value : [value];
 
     const valueText = value
-      .map(id => (this.data.find(item => item.id === id) || {}).title || '?')
+      .map(id => (this.data.find(item => item.id.toString() === id.toString()) || {}).title || '?')
       .join(', ');
 
-    return (
+    return super.render() || (
       <div className={this.getClasses('dropdown')}>
 
         { this.label }

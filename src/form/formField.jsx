@@ -8,6 +8,8 @@ import { setValues } from './actions';
 
 import { FORM_SCHEME_KEY } from './constants';
 
+import { Plain } from './pure/intl';
+
 
 /**
 * Form Item baseComponent:
@@ -489,7 +491,12 @@ class FormField extends Component
    */
   render()
   {
-    return (<div>Only use with extends</div>);
+    return !this.context.readOnly ? null :
+    (
+      <Plain
+        {...this.props}
+      />
+    );
   }
 }
 
@@ -643,6 +650,10 @@ FormField.propTypes =
       title: PropTypes.string.isRequired,
     })),
   ]),
+  /**
+   * Intl id for multiple data
+   */
+  multipleData: PropTypes.string,
 };
 
 /**
@@ -675,10 +686,12 @@ FormField.defaultProps =
   onFocus()
   {},
   data: [],
+  multipleData: 'placeholder.multipledata',
 };
 
 FormField.contextTypes =
 {
+  readOnly: PropTypes.bool,
   form: PropTypes.string,
   fields: PropTypes.object,
   store: PropTypes.object,

@@ -38,7 +38,7 @@ class Input extends Field
     const { intl, multipleData } = this.props;
     const multipleDataText = () => intl ? intl.formatMessage({ id: multipleData }) : multipleData;
 
-    return (
+    return super.render() || (
       <div className={this.getClasses('input')}>
 
         { this.label }
@@ -134,7 +134,6 @@ Input.defaultProps =
   regexp: '',
   prefix: '',
   postfix: '',
-  multipleData: 'placeholder.multipledata',
 };
 
 export default Input;

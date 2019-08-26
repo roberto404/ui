@@ -116,6 +116,7 @@ class Form extends Component
   getChildContext()
   {
     return {
+      readOnly: this.props.readOnly,
       form: this.props.id,
       fields: this.props.fields,
       onChange: this.onChangeHandler,
@@ -433,6 +434,10 @@ Form.propTypes =
    */
   flush: PropTypes.bool,
   /**
+   * Set Plain every field
+   */
+  readOnly: PropTypes.bool,
+  /**
    * Api call or Api hook
    * Returned results will Redux set in formId
    * @param {string} formId
@@ -480,6 +485,7 @@ Form.propTypes =
 Form.defaultProps =
 {
   id: v4(),
+  readOnly: false,
   scheme: {},
   fields: {},
   className: '',
@@ -516,6 +522,7 @@ Form.contextTypes = {
  */
 Form.childContextTypes = {
   form: PropTypes.string,
+  readOnly: PropTypes.bool,
   fields: PropTypes.object,
   onChange: PropTypes.func,
   onStart: PropTypes.func,

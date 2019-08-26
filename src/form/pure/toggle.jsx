@@ -46,7 +46,7 @@ class Toggle extends Field
    */
   render()
   {
-    return (
+    return super.render() || (
       <div className={this.getClasses('toggle')}>
 
         { this.label }

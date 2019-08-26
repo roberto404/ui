@@ -69,8 +69,7 @@ class Select extends Field
    */
   render()
   {
-
-    return (
+    return super.render() || (
       <div className={this.getClasses('select')}>
 
         { this.label }

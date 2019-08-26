@@ -72,7 +72,7 @@ class Button extends Field
       value = data[+this.state.value];
     }
 
-    return (
+    return super.render() || (
       <div
         className={`${this.getClasses('button')} pointer`}
         onClick={this.onChangeButtonHandler}

@@ -66,7 +66,7 @@ class Radio extends Field
    */
   render()
   {
-    return (
+    return super.render() || (
       <div className={this.getClasses('radio')}>
 
         { this.label }
