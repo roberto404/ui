@@ -2036,6 +2036,84 @@ class Products extends Model
             $result = [];
             $webCategoryItem = self::$webCategoriesMenu->getItem($webCategory["id"]);
 
+            /**
+             * Product filter
+             *
+             * Operators
+             * ==, >=, <=, !=, =*
+             * @example
+             * [
+             *  "brand", "=*", "/^vénusz$/i",
+             *  "price_sale_gross", ">=", "10"
+             * ]
+             */
+            if ($webCategoryItem['products'])
+            {
+              $productFilters = json_decode($webCategoryItem['products']);
+
+              if (!is_array($productFilters))
+              {
+                continue;
+              }
+
+              foreach($productFilters as $productFilter)
+              {
+                if (count($productFilter) !== 3)
+                {
+                  continue(2);
+                }
+
+                list($productFilterField, $productFilterOperator, $productFilterValue) = $productFilter;
+
+                if (!$productFilterValue || !property_exists($product, $productFilterField))
+                {
+                  continue(2);
+                }
+
+                switch ($productFilterOperator)
+                {
+                  case '==':
+                    if ($productFilterValue != $product->{$productFilterField})
+                    {
+                      continue(3);
+                    }
+                    break;
+
+                  case '>=':
+                    if ((float) $product->{$productFilterField} < (float) $productFilterValue)
+                    {
+                      continue(3);
+                    }
+                    break;
+
+                  case '<=':
+                    if ((float) $product->{$productFilterField} > (float) $productFilterValue)
+                    {
+                      continue(3);
+                    }
+                    break;
+
+                  case '!=':
+                    if ($productFilterValue == $product->{$productFilterField})
+                    {
+                      continue(3);
+                    }
+                    break;
+
+                  case '=*':
+                    if (!preg_match($productFilterValue, $product->{$productFilterField}))
+                    {
+                      continue(3);
+                    }
+                    break;
+
+                  default:
+                    continue(3);
+                    break;
+                }
+              }
+            }
+
             foreach ($webCategoryItem['path'] as $id)
             {
               $title = self::$webCategoriesMenu->getItemTitle($id);
@@ -2046,12 +2124,13 @@ class Products extends Model
               }
             }
 
-            // concate category path
+            // concate category path › Iroda/Irodabútorok/Szekrények
             $results[] = \implode('/', $result);
           }
         }
       }
     }
+
     return $results;
   }
 

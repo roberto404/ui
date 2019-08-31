@@ -37,16 +37,14 @@ class ProductTask extends \Phalcon\CLI\Task
       //price
       // 'conditions' => 'id = "8F00055A0"', //(37100.51)
       // 'conditions' => 'id = "8F0005500"', //(63859.41)
-      'conditions' => 'brand LIKE "%Vénusz%"',
-      // 'conditions' => 'id = "NF20712RK"',
+      // 'conditions' => 'brand LIKE "%Vénusz%"',
+      'conditions' => 'id = "NF20712RK"',
     ]);
 
     // var_dump(count($products));
-    // die();
 
     foreach ($products as $product)
     {
-
       // $this->updateWarrantyAction($products);
       // $product::parseTitle($product);
       // $product->createSubtitle();
@@ -61,9 +59,9 @@ class ProductTask extends \Phalcon\CLI\Task
         // $product->getStock()
       // );
       //
-      // var_dump(
-      //   $product::parseWebCategory($product)
-      // );
+      var_dump(
+        $product::parseWebCategory($product)
+      );
       // die();
 
       // $product->createRelatedId();
@@ -90,26 +88,26 @@ class ProductTask extends \Phalcon\CLI\Task
       var_dump(array(
       //   "id" => $product->id,
       //   // "price_orig_gross" => $product->price_orig_gross,
-      //   // "price_sale_gross" => $product->price_sale_gross,
+        "price_sale_gross" => $product->price_sale_gross,
       //   // "related_id" => $product->related_id,
-      //   "brand" => $product->brand,
-        "title" => $product->title,
-        "subtitle" => $product->subtitle,
-        "title_orig" => $product->title_orig,
+        "brand" => $product->brand,
+        // "title" => $product->title,
+        // "subtitle" => $product->subtitle,
+        // "title_orig" => $product->title_orig,
       //   // "category" => $product->category,
       //   // "manufacturerTitle" => $product->getManufacturerTitle(),
       //   // "dimension" => $product->getDimension(),
       //   "flag" => $product->getFlag(),
       //   // "priority" => $product->getPriority(),
       //   // "manufacturer" => $product->manufacturer,
-        "color" => $product->color,
+        // "color" => $product->color,
       //   // "colors" => array(
       //   //   'category' => $product->color,
       //   //   'sum' => count($colorFabrics),
       //   //   'items' => array_slice($colorFabrics, 0, 5),
       //   // ),
       //   // "fabrics" => $colorFabrics,
-        "title_orig_rest" => $product->title_orig_rest,
+        // "title_orig_rest" => $product->title_orig_rest,
       //   // "instore" => $product->instore,
       //   "features" => $product->features,
       //   // "stock" => $product->getStock()

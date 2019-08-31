@@ -48,7 +48,7 @@ class Menu extends Component
     	$dataResults = $this->db->query
         ("
             SELECT
-                id, title, pid, pos, categories
+                id, title, pid, pos, categories, products
             FROM
                 categories_web
             WHERE
