@@ -16,6 +16,7 @@ props,
   rowHeight,
   rowNum,
   calendarCoord,
+  startHour,
 },
 ) =>
 {
@@ -25,7 +26,7 @@ props,
   {
     labels.push(
       <Label {...{
-        hour: i,
+        hour: i + startHour,
         coord:
         {
           top: calendarCoord.y + (rowHeight * i),
@@ -53,11 +54,6 @@ props,
  */
 xAxis.propTypes =
 {
-  // style: PropTypes.shape({
-  //   fill: PropTypes.string,
-  //   fontSize: PropTypes.number,
-  //   fontFamily: PropTypes.string,
-  // }),
 };
 
 /**
@@ -66,7 +62,6 @@ xAxis.propTypes =
  */
 xAxis.defaultProps =
 {
-  // style: {},
 };
 
 xAxis.contextTypes =
@@ -74,6 +69,7 @@ xAxis.contextTypes =
   calendarCoord: PropTypes.shape({ x: PropTypes.number, y: PropTypes.number }).isRequired,
   rowNum: PropTypes.number.isRequired,
   rowHeight: PropTypes.number.isRequired,
+  startHour: PropTypes.number.isRequired,
 };
 
 

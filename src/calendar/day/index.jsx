@@ -37,8 +37,8 @@ class Calendar extends Component
     const state = {
       xAxisWidth: 80,
       yAxisHeight: 50,
-      startHour: 0,
-      endHour: 24,
+      startHour: props.startHour,
+      endHour: props.endHour,
     };
 
     this.state = {
@@ -205,10 +205,17 @@ Calendar.propTypes =
    */
   xAxis: PropTypes.bool,
   /**
+   * X axis start hour
+   */
+  startHour: PropTypes.number,
+  /**
+   * X axis finish hour
+   */
+  endHour: PropTypes.number,
+  /**
    * y-Axis visibility
    */
   yAxis: PropTypes.bool,
-
   /**
    * Invoke when hover events, default layer popup
    */
@@ -216,7 +223,6 @@ Calendar.propTypes =
     PropTypes.func,
     PropTypes.oneOf(['']),
   ]),
-
   /**
    * Invoke when hover off
    */
@@ -236,6 +242,8 @@ Calendar.defaultProps =
   width: 0,
   height: 0,
   xAxis: true,
+  startHour: 0,
+  endHour: 24,
   yAxis: true,
   onEventMouseEnter: '',
   onEventMouseLeave: '',

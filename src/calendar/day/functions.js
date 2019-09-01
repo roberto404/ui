@@ -1,8 +1,7 @@
 
-// import clamp from '@1studio/utils/math/clamp';
 import clamp from '@1studio/utils/math/clamp';
 import PropTypes, { checkPropTypes } from '@1studio/utils/propType';
-
+import moment from 'moment';
 
 /* !- Constants */
 
@@ -75,7 +74,7 @@ export const getEventPosition = (event, context) =>
 };
 
 /**
- * Start, end Date to coordinate (SVG Rectangle props).
+ * Convert Date (start, end) to coordinate (SVG Rectangle props).
  * @param  {Object} e       event { start, end }
  * @param  {Object} context calendar context
  * @return {Object}          ...event, rect = [{ x, y, width, height }]}
@@ -94,8 +93,8 @@ export const getEventCoordinate = (e, context) =>
     calendarHeight,
   } = context;
 
-  const eventStartDate = new Date(e.start.replace(/-/g, '/'));
-  const eventEndDate = new Date(e.end.replace(/-/g, '/'));
+  const eventStartDate = moment(e.start).toDate();
+  const eventEndDate = moment(e.end).toDate();
 
   const event = getEventPosition({
     ...e,
@@ -197,17 +196,17 @@ export const getEventDate = (rect, context, ENABLEACCURANCY: boolean = true) =>
 {
   const {
     startDate,
+    startHour,
     rowHeight,
     colWidth,
     calendarCoord,
-    moment,
   } = context;
 
 
   const col = Math.round((rect.x - calendarCoord.x) / colWidth);
   const row = (rect.y - calendarCoord.y) / rowHeight;
 
-  let start = moment(startDate).add(col, 'days').add(row, 'hours').unix() * 1000;
+  let start = moment(startDate).add(col, 'days').add(row + startHour, 'hours').unix() * 1000;
   let end = start + Math.round(rect.height / rowHeight * ONE_HOUR);
 
   if (Y_MOVEMENT_ACCURANCY && ENABLEACCURANCY)

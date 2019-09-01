@@ -1,11 +1,8 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import Hammer from 'hammerjs';
 import isEqual from 'lodash/isEqual';
-// import clamp from '@1studio/utils/math/clamp';
-import clamp from '@1studio/utils/math/clamp';
 
 import {
   getEventPosition,
@@ -25,7 +22,9 @@ import Rectangle from './eventsRectangle';
 
 
 /**
- * Calendar component
+ * Events component
+ *
+ * Connect grid === this.state
  */
 class Events extends Component
 {
@@ -100,7 +99,7 @@ class Events extends Component
           height: rowHeight,
         },
         this.context,
-      )
+      ),
     );
 
     // this.props.addEvent(getEventDate(
@@ -115,7 +114,7 @@ class Events extends Component
 
 
   /**
-   * Prepare events to eventRectangle Componenet
+   * Prepare events to eventRectangle Component
    * @return {Array} calendar rectagle object { x, y, width, height }
    */
   getEvents()
