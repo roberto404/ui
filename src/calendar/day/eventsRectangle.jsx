@@ -27,7 +27,7 @@ const DEFAULT_STYLE = {
 
 
 /**
- * x-Axis component
+ * Move, scaleable Event Component
  */
 class EventsRectangle extends Component
 {

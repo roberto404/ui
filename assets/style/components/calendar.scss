@@ -88,6 +88,61 @@
       }
     }
   }
+
+  &.day,
+  &.week
+  {
+    [id*="-bg"]
+    {
+      fill: #f5f5f5;
+    }
+
+    [id*="-xaxis"]
+    {
+      line
+      {
+        stroke: #e8e7e8;
+      }
+
+      text
+      {
+        fill: #584e4f;
+        font-size: 14px;
+      }
+    }
+
+    [id*="-yaxis"] text
+    {
+      fill: #d9d9d9;
+      font-size: 12px;
+    }
+
+    [id*="-ygrid"] line,
+    [id*="-xgrid"] line
+    {
+      stroke: #e8e7e8;
+      stroke-width: 1;
+    }
+
+    #weekend rect
+    {
+      fill: white;
+    }
+
+    #events
+    {
+      rect
+      {
+        fill: #caefff;
+      }
+
+      text
+      {
+        fill: #01689e;
+        font-size: 14px;
+      }
+    }
+  }
 }
 
 #pattern-checkers
