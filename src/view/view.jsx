@@ -58,10 +58,10 @@ ViewMenuComponent.defaultProps =
       className="button w-auto outline shadow embed-angle-down-gray"
     >
       <IconView />
-      Nézet
+      <span>Nézet</span>
     </div>
   ),
-}
+};
 
 export const ViewMenu = connect(
   (state) =>

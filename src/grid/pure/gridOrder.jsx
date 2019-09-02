@@ -117,7 +117,7 @@ OrderMenu.defaultProps =
       className="button w-auto outline shadow embed-angle-down-gray"
     >
       <IconOrder />
-      Rendezés
+      <span>Rendezés</span>
     </div>
   ),
 };
