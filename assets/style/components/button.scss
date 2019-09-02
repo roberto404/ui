@@ -47,9 +47,7 @@ button,
     }
   }
 
-  &:not(.no-fill)
-  :not([class^="fill-"])
-  :not([class*=" fill-"]),
+  &:not(.no-fill):not([class^="fill-"]):not([class*=" fill-"])
   {
     svg
     {
@@ -92,9 +90,7 @@ button,
   {
     color: white;
 
-    &:not(.no-fill)
-    :not([class^="fill-"])
-    :not([class*=" fill-"]),
+    &:not(.no-fill):not([class^="fill-"]):not([class*=" fill-"])
     {
       svg,
       &:hover svg
@@ -235,7 +231,7 @@ button,
         background-color: $yellow;
       }
 
-      &:not(:hover) svg path { fill: $yellow };
+      &:not(:hover):not(.no-fill):not([class^="fill-"]):not([class*=" fill-"]) svg path { fill: $yellow };
     }
 
     &.blue
@@ -249,7 +245,7 @@ button,
         background-color: $blue;
       }
 
-      &:not(:hover) svg path { fill: $blue };
+      &:not(:hover):not(.no-fill):not([class^="fill-"]):not([class*=" fill-"]) svg path { fill: $blue };
     }
 
     &.green
@@ -263,7 +259,7 @@ button,
         background-color: $green;
       }
 
-      &:not(:hover) svg path { fill: $green };
+      &:not(:hover):not(.no-fill):not([class^="fill-"]):not([class*=" fill-"]) svg path { fill: $green };
     }
 
     &.red
@@ -277,7 +273,7 @@ button,
         background-color: $red;
       }
 
-      &:not(:hover) svg path { fill: $red };
+      &:not(:hover):not(.no-fill):not([class^="fill-"]):not([class*=" fill-"]) svg path { fill: $red };
     }
 
     &.black
@@ -291,7 +287,7 @@ button,
         background-color: $black;
       }
 
-      &:not(:hover) svg path { fill: $black };
+      &:not(:hover):not(.no-fill):not([class^="fill-"]):not([class*=" fill-"]) svg path { fill: $black };
     }
 
     &.gray
@@ -305,7 +301,7 @@ button,
         background-color: $gray;
       }
 
-      &:not(:hover) svg path { fill: $gray };
+      &:not(:hover):not(.no-fill):not([class^="fill-"]):not([class*=" fill-"]) svg path { fill: $gray };
     }
   }
 

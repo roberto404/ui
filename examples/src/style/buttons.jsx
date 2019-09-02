@@ -4,6 +4,7 @@ import Icon from '../../../src/icon/mui/action/done';
 import IconPlus from '../../../src/icon/mui/content/add';
 import IconDuplicate from '../../../src/icon/mui/content/add';
 import IconDelete from '../../../src/icon/mui/content/remove';
+import IconArrow from '../../../src/icon/mui/navigation/expand_more';
 
 const ExampleForm = () =>
 (
@@ -147,6 +148,21 @@ const ExampleForm = () =>
       </div>
       <div className="col-1-4">
         <button className="outline blue "><Icon /><div className="w-full">blue</div><Icon /></button>
+      </div>
+    </div>
+
+    <h2>SVG mixed position</h2>
+    <div classNAme="grid-2 card">
+      <div className="col-1-4">
+        <button className="w-full outline shadow">
+          <div className="w-full">
+            <Icon />
+            <span>Action</span>
+          </div>
+          <div>
+            <IconArrow />
+          </div>
+        </button>
       </div>
     </div>
 
