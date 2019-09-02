@@ -4,19 +4,19 @@ import React from 'react';
 
 /* !- React Elements */
 
-import { Grid as GridView } from '@1studio/ui/view';
-import Connect from '@1studio/ui/grid/connect';
-import Grid from '@1studio/ui/grid/pure/grid';
+import { Grid as GridView } from '../../../src/view';
+import Connect from '../../../src/grid/connect';
+import Grid from '../../../src/grid/pure/grid';
 
-import GridDate from '@1studio/ui/grid/pure/gridDate';
-import GridSelectGroupBy from '@1studio/ui/grid/pure/gridSelectGroupBy';
-import GridFieldGroupBy from '@1studio/ui/grid/pure/gridFieldGroupBy';
+import GridDate from '../../../src/grid/pure/gridDate';
+import GridSelectGroupBy from '../../../src/grid/pure/gridSelectGroupBy';
+import GridFieldGroupBy from '../../../src/grid/pure/gridFieldGroupBy';
 
 import {
   Input,
   Button,
   Dropdown,
-} from '@1studio/ui/form/pure/intl';
+} from '../../../src/form/pure/intl';
 
 
 /* !- Constatnts */
@@ -38,11 +38,10 @@ const Example = () =>
   >
     <h1>Grid Filters</h1>
 
-
     <div className="filters">
       <Input
         id="search"
-        label={<div className="icon embed-search-gray-dark">Search</div>}
+        label={<div className="icon embed-arrow-down-gray">Search</div>}
         placeholder="Name..."
       />
       <Button
@@ -56,7 +55,7 @@ const Example = () =>
       <GridFieldGroupBy
         id="gender"
         placeholder="Gender"
-        helper={[{ id: 1, title: 'Male' }, { id: 2, title: 'Femail' }]}
+        helper={[{ id: 1, title: 'Male' }, { id: '2', title: 'Female' }]}
       />
       <GridDate
         id="visit"

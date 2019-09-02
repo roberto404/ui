@@ -132,6 +132,12 @@
 
     -webkit-appearance: none;
 
+    &[class^="embed-"],
+    &[class*=" embed-"]
+    {
+      padding-right: 3rem;
+    }
+
     &:focus
     {
       @extend .border;
@@ -181,9 +187,10 @@
 
   select
   {
-    @extend .embed-arrow-down;
+    @extend .embed-arrow-down-gray;
     @extend .shadow;
-    background-size: .5em;
+    padding-right: 3rem !important;
+    background-size: 1em;
     background-repeat: no-repeat;
     background-position-y: center;
     background-position-x: calc(100% - 1em);
@@ -850,7 +857,8 @@
 
     input:not([type="radio"]):not([type="checkbox"]),
     textarea,
-    select
+    select,
+    button
     {
       padding: 0 1em;
       width: auto;
@@ -859,7 +867,8 @@
       font-size: 0.75em;
       line-height: 120%;
       border: none;
-      background: none;
+      // background: none;
+      background-color: transparent !important;
       text-transform: uppercase;
       box-shadow: none;
       color: $gray;
@@ -900,15 +909,7 @@
 
       button
       {
-        padding: 0 1em;
-        height: 100%;
         border-radius: 0;
-        border: none;
-
-        background-color: transparent !important;
-        font-size: .75em;
-        text-transform: uppercase;
-        color: $gray-dark;
 
         > *
         {

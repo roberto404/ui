@@ -1,8 +1,8 @@
 import React from 'react';
 
 export const DATA = [
-  { "id": 1, "name": "Megan J. Cushman", "gender": 1, "visits": "2017-07-23" },
-  { "id": 2, "name": "Taylor R. Fallin", "gender": 2, "visits": "2017-07-22" },
+  { "id": 1, "name": "Megan J. Cushman", "gender": '1', "visits": "2017-07-23" },
+  { "id": 2, "name": "Taylor R. Fallin", "gender": '2', "visits": "2017-07-22" },
   { "id": 3, "name": "Jose C. Rosado", "gender": 1, "visits": "2017-07-20" },
   { "id": 4, "name": "Sammy C. Brandt", "gender": 1, "visits": "2017-07-10" },
   { "id": 5, "name": "June K. Jenkins", "gender": 2, "visits": "2017-06-10" },

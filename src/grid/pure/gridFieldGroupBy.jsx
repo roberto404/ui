@@ -45,17 +45,10 @@ const GridFieldGroupBy = (props, context) =>
         [],
       )
       .map(
-        (item) =>
-        {
-          let title = item;
-          const helperIndex = findIndex(helper, { id: item.toString() });
-
-          if (helperIndex >= 0)
-          {
-            title = helper[helperIndex].title;
-          }
-          return { id: item, title };
-        },
+        item => ({
+          id: item,
+          title: (helper.find(({ id }) => id.toString() === item.toString()) || {}).title || item.toString(),
+        }),
       )
       .sort((a, b) => a.title.localeCompare(b.title))
     );
@@ -112,6 +105,12 @@ GridFieldGroupBy.defaultProps =
   //TODO field placeholderét kellene h megörökölje
   placeholder: '',
   helper: [],
+  /**
+   * Collect records from rawData of Grid
+   * @return {array}        collected unique field name
+   * @example
+   * ['male', 'femail']
+   */
   reducer: (result, record, id) =>
   {
     if (Array.isArray(record[id]))
@@ -124,9 +123,12 @@ GridFieldGroupBy.defaultProps =
         }
       });
     }
-    else if (typeof record[id] === 'string' && result.indexOf(record[id]) === -1)
+    else if (
+      ['string', 'number'].indexOf(typeof record[id]) !== -1
+      && result.indexOf(record[id].toString()) === -1
+    )
     {
-      result.push(record[id]);
+      result.push(record[id].toString());
     }
     return result;
   },

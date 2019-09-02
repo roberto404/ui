@@ -90,7 +90,7 @@ class Button extends Field
             className={this.props.buttonClassName}
           >
             { this.props.icon && React.createElement(this.props.icon)}
-            <span>{ value || placeholder }</span>
+            <span>{ value && typeof value === 'string' ? value : placeholder }</span>
           </button>
 
           { this.props.postfix &&
