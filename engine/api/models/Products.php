@@ -2065,7 +2065,7 @@ class Products extends Model
 
                 list($productFilterField, $productFilterOperator, $productFilterValue) = $productFilter;
 
-                if (!$productFilterValue || !property_exists($product, $productFilterField))
+                if (!property_exists($product, $productFilterField))
                 {
                   continue(2);
                 }

@@ -28,7 +28,7 @@ class ProductTask extends \Phalcon\CLI\Task
   public function testAction()
   {
     $products = Products::find([
-      // 'conditions' => 'id = "K25820001102"',
+      'conditions' => 'id = "C4K10401"',
       // 'conditions' => 'features LIKE \'%\"41\":true%\'',
       // 'conditions' => 'id = "NF112I0220U01"',
       // 'conditions' => 'category = "15"',
@@ -38,7 +38,7 @@ class ProductTask extends \Phalcon\CLI\Task
       // 'conditions' => 'id = "8F00055A0"', //(37100.51)
       // 'conditions' => 'id = "8F0005500"', //(63859.41)
       // 'conditions' => 'brand LIKE "%Vénusz%"',
-      'conditions' => 'id = "NF20712RK"',
+      // 'conditions' => 'id = "NF20712RK"',
     ]);
 
     // var_dump(count($products));
@@ -62,7 +62,7 @@ class ProductTask extends \Phalcon\CLI\Task
       var_dump(
         $product::parseWebCategory($product)
       );
-      // die();
+      die();
 
       // $product->createRelatedId();
 
