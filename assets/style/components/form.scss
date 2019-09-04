@@ -864,7 +864,7 @@
       width: auto;
       max-width: 15em;
       height: 100%;
-      font-size: 0.75em;
+      font-size: 0.8em;
       line-height: 120%;
       border: none;
       // background: none;
@@ -884,6 +884,7 @@
         font-style: italic;
         font-weight: 300;
         color: $black-light;
+        font-size: .75em;
       }
 
       &:focus

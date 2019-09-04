@@ -63,8 +63,11 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  // height: 1.5em;
-  height: 1.06em;
+
+  &:not([class^="h-"]):not([class*=" h-"])
+  {
+    height: 1.06em;
+  }
 }
 
 .colon:after
