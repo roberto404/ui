@@ -18,6 +18,7 @@
     "docs": "node_modules/.bin/documentation build ./utils/manual.js -f md -o MANUAL.md --github",
     "docs:view": "node_modules/.bin/documentation serve --watch ./src/index.js",
     "docs:react": "rimraf docs && mkdir docs && react-docgen ./src/grid/pure/*.jsx --pretty -o ./docs/docs.json && cat ./docs/docs.json | ./utils/buildDocs.sh",
+    "example:icon": "find src/icon/mui | ./utils/buildIcons.sh && find src/icon/la | ./utils/buildIcons.sh",
     "#precommit": "npm run validate",
     "commit": "git-cz",
     "semantic-release": "semantic-release"
@@ -81,7 +82,7 @@
     "sinon": "4.1.2"
   },
   "dependencies": {
-    "@1studio/utils": "^3.7.0",
+    "@1studio/utils": "3.8.0",
     "@tinymce/tinymce-react": "2.5.0",
     "classnames": "2.2.5",
     "draft-js": "0.10.5",
@@ -95,7 +96,7 @@
     "jquery": "3.4.1",
     "lodash": "4.17.11",
     "material-ui": "0.18.7",
-    "moment": "2.19.4",
+    "moment": "2.24.0",
     "node-uuid": "1.4.8",
     "prop-types": "15.5.10",
     "react": "15.6.1",

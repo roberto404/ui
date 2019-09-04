@@ -13,16 +13,19 @@ import Layer from '../../src/layer';
 // import Example from './style/avatar';
 // import Example from './style/buttons';
 // import Example from './style/screen';
+import Example from './icon/mui';
+// import Example from './icon/la';
+
 
 
 /* !- Example: Form */
 
 // import Example from './form/basic';
-import Example from './form/fields';
+// import Example from './form/fields';
 // import Example from './form/submit';
 // import Example from './form/connect';
 // import Example from './form/flat';
-
+// import Example from './form/plain';
 
 
 /* !- Example: Grid */
@@ -53,10 +56,26 @@ import Example from './form/fields';
 /* !- Example: Calendar */
 
 // import Example from './calendar/static';
+// import Example from './calendar/week';
 // import Example from './calendar/dynamic';
 // import Example from './calendar/caroussel';
 // import Example from './calendar/filters';
 
+
+// import Example from './print';
+
+
+/* !- Example: Chart */
+
+// import Example from './chart/coordinate';
+// import Example from './chart/complex';
+
+
+/* !- Example: Map */
+
+// import Example from './map/gmaps';
+// import Example from './map/mapbox/static';
+// import Example from './map/mapbox/dynamic';
 
 
 export default () =>
