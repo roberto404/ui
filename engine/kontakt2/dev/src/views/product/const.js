@@ -198,9 +198,9 @@ export const HOOK_LIST = {
     format: ({ record }) =>
     (
       <div className="pl-1">
-        <div className="ellipsis">{record.brand} {record.title}</div>
+        <div className="ellipsis" style={{ height: '1.5em' }}>{record.brand} {record.title}</div>
         <div className="text-s text-gray light ellipsis" style={{ height: '1.5em' }}>{record.subtitle}</div>
-        <div className="text-s text-gray light ellipsis" onDoubleClick={() => console.log(1)} onClick={() => console.log(2)}>{record.id}</div>
+        <div className="text-s text-gray light ellipsis" style={{ height: '1.5em' }}>{record.id}</div>
       </div>
     ),
   },

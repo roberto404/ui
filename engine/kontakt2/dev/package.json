@@ -24,6 +24,7 @@
     "build:prod": "webpack --env.prod -p",
     "build:debug": "webpack --display-error-details",
     "prewatch": "npm run build",
+    "update": "npm i -S @1studio/ui@latest && npm i -S @1studio/utils@latest",
     "watch": "node_modules/.bin/webpack-dev-server --env.dev"
   },
   "repository": {
@@ -84,8 +85,8 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
-    "@1studio/ui": "1.*.*",
-    "@1studio/utils": "3.*.*",
+    "@1studio/ui": "1.10.0",
+    "@1studio/utils": "3.8.0",
     "blob-stream": "0.1.3",
     "classnames": "2.2.5",
     "lodash": "4.17.11",
