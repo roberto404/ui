@@ -70,6 +70,10 @@ export const getRoutes = app => [
       config: app ? app.getProjectConfig() : {},
     },
   },
+  {
+    path: '/analytics',
+    component: Views.AnalyticsGrid,
+  },
 ];
 
 
