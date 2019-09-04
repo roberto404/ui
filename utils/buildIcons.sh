@@ -39,9 +39,9 @@ process.stdin.on('end', function()
 
       imports.push(`import ${child} from '../../../${m[1]}';`);
       childs.push(`
-        <div className="col-3-12">
-          <div className="mb-1 text-gray text-xs">${m[1]}</div>
-          <${child} className="w-6 h-6" />
+        <div className="col-1-5">
+        <${child} className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">${m[1]}</div>
         </div>
       `);
     }
@@ -52,7 +52,7 @@ process.stdin.on('end', function()
 
     const Example = () =>
     (
-      <div className="grid-4-2 text-center">
+      <div className="grid-4-4 text-center">
         ${childs.join("\n")}
       </div>
     );
