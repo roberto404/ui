@@ -198,6 +198,16 @@ hr
   fill: $gray;
 }
 
+.fill-gray-light *
+{
+  fill: $gray-light;
+}
+
+.fill-gray-dark *
+{
+  fill: $gray-dark;
+}
+
 .fill-yellow *
 {
   fill: $yellow;
@@ -216,6 +226,21 @@ hr
 .fill-green *
 {
   fill: $green;
+}
+
+.rotate-90
+{
+  transform: rotate(90deg);
+}
+
+.rotate-180
+{
+  transform: rotate(180deg);
+}
+
+.rotate-270
+{
+  transform: rotate(270deg);
 }
 
 
