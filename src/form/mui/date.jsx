@@ -12,10 +12,6 @@ import Field from '../formField';
 
 /* !- Constants */
 
-require('intl/locale-data/jsonp/hu');
-
-moment.locale('hu');
-
 
 /**
 * Date Component
