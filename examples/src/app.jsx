@@ -34,6 +34,7 @@ import Example from './icon/mui';
 // import Example from './grid/connect';
 // import Example from './grid/dynamic';
 // import Example from './grid/filters';
+// import Example from './grid/data';
 // import Example from './grid/extra';
 // import Example from './grid/complex';
 // import Example from './grid/list';
