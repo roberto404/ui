@@ -13,7 +13,7 @@ import Layer from '../../src/layer';
 // import Example from './style/avatar';
 // import Example from './style/buttons';
 // import Example from './style/screen';
-import Example from './icon/mui';
+// import Example from './icon/mui';
 // import Example from './icon/la';
 
 
@@ -34,11 +34,12 @@ import Example from './icon/mui';
 // import Example from './grid/connect';
 // import Example from './grid/dynamic';
 // import Example from './grid/filters';
-// import Example from './grid/data';
 // import Example from './grid/extra';
 // import Example from './grid/complex';
 // import Example from './grid/list';
 // import Example from './grid/casual';
+// import Example from './grid/pivotTable';
+import Example from './grid/pivotTableComplex';
 // import Example from './grid/withoutGrid';
 
 
