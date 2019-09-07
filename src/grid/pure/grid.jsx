@@ -436,7 +436,7 @@ class Grid extends Component
           onClick={() => onChangeOrder(column)}
           style={{
             width: (typeof columnHook.width !== 'undefined') ?
-              columnHook.width : `${Math.floor(100 / Object.keys(hook).length)}%`,
+              columnHook.width : `${Math.ceil(100 / Object.keys(hook).length)}%`,
           }}
           className={orderColumn === column ? 'active' : ''}
         >
