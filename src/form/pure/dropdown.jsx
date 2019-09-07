@@ -102,15 +102,21 @@ class Dropdown extends Field
       data.unshift({ id: 0, title: this.props.placeholder });
     }
 
-    this.context.store.dispatch(menu({
-      items: data.map(item =>
-        ({
-          ...item,
-          className: item.className + (isActive(item.id) ? ' active' : ''),
-          handler: item.handler ? item.handler(this.onChangeDropdownHandler) : this.onChangeDropdownHandler,
-        }),
-      ),
-    }, event));
+    this.context.store.dispatch(menu(
+      {
+        items: data.map(item =>
+          ({
+            ...item,
+            className: item.className + (isActive(item.id) ? ' active' : ''),
+            handler: item.handler ?
+              item.handler(this.onChangeDropdownHandler) : this.onChangeDropdownHandler,
+          }),
+        ),
+      },
+      {
+        currentTarget: this.element,
+      },
+    ));
   }
 
 
@@ -131,13 +137,20 @@ class Dropdown extends Field
       .join(', ');
 
     return super.render() || (
-      <div className={this.getClasses('dropdown')}>
+      <div
+        className={this.getClasses('dropdown')}
+        onClick={this.onClickButtonHandler}
+      >
 
         { this.label }
 
         <button
           className={`value ${this.props.buttonClassName}`}
           onClick={this.onClickButtonHandler}
+          ref={(ref) =>
+          {
+            this.element = ref;
+          }}
         >
           { valueText || this.props.placeholder }
         </button>
