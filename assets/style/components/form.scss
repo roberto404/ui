@@ -875,6 +875,8 @@
 
       option
       {
+        background: initial;
+        color: initial;
         text-transform: inherit;
       }
 
@@ -884,12 +886,17 @@
         font-style: italic;
         font-weight: 300;
         color: $black-light;
-        font-size: .75em;
+        font-size: .9em;
       }
 
       &:focus
       {
         border: none;
+      }
+
+      &:hover
+      {
+        color: $gray !important;
       }
     }
 
@@ -936,6 +943,11 @@
       {
         font-weight: bold;
         color: $white-light;
+
+        &:hover
+        {
+          color: white !important;
+        }
       }
 
       svg *
