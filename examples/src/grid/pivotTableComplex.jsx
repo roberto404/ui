@@ -1,12 +1,10 @@
 
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import count from '@1studio/utils/array/count';
 import countUnique from '@1studio/utils/array/countUnique';
-// import pivotTable from '@1studio/utils/array/pivotTable';
-import PivotTable, { collectionGroupBy } from '/Users/roberto/Sites/utils/src/array/pivotTable';
+import PivotTable, { collectionGroupBy } from '@1studio/utils/array/pivotTable';
 import sum from 'lodash/sum';
 import mean from 'lodash/mean';
 import max from 'lodash/max';
@@ -125,7 +123,7 @@ const ConnectedGrid = connect(
     row: form.row,
     column: form.column,
     field: form.field,
-    summarize: form.summarize
+    summarize: form.summarize,
   }),
 )(PivotTableComponent);
 
