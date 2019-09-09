@@ -956,4 +956,9 @@
       }
     }
   }
+
+  &.gray-dark .field.active
+  {
+    background-color: $gray-dark;
+  }
 }
