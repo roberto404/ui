@@ -33,7 +33,7 @@ import Layer from '../../src/layer';
 // import Example from './grid/static';
 // import Example from './grid/connect';
 // import Example from './grid/dynamic';
-import Example from './grid/filters';
+// import Example from './grid/filters';
 // import Example from './grid/extra';
 // import Example from './grid/complex';
 // import Example from './grid/list';
@@ -76,7 +76,7 @@ import Example from './grid/filters';
 /* !- Example: Map */
 
 // import Example from './map/gmaps';
-// import Example from './map/mapbox/static';
+import Example from './map/mapbox/static';
 // import Example from './map/mapbox/dynamic';
 
 
