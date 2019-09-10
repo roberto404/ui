@@ -14,7 +14,7 @@ import ProductWebOutletGrid from './productWebOutlet/grid';
 import RepairGrid from './repair/grid';
 import RepairForm from './repair/form';
 import StockGrid from './stock/grid';
-import AnalyticsGrid from './analytics';
+import AnalyticsGrid from './analytics/grid';
 
 
 export default {
