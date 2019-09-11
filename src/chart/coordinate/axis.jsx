@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 
-export const xAxisLabel = ({ i, x, y }) =>
+export const yAxisLabel = ({ i, x, y }) =>
 (
   <text
     x={x - 3}
@@ -11,11 +11,11 @@ export const xAxisLabel = ({ i, x, y }) =>
     alignmentBaseline="middle"
     textAnchor="end"
   >
-    {i}
+    {i}.
   </text>
 );
 
-export const yAxisLabel = ({ i, x, y }) =>
+export const xAxisLabel = ({ i, x, y }) =>
 (
   <text
     x={x}
@@ -27,8 +27,8 @@ export const yAxisLabel = ({ i, x, y }) =>
   </text>
 );
 
-yAxisLabel.propTypes =
 xAxisLabel.propTypes =
+yAxisLabel.propTypes =
 {
   i: PropTypes.number.isRequired,
   x: PropTypes.number.isRequired,

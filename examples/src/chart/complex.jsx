@@ -11,7 +11,7 @@ import Coordinate from '../../../src/chart/coordinate';
 
 /* !- Elements */
 
-const xAxisLabel = ({ i, x, y }) =>
+const yAxisLabel = ({ i, x, y }) =>
 (
   <text
     x={x - 40}
@@ -23,7 +23,7 @@ const xAxisLabel = ({ i, x, y }) =>
   </text>
 );
 
-const yAxisLabel = ({ i, x, y, canvas }) =>
+const xAxisLabel = ({ i, x, y, canvas }) =>
 (
   <text
     x={x + (canvas.colWidth / 2)}

@@ -69,9 +69,9 @@ const Example = () =>
       <Resize>
         <Coordinate
           data={data}
-          xAxisSteps={10}
-          yAxisSteps={10}
-          xAxisLabel={({ i, x, y }) =>
+          xAxisSteps={8}
+          yAxisSteps={6}
+          yAxisLabel={({ i, x, y }) =>
           (
             <text
               x={x}
@@ -114,7 +114,7 @@ const Example = () =>
         }}
         xAxisSteps={7}
         yAxisSteps={11}
-        xAxisLabel={({ i, x, y }) =>
+        yAxisLabel={({ i, x, y }) =>
         (
           <text
             x={x - 40}
@@ -125,7 +125,7 @@ const Example = () =>
             {20-i}:00
           </text>
         )}
-        yAxisLabel={({ i, x, y, canvas }) =>
+        xAxisLabel={({ i, x, y, canvas }) =>
         (
           <g>
             <line
