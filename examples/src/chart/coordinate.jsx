@@ -65,7 +65,7 @@ const Example = () =>
     <h1>Coordinate</h1>
 
     <h2>Static coordinate system</h2>
-    <div className="col-1-5" style={{ height: '400px' }}>
+    {/*<div className="col-1-5" style={{ height: '400px' }}>
       <Resize>
         <Coordinate
           data={data}
@@ -90,7 +90,7 @@ const Example = () =>
           }}
         />
       </Resize>
-    </div>
+    </div>*/}
 
     <h2>Coordinate to Week Calendar</h2>
     <div className="">
@@ -114,6 +114,8 @@ const Example = () =>
         }}
         xAxisSteps={7}
         yAxisSteps={11}
+        yAxisValueMin={0}
+        xAxisValueMax={7}
         yAxisLabel={({ i, x, y }) =>
         (
           <text
@@ -122,7 +124,7 @@ const Example = () =>
             alignmentBaseline="middle"
             textAnchor="middle"
           >
-            {20-i}:00
+            {20 - i}:00
           </text>
         )}
         xAxisLabel={({ i, x, y, canvas }) =>

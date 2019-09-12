@@ -12,14 +12,23 @@ const Grid = ({
   coordToPix,
 }) =>
 {
-  const { canvas } = coordToPix(0, 0);
-  const steps = direction === 'x' ? canvas.yAxisSteps : canvas.xAxisSteps;
+  const {
+    xAxisSteps,
+    yAxisSteps,
+    stepXPoints,
+    stepYPoints,
+  } = coordToPix(0, 0).canvas;
+
+  const steps = direction === 'x' ? yAxisSteps : xAxisSteps;
+
   const lines = [];
 
   for (let i = 0; i <= steps; i += 1)
   {
-    const coords1 = direction === 'x' ? coordToPix(0, i) : coordToPix(i, 0);
-    const coords2 = direction === 'x' ? coordToPix(canvas.xAxisSteps, i) : coordToPix(i, canvas.yAxisSteps);
+    const coords1 = direction === 'x' ? coordToPix(0, i * stepYPoints) : coordToPix(i * stepXPoints, 0);
+    const coords2 = direction === 'x' ?
+      coordToPix(xAxisSteps * stepXPoints, i * stepYPoints)
+      : coordToPix(i * stepXPoints, yAxisSteps * stepYPoints);
 
     lines.push(
       <line
@@ -46,6 +55,9 @@ const Grid = ({
  */
 Grid.propTypes =
 {
+  id: PropTypes.string,
+  direction: PropTypes.oneOf(['x', 'y']).isRequired,
+  coordToPix: PropTypes.func.isRequired,
 };
 
 /**

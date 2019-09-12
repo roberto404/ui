@@ -2,35 +2,40 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-
-export const yAxisLabel = ({ i, x, y }) =>
+export const xAxisLabel = ({ value, x, y }) =>
 (
   <text
-    x={x - 3}
+    x={x}
+    y={y + 5}
+    alignmentBaseline="hanging"
+    textAnchor="middle"
+  >
+    {value.x}
+  </text>
+);
+
+export const yAxisLabel = ({ value, x, y }) =>
+(
+  <text
+    x={x - 5}
     y={y}
     alignmentBaseline="middle"
     textAnchor="end"
   >
-    {i}.
-  </text>
-);
-
-export const xAxisLabel = ({ i, x, y }) =>
-(
-  <text
-    x={x}
-    y={y + 3}
-    alignmentBaseline="hanging"
-    textAnchor="middle"
-  >
-    {i}
+    {Math.round(value.y * 10) / 10}
   </text>
 );
 
 xAxisLabel.propTypes =
-yAxisLabel.propTypes =
+yAxisLabel.propTypes = // eslint-disable-line
 {
-  i: PropTypes.number.isRequired,
+  value: PropTypes.shape({
+    x: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string,
+    ]),
+    y: PropTypes.number.isRequired,
+  }).isRequired,
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
 };
@@ -42,22 +47,43 @@ yAxisLabel.propTypes =
 const Axis = ({
   id,
   coordToPix,
-  steps,
   UI,
   direction,
 }) =>
 {
+  const {
+    xAxisSteps,
+    yAxisSteps,
+    stepXPoints,
+    stepYPoints,
+    xAxisValues,
+    yAxisValueMin,
+  } = coordToPix(0, 0).canvas;
+
+  const steps = direction === 'x' ? xAxisSteps : yAxisSteps;
+
   const labels = [];
+
+  //[null, 100, 200, 50]
 
   for (let i = 0; i <= steps; i += 1)
   {
-    labels.push(
-      <UI
-        i={i}
-        key={i}
-        {...(direction === 'x' ? coordToPix(i, 0) : coordToPix(0, i))}
-      />,
-    );
+    if (
+      direction === 'y' || (xAxisValues[i] !== null)
+    )
+    {
+      labels.push(
+        <UI
+          key={i}
+          i={i}
+          value={{
+            x: xAxisValues[i],
+            y: yAxisValueMin + (i * stepYPoints),
+          }}
+          {...(direction === 'x' ? coordToPix(i * stepXPoints, 0) : coordToPix(0, i * stepYPoints))}
+        />,
+      );
+    }
   }
 
   return (
@@ -73,6 +99,10 @@ const Axis = ({
  */
 Axis.propTypes =
 {
+  id: PropTypes.string,
+  direction: PropTypes.oneOf(['x', 'y']).isRequired,
+  coordToPix: PropTypes.func.isRequired,
+  UI: PropTypes.func.isRequired,
 };
 
 /**

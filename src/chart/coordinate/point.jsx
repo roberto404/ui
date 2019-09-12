@@ -13,6 +13,16 @@ export const Point = ({
   <circle cx={x} cy={y} r="5" />
 );
 
+/**
+ * propTypes
+ * @type {Object}
+ */
+Point.propTypes =
+{
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+};
+
 
 /**
  * Points component
@@ -23,13 +33,37 @@ const Points = ({
   UI,
 }) =>
 {
-  const renderGroupOfPoints = (id, points) => (
-    <g id={id} key={id}>
+  const {
+    yAxisValueMin,
+    xAxisValues,
+    xAxisValueMin,
+    xAxisValueMax,
+  } = coordToPix(0, 0).canvas;
+
+  const renderGroupOfPoints = (id, points) =>
+  {
+    const elements = [];
+
+    xAxisValues.forEach((value, i) =>
     {
-      points.map(({ x, y, element }) => React.createElement(element || UI, coordToPix(x, y)))
-    }
-    </g>
-  );
+      if (xAxisValues[i] !== null && points[i + xAxisValueMin])
+      {
+        const { element, x, y } = points[i + xAxisValueMin];
+
+        elements.push(
+          React.createElement(
+            element || UI,
+            {
+              ...coordToPix(x - xAxisValueMin, y - yAxisValueMin),
+              id: `${id}-${i}`,
+              key: `${id}-${i}`,  // eslint-disable-line
+            }),
+        );
+      }
+    });
+
+    return <g key={id} id={id}>{elements}</g>;
+  };
 
   if (Array.isArray(data))
   {
@@ -38,16 +72,16 @@ const Points = ({
 
   return (
     <g id="points">
-    {
+      {
       Object.keys(data).map(key => renderGroupOfPoints(key, data[key]))
-    }
+      }
     </g>
   );
 };
 
 const pointShape = PropTypes.shape({
   x: PropTypes.number.isRequired,
-  y: PropTypes.number.isRequired,
+  y: PropTypes.number,
   element: PropTypes.element,
 });
 
@@ -61,6 +95,8 @@ Points.propTypes =
     PropTypes.objectOf(PropTypes.arrayOf(pointShape)),
     PropTypes.arrayOf(pointShape),
   ]),
+  coordToPix: PropTypes.func.isRequired,
+  UI: PropTypes.func.isRequired,
 };
 
 /**
