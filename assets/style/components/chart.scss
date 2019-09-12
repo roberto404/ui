@@ -1,0 +1,56 @@
+.chart
+{
+
+  &.bar
+  {
+    rect#bar-bg
+    {
+      opacity: 0;
+    }
+
+    g#bar-xgrid line
+    {
+      stroke: $gray;
+      stroke-width: .5;
+
+      &:not(:first-child)
+      {
+        stroke-dasharray: 1.5;
+        stroke: $gray-light;
+      }
+    }
+
+    g#bar-xaxis text
+    {
+      fill: $gray-dark;
+    }
+
+    g#bar-yaxis text
+    {
+      fill: $gray-light;
+      font-size: 0.5em;
+    }
+
+    g#points g
+    {
+      &:first-child
+      {
+        rect
+        {
+          fill: $green-dark;
+          opacity: .5;
+        }
+
+        text
+        {
+          fill: $white-light;
+
+          &.outside
+          {
+            fill: $green-dark;
+          }
+        }
+      }
+    }
+  }
+}

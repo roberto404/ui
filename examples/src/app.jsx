@@ -69,14 +69,15 @@ import Layer from '../../src/layer';
 
 /* !- Example: Chart */
 
-// import Example from './chart/coordinate';
+import Example from './chart/coordinate';
 // import Example from './chart/complex';
+// import Example from './chart/barChart';
 
 
 /* !- Example: Map */
 
 // import Example from './map/gmaps';
-import Example from './map/mapbox/static';
+// import Example from './map/mapbox/static';
 // import Example from './map/mapbox/dynamic';
 
 
