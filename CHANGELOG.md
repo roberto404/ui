@@ -1,3 +1,17 @@
+# [1.1.0](https://github.com/roberto404/rs/compare/v1.0.1...v1.1.0) (2019-09-12)
+
+
+### Bug Fixes
+
+* **model/product:** categoryWeb/productFilter empty value ([176fbde](https://github.com/roberto404/rs/commit/176fbde))
+* **product:** list line height ([e34dba6](https://github.com/roberto404/rs/commit/e34dba6))
+
+
+### Features
+
+* **api:** readWeb ([1f97244](https://github.com/roberto404/rs/commit/1f97244))
+* **task/product/webshop:** add product filter to web category ([64b9403](https://github.com/roberto404/rs/commit/64b9403))
+
 ## [1.0.1](https://github.com/roberto404/rs/compare/v1.0.0...v1.0.1) (2019-07-30)
 
 

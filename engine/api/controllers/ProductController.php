@@ -77,7 +77,7 @@ class ProductController extends AppController
     // 'dimension',
   );
 
-  protected $jsonFields = array(
+  private $jsonFields = array(
     'flag',
     'dimension',
     'features',
@@ -87,6 +87,190 @@ class ProductController extends AppController
   //   'read',
   //   'create',
   // );
+
+
+  public function ReadWeb($ids)
+  {
+    $results = [];
+
+    /* !- Preparation */
+
+    // flags
+    $availableFlags = array_keys(Products::getFlagsPriority());
+
+    // features
+    $features = array();
+
+    foreach (Features::find() as $feature)
+    {
+      $features[$feature->id] = $feature->toArray();
+
+      if ($feature->options)
+      {
+        $features[$feature->id]['options'] = json_decode($feature->options, true);
+      }
+    }
+
+    /* !- Collect products */
+
+    foreach (\explode(',', $ids) as $id)
+    {
+      $product = Products::findFirst("id = '{$id}'");
+
+      if (!$product)
+      {
+        throw new HTTPException(
+          'Not Found',
+          404,
+          array(
+            'level' => 'emergency',
+            'code' => 'controller.product.readweb.noproduct',
+            'dev' => array('message' => 'Product not found', 'id' => $id)
+          )
+        );
+      }
+
+      // flags
+      $productFlag = $product->getFlag();
+
+      // flag translation or excluding
+      $productWebshopFlag = array();
+
+      foreach ($productFlag as $flag)
+      {
+        if (in_array(mb_strtoupper($flag), $availableFlags))
+        {
+          $productWebshopFlag[] = mb_strtoupper($flag);
+        }
+      }
+
+      // feature
+
+      $productFeatures = array();
+
+      if ($product->features)
+      {
+        foreach(json_decode($product->features) as $id => $values)
+        {
+          $feature = $features[$id];
+
+          $value = '';
+
+          switch ($feature['category'])
+          {
+            case 'multiselect':
+              $value = array_map(
+                function ($v) use ($feature)
+                {
+                  return $feature['options'][$v];
+                },
+                $values
+              );
+              break;
+
+            case 'select':
+              $value = $feature['options'][$values];
+              break;
+
+            default:
+              $value = $values;
+              break;
+          }
+
+          if ((is_array($value) && sizeof($value) > 0) || $value)
+          {
+            $productFeatures[] = array(
+              'id' => $feature['id'],
+              'title' => $feature['title'],
+              'type' => $feature['category'],
+              'value' => $value,
+            );
+          }
+        }
+      }
+
+
+      /**
+       * Extend description of product with DOS features and II. Class
+       */
+      $productDescriptonFeatures = $product->description ? ['',''] : [];
+
+      if (in_array('CLASS_2', $productWebshopFlag))
+      {
+        $productDescriptonFeatures[] = 'II. osztály';
+      }
+
+      $productFeaturesOrig = explode(',', $product->getFeatures_orig());
+
+      if ($productFeaturesOrig)
+      {
+        $productDescriptonFeatures = array_merge($productDescriptonFeatures, $productFeaturesOrig);
+      }
+
+      if (preg_grep("/^.+$/", $productDescriptonFeatures))
+      {
+        foreach ($productDescriptonFeatures as $index => $feature)
+        {
+          if ($feature)
+          {
+            $productDescriptonFeatures[$index] = '- ' . trim($feature);
+          }
+        }
+      }
+      else
+      {
+        $productDescriptonFeatures = [];
+      }
+
+      if ($product->price_discount == 21)
+      {
+        $productWebshopFlag[] = 'VAT';
+      }
+
+      // Méret leírások
+      if (in_array($product->category, ['51']))
+      {
+        if (count($productDescriptonFeatures))
+        {
+          $productDescriptonFeatures[] = ''; //extra <BR>
+        }
+        $productDescriptonFeatures[] = '* <b>Méretek:</b> szélesség: karfa szélessége, magasság: háttámla magassága, mélység: ülőfelület mélysége';
+      }
+
+      $results[] = array(
+        "id" => $product->id,
+        // "related_id" => $product->related_id ?: $product->id,
+        "brand" => $product->brand,
+        "title" => $product->title,
+        "subtitle" => $product->subtitle,
+        "flag" => $productWebshopFlag,
+        "vat" => $product->vat,
+        "price_sale_net" => $product->price_sale,
+        "price_orig_gross" => $product->price_orig_gross,
+        "price_sale_gross" => $product->price_sale_gross,
+        "price_discount" => $product->price_discount,
+        "manufacturer" => $product->manufacturer,
+        "manufacturerTitle" => $product->getManufacturerTitle(),
+        // "category" => $categories[$product->category]['title'],
+        // "category" => $webCategory,
+        "dimension" => json_decode($product->dimension, true),
+        "features" => $productFeatures,
+        // "colors" => array(
+        //   'category' => $product->color,
+        //   'sum' => count($colorFabrics),
+        //   'items' => array_slice($colorFabrics, 0, 15),
+        // ),
+        "description" => nl2br($product->description) . implode('<br>', $productDescriptonFeatures),
+        "images" => $product->images,
+        "incart" => $product->incart,
+        // "inoutlet" => $product::parseOutlet($product),
+        "stock" => $product->getStock(),
+        "priority" => $product->getPriority(),
+      );
+    }
+
+    return $results;
+  }
 
 
   public function Checkout()
