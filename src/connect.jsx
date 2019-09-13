@@ -90,7 +90,7 @@ class Connect extends Component
 
   getState(props = this.props, context = this.context)
   {
-    return context.store.getState()[this.store][props.id || context[this.store]];
+    return context.store.getState()[this.store][props.id || context[this.store]] || {};
   }
 
   render()
