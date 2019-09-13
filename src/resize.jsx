@@ -20,8 +20,11 @@ class Resize extends Component
   }
   render()
   {
-    const width = this.element ? this.element.offsetWidth : this.props.initWidth;
-    const height = this.element ? this.element.offsetHeight : width;
+    const width = this.element && !this.props.width ?
+      this.element.offsetWidth : this.props.width || this.props.initWidth;
+
+    const height = this.element && !this.props.height ?
+      this.element.offsetHeight : this.props.height || width;
 
     return (
       <div
@@ -44,6 +47,11 @@ class Resize extends Component
 Resize.propTypes =
 {
   /**
+   * Overwrite dynamic width and height value
+   */
+  width: PropTypes.number,
+  height: PropTypes.number,
+  /**
    * Initial width
    */
   initWidth: PropTypes.number,
@@ -57,6 +65,8 @@ Resize.propTypes =
  */
 Resize.defaultProps =
 {
+  width: 0,
+  height: 0,
   initWidth: 200,
 };
 
