@@ -51,7 +51,7 @@ const GridConnect = (props, { store, grid }) =>
       store="grid"
       onChangeOrder={column => store.dispatch(changeOrder(column, id))}
       onChangePage={nextPage => store.dispatch(goToPage(nextPage, id))}
-      onClickCell={props.onClick}
+      onClickCell={props.onClick || props.children.props.onClickCell}
       {...props}
     />
   );
