@@ -14,7 +14,7 @@ import ProductWebOutletGrid from './productWebOutlet/grid';
 import RepairGrid from './repair/grid';
 import RepairForm from './repair/form';
 import StockGrid from './stock/grid';
-import AnalyticsGrid from './analytics/grid';
+import Analytics from './analytics/';
 
 
 export default {
@@ -33,5 +33,5 @@ export default {
   RepairGrid,
   RepairForm,
   StockGrid,
-  AnalyticsGrid,
+  Analytics,
 };

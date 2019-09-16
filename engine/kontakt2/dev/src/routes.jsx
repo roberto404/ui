@@ -72,7 +72,7 @@ export const getRoutes = app => [
   },
   {
     path: '/analytics',
-    component: Views.AnalyticsGrid,
+    component: Views.Analytics,
   },
 ];
 

@@ -52,11 +52,13 @@ class AnalyticsTask extends \Phalcon\CLI\Task
         sor.id,
         CAST(fej.bolt AS SIGNED) as bolt,
         cikkszam,
-        mennyiseg,
-        ar,
+        mennyiseg * if((sztorno = 'S'), -1, 1) as mennyiseg,
+        round((ar * mennyiseg), 1) * if((sztorno = 'S'), -1, 1) as netto_osszesen,
         megnevezes,
         vhely,
-        datum as datum
+        datum as datum,
+        fej.bizkod,
+        fej.munkaszam
       FROM
         rsdb.upload_szamla_sor as sor
       LEFT JOIN
@@ -64,14 +66,23 @@ class AnalyticsTask extends \Phalcon\CLI\Task
       ON
         (sor.file = fej.file)
       WHERE
-        sztorno = ''
+        (datum >= '2019-01-01' AND datum < '2019-09-01')
       AND
-        ar > 0
+        vnev NOT LIKE 'RS Bútorpiac Kft%' /* RS Árumozgás */
       AND
-        fej.munkaszam != ''
-      AND
-        (datum >= '2019-05-01' AND datum < '2019-06-01')
+        (`mennyiseg` > 0 AND `osszesen_brutto` < 0) != 1 /* RS Engedmény */
     ");
+
+    /*
+
+6466 / 30mp
+
+ALTER TABLE `upload_szamla_sor` ADD INDEX(`file`);
+
+0.03mp
+
+ALTER TABLE `upload_szamla_fej` ADD INDEX(`file`);
+     */
 
     foreach ($query->fetchAll() as $record)
     {
@@ -88,9 +99,11 @@ class AnalyticsTask extends \Phalcon\CLI\Task
         'm' => $product::parseManufacturer($product), // Manufacturer
         'b' => $product::parseBrand($product), // Brand
         't' => $product->title_orig_rest, // Title of product without brand
-        'p' => $record['ar'],
+        'p' => $record['netto_osszesen'],
         'l' => $record['vhely'], // Client's town
         'd' => $record['datum'],
+        'sm' => $record['bizkod'], // Sales method (22 - prompt, 33 - order)
+        'sp' => $record['munkaszam'],  // Salesperson
       );
     }
 

@@ -70,8 +70,9 @@ export const GridColumnStar = (record) =>
   return (
     <div>
       {
-        [...Array(5).keys()].map(n => (
+        [...Array(5).keys()].map((n, i) => (
           <IconStar
+            key={i}
             className={`fill-gray-${rate > n ? 'dark' : 'light'} w-1.5`}
           />
         ))
