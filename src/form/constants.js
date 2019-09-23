@@ -151,11 +151,13 @@ export const DEFAULT_FIELDS = {
     id: 'pid',
     label: 'field.pid',
     placeholder: 'placeholder.select',
+    dataTranslate: false,
   },
   pos: {
     id: 'pos',
     label: 'field.pos',
     // placeholder: 'placeholder.pos',
+    dataTranslate: false,
   },
 };
 
