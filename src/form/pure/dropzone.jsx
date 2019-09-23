@@ -5,6 +5,7 @@ import dropzone from 'dropzone';
 import request from 'superagent';
 import findIndex from 'lodash/findIndex';
 import find from 'lodash/find';
+import md5 from 'crypto-js/md5';
 
 
 /* !- Redux Action */
@@ -19,6 +20,24 @@ import IconAdd from '../../icon/addCircleOutline';
 
 
 const FILE_PATTERN = /^(([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})[a-f0-9]{24})/;
+
+
+/**
+ * DropZone Props format helper
+ * default value: [{ id, ext, name, mimeMajor ... }]
+ * this value: [id, id, id ...]
+ */
+export const formatDropzoneFileId = (value) =>
+{
+  const lastIndex = value.length - 1;
+
+  if (lastIndex === -1 || typeof value[lastIndex].percent !== 'undefined')
+  {
+    return value;
+  }
+
+  return value.slice(0, lastIndex).concat(value[lastIndex].id);
+};
 
 export class File
 {
@@ -37,19 +56,30 @@ export class File
     // }
 
     this.id = file.id;
-    this.hash = file.hash;
-    this.ext = file.ext;
+    this.name = file.name;
+    this.ext = file.ext || 'jpg';
+    this.key = 'f4cDFa';
+  }
+
+  setName = () =>
+  {
+    this.name = md5(this.key + this.id).toString();
   }
 
 
   /* !- Getter Setter */
 
-  getUrl = (size) =>
+  getUrl = (size, devicePixelRatio) =>
   {
-    if (!this.hash || !FILE_PATTERN.exec(this.hash))
+    if (!this.name || !FILE_PATTERN.exec(this.name))
     {
-      return;
-      // throw new Error('File hash error.');
+      if (!this.id)
+      {
+        return '';
+        // throw new Error('File hash error.');
+      }
+
+      this.setName();
     }
 
     let sizePrefix = '';
@@ -59,12 +89,14 @@ export class File
       sizePrefix = `_${size}`;
     }
 
-    const path = this.hash.replace(FILE_PATTERN, '$2/$3/$4/$5/$1');
+    const path = this.name.replace(FILE_PATTERN, '$2/$3/$4/$5/$1');
+    const dpr = devicePixelRatio ? `@${devicePixelRatio}x` : '';
 
-    return `${this.baseFolder + path + sizePrefix}.${this.ext}`;
+    return `${this.baseFolder + path + sizePrefix + dpr}.${this.ext}`;
   }
 
-  getThumbnail = () => this.getUrl('180x180')
+  getThumbnail = () => this.getUrl('250x250')
+  getAvatar = () => this.getUrl('32x32')
 }
 
 
@@ -88,7 +120,7 @@ class DropzoneComponent extends Field
         url: this.props.url,
         paramName: 'dropzone',
         maxFiles: this.props.maxFiles,
-        maxFilesize: this.props.maxFilesize,
+        maxFilesize: this.props.maxFilesSize,
         acceptedFiles: this.props.acceptedFiles,
 
         accept: (file, done) =>
@@ -173,8 +205,6 @@ class DropzoneComponent extends Field
       {
         id: parseInt(`${file.lastModified}${file.size}`),
         title: file.name,
-        type: false,
-        url: false,
         percent: 0,
       },
     ]);
@@ -222,6 +252,7 @@ class DropzoneComponent extends Field
 
     const id = parseInt(file.lastModified + '' + file.size);
     const index = findIndex(value, { id: id });
+
     let response;
 
     if (file.accepted && file.xhr.responseText)
@@ -230,6 +261,11 @@ class DropzoneComponent extends Field
 
       if (response && response.records && typeof response.records.id !== 'undefined')
       {
+
+        /**
+         * id, path, name, ext, title, mimeMajor, mimeMinor
+         * @type {Array}
+         */
         value[index] = response.records;
 
         this.onChangeHandler(value);
@@ -253,29 +289,16 @@ class DropzoneComponent extends Field
    * @method onErrorHandler
    * @param {object} file
    */
-  onErrorHandler(file, message)
+  onErrorHandler = (file, message) =>
   {
-    console.log(file, message);
-      // var message = message || 'Please try again';
-      //
-      // if (typeof message == 'string')
-      //     message = message;
-      // else if (typeof message.records != 'undefined')
-      //     message = message.records.userMessage;
-      //
-      // if (typeof message.records.more)
-      //     message += ' (' + message.records.more + ')';
-      //
-      // alert(
-      // {
-      //     message : message,
-      //     source : "fieldDropzone :: onErrorHandler :: cant upload file",
-      //     error : message,
-      //     attr : {file: file},
-      //     navigate : window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/'))
-      // });
+    if (typeof message === 'string')
+    {
+      this.context.store.dispatch(modal({
+        title: message,
+        classes: 'error',
+      }));
+    }
   }
-
 
 
   componentDidMount()
@@ -284,9 +307,46 @@ class DropzoneComponent extends Field
     super.componentDidMount();
   }
 
-  render()
+
+  renderItems()
   {
     const items = this.state.value;
+    const children = [];
+
+    items.map((item) =>
+    {
+      let img = '';
+
+      switch (typeof item)
+      {
+        case 'string':
+        case 'number':
+          img = new File({ id: item }).getThumbnail();
+          break;
+
+        case 'object':
+          img = new File(item).getThumbnail();
+      }
+
+      children.push(
+        <div
+          key={item.id}
+          className="file"
+        >
+          <div style={{ backgroundImage: `url(${img})` }} />
+          {/* <div
+            className="progress"
+            data-value={items.percent}
+          /> */}
+        </div>
+      );
+    });
+
+    return children;
+  }
+
+  render()
+  {
 
     return (
       <div className={`field file-field ${this.props.className}`}>
@@ -295,35 +355,18 @@ class DropzoneComponent extends Field
 
         <div className="files">
 
-          { items.map(item =>
-          {
-            const img = item.hash ? new File(item).getThumbnail() : '';
-
-            return (
-              <div
-                key={item.id}
-                className="file"
-              >
-                <div style={{ backgroundImage: `url(${img})` }} />
-                {/* <div
-                  className="progress"
-                  data-value={items.percent}
-                /> */}
-              </div>
-            );
-          })
-          }
+          { this.renderItems() }
 
           { this.props.maxFiles > this.state.value.length &&
           <div
-            className="file add-new"
+            className="file add"
             onClick={this.onClickButtonHandler}
             ref={(ref) =>
             {
               this.element = ref;
             }}
           >
-            <IconAdd />
+            <IconAdd width="20em" height="20em" />
           </div>
           }
         </div>
@@ -343,7 +386,7 @@ DropzoneComponent.propTypes =
   value: PropTypes.array,
   url: PropTypes.string.isRequired,
   maxFiles: PropTypes.number,
-  maxFilesize: PropTypes.number,
+  maxFilesSize: PropTypes.number,
   /**
    * This is a comma separated list of mime types or file extensions.
    * This option will also be used as accept parameter on the file input
@@ -363,7 +406,7 @@ DropzoneComponent.defaultProps =
   ...DropzoneComponent.defaultProps,
   value: [],
   maxFiles: 30,
-  maxFilesize: 5,
+  maxFilesSize: 5,
   acceptedFiles: 'image/jpg,image/jpeg,image/png,application/pdf',
 };
 
