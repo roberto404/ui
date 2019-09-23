@@ -32,8 +32,11 @@ import {
   Toggle,
   Checkbox,
   Dropdown,
+  Dropzone,
 } from '@1studio/ui/form/pure/intl';
 // } from '@1studio/ui/form/pure/intl';
+
+import { File, formatDropzoneFileId } from '@1studio/ui/form/pure/dropzone';
 
 import Product, { ProductCard } from '../../components/product';
 import Features from '../../components/formFieldFeatures';
@@ -107,6 +110,12 @@ const ProductForm = ({
   const flags = register.data.product ? register.data.product.flags : [];
   const flagData = flags.filter(flag => EDITABLE_FLAGS.indexOf(flag.id) !== -1);
 
+  const imageSizes = [
+    { size: '36x36' },
+    { size: '250x250' },
+    { size: '640x480' },
+  ];
+
   return (
     <Form
       id="product"
@@ -129,9 +138,15 @@ const ProductForm = ({
         close();
       }}
     >
-      <div className="product grid-4 nowrap" onDoubleClick={() => console.log('2')} onClick={() => console.log('1')}>
+      <div className="product grid-4 nowrap">
         <div className="grow w-auto block">
           <div className="mb-2 text-s">
+            <Dropzone
+              url={`/api/v3/file/upload?resize=${JSON.stringify(imageSizes)}`}
+              maxFilesSize={10}
+              id="images"
+              format={formatDropzoneFileId}
+            />
             {/*<span className="bold pr-1/2">{parseCategory(category, helper.categories).title}:</span>*/}
             {/*<span>Otthon &rsaquo; Nappali bútorok &rsaquo; Szekrények</span>*/}
           </div>
@@ -141,7 +156,7 @@ const ProductForm = ({
               style={
                 images ?
                 {
-                  backgroundImage: `url(${IMAGE_URL + manufacturer}/${id}-01.jpg)`,
+                  backgroundImage: `url(${new File({ id: images[0] }).getThumbnail()})`,
                 }
                 :
                 {

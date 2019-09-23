@@ -41,11 +41,6 @@ class Products extends Model
   const DIMENSIONS = array('w', 'h', 'd');
 
   /**
-   * Location of product's images
-   */
-  const IMAGES_FOLDER = __DIR__ . '/../../../public_html/product_images/';
-
-  /**
    * special color code
    * @var array
    */
@@ -348,9 +343,6 @@ class Products extends Model
     {
       $this->dimension_orig_new = json_encode($this->dimension_orig_new, JSON_UNESCAPED_UNICODE);
     }
-
-    // images
-    $this->parseImages($this);
 
     // priority
     if (!$this->priority)
@@ -777,24 +769,14 @@ class Products extends Model
       return null;
     }
 
-    // RS2 => 11, RS6 => 3
-    $store = $stock->getSupply();
-    $maxQuantity = 0;
-
-    foreach ($store as $storeHouse => $quantity)
-    {
-      $store[$storeHouse] = $human ? $this->formatStockQuantityToHuman($quantity) : $quantity;
-
-      // find maximum store quantity
-      if ($quantity > $maxQuantity)
-      {
-        $maxQuantity = $quantity;
-      }
-    }
+    /**
+     * @var [array] [RS2 => 11, RS6 => 3]
+     */
+    $maxQuantity = max($stock->getSupply('RS2'), $stock->getSupply('RS6'), $stock->getSupply('RS8'));
 
     return array(
-      'global' => $maxQuantity ?  $this->formatStockQuantityToHuman($maxQuantity) : Products::parseDelivery($this),
-      'stores' => $store,
+      'global' => $maxQuantity ? $stock->getSupplyMessageHelper($maxQuantity) : Products::parseDelivery($this),
+      'stores' => $stock->getSupplyMessage(),
     );
   }
 
@@ -1187,25 +1169,6 @@ class Products extends Model
 
   /* !- Helper methods */
 
-
-  /**
-   * Helper function, convert stock quantity to human information
-   * @param  integer $quantity stock quantity
-   * @return string           ex.: raktáron
-   */
-  private function formatStockQuantityToHuman($quantity)
-  {
-    if ($quantity <= 0)
-    {
-      return 'nincs készleten';
-    }
-    else if ($quantity <= 3)
-    {
-      return 'utolsó darabok';
-    }
-
-    return 'raktáron';
-  }
 
   /**
    * Fetch products_flags priority
@@ -2035,47 +1998,6 @@ class Products extends Model
 
     return $product->manufacturer;
   }
-
-
-  /**
-   * Count the existing product images
-   * @param  [Products] $product
-   * @return [null|integer]
-   * @example
-   * K23/K23011502-01.jpg,K23011502-02.jpg
-   * //=> 2
-   */
-  static function parseImages($product)
-  {
-    if (!$product)
-    {
-      return null;
-    }
-
-    if (!$product->manufacturer)
-    {
-      $product::parseManufacturer($product);
-    }
-
-    $imagePath = self::IMAGES_FOLDER . $product->manufacturer . '/' . $product->id . '-';
-    $i = 1;
-
-    if (!file_exists($imagePath . '0'.$i.'.jpg'))
-    {
-      return null;
-    }
-
-    while (file_exists($imagePath . '0'.$i.'.jpg'))
-    {
-      $i++;
-    }
-
-    $product->images = $i - 1;
-
-    return $product->images;
-  }
-
-
 
 
   /* !- Webshop pharser methods */

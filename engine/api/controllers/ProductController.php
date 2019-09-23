@@ -16,7 +16,6 @@ class ProductController extends AppController
   // TODO:
   public $restricted = false;
 
-
   protected $model = 'App\Models\Products';
   protected $listFields = '
     id,
@@ -52,7 +51,7 @@ class ProductController extends AppController
     'flag',
     'category',
     'features',
-    // 'images',
+    'images',
     'instore',
     'incart',
     'description',
@@ -77,16 +76,12 @@ class ProductController extends AppController
     // 'dimension',
   );
 
-  private $jsonFields = array(
+  public $jsonFields = array(
     'flag',
     'dimension',
     'features',
+    'images'
   );
-
-  // protected $availableMethods = array(
-  //   'read',
-  //   'create',
-  // );
 
 
   public function ReadWeb($ids)

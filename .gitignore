@@ -13,3 +13,6 @@ public_html/product_images
 engine/kontakt2/dev/package-lock.json
 public_html/tmp_images
 package-lock.json
+public_html/kontakt2/library
+public_html/.htaccess
+.htaccess
