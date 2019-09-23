@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
+import omit from 'lodash/omit';
 
 
 /* !- Actions */
@@ -99,7 +100,7 @@ class Connect extends Component
 
     const props = {
       // ...childProps,
-      ...this.props,
+      ...omit(this.props, 'UI'),
       ...this.state,
       ...uiProps,
     };
