@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 
 /* !- Actions */
@@ -42,7 +43,7 @@ class GridReload extends Component
   reload = () =>
   {
     this.context.api({
-      method: this.context.id,
+      method: this.context.grid,
     })
       .then((response) =>
       {
@@ -60,7 +61,7 @@ class GridReload extends Component
       <div className={this.props.className}>
         {
           !this.state.modified ||
-          this.context.moment(this.state.modified * 1000).format(this.props.format)
+          moment(this.state.modified * 1000).format(this.props.format)
         }
       </div>
     );
@@ -90,8 +91,7 @@ GridReload.defaultProps =
 GridReload.contextTypes =
 {
   store: PropTypes.object,
-  moment: PropTypes.func,
-  id: PropTypes.string,
+  grid: PropTypes.string,
   api: PropTypes.func,
 };
 
