@@ -311,15 +311,6 @@ const Api = (options = {}, injections) =>
         .then(parseResponse)
         .catch(parseResponse);
 
-
-    case 'stock':
-      return request
-        // .get(`/json/${path}.json`)
-        .get(`/json/stock.json`)
-        .then(parseResponse)
-        .catch(parseResponse);
-
-
     case 'productMatching':
       return request
         .get(`${API_URL}/stock/match`)

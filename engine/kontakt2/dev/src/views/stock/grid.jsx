@@ -8,7 +8,8 @@ import moment from 'moment';
 
 import GridView from '@1studio/ui/view/grid';
 import Connect from '@1studio/ui/grid/connect';
-import Reload from '@1studio/ui/grid/reload';
+// import Reload from '@1studio/ui/grid/reload';
+import Reload from '/Users/roberto/Sites/ui/src/grid/reload';
 import Grid from '@1studio/ui/grid/pure/grid';
 import GridDownload from '@1studio/ui/grid/pure/gridDownload';
 import Input from '@1studio/ui/form/pure/input';
@@ -33,13 +34,8 @@ const StockGrid = () =>
 (
   <GridView
     id="stock"
-    settings={{
-      ...SETTINGS,
-      helper: {
-        permission: 1,
-      },
-    }}
-    className="grid"
+    settings={SETTINGS}
+    // className="grid"
   >
     <div className="col-1-2">
       <div className="text-gray-dark p-2">
@@ -55,31 +51,12 @@ const StockGrid = () =>
         placeholder="Cikkszám vagy terméknév..."
       />
 
-      <Button
-        id="instock"
-        placeholder="Készleten"
-      />
-
-      <Button
-        id="minkesz"
-        placeholder="Készlet probléma"
-      />
-
-      <CalendarButton
-        id="arvalt"
-        placeholder={<div className="icon embed-calendar-gray-dark label">Árváltozás</div>}
-        onChange={value => moment(value).fromNow()}
-      />
-
     </div>
 
     <Connect
       UI={Grid}
       uiProps={{
         className: 'card',
-        // rowElement: ({ data, columns }) => (
-        //   <div>{columns.map(column => <div style={{width: '10%'}} key={column}>{data[column]}</div>)}</div>
-        // ),
         noResults: 'stock.noResults',
       }}
     />
@@ -97,17 +74,6 @@ const StockGrid = () =>
         uiProps={{
           limit: 5,
         }}
-      />
-    </div>
-
-    <div className="col-3-12 text-right">
-      <ShowAll
-        className="flat"
-        label={<div className="icon embed-angle-double-yellow">Mind</div>}
-      />
-      <GridDownload
-        className="flat"
-        label={<div className="icon embed-download-yellow">Letöltés</div>}
       />
     </div>
 

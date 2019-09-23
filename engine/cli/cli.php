@@ -38,6 +38,7 @@ $loader->registerNamespaces(
   array(
     'App'               => APPLICATION_PATH,
     'App\Components'    => APPLICATION_PATH . '../api/library/components/',
+    'App\Exceptions'    => APPLICATION_PATH . '../api/exceptions/',
     'App\Models'        => APPLICATION_PATH . '../api/models/'
   )
 )->register();
