@@ -85,6 +85,7 @@ const NoResults = () => (
  */
 const NestedList = (
   {
+    nestedData,
     model,
     groupBy,
     UI,
@@ -96,25 +97,13 @@ const NestedList = (
    * Redux Grid data by group
    * @type {Object} { groupIndex: [items] }
    */
-  const data = model ? model.collectResultsByField(groupBy) : {};
-
-  /**
-   * If Use different UI components by level,
-   * You have to be enough components
-   * @type {Boolean}
-   */
-  const isEqualUiAndGroupLength = !Array.isArray(UI) || groupBy.length === UI.length - 1;
+  const data = nestedData || (model ? model.collectResultsByField(groupBy) : {});
 
   /**
    * NoResults view component
    */
-  if (!data || isEmpty(data) /*|| !isEqualUiAndGroupLength*/)
+  if (!data || isEmpty(data))
   {
-    // if (!isEqualUiAndGroupLength)
-    // {
-    //   console.warn('Not enough UI component: ' + groupBy.length);
-    // }
-
     return <NoResults />;
   }
 
@@ -131,7 +120,11 @@ const NestedList = (
         React.createElement(
           Array.isArray(UI) ? UI[level] : UI,
           { key: `list-${level}-${index}`, items, index, level, groupBy },
-          (level < groupBy.length && UI[level + 1]) ? renderItems(items, level + 1) : null,
+          (
+            ((groupBy === undefined || level < groupBy.length))
+            && (!Array.isArray(UI) || UI[level + 1])
+          )
+            ? renderItems(items, level + 1) : null,
         ),
      );
 
@@ -145,6 +138,7 @@ const NestedList = (
 
 NestedList.propTypes =
 {
+  // data: PropTypes.object(),
   UI: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.arrayOf(PropTypes.func),
@@ -157,6 +151,7 @@ NestedList.propTypes =
  */
 NestedList.defaultProps =
 {
+  data: {},
   UI: Results,
   className: 'nested-list',
 };
