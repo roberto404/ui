@@ -63,24 +63,7 @@ class FileTask extends \Phalcon\CLI\Task
 
           $product->images = json_encode([$file->id]);
           $product->save();
-
-          var_dump($product->toArray());
-          // var_dump(json_encode([$file->id]));
-          die();
         }
-
-
-
-
-        // var_dump([
-        //
-        //   $subDir,
-        //   $srcFile,
-        //   filesize($srcFile)
-        //
-        // ]);
-        //
-        // die();
       }
     }
   }

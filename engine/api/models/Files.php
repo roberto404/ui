@@ -464,9 +464,12 @@ class Files extends Model
       ));
     }
 
+    /**
+     * 1 GIF, 2 JPEG, 3 PNG, 6 BMP
+     */
   	$imageType = exif_imagetype($this->getPhysicalFullPath());
 
-    if (!$imageType || $imageType > 3)
+    if (!$imageType || ($imageType > 3 && $imageType !== 6))
     {
       throw new HTTPException(
         "File resizing Error",
