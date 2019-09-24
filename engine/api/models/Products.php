@@ -1012,6 +1012,7 @@ class Products extends Model
     // flags
     $availableFlags = array_keys(Products::getFlagsPriority());
 
+
     // features
     $features = array();
 
@@ -1034,11 +1035,11 @@ class Products extends Model
     // flag translation or excluding
     $productWebshopFlag = array();
 
-    foreach ($productFlag as $flag)
+    foreach ($availableFlags as $flag)
     {
-      if (in_array(mb_strtoupper($flag), $availableFlags))
+      if (in_array($flag, $productFlag))
       {
-        $productWebshopFlag[] = mb_strtoupper($flag);
+        $productWebshopFlag[] = $flag;
       }
     }
 
@@ -1141,6 +1142,7 @@ class Products extends Model
       "brand" => $this->brand,
       "title" => $this->title,
       "subtitle" => $this->subtitle,
+      "title_orig" => $this->title_orig,
       "flag" => $productWebshopFlag,
       "vat" => $this->vat,
       "price_sale_net" => $this->price_sale,
@@ -1153,11 +1155,12 @@ class Products extends Model
       // "category" => $webCategory,
       "dimension" => json_decode($this->dimension, true),
       "features" => $productFeatures,
-      // "colors" => array(
-      //   'category' => $this->color,
-      //   'sum' => count($colorFabrics),
-      //   'items' => array_slice($colorFabrics, 0, 15),
-      // ),
+      "colors" => array(
+        'category' => $this->color,
+        'sum' => count($colorFabrics),
+        'items' => $colorFabrics,
+        // 'items' => array_slice($colorFabrics, 0, 15),
+      ),
       "description" => nl2br($this->description) . implode('<br>', $productDescriptonFeatures),
       "images" => $this->images,
       "incart" => $this->incart,
@@ -1189,6 +1192,8 @@ class Products extends Model
           products_flags
         WHERE
           instore = 1
+        ORDER BY
+          priority DESC
       ");
 
       foreach($query->fetchAll() as $flagRecord)
