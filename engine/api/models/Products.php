@@ -1162,7 +1162,7 @@ class Products extends Model
         // 'items' => array_slice($colorFabrics, 0, 15),
       ),
       "description" => nl2br($this->description) . implode('<br>', $productDescriptonFeatures),
-      "images" => $this->images,
+      "images" => json_decode($this->images, true),
       "incart" => $this->incart,
       // "inoutlet" => $product::parseOutlet($product),
       "stock" => $this->getStock(),
