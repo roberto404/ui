@@ -36,6 +36,12 @@
   #  RewriteCond %{HTTP_HOST} !\.loc$
   #  RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+	# library #
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_URI} [0-9a-f]+(_[0-9]+x[0-9]+)?(@[2-9]{1}x)?\.(jpg|pdf|png)$
+	RewriteRule (.*) api/v3/file/download?file=$1 [L]
+
   # api #
   RewriteRule ^api/(v([0-9])+\/.*)$ api-v$2.php?_url=/$1 [QSA,L]
 
@@ -43,19 +49,18 @@
   RewriteRule (.*)app@[0-9]+(\.[a-z]+)$ $1app$2 [L]
 
 
-  # rhye.rs.hu:8884 #
+  # rs.loc #
 
-  #RewriteCond %{HTTP_HOST} ^rhye.rs.hu:8884
+  #RewriteCond %{HTTP_HOST} ^rs.loc
   #RewriteRule ^api/(v([0-9])+\/.*)$ api-v$2.php?_url=/$1 [QSA,L]
 
-  RewriteCond %{HTTP_HOST} rhye.rs.hu:8884$
+  RewriteCond %{HTTP_HOST} rs.loc$
   RewriteCond %{REQUEST_URI} !^/kontakt2/.*$
   RewriteRule ^(.*)$ kontakt2/$1
 
-  RewriteCond %{HTTP_HOST} rhye.rs.hu:8884$
+  RewriteCond %{HTTP_HOST} rs.loc$
   RewriteCond %{REQUEST_URI} !^.*\.(jpg|css|js|gif|png|svg|woff|json|php|pdf)$
   RewriteRule ^(.*)$ kontakt2/index.html [L]
-
 
   #RewriteCond %{REQUEST_URI} !^.*\.(jpg|css|js|gif|png|svg|woff|woff2|json|php|pdf)$
   #RewriteCond %{REQUEST_FILENAME} !-f
