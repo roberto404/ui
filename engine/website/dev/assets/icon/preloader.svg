@@ -1,0 +1,15 @@
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	 reserveAspectRatio='xMidYMid meet' viewBox='0 0 36 36'>
+
+   <defs>
+     <style>
+       .a { fill: rgba(256,256,256,0.0); }
+       .b { opacity: 0.5; }
+       .c { fill: blue; }
+			 .d { opacity: 0; }
+     </style>
+   </defs>
+
+   <path class='a d' d='M5.2721,5.2721,7.3934,7.3934a15,15,0,0,1,21.2132,0l2.1213-2.1213A18,18,0,0,0,5.2721,5.2721Z'/>
+   <path class='c b' d='M28.6066,28.6066A15,15,0,0,1,7.3934,7.3934L5.2721,5.2721a18,18,0,1,0,25.4558,0L28.6066,7.3934A15,15,0,0,1,28.6066,28.6066Z'/>
+</svg>

@@ -1,0 +1,41 @@
+
+/*
+100	Thin (Hairline)
+200	Extra Light (Ultra Light)
+300	Light
+400	Normal
+500	Medium
+600	Semi Bold (Demi Bold)
+700	Bold
+800	Extra Bold (Ultra Bold)
+900	Black (Heavy)
+ */
+
+// @include font-face("Din", "/fonts/Din/DINNextLTPro-Thin", 100);
+@include font-face("Din", "/fonts/Din/DINNextLTPro-Light", 300);
+@include font-face("Din", "/fonts/Din/DINNextLTPro-Regular", normal);
+// @include font-face("Din", "/fonts/Din/DINNextLTPro-Medium", 500);
+@include font-face("Din", "/fonts/Din/DINNextLTPro-Bold", bold);
+@include font-face("Din", "/fonts/Din/DINNextLTPro-Heavy", 900);
+
+@include font-face("DinCond", "/fonts/Din/DINNextLTPro-Heavy-Cond", 900);
+
+
+body
+{
+  font-family: $font;
+  font-size: 1.6rem;
+  color: $black;
+  background-color: $white;
+
+  @include respond-to(mobile)
+  {
+    font-size: 1.5rem;
+  }
+}
+
+
+.condensed
+{
+  font-family: 'DinCond';
+}

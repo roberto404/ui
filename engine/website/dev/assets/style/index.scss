@@ -1,0 +1,23 @@
+
+// --> mixins
+$iconPath: '../../node_modules/@1studio/ui/assets/icon/';
+@import "../../node_modules/@1studio/ui/assets/style/mixins.scss";
+@import "mixins";
+@import "../../node_modules/@1studio/ui/assets/style/bootstrap.scss";
+@import "../../node_modules/@1studio/ui/assets/style/icons.scss";
+$iconPath: '../icon/';
+
+// --> UI Theme
+// @import "../../node_modules/@1studio/ui/assets/style/.scss";
+
+// --> fonts
+@import "fonts";
+
+// --> project view layout styles
+@import "components/components";
+
+// --> project view layout styles
+@import "views/views";
+
+// --> Tailwind concept: https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.css
+@import "utilities/utilities";
