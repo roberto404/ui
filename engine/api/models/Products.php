@@ -636,7 +636,7 @@ class Products extends Model
 
     if (in_array($flag, $productFlag))
     {
-      $this->flag = \json_encode(array_diff($productFlag, [$flag]));
+      $this->flag = \json_encode(array_values(array_diff($productFlag, [$flag])));
     }
   }
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use
+  Phalcon\DI,
   Phalcon\Mvc\Model;
 
 class Stock extends Model
@@ -247,4 +248,34 @@ class Stock extends Model
     return 'készleten';
   }
 
+
+
+
+  /**
+   * Get last modify date
+   * @return [DateTime]
+   */
+  static function getModifyDateTime()
+  {
+    $di = DI::getDefault();
+    // $db = DI::getDefault()->get('db');
+
+    $query = $di->get('db')->query("
+      SELECT
+        datum
+      FROM
+        rsdb.frissites
+      WHERE
+        tipus='1';
+    ");
+
+    $query->setFetchMode(
+      \Phalcon\Db::FETCH_OBJ
+    );
+
+    return new \DateTime(
+      $query->fetch()->datum,
+      new \DateTimeZone($di->get('config')->locale->timezone)
+    );
+  }
 }

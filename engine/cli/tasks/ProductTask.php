@@ -28,7 +28,7 @@ class ProductTask extends \Phalcon\CLI\Task
   public function testAction()
   {
     $products = Products::find([
-      'conditions' => 'id = "C4K10401"',
+      'conditions' => 'id = "F13233201P"',
       // 'conditions' => 'features LIKE \'%\"41\":true%\'',
       // 'conditions' => 'id = "NF112I0220U01"',
       // 'conditions' => 'category = "15"',
@@ -40,6 +40,8 @@ class ProductTask extends \Phalcon\CLI\Task
       // 'conditions' => 'brand LIKE "%Vénusz%"',
       // 'conditions' => 'id = "NF20712RK"',
     ]);
+
+    // $this->updateDosAction($products); die();
 
     // var_dump(count($products));
 
@@ -121,30 +123,36 @@ class ProductTask extends \Phalcon\CLI\Task
    */
   public function syncAction()
   {
-    $currentTimeStamp = $this->getModifyDateTime()->getTimestamp();
-    $cachedTimeStamp = filemtime(self::FILE_PATH . self::FILE_NAME);
+    $currentTimeStamp = Stock::getModifyDateTime()->getTimestamp();
 
-    if ($currentTimeStamp != $cachedTimeStamp)
-    {
-      $this->updateAction();
-      $this->cacheAction();
-    }
+    //@TODO agent, ha túl rég óta nem frissült, akkor vmi DOS-os sync para van.
+    //
+    // $cachedTimeStamp = filemtime(self::FILE_PATH . self::FILE_NAME);
+
+    // if ($currentTimeStamp != $cachedTimeStamp)
+    // {
+    // }
+
+    $this->updateAction();
+    $this->cacheAction($currentTimeStamp);
   }
 
   /**
    * Create Stock cache file with database modified timestamp
    */
-  public function cacheAction()
+  public function cacheAction($timestamp)
   {
-    $modifiedTimeStamp = $this->getModifyDateTime()->getTimestamp();
+    if (!$timestamp)
+    {
+      $timestamp = time();
+    }
 
     file_put_contents(
       self::FILE_PATH . self::FILE_NAME . self::TMP_POSTFIX,
       json_encode(
         array(
           'status' => 'SUCCESS',
-          'modified' => $modifiedTimeStamp,
-          // 'records' => $this->getStock()
+          'modified' => $timestamp,
           'records' => Products::find()->toArray()
         )
         // , JSON_PRETTY_PRINT
@@ -156,270 +164,10 @@ class ProductTask extends \Phalcon\CLI\Task
       self::FILE_PATH . self::FILE_NAME
     );
 
-    touch(self::FILE_PATH . self::FILE_NAME, $modifiedTimeStamp);
-
-    $this->cacheWebshopAction();
+    touch(self::FILE_PATH . self::FILE_NAME, $timestamp);
   }
 
 
-  /**
-   * Export Products with webshop extra informations
-   *
-   * @return [array] {
-   *  'features': [
-   *      {
-   *          "title": "alapanyag",
-   *          "type": "select",
-   *          "value": "kárpitos"
-   *      },
-   *      {
-   *          "title": "belső szerkezet",
-   *          "type": "multiselect",
-   *          "value": [
-   *              "szivacsos, hideghabos",
-   *              "rugós"
-   *          ]
-   *      },
-   *      {
-   *          "title": "háttámla kialakítás",
-   *          "type": "select",
-   *          "value": "fix"
-   *      }
-   *  ],
-   *  'category': ["Otthon/Hálószoba bútorok/Heverők", "Otthon/Gyermek és ifjúsági szoba bútorok/Ágyak"]
-   *  'flag': ["RStop", "HUN", "FREE_DELIVERY","WARRANTY_5", "SALE"]
-   *  'images': '2', // <- http://kontakt2.rs.hu/product_images/K34/K342210-01.jpg
-   *  'stock': {
-   *    'global': 'raktáron', // <- legnagyobb készlettel rendelkező áruházi mennyiség szövegesen, ha nincs készlet úgy maximális rendelési idő '[n] hét'
-   *    stores: { "RS2": "utolsó darabok", "RS6": "raktáron": "RS8": "nincs készleten" }
-   *  },
-   *  'colors': [
-   *    { title: "LUX 1", image: "2409.jpg", colorHex: "#CEC8C6", colorName: "gray" },
-   *    // <- title: 'anyag szinének megnevezése', image: 'http://kontakt.rs.hu/gyartoi_szinmintak/upload/8170.jpg'
-   *  ],
-   *  incart: 0,
-   *  inoutlet: 0,
-   *  dimension: { ... },
-   * }
-   */
-  public function cacheWebshopAction()
-  {
-    $records = array();
-
-    // HUN, CLASS_2...
-    $availableFlags = array_keys(Products::getFlagsPriority());
-
-    // features
-    $features = array();
-
-    foreach (Features::find() as $feature)
-    {
-      $features[$feature->id] = $feature->toArray();
-
-      if ($feature->options)
-      {
-        $features[$feature->id]['options'] = json_decode($feature->options, true);
-      }
-    }
-
-    // categories
-    $categories = array();
-
-    foreach (Categories::find() as $category)
-    {
-      $categories[$category->id] = $category->toArray();
-    }
-
-    // products: webshop products (instore)
-    $products = Products::find([
-      'conditions' => 'instore = 1',
-    ]);
-
-    foreach ($products as $product)
-    {
-      $productFlag = $product->getFlag();
-
-      // exclude products, skip these products
-      if (
-        array_intersect(array('X', 'Y'), $productFlag)
-      )
-      {
-        continue;
-      }
-
-      // flag translation or excluding
-      $productWebshopFlag = array();
-
-      foreach ($productFlag as $flag)
-      {
-        if (in_array(mb_strtoupper($flag), $availableFlags))
-        {
-          $productWebshopFlag[] = mb_strtoupper($flag);
-        }
-      }
-
-      $colorFabrics = [];
-
-      if ($product->color)
-      {
-        $colorFabrics = $product->getFabrics();
-      }
-      else if ($product->features)
-      {
-        $productFeatures = json_decode($product->features, true);
-
-        // alapanyag fenyő
-        if (isset($productFeatures['1']) && $productFeatures['1'] == '2')
-        {
-          $colorFabrics[] = array(
-            "title" => $features[1]['options'][2],
-            "image" => "alapanyag_fenyo.jpg",
-            "colorHex" => "#F7D69F",
-            "colorName" => "yellow"
-          );
-        }
-      }
-
-      $webCategory = $product::parseWebCategory($product);
-
-      if (!$webCategory)
-      {
-        continue;
-      }
-
-      /**
-       * Extend description of product with DOS features and II. Class
-       */
-      $productDescriptonFeatures = $product->description ? ['',''] : [];
-
-      if (in_array('CLASS_2', $productWebshopFlag))
-      {
-        $productDescriptonFeatures[] = 'II. osztály';
-      }
-
-      $productFeaturesOrig = explode(',', $product->getFeatures_orig());
-
-      if ($productFeaturesOrig)
-      {
-        $productDescriptonFeatures = array_merge($productDescriptonFeatures, $productFeaturesOrig);
-      }
-
-      if (preg_grep("/^.+$/", $productDescriptonFeatures))
-      {
-        foreach ($productDescriptonFeatures as $index => $feature)
-        {
-          if ($feature)
-          {
-            $productDescriptonFeatures[$index] = '- ' . trim($feature);
-          }
-        }
-      }
-      else
-      {
-        $productDescriptonFeatures = [];
-      }
-
-      if ($product->price_discount == 21)
-      {
-        $productWebshopFlag[] = 'VAT';
-      }
-
-      // Méret leírások
-      if (in_array($product->category, ['51']))
-      {
-        if (count($productDescriptonFeatures))
-        {
-          $productDescriptonFeatures[] = ''; //extra <BR>
-        }
-        $productDescriptonFeatures[] = '* <b>Méretek:</b> szélesség: karfa szélessége, magasság: háttámla magassága, mélység: ülőfelület mélysége';
-      }
-
-      $record = array(
-        "id" => $product->id,
-        "related_id" => $product->related_id ?: $product->id,
-        "brand" => $product->brand,
-        "title" => $product->title,
-        "subtitle" => $product->subtitle,
-        "flag" => $productWebshopFlag,
-        "vat" => $product->vat,
-        "price_sale_net" => $product->price_sale,
-        "price_orig_gross" => $product->price_orig_gross,
-        "price_sale_gross" => $product->price_sale_gross,
-        "price_discount" => $product->price_discount,
-        "manufacturer" => $product->manufacturer,
-        "manufacturerTitle" => $product->getManufacturerTitle(),
-        // "category" => $categories[$product->category]['title'],
-        "category" => $webCategory,
-        "dimension" => json_decode($product->dimension, true),
-        "features" => array(),
-        "colors" => array(
-          'category' => $product->color,
-          'sum' => count($colorFabrics),
-          'items' => array_slice($colorFabrics, 0, 15),
-        ),
-        "description" => nl2br($product->description) . implode('<br>', $productDescriptonFeatures),
-        "images" => $product->images,
-        "incart" => $product->incart,
-        "inoutlet" => $product::parseOutlet($product),
-        "stock" => $product->getStock(),
-        "priority" => $product->getPriority(),
-      );
-
-      if ($product->features)
-      {
-        foreach(json_decode($product->features) as $id => $values)
-        {
-          $feature = $features[$id];
-
-          $value = '';
-
-          switch ($feature['category'])
-          {
-            case 'multiselect':
-              $value = array_map(
-                function ($v) use ($feature)
-                {
-                  return $feature['options'][$v];
-                },
-                $values
-              );
-              break;
-
-            case 'select':
-              $value = $feature['options'][$values];
-              break;
-
-            default:
-              $value = $values;
-              break;
-          }
-
-
-
-          if ((is_array($value) && sizeof($value) > 0) || $value)
-          {
-            $record['features'][] = array(
-              'id' => $feature['id'],
-              'title' => $feature['title'],
-              'type' => $feature['category'],
-              'value' => $value,
-            );
-          }
-        }
-      }
-      $records[] = $record;
-    }
-
-    file_put_contents(
-      self::FILE_PATH . self::WEBSHOP_FILE_NAME . self::TMP_POSTFIX,
-      json_encode($records, JSON_UNESCAPED_UNICODE /*| JSON_PRETTY_PRINT*/)
-    );
-
-    rename(
-      self::FILE_PATH . self::WEBSHOP_FILE_NAME . self::TMP_POSTFIX,
-      self::FILE_PATH . self::WEBSHOP_FILE_NAME
-    );
-  }
 
   /**
    * Export Outlet Products with webshop extra informations
@@ -539,7 +287,7 @@ class ProductTask extends \Phalcon\CLI\Task
    * ReParsing all products
    * @param  [Products] $products
    */
-  public function refreshAction($products)
+  public function refreshAction($products = false)
   {
     if (!$products)
     {
@@ -548,7 +296,7 @@ class ProductTask extends \Phalcon\CLI\Task
 
     foreach ($products as $product)
     {
-      // $product->createRelatedId(); // bekapcsolásával elvesznek a manuálisan szétválasztott termékek
+      // @important $product->createRelatedId(); // bekapcsolásával elvesznek a manuálisan szétválasztott termékek
       $product->save();
     }
   }
@@ -557,7 +305,7 @@ class ProductTask extends \Phalcon\CLI\Task
    * Set instore and incart those products where the related product instore
    * @param Products $products
    */
-  public function refreshRelatedInStoreAction($products)
+  public function refreshRelatedInStoreAction($products = false)
   {
     $relatedIds = [];
 
@@ -605,7 +353,7 @@ class ProductTask extends \Phalcon\CLI\Task
 
 
 
-  public function updateAction($products)
+  public function updateAction($products = false)
   {
     if (!$products)
     {
@@ -623,7 +371,7 @@ class ProductTask extends \Phalcon\CLI\Task
    * -> effected fields: brand, title, price_orig_gross, price_sale_gross, price_discount, dimension
    * @param  [Product] $products
    */
-  public function updateDOSAction($products)
+  public function updateDOSAction($products = false)
   {
     ini_set("memory_limit","1024M");
 
@@ -654,8 +402,8 @@ class ProductTask extends \Phalcon\CLI\Task
         $stockProps = array(
           "title_orig" => $stock['megnevezes'],
           "vat" => $stock['afa'],
-          "price_orig" => $listaar,
-          "price_sale" => $akcar,
+          "price_orig" => (float) $listaar,
+          "price_sale" => (float) $akcar,
           "features_orig" => $stock['jellemzo'],
           "dimension_orig" => $stock['meret']
           // dimension_orig_new => $stock[],
@@ -664,12 +412,11 @@ class ProductTask extends \Phalcon\CLI\Task
         $productProps = array(
           "title_orig" => $product->title_orig,
           "vat" => $product->vat,
-          "price_orig" => $product->price_orig,
-          "price_sale" => $product->price_sale,
+          "price_orig" => (float) $product->price_orig,
+          "price_sale" => (float) $product->price_sale,
           "features_orig" => $product->features_orig,
           "dimension_orig" => $product->dimension_orig
         );
-
         if (array_diff($stockProps, $productProps))
         {
           $product->title_orig = $stock['megnevezes'];
@@ -692,7 +439,7 @@ class ProductTask extends \Phalcon\CLI\Task
    * manufacturer, images, instore, incart, description
    * @param  [Product] $products
    */
-  public function updateKontaktAction($products)
+  public function updateKontaktAction($products = false)
   {
     if (!$products)
     {
@@ -701,14 +448,15 @@ class ProductTask extends \Phalcon\CLI\Task
 
     foreach ($products as $product)
     {
+      // - delete after launch
       $this->updateInStoreAction($products);
       $this->updateDescriptionAction($products);
+      // --
       $this->updateFreeDeliveryAction($products);
       $this->updateHunProductsAction($products);
       $this->updateWarrantyAction($products);
     }
   }
-
 
   /**
    * Update instore field
@@ -716,7 +464,7 @@ class ProductTask extends \Phalcon\CLI\Task
    * Product exist in webshop 1.0
    * @param  [Products] $products
    */
-  public function updateInStoreAction($products)
+  public function updateInStoreAction($products = false)
   {
     if (!$products)
     {
@@ -727,8 +475,13 @@ class ProductTask extends \Phalcon\CLI\Task
 
     foreach ($products as $product)
     {
-      $product->instore = (int) isset($instoreProducts[$product->id]);
-      $product->save();
+      $instore = (int) isset($instoreProducts[$product->id]);
+
+      if ($instore !== (int) $product->instore)
+      {
+        $product->instore = $instore;
+        $product->save();
+      }
     }
   }
 
@@ -736,7 +489,7 @@ class ProductTask extends \Phalcon\CLI\Task
    * Update description field
    * @param  [Products] $products
    */
-  public function updateDescriptionAction($products)
+  public function updateDescriptionAction($products = false)
   {
     if (!$products)
     {
@@ -749,8 +502,7 @@ class ProductTask extends \Phalcon\CLI\Task
     {
       if (isset($webshopProducts[$product->id]))
       {
-        // var_dump($webshopProducts[$product->id]);
-        // die();
+        $description = strip_tags($webshopProducts[$product->id]);
         $product->description = strip_tags($webshopProducts[$product->id]);
         $product->save();
       }
@@ -761,7 +513,7 @@ class ProductTask extends \Phalcon\CLI\Task
    * Update flag with Free_Delivery if isset in kontakt1
    * @param  [Products] $products
    */
-  public function updateFreeDeliveryAction($products)
+  public function updateFreeDeliveryAction($products = false)
   {
     if (!$products)
     {
@@ -770,12 +522,16 @@ class ProductTask extends \Phalcon\CLI\Task
 
     $freeDeliveryProducts = $this->getFreeDeliveryProducts();
 
-
     foreach ($products as $product)
     {
       if (in_array($product->id, $freeDeliveryProducts))
       {
         $product->addFlag(Products::FREE_DELIVERY);
+        $product->save();
+      }
+      else if (in_array(Products::FREE_DELIVERY, $product->getFlag()))
+      {
+        $product->removeFlag(Products::FREE_DELIVERY);
         $product->save();
       }
     }
@@ -785,7 +541,7 @@ class ProductTask extends \Phalcon\CLI\Task
    * Update flag with Hun products cames from Kontakt1
    * @param  [Products] $products
    */
-  public function updateHunProductsAction($products)
+  public function updateHunProductsAction($products = false)
   {
     if (!$products)
     {
@@ -801,16 +557,19 @@ class ProductTask extends \Phalcon\CLI\Task
         $product->addFlag(Products::HUN);
         $product->save();
       }
+      else if (in_array(Products::HUN, $product->getFlag()))
+      {
+        $product->removeFlag(Products::HUN);
+        $product->save();
+      }
     }
   }
-
-
 
   /**
    * Add flag predefined brand
    * @param  [Products] $products
    */
-  public function updateWarrantyAction($products)
+  public function updateWarrantyAction($products = false)
   {
     $warranty = array();
 
@@ -953,31 +712,6 @@ class ProductTask extends \Phalcon\CLI\Task
 
   /* !- Helper Methods */
 
-  /**
-   * Get last modify date
-   * @return [DateTime]
-   */
-  private function getModifyDateTime()
-  {
-    $query = $this->db->query("
-      SELECT
-        datum
-      FROM
-        frissites
-      WHERE
-        tipus='1';
-    ");
-
-    $query->setFetchMode(
-      \Phalcon\Db::FETCH_OBJ
-    );
-
-    return new DateTime(
-      $query->fetch()->datum,
-      new DateTimeZone($this->config->locale->timezone)
-    );
-  }
-
 
   /**
   * Fetch all products from Webshop 1.0
@@ -1003,23 +737,6 @@ class ProductTask extends \Phalcon\CLI\Task
     return $results;
   }
 
-
-  /**
-  * Fetch all stock
-  * @return [Array] [cikkszam => product]
-  */
-  private function getStockProducts()
-  {
-    ini_set("memory_limit","1024M");
-
-    $results = [];
-
-    foreach (Stock::find() as $product)
-    {
-      $results[$product->cikkszam] = $product->toArray();
-    }
-    return $results;
-  }
 
 
   /**
@@ -1073,82 +790,6 @@ class ProductTask extends \Phalcon\CLI\Task
   }
 
 
-  /**
-   * Get full stock database
-   * @return [array] [cikkszam, megneves, ar, keszlet...]
-   */
-  private function getStock()
-  {
-    $results = array();
-
-    $query = $this->db->query("
-      SELECT
-        cikkszam, megnevezes, keszlet1, keszlet9, keszlet29, keszlet4, keszlet2, keszletrs6m, keszletrs8m, akcar_float, listaar, afa, meret, arvalt, keszletrs7m, jellemzo
-      FROM
-        raktar
-      WHERE
-        megnevezes NOT LIKE 'X%' AND
-        cikkszam NOT LIKE 'R%' AND
-        megnevezes NOT LIKE 'RS %' AND
-        megnevezes != '' AND
-        listaar > 0
-    ");
-
-    $query->setFetchMode(
-      \Phalcon\Db::FETCH_OBJ
-    );
-
-    foreach ($query->fetchAll() as $record)
-    {
-      $vat = ($record->afa / 100) + 1;
-
-      $results[] = array(
-        "id" => $record->cikkszam,
-        "m" => $record->megnevezes,
-        "k1" => $record->keszlet1,
-        "k9" => $record->keszlet9,
-        "k29" => $record->keszlet29,
-        "k4" => $record->keszlet4,
-        "k2" => $record->keszlet2,
-        "k6" => $record->keszletrs6m,
-        "k8" => $record->keszletrs8m,
-        "k7" => $record->keszletrs7m,
-        "a1" => round($record->akcar_float * $vat, -1),
-        "a0" => round($record->listaar * $vat, -1),
-        "av" => $record->arvalt,
-        "d" => $record->meret,
-        "j" => $record->jellemzo,
-      );
-    }
-
-    return $results;
-  }
-
-
-  /**
-   * Fetch all record from Szotar
-   * @return [array] [mit => mire]
-   */
-  private function getSzotar()
-  {
-    $results = [];
-
-    $query = $this->db->query("
-      SELECT
-        mit, mire
-      FROM
-        szotar
-      WHERE
-        statusz = 2
-        AND hol_nev = 1
-    ");
-
-    foreach ($query->fetchAll() as $record)
-    {
-      $results[$record['mit']] = $record['mire'];
-    }
-    return $results;
-  }
 
 
 
@@ -1163,36 +804,6 @@ class ProductTask extends \Phalcon\CLI\Task
 		);
 
     return strtr($value, $translations);
-  }
-
-  public function updateWebSiteFastAction()
-  {
-    $this->updateWebsite('fast');
-  }
-
-  public function updateWebSiteFullAction()
-  {
-    $this->updateWebsite('full');
-  }
-
-  private function updateWebsite($mode)
-  {
-    if (!in_array($mode, ['full', 'fast']))
-    {
-      return 'Wronng update mode';
-    }
-
-    $cmd = '/opt/php-7.3.7/bin/php -d memory_limit=512M /home/site_betars/public_html/artisan sync:products --type=' . $mode;
-
-    while (@ ob_end_flush()); // end all output buffers if any
-
-    $proc = popen($cmd, 'r');
-
-    while (!feof($proc))
-    {
-        echo fread($proc, 4096);
-        @ flush();
-    }
   }
 
 }
