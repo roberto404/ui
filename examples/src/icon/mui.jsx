@@ -30,11 +30,13 @@ import SrcIconMuiHardverKeyboardreturn from '../../../src/icon/mui/hardver/keybo
 import SrcIconMuiHardverKeyboardbackspace from '../../../src/icon/mui/hardver/keyboard_backspace';
 import SrcIconMuiImageAddphoto_alternate from '../../../src/icon/mui/image/add_photo_alternate';
 import SrcIconMuiImageLens from '../../../src/icon/mui/image/lens';
+import SrcIconMuiToggleStar from '../../../src/icon/mui/toggle/star';
 import SrcIconMuiActionFavoriteborder from '../../../src/icon/mui/action/favorite_border';
 import SrcIconMuiActionDone from '../../../src/icon/mui/action/done';
 import SrcIconMuiActionPrint from '../../../src/icon/mui/action/print';
 import SrcIconMuiActionOpenwith from '../../../src/icon/mui/action/open_with';
 import SrcIconMuiActionCached from '../../../src/icon/mui/action/cached';
+import SrcIconMuiActionZoomout from '../../../src/icon/mui/action/zoom_out';
 import SrcIconMuiActionDelete from '../../../src/icon/mui/action/delete';
 import SrcIconMuiActionDeleteforever from '../../../src/icon/mui/action/delete_forever';
 import SrcIconMuiActionTimeline from '../../../src/icon/mui/action/timeline';
@@ -55,6 +57,7 @@ import SrcIconMuiActionSwaphoriz from '../../../src/icon/mui/action/swap_horiz';
 import SrcIconMuiActionTextrotate_vertical from '../../../src/icon/mui/action/text_rotate_vertical';
 import SrcIconMuiActionVisibility from '../../../src/icon/mui/action/visibility';
 import SrcIconMuiActionSavealt from '../../../src/icon/mui/action/save_alt';
+import SrcIconMuiActionZoomin from '../../../src/icon/mui/action/zoom_in';
 import SrcIconMuiActionBackup from '../../../src/icon/mui/action/backup';
 import SrcIconMuiCommunicationLocationon from '../../../src/icon/mui/communication/location_on';
 import SrcIconMuiCommunicationPhone from '../../../src/icon/mui/communication/phone';
@@ -249,6 +252,12 @@ import SrcIconMuiEditorFormatindent_increase from '../../../src/icon/mui/editor/
       
 
         <div className="col-1-5">
+        <SrcIconMuiToggleStar className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">src/icon/mui/toggle/star</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiActionFavoriteborder className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">src/icon/mui/action/favorite_border</div>
         </div>
@@ -275,6 +284,12 @@ import SrcIconMuiEditorFormatindent_increase from '../../../src/icon/mui/editor/
         <div className="col-1-5">
         <SrcIconMuiActionCached className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">src/icon/mui/action/cached</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiActionZoomout className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">src/icon/mui/action/zoom_out</div>
         </div>
       
 
@@ -395,6 +410,12 @@ import SrcIconMuiEditorFormatindent_increase from '../../../src/icon/mui/editor/
         <div className="col-1-5">
         <SrcIconMuiActionSavealt className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">src/icon/mui/action/save_alt</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiActionZoomin className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">src/icon/mui/action/zoom_in</div>
         </div>
       
 
