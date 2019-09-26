@@ -413,17 +413,7 @@ class ProductTask extends \Phalcon\CLI\Task
           $product->description = $relatedProduct->description;
 
           $product->save();
-
-          // $product->beforeValidation();
-          // $product->beforeValidationOnCreate();
-          var_dump($product->id);
-          var_dump($product->related_id);
-          var_dump('---');
-          // var_dump($relatedProduct->toArray());
-          // die();
-
         }
-
       }
     }
   }
