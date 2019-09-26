@@ -35,34 +35,47 @@ class FileTask extends \Phalcon\CLI\Task
 
         if ($product)
         {
-          $file = new Files();
+          $file = Files::findFirst("title = '${sku}'");
 
-          $file->title = $sku;
-          $file->ext = 'jpg';
-          $file->size = filesize($srcFile);
-          $file->mimeMajor = 'image';
-          $file->mimeMinor = 'jpeg';
-          $file->create();
+          if (!$file)
+          {
+            $file = new Files();
 
-          copy($srcFile, $file->getPhysicalFullPath());
+            $file->title = $sku;
+            $file->ext = 'jpg';
+            $file->size = filesize($srcFile);
+            $file->mimeMajor = 'image';
+            $file->mimeMinor = 'jpeg';
+            $file->create();
 
-          $file->resizeImage([
-            'size' => '36x36',
-            'devicePixelRatio' => 4,
-          ]);
+            copy($srcFile, $file->getPhysicalFullPath());
 
-          $file->resizeImage([
-            'size' => '250x250',
-            'devicePixelRatio' => 4,
-          ]);
+            $file->resizeImage([
+              'size' => '36x36',
+              'devicePixelRatio' => 4,
+            ]);
 
-          $file->resizeImage([
-            'size' => '640x480',
-            'devicePixelRatio' => 4,
-          ]);
+            $file->resizeImage([
+              'size' => '250x250',
+              'devicePixelRatio' => 4,
+            ]);
 
-          $product->images = json_encode([$file->id]);
-          $product->save();
+            $file->resizeImage([
+              'size' => '640x480',
+              'devicePixelRatio' => 4,
+            ]);
+
+            $product->images = json_encode([$file->id]);
+            $product->save();
+          }
+          else
+          {
+            if (!$product->images)
+            {
+              $product->images = json_encode([$file->id]);
+              $product->save();
+            }
+          }
         }
       }
     }
