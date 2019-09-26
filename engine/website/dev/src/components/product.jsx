@@ -105,6 +105,36 @@ export const parseFeatures = (featureCollection = {}, features = []) =>
 }
 
 
+export const PRODUCT_DICTIONARY = {
+  i: 'id',
+  ri: 'related_id',
+  b: 'brand',
+  m: 'manufacturer',
+  t: 'title',
+  s: 'subtitle',
+  pd: 'price_discount',
+  po: 'price_orig_gross',
+  ps: 'price_sale_gross',
+  f: 'flag',
+  fe: 'features',
+  di: 'dimension',
+  c: 'color',
+  im: 'images',
+  ic: 'incart',
+  de: 'description',
+};
+
+export const productPropsParser = props =>
+  Object
+    .keys(props)
+    .reduce(
+      (results, index) =>
+      {
+        results[PRODUCT_DICTIONARY[index] ? PRODUCT_DICTIONARY[index] : index] = props[index]; // eslint-disable-line
+        return results;
+      },
+      {},
+    );
 
 
 /**
@@ -118,33 +148,20 @@ export const ProductCard = (
 ) =>
 {
   const {
-    id,
-    related_id,
     brand,
-    manufacturer,
     title,
-    title_orig,
-    title_orig_rest,
     subtitle,
     price_discount,
-    price_orig,
     price_orig_gross,
-    price_sale,
     price_sale_gross,
-    vat,
     flag,
-    category,
     features,
     dimension,
     color,
     images,
-    instore,
-    incart,
-    description,
-    priority,
     className,
     onClick,
-  } =  props;
+  } = props;
 
   const helper = register && register.data.product ? register.data.product : {};
 
@@ -153,7 +170,7 @@ export const ProductCard = (
     [className]: true,
   })
 
-  const Favourite = priority > 0 ? <IconFavoriteActive className="w-2 fill-orange" /> : <IconFavorite className="w-2 fill-gray" />
+  // const Favourite = priority > 0 ? <IconFavoriteActive className="w-2 fill-orange" /> : <IconFavorite className="w-2 fill-gray" />
 
 
 
@@ -186,8 +203,10 @@ export const ProductCard = (
         }
       />
       <div className="p-2">
-        <div className="mb-1/4 bold ellipsis" style={{ fontSize: '1.125em' }}>{`${brand} ${title}`}</div>
-        <div className="light overflow mb-2" style={{ height: '2.4em', lineHeight: '1.2em' }}>{subtitle}</div>
+        <div className="overflow mb-2" style={{ height: '4em' }}>
+          <div className="mb-1/4 bold" style={{ fontSize: '1.125em', lineHeight: '1.2em' }}>{`${brand} ${title}`}</div>
+          <div className="light" style={{ height: '2.4em', lineHeight: '1.2em' }}>{subtitle}</div>
+        </div>
 
         <div className="grid">
           <div className="col-10-12">
@@ -209,9 +228,9 @@ export const ProductCard = (
             <div className="mb-1/2">
               <IconZoom className="w-2 fill-gray" />
             </div>
-            <div>
+            {/*<div>
               { Favourite }
-            </div>
+            </div>*/}
           </div>
         </div>
       </div>
@@ -220,7 +239,7 @@ export const ProductCard = (
 };
 
 ProductCard.defaultProps = {
-  className: 'col-1-3',
+  className: 'col-1-3 bg-white',
 };
 
 /**
@@ -258,25 +277,25 @@ const Product = (
   },
 ) =>
 {
-  const helper = register && register.data.product ? register.data.product : {};
+  // const helper = register && register.data.product ? register.data.product : {};
 
   return (
     <div className="grid-4 nowrap">
       <div className="grow w-auto block">
-        <div className="mb-2 text-s">
-          <span className="bold pr-1/2">{parseCategory(category, helper.categories).title}:</span>
-          {/* <span>Otthon &rsaquo; Nappali bútorok &rsaquo; Szekrények</span> */}
-        </div>
 
         <div
-          className="image"
+          className="embed"
           style={
             images ?
             {
-              backgroundImage: `url(${IMAGE_URL + manufacturer}/${id}-01.jpg)`,
+              width: '640px',
+              height: '480px',
+              backgroundImage: `url(${new File({ id: images[0] }).getUrl('640x480')})`,
             }
             :
             {
+              width: '640px',
+              height: '480px',
               filter: 'grayscale(100%)',
               opacity: '0.2',
               backgroundImage: 'url(/images/logo.svg)',
@@ -319,7 +338,7 @@ const Product = (
           </div>
           <div className="col-1-3">
             <div className="mb-1 heavy">Jellemzők</div>
-            <span>
+            {/*<span>
               {
                 parseFeatures(features, helper.features).map(({ id, title, value }) => (
                   <div key={id} className="mb-1/2">
@@ -328,7 +347,7 @@ const Product = (
                   </div>
                 ))
               }
-            </span>
+            </span>*/}
           </div>
         </div>
 
@@ -337,9 +356,9 @@ const Product = (
       <div className="p-0 mobile:order--1 desktop:w-35" style={{ minWidth: '35rem' }}>
         <div className="mb-1 light"><span className="bold">Cikkszám:</span> {id}</div>
         <div className="mb-1 text-l bold">{brand} {title}</div>
-        <div className="light">{subtitle}</div>
+        <div className="text-s light">{subtitle}</div>
         <hr />
-        <div className="mb-1 tag">raktáron</div>
+        <div className="mb-2 tag">raktáron</div>
         <div className="mb-1 text-s light">
           <span className="bold">Méret: </span>
           <span>{dimension.w || '-'} x {dimension.h || '-'} x {dimension.d || '-'} cm</span>
@@ -350,27 +369,26 @@ const Product = (
           { parseInt(price_discount) > 0 &&
           <div className="h-center">
             <div className="text-s bold text-gray strikethrough">
-              <FormattedNumber
-                value={price_orig_gross}
-                style="currency"
-                currency="HUF"
-                minimumFractionDigits={0}
-              />
+              {`${formatThousand(price_orig_gross)} Ft`}
             </div>
-            <div className="tag mx-1 red bold">-{price_discount}%</div>
+            <div className="tag mx-1 red bold">{`- ${price_discount}%`}</div>
           </div>
           }
         </div>
-        <div className="text-xxl bold">
-          <FormattedNumber
-            value={price_sale_gross}
-            style="currency"
-            currency="HUF"
-            minimumFractionDigits={0}
-          />
+        <div className="mb-2 text-xxl condensed">
+          {`${formatThousand(price_sale_gross)} Ft`}
         </div>
+        <div className="mb-1">
+          <span className="bold">Várható szállítási költség:</span>
+          <span className="light"> 3000 HUF-tól</span>
+        </div>
+        <div className="mb-2 text-xs light underline">Szállítási költség kalkulálása</div>
+        <div className="text-xs light">(Az ár bruttóban értendő, az ÁFÁ-t tartamlazza.)</div>
         <hr />
-        <div className="bold">Színek:</div>
+        <div className="mb-1 bold">Szín:</div>
+        <div className="text-s light">A képen nem a választott szín jelenik meg!</div>
+        <hr />
+        <div>+/-</div>
       </div>
     </div>
   );

@@ -10,89 +10,57 @@ import PropTypes from 'prop-types';
 
 /* !- React Elements */
 
-import { ProductCard } from '../../components/product';
+import GridView from '@1studio/ui/view/grid';
+import Connect from '@1studio/ui/grid/connect';
+import Product, { ProductCard, productPropsParser } from '../../components/product';
 
 
 /* !- Constants */
 
 // ...
 
-const PRODUCT = {
-  id: 1,
-  related_id: 1,
-  brand: 'Nepo',
-  // manufacturer: '',
-  title: 'szekrény',
-  // title_orig: '',
-  // title_orig_rest: '',
-  subtitle: 'bútorlapos, akasztós, polcos',
-  price_discount: 12,
-  // price_orig: '',
-  price_orig_gross: 35990,
-  // price_sale: '',
-  price_sale_gross: 39900,
-  // vat: '',
-  flag: ['RSTOP', 'SALE'],
-  // category: '',
-  features: '',
-  dimension: '',
-  color: '',
-  images: ['112', '113'],
-  // instore: '',
-  incart: 1,
-  description: '',
-  // priority: '',
-  // className: '',
-  // onClick: '',
-}
 
-const PRODUCT2 = {
-  id: 1,
-  related_id: 1,
-  brand: 'Fineline',
-  // manufacturer: '',
-  title: 'étkezőasztal 120x85 cm (világos sonoma)',
-  // title_orig: '',
-  // title_orig_rest: '',
-  subtitle: 'bútorlapos, polcos, vitrines, fali elemek, 2 ajtós, 1 üvegajtós, blokk, több színben, -3',
-  price_discount: 5,
-  // price_orig: '',
-  price_orig_gross: 49990,
-  // price_sale: '',
-  price_sale_gross: 39900,
-  // vat: '',
-  flag: ['RSTOP', 'SALE'],
-  // category: '',
-  features: '',
-  dimension: '',
-  color: '',
-  images: ['112', '113'],
-  // instore: '',
-  incart: 1,
-  description: '',
-  // priority: '',
-  // className: '',
-  // onClick: '',
-}
-const PRODUCT3 = {
-  id: 1,
-  related_id: 1,
-  brand: 'Nepo',
-  title: 'szekrény',
-  subtitle: '',
-  price_discount: 0,
-  price_orig_gross: 39900,
-  price_sale_gross: 39900,
-  flag: ['RSTOP', 'SALE'],
-  features: '',
-  dimension: '',
-  color: '',
-  images: ['112', '113'],
-  incart: 1,
-  description: '',
+const SETTINGS = {
+  paginate:
+  {
+    page: 1,
+    limit: 1,
+  },
+  // order:
+  // {
+  //   column: 'm',
+  //   order: 'asc',
+  // },
+  filters:
+  [
+    {
+      id: 'title',
+      handler: (record, terms) => productPropsParser(record).title.indexOf(terms) !== -1,
+      arguments: ['szekrény'],
+      status: true,
+    },
+    {
+      id: 'brand',
+      handler: (record, terms) => terms.split(',').indexOf(productPropsParser(record).brand) !== -1,
+      arguments: ['Bling,Box'],
+      status: true,
+    },
+  ]
 }
 
 
+const ProductCardGrid = ({ data }) =>
+(
+  <div className="grid">
+    { data.map(props => (
+      <Product
+        key={props.i}
+        {...productPropsParser(props)}
+        // className="col-1-4 bg-white"
+      />
+    ))}
+  </div>
+);
 
 /**
 * Home Component
@@ -105,23 +73,14 @@ const Home = (props, { register, store }) =>
 
       <div className="p-4" style={{ width: '900px' }}>
 
-        <div className="grid">
-
-          <ProductCard
-            {...PRODUCT}
-            className="col-1-4"
-          />
-
-          <ProductCard
-            {...PRODUCT2}
-          />
-
-          <ProductCard
-            {...PRODUCT3}
-          />
-
-        </div>
-
+        <GridView
+          id="products"
+          settings={SETTINGS}
+        >
+          <Connect>
+            <ProductCardGrid />
+          </Connect>
+        </GridView>
 
 
       </div>

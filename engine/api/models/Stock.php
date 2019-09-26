@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use
+  App\Models\Products,
   Phalcon\DI,
   Phalcon\Mvc\Model;
 
@@ -248,7 +249,36 @@ class Stock extends Model
     return 'készleten';
   }
 
+  public function toProduct()
+  {
+    $product = new Products([
+      'id' => $this->cikkszam,
+      'title_orig' => $this->megnevezes,
+      'vat' => $this->afa,
+      'price_orig' => $this->listaar_float,
+      'price_sale' => $this->akcar_float,
+      'price_discount' => $this->cikkszam,
+      'features_orig' => $this->jellemzo,
+      'dimension_orig' => $this->meret,
+      'dimension_orig_new' => [
+        $this->meret_szelesseg1,
+        $this->meret_szelesseg2,
+        $this->meret_magassag1,
+        $this->meret_magassag2,
+        $this->meret_melyseg1,
+        $this->meret_melyseg2,
+        $this->fekvofelulet_szelesseg,
+        $this->fekvofelulet_magassag,
+        $this->fekvofelulet_melyseg,
+        $this->meret_egyeb,
+      ],
+    ]);
 
+    $product->beforeValidation();
+    $product->beforeValidationOnCreate();
+
+    return $product;
+  }
 
 
   /**

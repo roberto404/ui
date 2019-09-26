@@ -392,7 +392,7 @@ class Products extends Model
     $this->related_id = sizeof($matches[1]) ? $matches[1][0] : '';
 
     // related_id is too short
-    $regex = '/^' . $this->related_id . '[0-9]{1}[A-Z]{0,2}$/m';
+    $regex = '/^' . preg_quote($this->related_id, '/') . '[0-9]{1}[A-Z]{0,2}$/m';
 
     if (!$this->related_id || !preg_match($regex, $this->id))
     {
@@ -730,6 +730,11 @@ class Products extends Model
   public function getDimension()
   {
     return !$this->dimension ? [] : \json_decode($this->dimension, true);
+  }
+
+  public function getImages()
+  {
+    return !$this->images ? [] : \json_decode($this->images, true);
   }
 
 
@@ -1174,6 +1179,28 @@ class Products extends Model
       "stock" => $this->getStock(),
       "priority" => $this->getPriority(),
     );
+  }
+
+  public function toWebsiteProps()
+  {
+    return [
+      'i' => $this->id,
+      'ri' => $this->related_id,
+      'b' => $this->brand,
+      'm' => $this->manufacturer,
+      't' => $this->title,
+      's' => $this->subtitle,
+      'pd' => $this->price_discount,
+      'po' => $this->price_orig_gross,
+      'ps' => $this->price_sale_gross,
+      'f' => $this->getFlag(),
+      'fe' => $this->getFeatures(),
+      'di' => $this->getDimension(),
+      'c' => $this->color,
+      'im' => $this->getImages(),
+      'ic' => $this->incart,
+      'de' => $this->description,
+    ];
   }
 
   /* !- Helper methods */
