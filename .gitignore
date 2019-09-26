@@ -1,6 +1,6 @@
 cache/
 logs/
-htdocs/belepes/library
+tmp/
 
 node_modules
 npm-debug.log
@@ -14,6 +14,8 @@ engine/kontakt2/dev/package-lock.json
 public_html/tmp_images
 package-lock.json
 engine/config/rs.loc.ini
+engine/config/gulyasrobert.ini
+engine/config/root.ini
 public_html/kontakt2/library
 .htaccess
 public_html/.htaccess
