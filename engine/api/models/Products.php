@@ -233,6 +233,12 @@ class Products extends Model
 
   /**
    *
+   * @var string
+   */
+  public $images;
+
+  /**
+   *
    * @var boolean
    */
   public $instore;
@@ -306,7 +312,7 @@ class Products extends Model
     // clamp discount, sometimes price_sale float wrong
     $this->price_discount = 0;
 
-    if ($this->price_orig && $this->price_orig != $this->price_sale)
+    if ($this->price_orig > 0 && $this->price_sale > 0 && $this->price_orig != $this->price_sale)
     {
       $this->price_discount = max(0, min(100,
         floor(100 - (($this->price_sale / $this->price_orig) * 100))
