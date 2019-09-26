@@ -17,6 +17,7 @@ return call_user_func(function()
 		// ->delete('/{id:[0-9]+}','deleteOne')
 
 		->get('/readWeb/{ids:[A-Z0-9,]+}', 'readWeb')
+		->get('/readAllWebsite', 'ReadAllWebsite')
 
 		->post('/checkout', 'checkout')
 	;

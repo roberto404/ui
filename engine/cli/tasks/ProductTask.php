@@ -147,15 +147,24 @@ class ProductTask extends \Phalcon\CLI\Task
       $timestamp = time();
     }
 
+    $products = [];
+
+    foreach(Products::find([
+      'conditions' => 'instore = 1'
+    ]) as $product)
+    {
+      $products[] = $product->toWebsiteProps();
+    }
+
     file_put_contents(
       self::FILE_PATH . self::FILE_NAME . self::TMP_POSTFIX,
       json_encode(
         array(
           'status' => 'SUCCESS',
           'modified' => $timestamp,
-          'records' => Products::find()->toArray()
-        )
-        // , JSON_PRETTY_PRINT
+          'records' => $products
+        ),
+        JSON_UNESCAPED_UNICODE /*| JSON_PRETTY_PRINT*/
       )
     );
 
@@ -352,6 +361,73 @@ class ProductTask extends \Phalcon\CLI\Task
   }
 
 
+  public function fetchRelatedProductsFromStockAction()
+  {
+    ini_set("memory_limit","1024M");
+
+    $results = array();
+
+    $query = $this->db->query("
+      SELECT
+        *
+      FROM
+        rsdb.raktar
+      LEFT JOIN
+        products
+      ON
+        raktar.cikkszam = products.id
+      WHERE
+        products.id is NULL
+    ");
+
+    $query->setFetchMode(
+      \Phalcon\Db::FETCH_ASSOC
+    );
+
+    foreach ($query->fetchAll() as $record)
+    {
+      // var_dump($record['cikkszam']);
+
+      $stock = new Stock($record);
+      $product = $stock->toProduct();
+
+      $relatedProduct = Products::findFirst([
+        'conditions' => "related_id = ?1",
+        'bind' => [1 => $product->related_id]
+      ]);
+
+      if ($relatedProduct)
+      {
+        if (
+          $product->brand === $relatedProduct->brand
+          && $product->color && $product->color !== $relatedProduct->color
+          && $product->dimension === $relatedProduct->dimension
+          && $product->price_orig > 0
+        )
+        {
+          $product->flag = $relatedProduct->flag;
+          $product->category = $relatedProduct->category;
+          $product->features = $relatedProduct->features;
+          $product->instore = $relatedProduct->instore;
+          $product->incart = $relatedProduct->incart;
+          $product->description = $relatedProduct->description;
+
+          $product->save();
+
+          // $product->beforeValidation();
+          // $product->beforeValidationOnCreate();
+          var_dump($product->id);
+          var_dump($product->related_id);
+          var_dump('---');
+          // var_dump($relatedProduct->toArray());
+          // die();
+
+        }
+
+      }
+    }
+  }
+
 
   public function updateAction($products = false)
   {
@@ -450,6 +526,7 @@ class ProductTask extends \Phalcon\CLI\Task
     {
       // - delete after launch
       $this->updateInStoreAction($products);
+      $this->refreshRelatedInStoreAction($products);
       $this->updateDescriptionAction($products);
       // --
       $this->updateFreeDeliveryAction($products);

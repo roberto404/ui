@@ -118,6 +118,50 @@ class ProductController extends AppController
   }
 
 
+  public function ReadAllWebsite()
+  {
+    // $this->validationByIp();
+
+    ini_set("memory_limit","150M");
+    $file = __DIR__ . '/../../../cache/task/products.json';
+
+
+    $getCache = function() use ($file)
+    {
+      $cache = \file_get_contents($file);
+      $json = json_decode($cache, true);
+
+      return $json;
+    };
+
+    $json = $getCache();
+
+    if (!$json)
+    {
+      sleep(10);
+      $json = $getCache();
+
+      if (!$json)
+      {
+        throw new HTTPException(
+          'Method Not Allowed',
+          405,
+          array(
+            'level' => 'emergency',
+            'code' => 'controller.product.readallwebsite',
+            'dev' => array(
+              'message' => 'Cache file missing',
+              'filePath' => $file,
+            ),
+          )
+        );
+      }
+    }
+
+    $this->createResponse($json['records'], ['modified' => $json['modified']]);
+  }
+
+
   public function Checkout()
   {
     $this->validationByIp();
