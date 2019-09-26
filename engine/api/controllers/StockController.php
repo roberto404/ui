@@ -52,6 +52,6 @@ class StockController extends AppController
       }
     }
 
-    $this->respond($json['records'], ['modified' => $json['modified']]);
+    $this->createResponse($json['records'], ['modified' => $json['modified']]);
   }
 }
