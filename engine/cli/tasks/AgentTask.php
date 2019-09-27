@@ -160,10 +160,13 @@ class AgentTask extends \Phalcon\CLI\Task
   /**
    * Related products categories or title or dimension not same
    *
-   * DANGEROUS because full group deleted if one of elemet wrong
+   * !!!DANGEROUS
+   * because full group deleted if one of elemet wrong
    */
   public function productRelatedPropsAction()
   {
+    // !!!DANGEROUS
+    //
     $query = $this->db->query("
       SELECT
         related_id,
@@ -183,7 +186,7 @@ class AgentTask extends \Phalcon\CLI\Task
       OR
         COUNT(distinct dimension) > 1
       OR
-        COUNT(distinct color) != count(id)
+        (COUNT(distinct color) != count(id) AND COUNT(distinct color) != 1)
     ");
 
     $relatedIds = [];
@@ -207,15 +210,15 @@ class AgentTask extends \Phalcon\CLI\Task
         ]
       ]);
 
-      // foreach ($products as $product)
-      // {
-      //   $product->related_id = $product->id;
-      //
-      //   if (!$product->save())
-      //   {
-      //     var_dump($product->getMessages());
-      //   }
-      // }
+      foreach ($products as $product)
+      {
+        $product->related_id = $product->id;
+
+        if (!$product->save())
+        {
+          var_dump($product->getMessages());
+        }
+      }
     }
     echo count($relatedIds);
   }
