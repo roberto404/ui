@@ -162,7 +162,10 @@ class ProductTask extends \Phalcon\CLI\Task
         array(
           'status' => 'SUCCESS',
           'modified' => $timestamp,
-          'records' => $products
+          'records' => $products,
+          'config' => [
+            'fabrics' => Products::getFabricsCache()
+          ]
         ),
         JSON_UNESCAPED_UNICODE /*| JSON_PRETTY_PRINT*/
       )
@@ -386,8 +389,6 @@ class ProductTask extends \Phalcon\CLI\Task
 
     foreach ($query->fetchAll() as $record)
     {
-      // var_dump($record['cikkszam']);
-
       $stock = new Stock($record);
       $product = $stock->toProduct();
 
@@ -395,6 +396,31 @@ class ProductTask extends \Phalcon\CLI\Task
         'conditions' => "related_id = ?1",
         'bind' => [1 => $product->related_id]
       ]);
+
+      if (!$relatedProduct)
+      {
+        $relatedProduct = Products::findFirst([
+          'conditions' => "
+              related_id LIKE ?1
+            AND
+              brand = ?2
+            AND
+              dimension = ?3
+            AND
+              SUBSTRING(title_orig, 1, (CHAR_LENGTH(title_orig) - CHAR_LENGTH(color) - 3)) LIKE ?4
+          ",
+          'bind' => [
+            1 => $product->related_id . '%',
+            2 => $product->brand,
+            3 => $product->dimension,
+            4 => substr(
+              $product->title_orig,
+              0,
+              (strlen($product->title_orig) - strlen($product->color) - 3)
+            ) . '%',
+          ]
+        ]);
+      }
 
       if ($relatedProduct)
       {
@@ -410,9 +436,31 @@ class ProductTask extends \Phalcon\CLI\Task
           $product->features = $relatedProduct->features;
           $product->instore = $relatedProduct->instore;
           $product->incart = $relatedProduct->incart;
-          $product->description = $relatedProduct->description;
+
+          if (!$product->description)
+          {
+           $product->description = $relatedProduct->description;
+          }
 
           $product->save();
+
+          if ($relatedProduct->related_id !== $product->related_id)
+          {
+            $relatedProducts = Products::find([
+              'conditions' => "
+                  related_id = ?1
+              ",
+              'bind' => [
+                1 => $relatedProduct->related_id
+              ]
+            ]);
+
+            foreach($relatedProducts as $rproduct)
+            {
+              $rproduct->related_id = $product->related_id;
+              $rproduct->save();
+            }
+          }
         }
       }
     }
