@@ -195,10 +195,9 @@ class AgentTask extends \Phalcon\CLI\Task
     {
       // @TODO az a baj h lehet h tobb jo is van csak egy rossz a csoportban
       // UPDATE products SET related_id = id WHERE color = ''
-      if (count(id) == 2)
-      {
-        $relatedIds[] = $relatedProduct['related_id'];
-      }
+      // if (count(id) == 2)
+
+      $relatedIds[] = $relatedProduct['related_id'];
     }
 
     if (count($relatedIds) > 0)
