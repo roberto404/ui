@@ -158,7 +158,7 @@ class ProductController extends AppController
       }
     }
 
-    $this->createResponse($json['records'], ['modified' => $json['modified']]);
+    $this->createResponse($json['records'], ['modified' => $json['modified'], 'config' => $json['config']]);
   }
 
 

@@ -792,6 +792,94 @@ class Products extends Model
   }
 
 
+  static function getFabricsCache()
+  {
+    $di = DI::getDefault();
+    $filter = $di->get('filter');
+
+    // Create library: Color code by manufacturer
+    // [NF2] = ["RK", "R"]
+
+    $query = $di->get('db')->query("
+      SELECT
+        *
+      FROM
+        szovetek.kategoriak
+    ");
+
+    $query->setFetchMode(
+      \Phalcon\Db::FETCH_NUM
+    );
+
+    foreach($query->fetchAll() as $manufacturer)
+    {
+      foreach ($manufacturer as $i => $colorCategory)
+      {
+        if ($i < 1 || !$colorCategory) continue;
+
+        // sanitize
+        $colorCategory = $filter->sanitize(
+          str_replace(['"', '.', ' ',':'], "", mb_strtolower($colorCategory)),
+          'hungarian'
+        );
+
+        // remove extra info => 1.(Concept Kanapéágy)
+        preg_match("/^([^(]*)(\((.+)\))?/", $colorCategory, $colorCategoryMatches);
+
+        if (!isset($manufacturerFabricCategories[$manufacturer[0]][$colorCategoryMatches[1]]))
+        {
+          $manufacturerFabricCategories[$manufacturer[0]][] = $colorCategoryMatches[1];
+        }
+      }
+    }
+
+    $query = $di->get('db')->query("
+      SELECT
+        prefix, kep, colorHex, colorName, megnevezes, kategoria
+      FROM
+        szovetek.szovetek
+    ");
+
+    /**
+     * @example
+     * {
+     *  "NF2": {
+     *    "kateg02": [{ title, image, colorHex, colorName }]
+     *  }
+     * }
+     */
+    foreach($query->fetchAll() as $fabric)
+    {
+      if (!isset($manufacturerFabricCategoryFabrics[$fabric['prefix']]))
+      {
+        $manufacturerFabricCategoryFabrics[$fabric['prefix']] = array();
+        $manufacturerFabricCategoryFabrics[$fabric['prefix']][$fabric['kategoria']] = array();
+      }
+
+      if (
+        $fabric['megnevezes']
+        && $fabric['kep']
+        && $fabric['colorHex']
+        && $fabric['colorName']
+      )
+      {
+        $manufacturerFabricCategoryFabrics[$fabric['prefix']][$fabric['kategoria']][] =
+          array(
+            'title' => $fabric['megnevezes'],
+            'image' => $fabric['kep'],
+            'colorHex' => $fabric['colorHex'],
+            'colorName' => $fabric['colorName'],
+          );
+      }
+    }
+
+
+    return [
+      'manufacturerFabricCategories' => $manufacturerFabricCategories,
+      'manufacturerFabricCategoryFabrics' => $manufacturerFabricCategoryFabrics
+    ];
+  }
+
   /**
    * Convert color to fabrics. Webshop use only
    *
@@ -856,8 +944,6 @@ class Products extends Model
 
         }
       }
-
-      // var_dump($cache_manufacturerFabricCategories['K45']); die();
 
 
       $query = $this->di->get('db')->query("
@@ -1057,6 +1143,30 @@ class Products extends Model
     if ($this->price_discount == 21)
     {
       $productWebshopFlag[] = 'VAT';
+    }
+
+    // color
+
+    $colorFabrics = [];
+
+    if ($product->color)
+    {
+      $colorFabrics = $product->getFabrics();
+    }
+    else if ($product->features)
+    {
+      $productFeatures = json_decode($product->features, true);
+
+      // alapanyag fenyő
+      if (isset($productFeatures['1']) && $productFeatures['1'] == '2')
+      {
+        $colorFabrics[] = array(
+          "title" => $features[1]['options'][2],
+          "image" => "alapanyag_fenyo.jpg",
+          "colorHex" => "#F7D69F",
+          "colorName" => "yellow"
+        );
+      }
     }
 
     // feature

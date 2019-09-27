@@ -277,7 +277,57 @@ const Product = (
   },
 ) =>
 {
-  // const helper = register && register.data.product ? register.data.product : {};
+  const helper = register && register.data.products ? register.data.products : {};
+
+  console.log(helper.fabrics, color, brand, manufacturer);
+
+
+  const getCategory = level =>
+    `kateg${level < 11 ? 0 : ''}${level+1}`;
+
+  const fabrics = [];
+
+  // Color category = brand (NF1)
+  if (color === brand)
+  {
+    helper.fabrics.manufacturerFabricCategories[manufacturer].forEach((brands, index) =>
+    {
+      if (
+        brands.split(',').indexOf(brand.toLowerCase()) !== -1
+      )
+      {
+        fabrics.push(helper.fabrics.manufacturerFabricCategoryFabrics[manufacturer][getCategory(index)])
+      }
+
+    })
+    // console.log(helper.fabrics.manufacturerFabricCategories[manufacturer]);
+  }
+
+  // if ($this->color === $this->brand)
+  // {
+  //   $fabrics = [];
+  //
+  //   foreach ($cache_manufacturerFabricCategories[$this->manufacturer] as $colorCategory => $brands)
+  //   {
+  //     foreach (explode(',', $brands) as $brand)
+  //     {
+  //       if (mb_strtolower($this->brand) === mb_strtolower(trim($brand)))
+  //       {
+  //         $colorCategoryField = $getCategoryField($colorCategory);
+  //
+  //         if (isset($cache_manufacturerFabricCategoryFabrics[$this->manufacturer][$colorCategoryField]))
+  //         {
+  //           foreach($cache_manufacturerFabricCategoryFabrics[$this->manufacturer][$colorCategoryField] as $fabric)
+  //           {
+  //             $fabrics[] = $fabric;
+  //           }
+  //         }
+  //       };
+  //     }
+  //   }
+  //
+  //   return $fabrics;
+  // }
 
   return (
     <div className="grid-4 nowrap">
