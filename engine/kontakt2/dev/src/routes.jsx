@@ -5,6 +5,7 @@ import { Route } from 'react-router-dom';
 /* !- React Elemens */
 
 import IconProduct from './icons/product';
+import IconAnalytics from '@1studio/ui/icon/mui/action/timeline';
 
 
 /* !- App Compontents */
@@ -72,7 +73,10 @@ export const getRoutes = app => [
   },
   {
     path: '/analytics',
+    title: 'analytics.title',
     component: Views.Analytics,
+    icon: IconAnalytics,
+    permission: ['analytics'],
   },
 ];
 

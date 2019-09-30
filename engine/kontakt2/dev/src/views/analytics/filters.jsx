@@ -6,6 +6,8 @@ import sum from 'lodash/sum';
 import mean from 'lodash/mean';
 import max from 'lodash/max';
 import min from 'lodash/min';
+import moment from 'moment';
+import produceNumericArray from '@1studio/utils/array/produceNumericArray';
 
 
 /* !- React Elements */
@@ -25,6 +27,8 @@ import PivotTable from './pivotTable';
 
 /* !- Constants */
 
+import { DATE_FORMAT, HISTORY_MONTHS } from './const';
+
 const SUMMARIES = {
   count,
   countUnique,
@@ -33,6 +37,11 @@ const SUMMARIES = {
   min,
   mean,
 };
+
+const initDate = moment().subtract(HISTORY_MONTHS, 'months');
+
+const dateData = produceNumericArray(1, HISTORY_MONTHS).map(() =>
+  ({ id: initDate.add(1, 'month').format(DATE_FORMAT), title: initDate.format('YYYY MMMM') }));
 
 
 /**
@@ -67,15 +76,7 @@ const AnalyticsFilters = () =>
           buttonClassName="gray outline shadow"
           label="Időszak"
           placeholder="Teljes időszak"
-          data={[
-            { id: '2019-01', title: '2019 január' },
-            { id: '2019-02', title: '2019 február' },
-            { id: '2019-03', title: '2019 március' },
-            { id: '2019-04', title: '2019 április' },
-            { id: '2019-05', title: '2019 május' },
-            { id: '2019-06', title: '2019 június' },
-            { id: '2019-07', title: '2019 július' },
-          ]}
+          data={dateData}
         />
         <Dropdown
           id="dateCompare"
@@ -83,15 +84,7 @@ const AnalyticsFilters = () =>
           label="Hasonlít"
           placeholder="&empty;"
           // value="2019-01"
-          data={[
-            { id: '2019-01', title: '2019 január' },
-            { id: '2019-02', title: '2019 február' },
-            { id: '2019-03', title: '2019 március' },
-            { id: '2019-04', title: '2019 április' },
-            { id: '2019-05', title: '2019 május' },
-            { id: '2019-06', title: '2019 június' },
-            { id: '2019-07', title: '2019 július' },
-          ]}
+          data={dateData}
         />
       </div>
     </div>

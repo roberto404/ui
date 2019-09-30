@@ -1,5 +1,6 @@
 
 import React from 'react';
+import moment from 'moment';
 
 
 /* !- React Elements */
@@ -16,7 +17,11 @@ export const UNIT = {
 
 export const SIMPLIFY_ROOT = 1000;
 export const SIMPLIFY_UNITS = ['', 'e', 'm', 'mrd'];
-export const SIMPLIFY_FORMAT = ({ value, unit }) => Math.round(value) + unit;
+export const SIMPLIFY_FORMAT = ({ value, unit }) => (Math.round(value * 100) / 100) + unit;
+
+export const DATE_FORMAT = 'YYYY-MM';
+
+export const HISTORY_MONTHS = 24;
 
 export const SETTINGS = {
   paginate:
@@ -31,9 +36,9 @@ export const SETTINGS = {
       handler: (record, term) => term.split(/[ ,]+/g).every(word =>
         record.pi.toString().toLowerCase().indexOf(word.toString().toLowerCase()) >= 0
         || record.b.toString().toLowerCase().indexOf(word.toString().toLowerCase()) >= 0
-        || record.t.toString().toLowerCase().indexOf(word.toString().toLowerCase()) >= 0
+        || record.t.toString().toLowerCase().indexOf(word.toString().toLowerCase()) >= 0,
       ),
-      arguments: ['Marcus íróa.'],
+      arguments: [''],
       status: true,
     },
     {
@@ -41,7 +46,7 @@ export const SETTINGS = {
       handler: (record, terms) => record.d.indexOf(terms) === 0,
       // arguments: [],
       // status: false,
-      arguments: ['2019-05'],
+      arguments: [moment().format(DATE_FORMAT)],
       status: true,
     },
     {

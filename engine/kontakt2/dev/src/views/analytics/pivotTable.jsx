@@ -11,6 +11,8 @@ import min from 'lodash/min';
 import sort from '@1studio/utils/array/sort';
 import simplify from '@1studio/utils/math/simplify';
 import isEqual from 'lodash/isEqual';
+import Data from '@1studio/utils/models/data';
+import clone from 'lodash/clone';
 
 /* !- React Elements */
 
@@ -59,7 +61,7 @@ export const PivotTableFilter = () =>
       id="row"
       buttonClassName="gray outline shadow"
       label="Sorok"
-      value="pi"
+      value="m"
       data={[
         { id: 'pi', title: 'Termék' },
         { id: 'b', title: 'Márka' },
@@ -75,7 +77,7 @@ export const PivotTableFilter = () =>
       id="field"
       buttonClassName="gray outline shadow"
       label="Érték"
-      value="q"
+      value="p"
       data={[
         { id: 'q', title: 'Mennyiség' },
         { id: 'p', title: 'Ár' },
@@ -161,16 +163,16 @@ class PivotTableComponent extends Component
     }
   }
 
+  /**
+   * Invoke when every data change: pivot fields changes or observed data change (analytics).
+   */
   reCalculate()
   {
-
     const store = this.context.store.getState();
     const storeAnalytics = store.grid.analytics || {};
 
     const {
       data,
-      model,
-      hook,
     } = storeAnalytics;
 
     const {
@@ -184,8 +186,10 @@ class PivotTableComponent extends Component
 
     if (dateCompare && data.length)
     {
-      model.filters = { id: 'date', arguments: [dateCompare], status: true };
-      const pivotCompare = new PivotTable(model.results, field, SUMMARIES[summarize], [row, 's']);
+      const comparedModel = clone(storeAnalytics.model);
+      comparedModel.filters = { id: 'date', arguments: [dateCompare], status: true };
+
+      const pivotCompare = new PivotTable(comparedModel.results, field, SUMMARIES[summarize], [row, 's']);
       comparedData = pivotCompare.toArray();
     }
 

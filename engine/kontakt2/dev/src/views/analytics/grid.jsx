@@ -27,7 +27,7 @@ const AnalyticsGrid = (props, { store }) =>
   const onClickCellHandler = ({ id, row }) =>
   {
     const data = store.getState().grid.analytics.data
-      .filter(record => record[row] === id);
+      .filter(record => String(record[row]) === id);
 
     store.dispatch(dialog(<GridModal data={data} />));
   };
