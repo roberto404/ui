@@ -3,6 +3,7 @@
 use
   App\Models\Products,
   App\Models\Features,
+  App\Models\ProductsFlags,
   App\Models\Categories,
   App\Models\Stock,
   App\Components\Menu;
@@ -164,7 +165,15 @@ class ProductTask extends \Phalcon\CLI\Task
           'modified' => $timestamp,
           'records' => $products,
           'config' => [
-            'fabrics' => Products::getFabricsCache()
+            'fabrics' => Products::getFabricsCache(),
+            'features' => Features::find([
+              'conditions' => 'status = 1',
+              'columns' => 'id, title, options'
+            ])->toArray(),
+            'flags' => ProductsFlags::find([
+              'conditions' => 'instore = 1',
+              'columns' => 'id, title, priority, description'
+            ])->toArray()
           ]
         ),
         JSON_UNESCAPED_UNICODE /*| JSON_PRETTY_PRINT*/
