@@ -863,7 +863,34 @@ class Products extends Model
         && $fabric['colorName']
       )
       {
-        $manufacturerFabricCategoryFabrics[$fabric['prefix']][$fabric['kategoria']][] =
+        /**
+         * @example
+         * // => 'kateg12' => 12
+         */
+        $categoryIndex = (int) mb_substr($fabric['kategoria'], 5) - 1;
+        $manufacturer = $fabric['prefix'];
+
+        if (
+          $categoryIndex === -1
+          || !isset($manufacturerFabricCategories[$manufacturer])
+          || !isset($manufacturerFabricCategories[$manufacturer][$categoryIndex])
+        )
+        {
+          // var_dump($manufacturerFabricCategories);
+          // var_dump($manufacturer);
+          // var_dump($categoryIndex);
+          // die();
+          continue;
+        }
+
+        $colorCode = $manufacturerFabricCategories[$manufacturer][$categoryIndex];
+
+
+        /**
+         * @example
+         * // => NK2 => R => [{ title, image, colorHex, colorName }]
+         */
+        $manufacturerFabricCategoryFabrics[$manufacturer][$colorCode][] =
           array(
             'title' => $fabric['megnevezes'],
             'image' => $fabric['kep'],
@@ -873,11 +900,7 @@ class Products extends Model
       }
     }
 
-
-    return [
-      'manufacturerFabricCategories' => $manufacturerFabricCategories,
-      'manufacturerFabricCategoryFabrics' => $manufacturerFabricCategoryFabrics
-    ];
+    return $manufacturerFabricCategoryFabrics;
   }
 
   /**
@@ -944,7 +967,6 @@ class Products extends Model
 
         }
       }
-
 
       $query = $this->di->get('db')->query("
         SELECT
