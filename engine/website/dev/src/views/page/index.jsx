@@ -12,8 +12,9 @@ import PropTypes from 'prop-types';
 
 import GridView from '@1studio/ui/view/grid';
 import Connect from '@1studio/ui/grid/connect';
-import Product, { ProductCard, productPropsParser } from '../../components/product';
-
+import { productPropsParser } from '../../components/product';
+import Product from '../../components/product/product';
+import ProductCard from '../../components/product/productThumbnail';
 
 /* !- Constants */
 
@@ -35,16 +36,23 @@ const SETTINGS = {
   [
     {
       id: 'title',
-      handler: (record, terms) => productPropsParser(record).title.indexOf(terms) !== -1,
-      arguments: ['szekrény'],
+      handler: (record, terms) => productPropsParser(record).id === terms,
+      arguments: ['K65904301'],
+      // arguments: ['NF11E20051000'],
       status: true,
     },
-    {
-      id: 'brand',
-      handler: (record, terms) => terms.split(',').indexOf(productPropsParser(record).brand) !== -1,
-      arguments: ['Bling,Box'],
-      status: true,
-    },
+    // {
+    //   id: 'title',
+    //   handler: (record, terms) => productPropsParser(record).title.indexOf(terms) !== -1,
+    //   arguments: ['szekrény'],
+    //   status: true,
+    // },
+    // {
+    //   id: 'brand',
+    //   handler: (record, terms) => terms.split(',').indexOf(productPropsParser(record).brand) !== -1,
+    //   arguments: ['Bling,Box'],
+    //   status: true,
+    // },
   ]
 }
 
@@ -53,14 +61,26 @@ const ProductCardGrid = ({ data }) =>
 (
   <div className="grid">
     { data.map(props => (
-      <Product
+      <ProductCard
         key={props.i}
         {...productPropsParser(props)}
-        // className="col-1-4 bg-white"
+        className="col-1-4 bg-white"
       />
     ))}
   </div>
 );
+// const ProductCardGrid = ({ data }) =>
+// (
+//   <div className="_grid">
+//     { data.map(props => (
+//       <Product
+//         key={props.i}
+//         {...productPropsParser(props)}
+//         // className="col-1-4 bg-white"
+//       />
+//     ))}
+//   </div>
+// );
 
 /**
 * Home Component
@@ -68,10 +88,7 @@ const ProductCardGrid = ({ data }) =>
 const Home = (props, { register, store }) =>
 {
   return (
-    <div className="py-2">
-
-
-      <div className="p-4" style={{ width: '900px' }}>
+    <div className="wrapper">
 
         <GridView
           id="products"
@@ -83,9 +100,8 @@ const Home = (props, { register, store }) =>
         </GridView>
 
 
-      </div>
 
-      <div className="bold">Home</div>
+      {/*<div className="bold">Home</div>
       <div className="text-green">Galléria - Caroussel 1</div>
       <div className="text-green">Termék válogatás - Caroussel 1, 3</div>
       <div className="text-green">Galéria - Lista 3</div>
@@ -93,7 +109,7 @@ const Home = (props, { register, store }) =>
       <div className="text-green">Galéria - Lista 4</div>
       <div className="text-green">Galéria - Lista 2</div>
       <div>Magyar termék</div>
-      <div>Rólunk???</div>
+      <div>Rólunk???</div>*/}
     </div>
   );
 };
