@@ -3,7 +3,8 @@
 $iconPath: '../../node_modules/@1studio/ui/assets/icon/';
 @import "../../node_modules/@1studio/ui/assets/style/mixins.scss";
 @import "mixins";
-@import "../../node_modules/@1studio/ui/assets/style/bootstrap.scss";
+@import "/Users/roberto/Sites/ui/assets/style/bootstrap.scss";
+// @import "../../node_modules/@1studio/ui/assets/style/bootstrap.scss";
 @import "../../node_modules/@1studio/ui/assets/style/icons.scss";
 $iconPath: '../icon/';
 
@@ -21,3 +22,23 @@ $iconPath: '../icon/';
 
 // --> Tailwind concept: https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.css
 @import "utilities/utilities";
+
+
+
+.wrapper
+{
+  @include respond-to(desktop)
+  {
+    width: 1140px;
+    margin: 0 auto;
+    padding: 1.5rem;
+  }
+
+  @include respond-to(mobile)
+  {
+    // width: 1140px;
+    // margin: 0 auto;
+    padding: 1.5rem;
+  }
+
+}
