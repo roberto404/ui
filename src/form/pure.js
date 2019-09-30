@@ -17,6 +17,7 @@ import CalendarMonthCaroussel from './pure/calendarMonthCaroussel';
 import DateTime from './pure/datetime';
 import Slider from './pure/slider';
 import Plain from './pure/plain';
+import Collection from './pure/collection';
 
 
 export {
@@ -38,6 +39,7 @@ export {
   Slider,
   DateTime,
   Plain,
+  Collection,
 };
 
 export default Form;

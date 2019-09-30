@@ -21,5 +21,6 @@ export const CalendarMonthButton = injectIntl(Fields.CalendarMonthButton);
 export const DateTime = injectIntl(Fields.DateTime);
 export const Slider = injectIntl(Fields.Slider);
 export const Plain = injectIntl(Fields.Plain);
+export const Collection = injectIntl(Fields.Collection);
 
 export default injectIntl(Form);
