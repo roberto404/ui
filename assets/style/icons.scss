@@ -49,3 +49,8 @@
 {
   @include icon('minus', $white);
 }
+
+.embed-search-gray
+{
+  @include icon('search', $gray);
+}

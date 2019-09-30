@@ -136,6 +136,11 @@ table
   @include aspect-ratio(1,1);
 }
 
+.ratio-4-3
+{
+  @include aspect-ratio(4,3);
+}
+
 
 .flip-vertical
 {
@@ -274,7 +279,6 @@ table
   }
 }
 
-
 @include respond-to(desktop)
 {
   .desktop\:hidden {
@@ -291,6 +295,10 @@ table
 
   .desktop\:absolute {
     position: absolute;
+  }
+
+  .desktop\:nowrap {
+    flex-wrap: nowrap;
   }
 }
 

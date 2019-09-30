@@ -49,6 +49,7 @@ body[class*=" layer-"]
 
     .close
     {
+      z-index: 1;
       position: absolute;
       top: $layer-padding;
       right: $layer-padding;
