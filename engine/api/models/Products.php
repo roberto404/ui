@@ -41,11 +41,6 @@ class Products extends Model
   const DIMENSIONS = array('w', 'h', 'd');
 
   /**
-   * Location of product's images
-   */
-  const IMAGES_FOLDER = __DIR__ . '/../../../public_html/product_images/';
-
-  /**
    * special color code
    * @var array
    */
@@ -238,6 +233,12 @@ class Products extends Model
 
   /**
    *
+   * @var string
+   */
+  public $images;
+
+  /**
+   *
    * @var boolean
    */
   public $instore;
@@ -311,7 +312,7 @@ class Products extends Model
     // clamp discount, sometimes price_sale float wrong
     $this->price_discount = 0;
 
-    if ($this->price_orig && $this->price_orig != $this->price_sale)
+    if ($this->price_orig > 0 && $this->price_sale > 0 && $this->price_orig != $this->price_sale)
     {
       $this->price_discount = max(0, min(100,
         floor(100 - (($this->price_sale / $this->price_orig) * 100))
@@ -348,9 +349,6 @@ class Products extends Model
     {
       $this->dimension_orig_new = json_encode($this->dimension_orig_new, JSON_UNESCAPED_UNICODE);
     }
-
-    // images
-    $this->parseImages($this);
 
     // priority
     if (!$this->priority)
@@ -394,7 +392,7 @@ class Products extends Model
     $this->related_id = sizeof($matches[1]) ? $matches[1][0] : '';
 
     // related_id is too short
-    $regex = '/^' . $this->related_id . '[0-9]{1}[A-Z]{0,2}$/m';
+    $regex = '/^' . preg_quote($this->related_id, '/') . '[0-9]{1}[A-Z]{0,2}$/m';
 
     if (!$this->related_id || !preg_match($regex, $this->id))
     {
@@ -644,7 +642,7 @@ class Products extends Model
 
     if (in_array($flag, $productFlag))
     {
-      $this->flag = \json_encode(array_diff($productFlag, [$flag]));
+      $this->flag = \json_encode(array_values(array_diff($productFlag, [$flag])));
     }
   }
 
@@ -734,6 +732,11 @@ class Products extends Model
     return !$this->dimension ? [] : \json_decode($this->dimension, true);
   }
 
+  public function getImages()
+  {
+    return !$this->images ? [] : \json_decode($this->images, true);
+  }
+
 
   /**
    * Calculate product's priority based on Flag
@@ -777,27 +780,128 @@ class Products extends Model
       return null;
     }
 
-    // RS2 => 11, RS6 => 3
-    $store = $stock->getSupply();
-    $maxQuantity = 0;
-
-    foreach ($store as $storeHouse => $quantity)
-    {
-      $store[$storeHouse] = $human ? $this->formatStockQuantityToHuman($quantity) : $quantity;
-
-      // find maximum store quantity
-      if ($quantity > $maxQuantity)
-      {
-        $maxQuantity = $quantity;
-      }
-    }
+    /**
+     * @var [array] [RS2 => 11, RS6 => 3]
+     */
+    $maxQuantity = max($stock->getSupply('RS2'), $stock->getSupply('RS6'), $stock->getSupply('RS8'));
 
     return array(
-      'global' => $maxQuantity ?  $this->formatStockQuantityToHuman($maxQuantity) : Products::parseDelivery($this),
-      'stores' => $store,
+      'global' => $maxQuantity ? $stock->getSupplyMessageHelper($maxQuantity) : Products::parseDelivery($this),
+      'stores' => $stock->getSupplyMessage(),
     );
   }
 
+
+  static function getFabricsCache()
+  {
+    $di = DI::getDefault();
+    $filter = $di->get('filter');
+
+    // Create library: Color code by manufacturer
+    // [NF2] = ["RK", "R"]
+
+    $query = $di->get('db')->query("
+      SELECT
+        *
+      FROM
+        szovetek.kategoriak
+    ");
+
+    $query->setFetchMode(
+      \Phalcon\Db::FETCH_NUM
+    );
+
+    foreach($query->fetchAll() as $manufacturer)
+    {
+      foreach ($manufacturer as $i => $colorCategory)
+      {
+        if ($i < 1 || !$colorCategory) continue;
+
+        // sanitize
+        $colorCategory = $filter->sanitize(
+          str_replace(['"', '.', ' ',':'], "", mb_strtolower($colorCategory)),
+          'hungarian'
+        );
+
+        // remove extra info => 1.(Concept Kanapéágy)
+        preg_match("/^([^(]*)(\((.+)\))?/", $colorCategory, $colorCategoryMatches);
+
+        if (!isset($manufacturerFabricCategories[$manufacturer[0]][$colorCategoryMatches[1]]))
+        {
+          $manufacturerFabricCategories[$manufacturer[0]][] = $colorCategoryMatches[1];
+        }
+      }
+    }
+
+    $query = $di->get('db')->query("
+      SELECT
+        prefix, kep, colorHex, colorName, megnevezes, kategoria
+      FROM
+        szovetek.szovetek
+    ");
+
+    /**
+     * @example
+     * {
+     *  "NF2": {
+     *    "kateg02": [{ title, image, colorHex, colorName }]
+     *  }
+     * }
+     */
+    foreach($query->fetchAll() as $fabric)
+    {
+      if (!isset($manufacturerFabricCategoryFabrics[$fabric['prefix']]))
+      {
+        $manufacturerFabricCategoryFabrics[$fabric['prefix']] = array();
+        $manufacturerFabricCategoryFabrics[$fabric['prefix']][$fabric['kategoria']] = array();
+      }
+
+      if (
+        $fabric['megnevezes']
+        && $fabric['kep']
+        && $fabric['colorHex']
+        && $fabric['colorName']
+      )
+      {
+        /**
+         * @example
+         * // => 'kateg12' => 12
+         */
+        $categoryIndex = (int) mb_substr($fabric['kategoria'], 5) - 1;
+        $manufacturer = $fabric['prefix'];
+
+        if (
+          $categoryIndex === -1
+          || !isset($manufacturerFabricCategories[$manufacturer])
+          || !isset($manufacturerFabricCategories[$manufacturer][$categoryIndex])
+        )
+        {
+          // var_dump($manufacturerFabricCategories);
+          // var_dump($manufacturer);
+          // var_dump($categoryIndex);
+          // die();
+          continue;
+        }
+
+        $colorCode = $manufacturerFabricCategories[$manufacturer][$categoryIndex];
+
+
+        /**
+         * @example
+         * // => NK2 => R => [{ title, image, colorHex, colorName }]
+         */
+        $manufacturerFabricCategoryFabrics[$manufacturer][$colorCode][] =
+          array(
+            'title' => $fabric['megnevezes'],
+            'image' => $fabric['kep'],
+            'colorHex' => $fabric['colorHex'],
+            'colorName' => $fabric['colorName'],
+          );
+      }
+    }
+
+    return $manufacturerFabricCategoryFabrics;
+  }
 
   /**
    * Convert color to fabrics. Webshop use only
@@ -863,9 +967,6 @@ class Products extends Model
 
         }
       }
-
-      // var_dump($cache_manufacturerFabricCategories['K45']); die();
-
 
       $query = $this->di->get('db')->query("
         SELECT
@@ -1023,27 +1124,219 @@ class Products extends Model
   }
 
 
+  public function toWebProps()
+  {
+    /* !- Preparation */
+
+    // flags
+    $availableFlags = array_keys(Products::getFlagsPriority());
+
+
+    // features
+    $features = array();
+
+    foreach (Features::find() as $feature)
+    {
+      $features[$feature->id] = $feature->toArray();
+
+      if ($feature->options)
+      {
+        $features[$feature->id]['options'] = json_decode($feature->options, true);
+      }
+    }
+
+
+    /* !- Collect product props */
+
+    // flags
+    $productFlag = $this->getFlag();
+
+    // flag translation or excluding
+    $productWebshopFlag = array();
+
+    foreach ($availableFlags as $flag)
+    {
+      if (in_array($flag, $productFlag))
+      {
+        $productWebshopFlag[] = $flag;
+      }
+    }
+
+    if ($this->price_discount == 21)
+    {
+      $productWebshopFlag[] = 'VAT';
+    }
+
+    // color
+
+    $colorFabrics = [];
+
+    if ($product->color)
+    {
+      $colorFabrics = $product->getFabrics();
+    }
+    else if ($product->features)
+    {
+      $productFeatures = json_decode($product->features, true);
+
+      // alapanyag fenyő
+      if (isset($productFeatures['1']) && $productFeatures['1'] == '2')
+      {
+        $colorFabrics[] = array(
+          "title" => $features[1]['options'][2],
+          "image" => "alapanyag_fenyo.jpg",
+          "colorHex" => "#F7D69F",
+          "colorName" => "yellow"
+        );
+      }
+    }
+
+    // feature
+
+    $productFeatures = array();
+
+    if ($this->features)
+    {
+      foreach(json_decode($this->features) as $id => $values)
+      {
+        $feature = $features[$id];
+
+        $value = '';
+
+        switch ($feature['category'])
+        {
+          case 'multiselect':
+            $value = array_map(
+              function ($v) use ($feature)
+              {
+                return $feature['options'][$v];
+              },
+              $values
+            );
+            break;
+
+          case 'select':
+            $value = $feature['options'][$values];
+            break;
+
+          default:
+            $value = $values;
+            break;
+        }
+
+        if ((is_array($value) && sizeof($value) > 0) || $value)
+        {
+          $productFeatures[] = array(
+            'id' => $feature['id'],
+            'title' => $feature['title'],
+            'type' => $feature['category'],
+            'value' => $value,
+          );
+        }
+      }
+    }
+
+
+    /**
+     * Extend description of product with DOS features and II. Class
+     */
+    $productDescriptonFeatures = $this->description ? ['',''] : [];
+
+    if (in_array('CLASS_2', $productWebshopFlag))
+    {
+      $productDescriptonFeatures[] = 'II. osztály';
+    }
+
+    $productFeaturesOrig = explode(',', $this->getFeatures_orig());
+
+    if ($productFeaturesOrig)
+    {
+      $productDescriptonFeatures = array_merge($productDescriptonFeatures, $productFeaturesOrig);
+    }
+
+    if (preg_grep("/^.+$/", $productDescriptonFeatures))
+    {
+      foreach ($productDescriptonFeatures as $index => $feature)
+      {
+        if ($feature)
+        {
+          $productDescriptonFeatures[$index] = '- ' . trim($feature);
+        }
+      }
+    }
+    else
+    {
+      $productDescriptonFeatures = [];
+    }
+
+    // Méret leírások
+    if (in_array($this->category, ['51']))
+    {
+      if (count($productDescriptonFeatures))
+      {
+        $productDescriptonFeatures[] = ''; //extra <BR>
+      }
+      $productDescriptonFeatures[] = '* <b>Méretek:</b> szélesség: karfa szélessége, magasság: háttámla magassága, mélység: ülőfelület mélysége';
+    }
+
+    return array(
+      "id" => $this->id,
+      // "related_id" => $this->related_id ?: $this->id,
+      "brand" => $this->brand,
+      "title" => $this->title,
+      "subtitle" => $this->subtitle,
+      "title_orig" => $this->title_orig,
+      "flag" => $productWebshopFlag,
+      "vat" => $this->vat,
+      "price_sale_net" => $this->price_sale,
+      "price_orig_gross" => $this->price_orig_gross,
+      "price_sale_gross" => $this->price_sale_gross,
+      "price_discount" => $this->price_discount,
+      "manufacturer" => $this->manufacturer,
+      "manufacturerTitle" => $this->getManufacturerTitle(),
+      // "category" => $categories[$this->category]['title'],
+      // "category" => $webCategory,
+      "dimension" => json_decode($this->dimension, true),
+      "features" => $productFeatures,
+      "colors" => array(
+        'category' => $this->color,
+        'sum' => count($colorFabrics),
+        'items' => $colorFabrics,
+        // 'items' => array_slice($colorFabrics, 0, 15),
+      ),
+      "description" => nl2br($this->description) . implode('<br>', $productDescriptonFeatures),
+      "images" => json_decode($this->images, true),
+      "incart" => $this->incart,
+      // "inoutlet" => $product::parseOutlet($product),
+      "stock" => $this->getStock(),
+      "priority" => $this->getPriority(),
+    );
+  }
+
+  public function toWebsiteProps()
+  {
+    return [
+      'i' => $this->id,
+      'ri' => $this->related_id,
+      'b' => $this->brand,
+      'm' => $this->manufacturer,
+      't' => $this->title,
+      's' => $this->subtitle,
+      'pd' => $this->price_discount,
+      'po' => $this->price_orig_gross,
+      'ps' => $this->price_sale_gross,
+      'f' => $this->getFlag(),
+      'fe' => $this->getFeatures(),
+      'di' => $this->getDimension(),
+      'c' => $this->color,
+      'im' => $this->getImages(),
+      'ic' => $this->incart,
+      'de' => $this->description,
+    ];
+  }
+
   /* !- Helper methods */
 
-
-  /**
-   * Helper function, convert stock quantity to human information
-   * @param  integer $quantity stock quantity
-   * @return string           ex.: raktáron
-   */
-  private function formatStockQuantityToHuman($quantity)
-  {
-    if ($quantity <= 0)
-    {
-      return 'nincs készleten';
-    }
-    else if ($quantity <= 3)
-    {
-      return 'utolsó darabok';
-    }
-
-    return 'raktáron';
-  }
 
   /**
    * Fetch products_flags priority
@@ -1064,6 +1357,8 @@ class Products extends Model
           products_flags
         WHERE
           instore = 1
+        ORDER BY
+          priority DESC
       ");
 
       foreach($query->fetchAll() as $flagRecord)
@@ -1873,47 +2168,6 @@ class Products extends Model
 
     return $product->manufacturer;
   }
-
-
-  /**
-   * Count the existing product images
-   * @param  [Products] $product
-   * @return [null|integer]
-   * @example
-   * K23/K23011502-01.jpg,K23011502-02.jpg
-   * //=> 2
-   */
-  static function parseImages($product)
-  {
-    if (!$product)
-    {
-      return null;
-    }
-
-    if (!$product->manufacturer)
-    {
-      $product::parseManufacturer($product);
-    }
-
-    $imagePath = self::IMAGES_FOLDER . $product->manufacturer . '/' . $product->id . '-';
-    $i = 1;
-
-    if (!file_exists($imagePath . '0'.$i.'.jpg'))
-    {
-      return null;
-    }
-
-    while (file_exists($imagePath . '0'.$i.'.jpg'))
-    {
-      $i++;
-    }
-
-    $product->images = $i - 1;
-
-    return $product->images;
-  }
-
-
 
 
   /* !- Webshop pharser methods */

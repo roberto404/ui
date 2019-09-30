@@ -15,6 +15,7 @@ import RepairGrid from './repair/grid';
 import RepairForm from './repair/form';
 import StockGrid from './stock/grid';
 import Analytics from './analytics/';
+import WebsiteMenu from './website/menu';
 
 
 export default {
@@ -34,4 +35,5 @@ export default {
   RepairForm,
   StockGrid,
   Analytics,
+  WebsiteMenu,
 };

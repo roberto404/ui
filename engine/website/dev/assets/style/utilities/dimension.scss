@@ -1,0 +1,6 @@
+@include respond-to(desktop)
+{
+  .desktop\:w-35 {
+    width: 35rem;
+  }
+}

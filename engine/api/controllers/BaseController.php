@@ -445,6 +445,12 @@ class BaseController extends Controller
   protected function respond($records, $meta = array(), $error = false)
   {
     $this->eventsManager->fire(
+      'controller:beforeRespond',
+      $this,
+      array("records" => $records, "meta" => $meta, "error" => $error)
+    );
+
+    $this->eventsManager->fire(
       'controller:respond',
       $this,
       array("records" => $records, "meta" => $meta, "error" => $error)

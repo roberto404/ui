@@ -72,6 +72,8 @@ export const getRoutes = app => [
     },
   },
   {
+    path: '/website/menu',
+    component: Views.WebsiteMenu,
     path: '/analytics',
     title: 'analytics.title',
     component: Views.Analytics,

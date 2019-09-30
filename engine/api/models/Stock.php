@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use
+  App\Models\Products,
+  Phalcon\DI,
   Phalcon\Mvc\Model;
 
 class Stock extends Model
@@ -191,10 +193,119 @@ class Stock extends Model
       case 'RS2':
         return $this->keszlet1;
       case 'RS6':
-        return $this->keszletrs6;
+        return $this->keszlet29;
       case 'RS8':
-        return $this->keszletrs8;
+        return $this->keszlet9;
     }
+
     return false;
+  }
+
+  /**
+  * Convert stock quantity to human message
+  * @param  string [$storeHouse]
+  * @return string           ex.: raktáron
+  */
+  public function getSupplyMessage($storeHouse = '')
+  {
+    if (!$storeHouse)
+    {
+      return array(
+        'RS2' => $this->getSupplyMessage('RS2'),
+        'RS6' => $this->getSupplyMessage('RS6'),
+        'RS8' => $this->getSupplyMessage('RS8'),
+      );
+    }
+
+    switch ($storeHouse)
+    {
+      case 'RS2':
+        return $this->getSupplyMessageHelper($this->keszlet1, max($this->keszletrs2_gyartoi_minta, $this->keszletrs2_kivett_keszlet));
+      case 'RS6':
+        return $this->getSupplyMessageHelper($this->keszlet29, max($this->keszletrs6_gyartoi_minta, $this->keszletrs6_kivett_keszlet));
+      case 'RS8':
+        return $this->getSupplyMessageHelper($this->keszlet9, max($this->keszletrs8_gyartoi_minta, $this->keszletrs8_kivett_keszlet));
+    }
+
+    return false;
+  }
+
+  public function getSupplyMessageHelper($quantity, $sample = 0, $limit = 3)
+  {
+    if ($quantity <= 0)
+    {
+      if ($sample > 0)
+      {
+        return 'megtekinthető';
+      }
+
+      return 'rendelhető';
+    }
+    else if ($quantity <= $limit)
+    {
+      return 'utolsó darabok';
+    }
+
+    return 'készleten';
+  }
+
+  public function toProduct()
+  {
+    $product = new Products([
+      'id' => $this->cikkszam,
+      'title_orig' => $this->megnevezes,
+      'vat' => $this->afa,
+      'price_orig' => $this->listaar_float,
+      'price_sale' => $this->akcar_float,
+      'price_discount' => $this->cikkszam,
+      'features_orig' => $this->jellemzo,
+      'dimension_orig' => $this->meret,
+      'dimension_orig_new' => [
+        $this->meret_szelesseg1,
+        $this->meret_szelesseg2,
+        $this->meret_magassag1,
+        $this->meret_magassag2,
+        $this->meret_melyseg1,
+        $this->meret_melyseg2,
+        $this->fekvofelulet_szelesseg,
+        $this->fekvofelulet_magassag,
+        $this->fekvofelulet_melyseg,
+        $this->meret_egyeb,
+      ],
+    ]);
+
+    $product->beforeValidation();
+    $product->beforeValidationOnCreate();
+
+    return $product;
+  }
+
+
+  /**
+   * Get last modify date
+   * @return [DateTime]
+   */
+  static function getModifyDateTime()
+  {
+    $di = DI::getDefault();
+    // $db = DI::getDefault()->get('db');
+
+    $query = $di->get('db')->query("
+      SELECT
+        datum
+      FROM
+        rsdb.frissites
+      WHERE
+        tipus='1';
+    ");
+
+    $query->setFetchMode(
+      \Phalcon\Db::FETCH_OBJ
+    );
+
+    return new \DateTime(
+      $query->fetch()->datum,
+      new \DateTimeZone($di->get('config')->locale->timezone)
+    );
   }
 }

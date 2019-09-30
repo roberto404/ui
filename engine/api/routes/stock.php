@@ -9,6 +9,6 @@ return call_user_func(function()
 		->setHandler('App\Controllers\StockController')
 		->setLazy(true)
 
-    ->get('/match', 'productMatching')
+		->get('/', 'readAll')
 	;
 });

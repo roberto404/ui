@@ -1,0 +1,31 @@
+
+document:
+  language: hu
+  regionCode: hu
+  regionName: Hungarian
+  token: pOIfdu4s
+  charset: utf-8
+  title: RS
+  #facebook: 111112
+  #ga: 11111111
+  #gtag: UA-119395753-1
+  baseDir: /
+  staticFilePrefix: app@
+
+
+application:
+  id: rs
+  password:  aCCa9vn2
+  global: false
+
+# project:
+#  example:
+#    first:
+#    - id: 1
+#      title: One
+#    - id: 2
+#      title: Two
+#  examle:
+#    second:
+#    - id: 1
+#      title: One
