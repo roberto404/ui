@@ -1,17 +1,14 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-
 /* !- React Elemens */
 
 import IconProduct from './icons/product';
-
 
 /* !- App Compontents */
 
 import Logout from '@1studio/ui/authentication/logout';
 import Views from './views';
-
 
 /**
  * @example
@@ -40,10 +37,10 @@ export const getRoutes = app => [
     path: '/categoryWeb',
     component: Views.CategoryWebGrid,
   },
-  {
-    path: '/pricetag',
-    component: Views.PriceTag,
-  },
+  // {
+  //   path: '/pricetag',
+  //   component: Views.PriceTag,
+  // },
   {
     path: '/product',
     title: 'product.title',
@@ -76,7 +73,6 @@ export const getRoutes = app => [
   },
 ];
 
-
 /**
  * Validate user access to route
  * @param  {Object}  route
@@ -86,7 +82,7 @@ export const getRoutes = app => [
 export const isAccessGaranted = (route = {}, permission = {}) =>
 {
   if (!route.permission)
-  {
+{
     return true;
   }
 

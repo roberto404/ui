@@ -4,7 +4,7 @@ import Dashboard from './dashboard';
 import CategoryGrid from './category/grid';
 import CategoryWebGrid from './categoryWeb/grid';
 import CategoryWebForm from './categoryWeb/form';
-import PriceTag from './priceTag/';
+// import PriceTag from './priceTag/';
 import ProductGrid from './product/grid';
 // import PriceTagGrid from './priceTag/grid';
 // import PriceTagForm from './priceTag/form';
@@ -23,7 +23,7 @@ export default {
   CategoryGrid,
   CategoryWebGrid,
   CategoryWebForm,
-  PriceTag,
+  // PriceTag,
   // PriceTagGrid,
   // PriceTagForm,
   ProductGrid,
