@@ -34,29 +34,51 @@ export const SETTINGS = {
               record.rs81 +
               record.rs82,
           ) > 0 && <div className="circle bg-green w-1 h-1 absolute pin-l m-1/2 ml-1" />}
-          <div>{record.rs} db</div>
+          <div className="heavy">{record.rs} db</div>
         </div>
       ),
       align: 'left',
     },
     rs2: {
       title: <div className="text-left pl-4">RS2</div>,
-      format: ({ record }) => `${record.rs2} db`,
+      format: ({ record }) => (
+        <div className="pl-3 relative">
+          {parseInt(record.rs2 + record.rs21 + record.rs22) > 0 && (
+            <div className="circle bg-green w-1 h-1 absolute pin-l m-1/2 ml-1" />
+          )}
+          <div>{record.rs2} db</div>
+        </div>
+      ),
       align: 'left',
     },
     rs6: {
       title: <div className="text-left pl-4">RS6</div>,
-      format: ({ record }) => `${record.rs6} db`,
+      format: ({ record }) => (
+        <div className="pl-3 relative">
+          {parseInt(record.rs6 + record.rs61 + record.rs62) > 0 && (
+            <div className="circle bg-green w-1 h-1 absolute pin-l m-1/2 ml-1" />
+          )}
+          <div>{record.rs6} db</div>
+        </div>
+      ),
       align: 'left',
     },
     rs8: {
       title: <div className="text-left pl-4">RS8</div>,
-      format: ({ record }) => `${record.rs8} db`,
+      format: ({ record }) => (
+        <div className="pl-3 relative">
+          {parseInt(record.rs8 + record.rs81 + record.rs82) > 0 && (
+            <div className="circle bg-green w-1 h-1 absolute pin-l m-1/2 ml-1" />
+          )}
+          <div>{record.rs8} db</div>
+        </div>
+      ),
       align: 'left',
     },
     r: {
       title: 'Rendelés',
-      format: ({ value }) => `${value} db`,
+      format: ({ value }) => <div className="italic">{value} db</div>,
+      align: 'left',
     },
     p1: {
       title: 'Eladási ár',
