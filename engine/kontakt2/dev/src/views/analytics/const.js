@@ -38,8 +38,8 @@ export const SETTINGS = {
         || record.b.toString().toLowerCase().indexOf(word.toString().toLowerCase()) >= 0
         || record.t.toString().toLowerCase().indexOf(word.toString().toLowerCase()) >= 0,
       ),
-      arguments: [''],
-      status: true,
+      arguments: [],
+      status: false,
     },
     {
       id: 'date',
