@@ -66,8 +66,10 @@ class AnalyticsTask extends \Phalcon\CLI\Task
       ON
         (sor.file = fej.file)
       WHERE
-        (datum >= '2019-01-01' AND datum < '2019-09-01')
+      /*
+        (datum >= '2017-01-01' AND datum < '2019-09-01')
       AND
+      */
         vnev NOT LIKE 'RS Bútorpiac Kft%' /* RS Árumozgás */
       AND
         (`mennyiseg` > 0 AND `osszesen_brutto` < 0) != 1 /* RS Engedmény */
