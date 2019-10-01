@@ -117,17 +117,20 @@ class ProductController extends AppController
     return $results;
   }
 
-  public function ReadWebFlag($flag)
+  public function ReadWebFlag($flag, $page)
   {
     $results = [];
+    $offset = ($page -1) * 60;
+    if ($page == 0) $limit = '';
+    else $limit = "LIMIT 60 OFFSET " . $page;
 
     if ($flag == 'DISCOUNT')
     {
-      $products = Products::find("price_discount > 0");
+      $products = Products::find("price_discount > 0 {$limit}");
     }
     else
     {
-      $products = Products::find("flag LIKE '%{$flag}%'");
+      $products = Products::find("flag LIKE '%{$flag}%' {$limit}");
     }
 
     if (!$products)
