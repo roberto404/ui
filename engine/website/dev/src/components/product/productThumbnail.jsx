@@ -46,7 +46,7 @@ export const ProductColorPalette = ({ fabrics }) => (
 /**
  * [Product description]
  */
-class ProductCard extends Component
+class ProductThumbnail extends Component
 {
   constructor(props)
   {
@@ -55,6 +55,17 @@ class ProductCard extends Component
     this.state = {
       active: false,
     };
+  }
+
+  onClickHandler = () =>
+  {
+    if (
+      typeof this.props.onClick === 'function'
+      && String(this.props.onClick) !== String(ProductThumbnail.defaultProps)
+    )
+    {
+      this.props.onClick(this.props.record);
+    }
   }
 
   onMouseOverHandler = () =>
@@ -92,6 +103,9 @@ class ProductCard extends Component
       color,
       images,
       manufacturer,
+    } = this.props.record;
+
+    const {
       className,
       onClick,
       isFavourite,
@@ -130,6 +144,7 @@ class ProductCard extends Component
       <div
         className={classes}
         style={{ minWidth: '250px' }}
+        onClick={this.onClickHandler}
         onMouseOver={this.onMouseOverHandler}
         onMouseOut={this.onMouseOutHandler}
       >
@@ -223,14 +238,16 @@ class ProductCard extends Component
   }
 }
 
-ProductCard.defaultProps =
+ProductThumbnail.defaultProps =
 {
   className: 'col-1-3 bg-white',
+  onClick: () =>
+  {},
 };
 
-ProductCard.contextTypes =
+ProductThumbnail.contextTypes =
 {
   register: PropTypes.object,
 };
 
-export default ProductCard;
+export default ProductThumbnail;

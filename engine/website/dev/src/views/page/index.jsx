@@ -63,8 +63,9 @@ const ProductCardGrid = ({ data }) =>
     { data.map(props => (
       <ProductCard
         key={props.i}
-        {...productPropsParser(props)}
+        record={productPropsParser(props)}
         className="col-1-4 bg-white"
+        onClick={record => console.log(record)}
       />
     ))}
   </div>
