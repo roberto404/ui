@@ -29,7 +29,7 @@ class ProductTask extends \Phalcon\CLI\Task
   public function testAction()
   {
     $products = Products::find([
-      'conditions' => 'id = "F13233201P"',
+      'conditions' => 'id = "DMCS600"',
       // 'conditions' => 'features LIKE \'%\"41\":true%\'',
       // 'conditions' => 'id = "NF112I0220U01"',
       // 'conditions' => 'category = "15"',
@@ -52,20 +52,25 @@ class ProductTask extends \Phalcon\CLI\Task
       // $product::parseTitle($product);
       // $product->createSubtitle();
       // $product::parseDOSTitle($product);
-      // var_dump(
+
+
+      var_dump(array(
         // $product->toArray()
         // $product::parseManufacturerTitle($product)
         // $product::parseStock($product)
+        $product::parseDimension($product)
         // $product::parseOutlet($product)
         // $product::parseColor($product)
         // $product::parseDelivery($product),
         // $product->getStock()
-      // );
+      ));
+
       //
       var_dump(
-        $product::parseWebCategory($product)
+        // $product::parseWebCategory($product)
+        $product->toWebsiteProps()['st']
       );
-      die();
+      // die();
 
       // $product->createRelatedId();
 
@@ -75,15 +80,15 @@ class ProductTask extends \Phalcon\CLI\Task
       // $product->addFeatures(['51' => '1']);
 
 
-      if (!$product->save())
-      {
-        echo "\n💩 \033[1;33mERROR\033[0m {$product->id}\n\n";
-        var_dump($product->getMessages());
-        var_dump(array(
-          "brand" => $product->brand,
-        ));
-        die();
-      }
+      // if (!$product->save())
+      // {
+      //   echo "\n💩 \033[1;33mERROR\033[0m {$product->id}\n\n";
+      //   var_dump($product->getMessages());
+      //   var_dump(array(
+      //     "brand" => $product->brand,
+      //   ));
+      //   die();
+      // }
 
       // continue;
       // die();
@@ -91,15 +96,15 @@ class ProductTask extends \Phalcon\CLI\Task
       var_dump(array(
       //   "id" => $product->id,
       //   // "price_orig_gross" => $product->price_orig_gross,
-        "price_sale_gross" => $product->price_sale_gross,
+        // "price_sale_gross" => $product->price_sale_gross,
       //   // "related_id" => $product->related_id,
-        "brand" => $product->brand,
+        // "brand" => $product->brand,
         // "title" => $product->title,
         // "subtitle" => $product->subtitle,
         // "title_orig" => $product->title_orig,
       //   // "category" => $product->category,
       //   // "manufacturerTitle" => $product->getManufacturerTitle(),
-      //   // "dimension" => $product->getDimension(),
+        // "dimension" => $product->getDimension(),
       //   "flag" => $product->getFlag(),
       //   // "priority" => $product->getPriority(),
       //   // "manufacturer" => $product->manufacturer,
