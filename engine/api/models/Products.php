@@ -5,6 +5,7 @@ namespace App\Models;
 use
   Phalcon\DI,
   App\Models\Features,
+  App\Models\Stock,
   App\Models\Categories,
   Phalcon\Mvc\Model,
   App\Components\Menu;
@@ -765,13 +766,13 @@ class Products extends Model
 
   /**
    * Create stock informations
-   * @param boolean $human quantity informations is exact number or human information
+   * @param boolean $intl quantity informations is exact number or intl information
    * @return array {
    *    global: 'raktáron',
    *    stores: { "RS1": "utolsó darabok", "RS2": "raktáron": "RS3": "nincs készleten", "RS4": "megtekinthető" }
    *  }
    */
-  public function getStock($human = true)
+  public function getStock($intl = true)
   {
     $stock = Stock::findFirst("cikkszam = '{$this->id}'");
 
@@ -785,10 +786,20 @@ class Products extends Model
      */
     $maxQuantity = max($stock->getSupply('RS2'), $stock->getSupply('RS6'), $stock->getSupply('RS8'));
 
+    if ($intl)
+    {
+      return array(
+        'global' => $maxQuantity ? $stock->getSupplyMessageHelper($maxQuantity) : Products::parseDelivery($this),
+        'stores' => $stock->getSupplyMessage(),
+      );
+    }
+
     return array(
-      'global' => $maxQuantity ? $stock->getSupplyMessageHelper($maxQuantity) : Products::parseDelivery($this),
-      'stores' => $stock->getSupplyMessage(),
+      // 'global' => $maxQuantity ? $stock->getSupplyMessageHelper($maxQuantity, null, null, false) : Products::parseDelivery($this),
+      'stores' => $stock->getSupplyMessage(null, false),
     );
+
+    // return [$stock->getSupply('RS2'), $stock->getSupply('RS6'), $stock->getSupply('RS8')];
   }
 
 
@@ -1333,6 +1344,7 @@ class Products extends Model
       'im' => $this->getImages(),
       'ic' => $this->incart,
       'de' => $this->description,
+      'st' => $this->getStock(false),
     ];
   }
 
@@ -2124,8 +2136,26 @@ class Products extends Model
       $product->dimension['e'] = 'fekvőfelület';
     }
 
-    $product->dimension = json_encode($product->dimension, JSON_UNESCAPED_UNICODE);
+    // change h to d if d missing
+    if (!isset($product->dimension[self::DIMENSIONS[2]]) && isset($product->dimension[self::DIMENSIONS[1]]))
+    {
+      $product->dimension[self::DIMENSIONS[2]] = $product->dimension[self::DIMENSIONS[1]];
+      unset($product->dimension[self::DIMENSIONS[1]]);
+    }
+    // change h1 to d1 if d1 missing
+    if (!isset($product->dimension[self::DIMENSIONS[2] . '1']) && isset($product->dimension[self::DIMENSIONS[1] . '1']))
+    {
+      $product->dimension[self::DIMENSIONS[2] . '1'] = $product->dimension[self::DIMENSIONS[1] . '1'];
+      unset($product->dimension[self::DIMENSIONS[1] . '1']);
+    }
+    // change h2 to d2 if d2 missing
+    if (!isset($product->dimension[self::DIMENSIONS[2] . '2']) && isset($product->dimension[self::DIMENSIONS[1] . '2']))
+    {
+      $product->dimension[self::DIMENSIONS[2] . '2'] = $product->dimension[self::DIMENSIONS[1] . '2'];
+      unset($product->dimension[self::DIMENSIONS[1] . '2']);
+    }
 
+    $product->dimension = json_encode($product->dimension, JSON_UNESCAPED_UNICODE);
     return $product->dimension;
   }
 

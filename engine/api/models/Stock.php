@@ -206,47 +206,57 @@ class Stock extends Model
   * @param  string [$storeHouse]
   * @return string           ex.: raktáron
   */
-  public function getSupplyMessage($storeHouse = '')
+  public function getSupplyMessage($storeHouse = '', $intl = true)
   {
     if (!$storeHouse)
     {
       return array(
-        'RS2' => $this->getSupplyMessage('RS2'),
-        'RS6' => $this->getSupplyMessage('RS6'),
-        'RS8' => $this->getSupplyMessage('RS8'),
+        'RS2' => $this->getSupplyMessage('RS2', $intl),
+        'RS6' => $this->getSupplyMessage('RS6', $intl),
+        'RS8' => $this->getSupplyMessage('RS8', $intl),
       );
     }
 
     switch ($storeHouse)
     {
       case 'RS2':
-        return $this->getSupplyMessageHelper($this->keszlet1, max($this->keszletrs2_gyartoi_minta, $this->keszletrs2_kivett_keszlet));
+        return $this->getSupplyMessageHelper($this->keszlet1, max($this->keszletrs2_gyartoi_minta, $this->keszletrs2_kivett_keszlet), null, $intl);
       case 'RS6':
-        return $this->getSupplyMessageHelper($this->keszlet29, max($this->keszletrs6_gyartoi_minta, $this->keszletrs6_kivett_keszlet));
+        return $this->getSupplyMessageHelper($this->keszlet29, max($this->keszletrs6_gyartoi_minta, $this->keszletrs6_kivett_keszlet), null, $intl);
       case 'RS8':
-        return $this->getSupplyMessageHelper($this->keszlet9, max($this->keszletrs8_gyartoi_minta, $this->keszletrs8_kivett_keszlet));
+        return $this->getSupplyMessageHelper($this->keszlet9, max($this->keszletrs8_gyartoi_minta, $this->keszletrs8_kivett_keszlet), null, $intl);
     }
 
     return false;
   }
 
-  public function getSupplyMessageHelper($quantity, $sample = 0, $limit = 3)
+  public function getSupplyMessageHelper($quantity, $sample = null, $limit = null, $intl = true)
   {
+    if (!$sample)
+    {
+      $sample = 0;
+    }
+
+    if (!$limit)
+    {
+      $limit = 3;
+    }
+    
     if ($quantity <= 0)
     {
       if ($sample > 0)
       {
-        return 'megtekinthető';
+        return $intl ? 'megtekinthető': 0;
       }
 
-      return 'rendelhető';
+      return $intl ? 'rendelhető': -1;
     }
     else if ($quantity <= $limit)
     {
-      return 'utolsó darabok';
+      return $intl ? 'utolsó darabok' : 1;
     }
 
-    return 'készleten';
+    return $intl ? 'készleten' : 2;
   }
 
   public function toProduct()
