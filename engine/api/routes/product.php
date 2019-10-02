@@ -18,6 +18,7 @@ return call_user_func(function()
 
 		->get('/readWeb/{ids:[A-Z0-9,]+}', 'readWeb')
 		->get('/readAllWebsite', 'ReadAllWebsite')
+		->get('/readWebFlag/{ids:[A-Z0-9,]+}/{page:[0-9]+}', 'readWebFlag')
 
 		->post('/checkout', 'checkout')
 	;
