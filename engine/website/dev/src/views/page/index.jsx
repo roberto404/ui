@@ -57,6 +57,19 @@ const SETTINGS = {
 }
 
 
+const ProductCardGrid = ({ data }) =>
+(
+  <div className="grid">
+    { data.map(props => (
+      <ProductCard
+        key={props.i}
+        record={productPropsParser(props)}
+        className="col-1-4 bg-white"
+        onClick={record => console.log(record)}
+      />
+    ))}
+  </div>
+);
 // const ProductCardGrid = ({ data }) =>
 // (
 //   <div className="grid">
