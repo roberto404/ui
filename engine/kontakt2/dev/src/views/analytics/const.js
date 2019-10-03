@@ -13,6 +13,7 @@ import { GridColumnStore, GridColumnStar } from './gridRow';
 export const UNIT = {
   q: 'db',
   p: 'Ft',
+  p2: 'Ft',
 };
 
 export const SIMPLIFY_ROOT = 1000;

@@ -54,6 +54,7 @@ class AnalyticsTask extends \Phalcon\CLI\Task
         cikkszam,
         mennyiseg * if((sztorno = 'S'), -1, 1) as mennyiseg,
         round((ar * mennyiseg), 1) * if((sztorno = 'S'), -1, 1) as netto_osszesen,
+        round((ar * mennyiseg), 1) * if((sztorno = 'S'), -1, 1) * (afa + 100) / 100 as brutto_osszesen,
         megnevezes,
         vhely,
         datum as datum,
@@ -92,6 +93,7 @@ class AnalyticsTask extends \Phalcon\CLI\Task
         'b' => $product::parseBrand($product), // Brand
         't' => $product->title_orig_rest, // Title of product without brand
         'p' => $record['netto_osszesen'],
+        'p2' => $record['brutto_osszesen'],
         'l' => $record['vhely'], // Client's town
         'd' => $record['datum'],
         'sm' => $record['bizkod'], // Sales method (22 - prompt, 33 - order)

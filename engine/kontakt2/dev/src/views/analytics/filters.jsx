@@ -38,10 +38,10 @@ const SUMMARIES = {
   mean,
 };
 
-const initDate = moment().subtract(HISTORY_MONTHS, 'months');
+const initDate = moment().add(1, 'months');
 
 const dateData = produceNumericArray(1, HISTORY_MONTHS).map(() =>
-  ({ id: initDate.add(1, 'month').format(DATE_FORMAT), title: initDate.format('YYYY MMMM') }));
+  ({ id: initDate.add(-1, 'month').format(DATE_FORMAT), title: initDate.format('YYYY MMMM') }));
 
 
 /**

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import simplify from '@1studio/utils/math/simplify';
 import clamp from '@1studio/utils/math/clamp';
+import formatThousand from '@1studio/utils/string/formatThousand';
 
 /* !- React Elements */
 
@@ -29,8 +30,8 @@ export const GridColumnStore = (record, { store }) =>
   const color = diff >= 1 ? 'green' : 'red';
   const rotate = diff >= 1 ? '90' : '270';
 
-  const valueA = `${simplify(a, SIMPLIFY_ROOT, SIMPLIFY_UNITS, SIMPLIFY_FORMAT)} ${unit}`;
-  const valueB = !b ? '-' : `${simplify(b, SIMPLIFY_ROOT, SIMPLIFY_UNITS, SIMPLIFY_FORMAT)} ${unit}`;
+  const valueA = `${formatThousand(Math.round(a / 100) / 10)}e ${unit}`;
+  const valueB = !b ? '-' : `${formatThousand(Math.round(b / 100) / 10)}e ${unit}`;
 
   return (
     <div>
