@@ -16,6 +16,6 @@ class AnalyticsController extends AppController
     // $permissionFilters = $this->getPermissionFilter();
 
     $cache = \file_get_contents(DOCUMENT_ROOT . 'cache/task/analytics.json');
-    $this->respond(\json_decode($cache));
+    $this->createResponse(\json_decode($cache));
   }
 }
