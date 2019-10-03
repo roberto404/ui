@@ -1,3 +1,11 @@
+## [1.2.1](https://github.com/roberto404/rs/compare/v1.2.0...v1.2.1) (2019-10-03)
+
+
+### Bug Fixes
+
+* **cli:** analytics ([8d00f51](https://github.com/roberto404/rs/commit/8d00f51))
+* **kontakt2:** analytics ([2e4cb20](https://github.com/roberto404/rs/commit/2e4cb20))
+
 # [1.2.0](https://github.com/roberto404/rs/compare/v1.1.0...v1.2.0) (2019-10-03)
 
 
