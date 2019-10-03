@@ -159,12 +159,18 @@ class AgentTask extends \Phalcon\CLI\Task
 
   /**
    * Related products categories or title or dimension not same
+   *
+   * !!!DANGEROUS
+   * because full group deleted if one of elemet wrong
    */
   public function productRelatedPropsAction()
   {
+    // !!!DANGEROUS
+    //
     $query = $this->db->query("
       SELECT
-        related_id
+        related_id,
+        count(id)
       FROM
         products
       WHERE
@@ -179,16 +185,20 @@ class AgentTask extends \Phalcon\CLI\Task
         COUNT(distinct title) > 1
       OR
         COUNT(distinct dimension) > 1
+      OR
+        (COUNT(distinct color) != count(id) AND COUNT(distinct color) != 1)
     ");
 
     $relatedIds = [];
 
     foreach ($query->fetchAll() as $relatedProduct)
     {
+      // @TODO az a baj h lehet h tobb jo is van csak egy rossz a csoportban
+      // UPDATE products SET related_id = id WHERE color = ''
+      // if (count(id) == 2)
+
       $relatedIds[] = $relatedProduct['related_id'];
     }
-    // var_dump($relatedIds);
-    // die();
 
     if (count($relatedIds) > 0)
     {
@@ -199,7 +209,6 @@ class AgentTask extends \Phalcon\CLI\Task
         ]
       ]);
 
-
       foreach ($products as $product)
       {
         $product->related_id = $product->id;
@@ -208,32 +217,94 @@ class AgentTask extends \Phalcon\CLI\Task
         {
           var_dump($product->getMessages());
         }
-        // var_dump($product->id);
       }
-
     }
-
-
     echo count($relatedIds);
   }
 
+
   /**
    * Find Wrong related Id length and reset to product id
+   * @depricated
+   *
+   * NF2 not same, or user able to change
    */
   public function productRelatedIdAction()
   {
-    $products = Products::find();
+    // $products = Products::find();
+    //
+    // foreach($products as $product)
+    // {
+    //   $regex = '/^' . $product->related_id . '[0-9]{1}[A-Z]{0,2}$/m';
+    //
+    //   if ($product->id !== $product->related_id && !preg_match($regex, $product->id))
+    //   {
+    //     $product->related_id = $product->id;
+    //     $product->save();
+    //   };
+    // }
+  }
+
+
+  /**
+   * proof of concept... => added to js validator
+   */
+  public function validateReladtedProductsAction()
+  {
+    $products = Products::find([
+      'order' => 'related_id'
+    ]);
+
+    $count = 0;
 
     foreach($products as $product)
     {
-      $regex = '/^' . $product->related_id . '[0-9]{1}[A-Z]{0,2}$/m';
-
-      if ($product->id !== $product->related_id && !preg_match($regex, $product->id))
+      if (mb_strlen($product->related_id) < 4)
       {
+        var_dump($product->related_id);
         $product->related_id = $product->id;
         $product->save();
-      };
+        // die();
+      }
+
+      if (!isset($relatedProduct) || $product->related_id != $relatedProduct->related_id)
+      {
+        $relatedProduct = $product;
+        continue;
+      }
+      //
+      // if (
+      //
+      //
+      // )
+
+      // $titleOrig = mb_substr($relatedProduct->title_orig, 0, (mb_strlen($relatedProduct->title_orig) - mb_strlen($relatedProduct->color) - 3));
+
+      // if (mb_strpos($product->title_orig, $titleOrig) === false)
+      // {
+      //     var_dump(
+      //
+      //       mb_strpos($product->title_orig, $titleOrig)
+      //     );
+      //
+      //     var_dump($titleOrig);
+      //     // var_dump($product->title_orig);
+      //     // var_dump($relatedProduct->title_orig);
+      //     var_dump($product->title_orig_rest);
+      //     var_dump($relatedProduct->title_orig_rest);
+      //     die();
+      //   $count++;
+      //   // $product->related_id = $product->id;
+      //   // $product->save();
+      // }
+
+      // if (mb_strpos($product->title_orig, $titleOrig) !== 0 && mb_strpos($product->title_orig, $titleOrig) !== 1)
+      // {
+
+      // }
     }
+
+    var_dump($count);
   }
 
   public function productMissingColorAction()

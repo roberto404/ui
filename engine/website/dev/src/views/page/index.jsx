@@ -57,30 +57,30 @@ const SETTINGS = {
 }
 
 
-const ProductCardGrid = ({ data }) =>
-(
-  <div className="grid">
-    { data.map(props => (
-      <ProductCard
-        key={props.i}
-        {...productPropsParser(props)}
-        className="col-1-4 bg-white"
-      />
-    ))}
-  </div>
-);
 // const ProductCardGrid = ({ data }) =>
 // (
-//   <div className="_grid">
+//   <div className="grid">
 //     { data.map(props => (
-//       <Product
+//       <ProductCard
 //         key={props.i}
 //         {...productPropsParser(props)}
-//         // className="col-1-4 bg-white"
+//         className="col-1-4 bg-white"
 //       />
 //     ))}
 //   </div>
 // );
+const ProductCardGrid = ({ data }) =>
+(
+  <div className="_grid">
+    { data.map(props => (
+      <Product
+        key={props.i}
+        {...productPropsParser(props)}
+        // className="col-1-4 bg-white"
+      />
+    ))}
+  </div>
+);
 
 /**
 * Home Component

@@ -1171,13 +1171,13 @@ class Products extends Model
 
     $colorFabrics = [];
 
-    if ($product->color)
+    if ($this->color)
     {
-      $colorFabrics = $product->getFabrics();
+      $colorFabrics = $this->getFabrics();
     }
-    else if ($product->features)
+    else if ($this->features)
     {
-      $productFeatures = json_decode($product->features, true);
+      $productFeatures = json_decode($this->features, true);
 
       // alapanyag fenyő
       if (isset($productFeatures['1']) && $productFeatures['1'] == '2')
@@ -1289,6 +1289,7 @@ class Products extends Model
       "flag" => $productWebshopFlag,
       "vat" => $this->vat,
       "price_sale_net" => $this->price_sale,
+      "price_orig_net" => $this->price_orig,
       "price_orig_gross" => $this->price_orig_gross,
       "price_sale_gross" => $this->price_sale_gross,
       "price_discount" => $this->price_discount,

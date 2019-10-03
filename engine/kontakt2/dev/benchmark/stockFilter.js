@@ -6,7 +6,7 @@ import sort from '../src/array/sort';
 import toNumber, { NOT_NAN_REGEX } from '../src/string/toNumber';
 
 
-import stockJson from '/Users/roberto/Sites/rs/public_html/kontakt2/json/stock.json';
+import stockJson from '../../../../public_html/kontakt2/json/stock.json';
 
 const SETTINGS = {
   paginate:
