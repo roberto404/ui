@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/roberto404/rs/compare/v1.2.1...v1.2.2) (2019-10-03)
+
+
+### Bug Fixes
+
+* **kontakt2:** analytics ([ad88081](https://github.com/roberto404/rs/commit/ad88081))
+
 ## [1.2.1](https://github.com/roberto404/rs/compare/v1.2.0...v1.2.1) (2019-10-03)
 
 
