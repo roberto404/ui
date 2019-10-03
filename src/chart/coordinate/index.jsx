@@ -7,8 +7,7 @@ import min from 'lodash/min';
 import flatten from 'lodash/flatten';
 import clamp from '@1studio/utils/math/clamp';
 import produceNumericArray from '@1studio/utils/array/produceNumericArray';
-// import gcd from '@1studio/utils/math/gcd';
-import gcd from '/Users/roberto/Sites/utils/src/math/gcd';
+import gcd from '@1studio/utils/math/gcd';
 
 
 /* !- React Elements */

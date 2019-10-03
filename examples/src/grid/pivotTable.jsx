@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import count from '@1studio/utils/array/count';
-import pivotTable from '/Users/roberto/Sites/utils/src/array/pivotTable';
+import pivotTable from '@1studio/utils/array/pivotTable';
 
 
 /* !- React Elements */
