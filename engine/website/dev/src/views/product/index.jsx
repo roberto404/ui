@@ -10,29 +10,39 @@ import PropTypes from 'prop-types';
 
 /* !- React Elements */
 
-// ...
+import Product from '../../components/product/product';
 
 
 /* !- Constants */
 
-// ...
+import { productPropsParser } from '../../components/product/const';
 
 
 
 /**
-* Product Component
+* ProductView Component
 */
-const Product = (props, { register, store }) =>
+const ProductView = (props, { register, store, config }) =>
 {
+  console.log(config);
+
   return (
-    <div>Product</div>
+    <Product
+      record={productPropsParser(config.products[1])}
+      helper={{
+        fabrics: config.fabrics,
+        features: config.features,
+        flags: config.flags,
+      }}
+    />
   );
 };
 
-Product.contextTypes =
+ProductView.contextTypes =
 {
   register: PropTypes.object,
   store: PropTypes.object,
+  config: PropTypes.object,
 };
 
-export default Product;
+export default ProductView;

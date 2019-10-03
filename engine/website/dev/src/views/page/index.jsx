@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 
 import GridView from '@1studio/ui/view/grid';
 import Connect from '@1studio/ui/grid/connect';
-import { productPropsParser } from '../../components/product';
+import { productPropsParser } from '../../components/product/const';
 import Product from '../../components/product/product';
 import ProductCard from '../../components/product/productThumbnail';
 
@@ -64,7 +64,7 @@ const ProductCardGrid = ({ data }) =>
       <ProductCard
         key={props.i}
         record={productPropsParser(props)}
-        className="col-1-4 bg-white"
+        className="col-1-4 bg-white pointer"
         onClick={record => console.log(record)}
       />
     ))}
@@ -76,8 +76,7 @@ const ProductCardGrid = ({ data }) =>
 //     { data.map(props => (
 //       <Product
 //         key={props.i}
-//         {...productPropsParser(props)}
-//         // className="col-1-4 bg-white"
+//         record={productPropsParser(props)}
 //       />
 //     ))}
 //   </div>

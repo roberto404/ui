@@ -27,42 +27,14 @@ import Views from './views';
  * }
  */
 export const getRoutes = app => [
-  // {
-  //   path: '/category',
-  //   component: Views.CategoryGrid,
-  //   permission: 'category',
-  // },
-  // {
-  //   path: '/categoryWeb/:id',
-  //   component: Views.CategoryWebForm,
-  // },
-  // {
-  //   path: '/categoryWeb',
-  //   component: Views.CategoryWebGrid,
-  // },
-  // {
-  //   path: '/pricetag',
-  //   component: Views.PriceTag,
-  // },
-  // {
-  //   path: '/product',
-  //   title: 'product.title',
-  //   permission: ['products'],
-  //   icon: IconProduct,
-  //   component: Views.ProductGrid,
-  // },
-  // {
-  //   path: '/productWeb',
-  //   component: Views.ProductWebGrid,
-  // },
-  // {
-  //   path: '/productWebOutlet',
-  //   component: Views.ProductWebOutletGrid,
-  // },
-  // {
-  //   path: '/repair',
-  //   component: Views.RepairGrid,
-  // },
+  {
+    path: '/kosar',
+    component: Views.Cart,
+  },
+  {
+    path: '/kedvencek',
+    component: Views.Favourites,
+  },
   // {
   //   path: '/stock',
   //   component: Views.StockGrid,
@@ -70,11 +42,25 @@ export const getRoutes = app => [
   //     config: app ? app.getProjectConfig() : {},
   //   },
   // },
-  // {
-  //   path: '/website/menu',
-  //   component: Views.WebsiteMenu,
-  // },
 ];
+
+const REWRITE_RULES = {
+  '.*-[0-9]+$': 'Product',
+};
+
+const reWriteRoutes = () =>
+{
+  const path = window.location.pathname;
+
+  const index = Object.keys(REWRITE_RULES).find(regexp => path.match(new RegExp(regexp)) !== null);
+
+  if (index && Views[REWRITE_RULES[index]])
+  {
+    return React.createElement(Views[REWRITE_RULES[index]]);
+  }
+
+  return <h1>{window.location.pathname}???</h1>;
+};
 
 
 /**
@@ -104,10 +90,10 @@ export default (app, permission) =>
       path: '/logout',
       component: Logout,
     },
-    // ...getRoutes(app),
+    ...getRoutes(app),
     {
       path: '*',
-      component: Views.Page,
+      component: reWriteRoutes,
     },
   ]
     .filter(route => isAccessGaranted(route, permission))
