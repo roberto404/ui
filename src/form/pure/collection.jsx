@@ -66,7 +66,9 @@ class Collection extends Field
 
     const item = {};
 
-    Object.keys(this.state.value[0]).forEach((key) =>
+    const keys = this.state.value.length ? this.state.value[0] : this.props.value[0];
+
+    Object.keys(keys).forEach((key) =>
     {
       if (key === 'id')
       {
@@ -74,7 +76,8 @@ class Collection extends Field
       }
       else
       {
-        item[key] = undefined;
+        item[key] = (this.props.value.length && typeof this.props.value[0][key] !== 'undefined') ?
+          this.props.value[0][key] : undefined;
       }
     });
 
@@ -97,14 +100,20 @@ class Collection extends Field
 
         { this.state.value.map((record, index) =>
           (
-            <div key={index} className="flex v-center">
-              <UI record={record} onChange={record => this.onChangeItemListener(record, index)} />
+            <div key={index} className="v-center">
+              <UI
+                {...this.props.uiProps}
+                record={record}
+                index={index}
+                id={this.props.id}
+                onChange={record => this.onChangeItemListener(record, index)}
+              />
               <button className="action" onClick={e => this.onClickRemoveHandler(e, index)}><IconRemove /></button>
             </div>
           ))
          }
 
-        { this.state.value.length > 0 &&
+        { (this.state.value.length > 0 || this.props.value) &&
           <button className="action" onClick={this.onClickAddHandler}><IconAdd /></button>
         }
 
