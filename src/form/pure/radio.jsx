@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import slugify from '@1studio/utils/string/slugify';
+import random from '@1studio/utils/string/random';
 
 /* !- React Elements */
 
@@ -66,6 +67,8 @@ class Radio extends Field
    */
   render()
   {
+    const uid = random(8);
+
     return super.render() || (
       <div className={this.getClasses('radio')}>
 
@@ -74,20 +77,20 @@ class Radio extends Field
         { this.data.map(item =>
           (
             <div
-              className="value"
+              className={`value ${this.props.valueClassName}`}
               key={`${this.props.id}-${item.id}`}
             >
               { /* slugify: Cannot use props.id because JSON data use same id (see rs/features) */ }
               <input
                 type="radio"
-                id={`${slugify(this.props.label)}-${item.id}`}
+                id={`${slugify(this.props.label)}-${item.id}-${uid}`}
                 name={slugify(this.props.label)}
                 value={item.id}
                 checked={this.state.value.indexOf(item.id.toString()) !== -1}
                 onChange={this.onChangeRadioHandler}
               />
 
-              <label htmlFor={`${slugify(this.props.label)}-${item.id}`}>{item.title}</label>
+              <label htmlFor={`${slugify(this.props.label)}-${item.id}-${uid}`}>{item.title}</label>
             </div>
           ),
         )}
@@ -138,6 +141,12 @@ Radio.propTypes =
    * @param {object} event Change event targeting the text field.
    */
   onFocus: PropTypes.func,
+  /**
+   * Radio values block classes
+   * @example
+   * valueClassName="col-1-4"
+   */
+  valueClassName: PropTypes.string,
 };
 
 /**
@@ -154,6 +163,7 @@ Radio.defaultProps =
   {},
   onFocus()
   {},
+  valueClassName: '',
 };
 
 

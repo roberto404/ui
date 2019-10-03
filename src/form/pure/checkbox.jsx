@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import slugify from '@1studio/utils/string/slugify';
+import random from '@1studio/utils/string/random';
 
 
 /* !- React Elements */
@@ -161,6 +162,7 @@ class Checkbox extends Field
    */
   render()
   {
+    const uid = random(8);
     // this.data = ((typeof this.props.data === 'function') ? this.props.data(this.state, this.getValue()) : this.props.data) || [];
 
     return super.render() || (
@@ -171,13 +173,13 @@ class Checkbox extends Field
         { this.data.map(({ id, title }) =>
           (
             <div
-              className="value"
+              className={`value ${this.props.valueClassName}`}
               key={`${this.props.id}-${id}`}
             >
               { /* slugify: Cannot use props.id because JSON data use same id (see rs/features) */ }
               <input
                 type="checkbox"
-                id={`${slugify(this.props.id)}-${slugify(this.props.label)}-${id}`}
+                id={`${slugify(this.props.id)}-${slugify(this.props.label)}-${id}-${uid}`}
                 name={slugify(this.props.label)}
                 value={id.toString()}
                 checked={this.getStatus(id.toString()) !== 0}
@@ -188,7 +190,7 @@ class Checkbox extends Field
                 }}
               />
 
-              <label htmlFor={`${slugify(this.props.id)}-${slugify(this.props.label)}-${id}`}>{title}</label>
+              <label htmlFor={`${slugify(this.props.id)}-${slugify(this.props.label)}-${id}-${uid}`}>{title}</label>
             </div>
           ),
         )}
@@ -218,6 +220,12 @@ Checkbox.propTypes =
       title: PropTypes.string.isRequired,
     })),
   ]),
+  /**
+   * Radio values block classes
+   * @example
+   * valueClassName="col-1-4"
+   */
+  valueClassName: PropTypes.string,
 };
 
 /**
@@ -228,6 +236,7 @@ Checkbox.defaultProps =
 {
   ...Checkbox.defaultProps,
   data: [],
+  valueClassName: '',
 };
 
 export default Checkbox;
