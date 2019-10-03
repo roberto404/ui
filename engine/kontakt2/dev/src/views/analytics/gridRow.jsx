@@ -30,8 +30,8 @@ export const GridColumnStore = (record, { store }) =>
   const color = diff >= 1 ? 'green' : 'red';
   const rotate = diff >= 1 ? '90' : '270';
 
-  const valueA = `${formatThousand(Math.round(a / 100) / 10)}e ${unit}`;
-  const valueB = !b ? '-' : `${formatThousand(Math.round(b / 100) / 10)}e ${unit}`;
+  const valueA = `${formatThousand(Math.round(a / 1000))}e ${unit}`;
+  const valueB = !b ? '-' : `${formatThousand(Math.round(b / 1000))}e ${unit}`;
 
   return (
     <div>
