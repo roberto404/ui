@@ -83,7 +83,7 @@ describe.only('Grid Filters', () =>
     expectFilter('cafe   Tom', false);
   });
 
-  it.only('Search expression equal', () =>
+  it('Search expression equal', () =>
   {
     // expectFilter('person=2');
     // expectFilter('person=3', false);
@@ -94,13 +94,22 @@ describe.only('Grid Filters', () =>
     expectFilter('restaurant=afe');
     expectFilter('restaurant=ABC', false);
     expectFilter('restaurant=cafeABC', false);
+  });
 
+  it('Search expression equals', () =>
+  {
     expectFilter('restaurant==cafe');
-    expectFilter('restaurant==Cafe', false);
 
-
-    // expectFilter('userId=Rob', false);
-    // expectFilter('person!=2', false);
+    expectFilter('userId==Rob', false);
+    expectFilter('userId==Robert', true);
+    expectFilter('userId^=ob', false);
+    expectFilter('userId^=Rob', true);
+    expectFilter('userId$=obi', false);
+    expectFilter('userId$=bert', true);
+    expectFilter('userId!=3', true);    // because apply hook => Robert != 3
+    expectFilter('userId!=Robert', true); // because result false and check non-hook version => 3 != Robert
+    expectFilter('person!=4', true); // working only non-hooked or formated version
+    expectFilter('person!=2', false);
   });
 
   it('Search expression less or more than', () =>

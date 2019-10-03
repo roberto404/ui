@@ -1,5 +1,11 @@
 
+import slugify from '@1studio/utils/string/slugify';
+
 const DEFAULT_COMPARE = '_default';
+
+
+export const compareText = (subject, term) =>
+  slugify(subject).indexOf(slugify(term)) !== -1;
 
 
 export const compare = {
@@ -18,14 +24,33 @@ export const compare = {
     );
   },
 
-  '=': (subject, term) => parseFloat(subject) === parseFloat(term),
+  '=': (subject, term) => isNaN(subject) ? // eslint-disable-line
+    compareText(subject, term) : parseFloat(subject) === parseFloat(term),
+  '==': (subject, term) => new RegExp(`^${term}$`, 'i').exec(subject) !== null,
+  '!=': (subject, term) => new RegExp(`^${term}$`, 'i').exec(subject) === null,
+  '*=': (subject, term) => new RegExp(term, 'i').exec(subject) !== null,
+  '^=': (subject, term) => new RegExp(`^${term}`, 'i').exec(subject) !== null,
+  '$=': (subject, term) => new RegExp(`${term}$`, 'i').exec(subject) !== null,
   '>': (subject, term) => parseFloat(subject) > parseFloat(term),
   '<': (subject, term) => parseFloat(subject) < parseFloat(term),
-  '==': (subject, term) => parseFloat(subject) === parseFloat(term),
   '<=': (subject, term) => parseFloat(subject) <= parseFloat(term),
   '>=': (subject, term) => parseFloat(subject) >= parseFloat(term),
-  '!=': (subject, term) => parseFloat(subject) !== parseFloat(term),
 };
+
+/**
+ * Determine operators: ==, !=, >=, = ...
+ */
+export const OPERATOR_KEYS = Object.keys(compare)
+    .filter(key => key !== DEFAULT_COMPARE);
+
+export const OPERATOR_REGEX = `(${
+  OPERATOR_KEYS
+    .join('|')
+    .replace(/\*/g, '\\$&')
+})`;
+
+export const LOGICAL_REGEX = '[|&]{1,2}';
+
 
 /**
  * Search filters handler
@@ -49,7 +74,7 @@ export const search = ({ record, value, helpers, hooks }) =>
    * field = 1, field > 2
    * value#1, value#2
    */
-  const regex = /([0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ]+[ ]*[!>=<]+[ ]*)?[a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ0-9./-]+[ ,]*/g;
+  const regex = new RegExp(`([0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ]+[ ]*[${OPERATOR_KEYS.join('')}]+[ ]*)?[a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ0-9./-]+[ ,]*`, 'g');
 
   /**
    * Split search terms by regular expression
@@ -79,12 +104,11 @@ export const search = ({ record, value, helpers, hooks }) =>
      */
     let term = thisValue.replace(/[ ,]/g, '');
 
-
     /**
      * @example
      * field > 2
      */
-    const termRegex = /^([a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ]+)([!>=<]{1}[=]{0,1})([a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ0-9]+)$/;
+    const termRegex = new RegExp(`^([a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ]+)([${OPERATOR_KEYS.join('')}]{1}[=]{0,1})([a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ0-9]+)$`);
 
     /**
      * Determine term expressions: [field] [operator] [value]
@@ -136,6 +160,11 @@ export const search = ({ record, value, helpers, hooks }) =>
         }
         let subject = record[column];
 
+        if (compare[handlerIndex](subject, term) === true)
+        {
+          return true;
+        }
+
         if (
           typeof hooks !== 'undefined' &&
           typeof hooks[column] !== 'undefined' &&
@@ -143,6 +172,13 @@ export const search = ({ record, value, helpers, hooks }) =>
         )
         {
           subject = hooks[column].format({ value: subject, helper: helpers, column });
+        }
+        else if (
+          typeof helpers !== 'undefined'
+          && typeof helpers[column] !== 'undefined'
+        )
+        {
+          subject = helpers[column][subject];
         }
 
         return compare[handlerIndex](subject, term);
