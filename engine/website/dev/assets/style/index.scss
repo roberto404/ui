@@ -40,5 +40,11 @@ $iconPath: '../icon/';
     // margin: 0 auto;
     padding: 1.5rem;
   }
-
+}
+.layer.dialog .container
+{
+  @include respond-to(desktop)
+  {
+    max-width: 1100px;
+  }
 }

@@ -794,12 +794,12 @@ class Products extends Model
       );
     }
 
-    return array(
-      // 'global' => $maxQuantity ? $stock->getSupplyMessageHelper($maxQuantity, null, null, false) : Products::parseDelivery($this),
-      'stores' => $stock->getSupplyMessage(null, false),
-    );
+    $supplies = $stock->getSupplyMessage(null, false);
 
-    // return [$stock->getSupply('RS2'), $stock->getSupply('RS6'), $stock->getSupply('RS8')];
+    return array(
+      Products::parseDelivery($this, false),
+      [$supplies['RS2'], $supplies['RS6'], $supplies['RS8']],
+    );
   }
 
 
@@ -2210,7 +2210,7 @@ class Products extends Model
    * @param  [Products] $product
    * @return [string] [n] héten belül
    */
-  static function parseDelivery($product)
+  static function parseDelivery($product, $intl = true)
   {
     if (!$product)
     {
@@ -2255,7 +2255,7 @@ class Products extends Model
       if ($deliveryUnixDate)
       {
         $deliveryWeek = ceil(($deliveryUnixDate - time()) / (60 * 60 * 24) / 7);
-        return "$deliveryWeek héten belül";
+        return $intl ? "$deliveryWeek héten belül" : $deliveryWeek;
       }
     }
 

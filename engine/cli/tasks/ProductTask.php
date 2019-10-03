@@ -58,7 +58,7 @@ class ProductTask extends \Phalcon\CLI\Task
         // $product->toArray()
         // $product::parseManufacturerTitle($product)
         // $product::parseStock($product)
-        $product::parseDimension($product)
+        // $product::parseDimension($product)
         // $product::parseOutlet($product)
         // $product::parseColor($product)
         // $product::parseDelivery($product),
@@ -68,7 +68,8 @@ class ProductTask extends \Phalcon\CLI\Task
       //
       var_dump(
         // $product::parseWebCategory($product)
-        $product->toWebsiteProps()['st']
+        // $product->toWebsiteProps()
+        $product->getStock(false)
       );
       // die();
 
