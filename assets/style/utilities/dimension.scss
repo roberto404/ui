@@ -103,14 +103,19 @@
   width: 83.33333%;
 }
 
-.w-max-768,
-.w-max-pal
+.w-640,
+{
+  width: 640px;
+}
+
+.w-768,
+.w-pal
 {
   width: 768px;
 }
 
-.w-max-1024,
-.w-max-xga
+.w-1024,
+.w-xga
 {
   width: 1024px;
 }
