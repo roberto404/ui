@@ -221,7 +221,7 @@
   {
     .value
     {
-      display: flex;
+      display: inline-flex;
       align-items: center;
     }
 
@@ -903,6 +903,15 @@
       }
     }
 
+    .postfix,
+    .prefix
+    {
+      button
+      {
+        padding-left: 0;
+      }
+    }
+
     button,
     select
     {
@@ -953,7 +962,7 @@
         }
       }
 
-      svg *
+      *:not(.no-fill):not([class^="fill-"]):not([class*=" fill-"]) svg *
       {
         fill: white;
       }
