@@ -78,28 +78,28 @@ export const GRID_HOOK = {
   {
     title: 'Forgalom',
     format: ({ record }) => <GridColumnStore {...record} observe="traffic" />,
-    align: 'left',
+    align: 'right',
     width: '15rem',
   },
   rs2:
   {
     title: 'RS2',
     format: ({ record }) => <GridColumnStore {...record} observe="rs2" />,
-    align: 'left',
+    align: 'right',
     width: '15rem',
   },
   rs6:
   {
     title: 'RS6',
     format: ({ record }) => <GridColumnStore {...record} observe="rs6" />,
-    align: 'left',
+    align: 'right',
     width: '15rem',
   },
   rs8:
   {
     title: 'RS8',
     format: ({ record }) => <GridColumnStore {...record} observe="rs8" />,
-    align: 'left',
+    align: 'right',
     width: '15rem',
   },
   rate:
