@@ -4,11 +4,12 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import capitalizeFirstLetter from '@1studio/utils/string/capitalizeFirstLetter';
 import formatThousand from '@1studio/utils/string/formatThousand';
-import  { File } from '@1studio/ui/form/pure/dropzone';
+import { File } from '@1studio/ui/form/pure/dropzone';
+
 
 /* !- React Actions */
 
-import { setValues } from '@1studio/ui/form/actions';
+import { dialog } from '@1studio/ui/layer/actions';
 
 
 /* !- React Elements */
@@ -16,20 +17,24 @@ import { setValues } from '@1studio/ui/form/actions';
 import IconFavorite from '../../icons/heart';
 import IconFavoriteActive from '../../icons/heartSolid';
 import IconZoom from '../../icons/searchPlus';
+import Product from './product';
 
 
 /* !- Constants */
 
-import { parseFlag, parseFeatures, parseFabrics, parseDimension } from './const';
+import {
+  parse,
+  MAX_THUMBNAIL_FABRICS_LENGTH,
+  MAX_THUMBNAIL_FEATURE_LENGTH,
+} from './const';
 
-const MAX_FABRICS_LENGTH = 5;
-const MAX_FEATURE_LENGTH = 2;
-
-
+/**
+ * [ProductColorPalette description]
+ */
 export const ProductColorPalette = ({ fabrics }) => (
   <div className="h-center" style={{ display: 'inline-flex' }}>
     <div className="flex">
-      { fabrics.slice(0, MAX_FABRICS_LENGTH).map(({ colorHex, image }) => (
+      { fabrics.slice(0, MAX_THUMBNAIL_FABRICS_LENGTH).map(({ colorHex, image }) => (
         <div
           key={image}
           className="w-1.5 h-1.5 mr-1/2"
@@ -37,8 +42,8 @@ export const ProductColorPalette = ({ fabrics }) => (
         />
       ))}
     </div>
-    { fabrics.length > MAX_FABRICS_LENGTH &&
-    <div className="text-xs bold">{`+${fabrics.length - MAX_FABRICS_LENGTH}`}</div>
+    { fabrics.length > MAX_THUMBNAIL_FABRICS_LENGTH &&
+    <div className="text-xs bold">{`+${fabrics.length - MAX_THUMBNAIL_FABRICS_LENGTH}`}</div>
     }
   </div>
 );
@@ -68,6 +73,11 @@ class ProductThumbnail extends Component
     }
   }
 
+  onClickZoomHandler = () =>
+  {
+    this.context.store.dispatch(dialog(<Product record={this.props.record} />));
+  }
+
   onMouseOverHandler = () =>
   {
     this.setState({ active: true });
@@ -91,6 +101,13 @@ class ProductThumbnail extends Component
   render()
   {
     const {
+      record,
+      className,
+      onClick,
+      isFavourite,
+    } = this.props;
+
+    const {
       brand,
       title,
       subtitle,
@@ -103,30 +120,23 @@ class ProductThumbnail extends Component
       color,
       images,
       manufacturer,
-    } = this.props.record;
-
-    const {
-      className,
-      onClick,
-      isFavourite,
-    } = this.props;
+      stock,
+    } = record;
 
     const helper = this.context.register && this.context.register.data.products ? this.context.register.data.products : {};
 
-    //@TODO átrakni record props-ra
     //@TODO helper átrakni props-ra
 
-    const fabrics = parseFabrics({
-      color,
-      brand,
-      manufacturer,
-    }, helper.fabrics);
 
+    /**
+     * Hover extra info => table (title|value)
+     */
     const details = [
-      { id: 'dimension', title: 'Méret', value: parseDimension({ dimension })[0] },
-      ...parseFeatures({ features }, helper.features)
-        .filter(({ value }) => value !== undefined).slice(0, MAX_FEATURE_LENGTH),
-      { id: 'color', title: 'Színek', value: <ProductColorPalette fabrics={fabrics} /> },
+      { id: 'dimension', title: 'Méret', value: parse.dimension(record) },
+      ...parse.features({ features }, helper.features)
+        .filter(({ value }) => value !== undefined).slice(0, MAX_THUMBNAIL_FEATURE_LENGTH),
+      { id: 'delivery', title: 'Elérhetőség', value: parse.stock(record) },
+      { id: 'color', title: 'Színek', value: <ProductColorPalette fabrics={parse.fabrics(record, helper.fabrics)} /> },
     ];
 
     const favourite = isFavourite ?
@@ -154,7 +164,7 @@ class ProductThumbnail extends Component
             className="text-s"
             style={{ textTransform: 'none' }}
           >
-            {parseFlag(flag, helper.flags)[0].title}
+            {parse.flag(record, helper.flags)[0].title}
           </span>
         </div>
         }
@@ -200,7 +210,7 @@ class ProductThumbnail extends Component
             </div>
             <div className="col-2-12 text-right">
               <div className="mb-1/2">
-                <IconZoom className="w-2 fill-gray" />
+                <IconZoom className="w-2 fill-gray pointer" onClick={this.onClickZoomHandler} />
               </div>
               <div>
                 { favourite }
@@ -218,7 +228,7 @@ class ProductThumbnail extends Component
           // onMouseOver={this.onMouseOverHandler}
           // onMouseOut={this.onMouseOutHandler}
         >
-        {
+          {
           details.map(({ id, title, value }) => (
             <div key={id} className="flex pb-1 text-s">
               <div className="col-1-2">
@@ -229,7 +239,7 @@ class ProductThumbnail extends Component
               </div>
             </div>
           ))
-        }
+          }
         </div>
         }
 
@@ -247,6 +257,7 @@ ProductThumbnail.defaultProps =
 
 ProductThumbnail.contextTypes =
 {
+  store: PropTypes.object,
   register: PropTypes.object,
 };
 
