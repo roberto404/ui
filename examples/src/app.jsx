@@ -17,7 +17,6 @@ import Layer from '../../src/layer';
 // import Example from './icon/la';
 
 
-
 /* !- Example: Form */
 
 // import Example from './form/basic';
@@ -26,6 +25,7 @@ import Layer from '../../src/layer';
 // import Example from './form/connect';
 // import Example from './form/flat';
 // import Example from './form/plain';
+// import Example from './form/collection';
 
 
 /* !- Example: Grid */
@@ -34,6 +34,7 @@ import Layer from '../../src/layer';
 // import Example from './grid/connect';
 // import Example from './grid/dynamic';
 // import Example from './grid/filters';
+import Example from './grid/search';
 // import Example from './grid/extra';
 // import Example from './grid/complex';
 // import Example from './grid/list';
@@ -41,6 +42,8 @@ import Layer from '../../src/layer';
 // import Example from './grid/pivotTable';
 // import Example from './grid/pivotTableComplex';
 // import Example from './grid/withoutGrid';
+// import Example from './grid/nestedList';
+// import Example from './grid/nestedListMenu';
 
 
 /* !- Example: Layer */
@@ -64,12 +67,9 @@ import Layer from '../../src/layer';
 // import Example from './calendar/filters';
 
 
-// import Example from './print';
-
-
 /* !- Example: Chart */
 
-import Example from './chart/coordinate';
+// import Example from './chart/coordinate';
 // import Example from './chart/complex';
 // import Example from './chart/barChart';
 
@@ -79,6 +79,12 @@ import Example from './chart/coordinate';
 // import Example from './map/gmaps';
 // import Example from './map/mapbox/static';
 // import Example from './map/mapbox/dynamic';
+
+
+/* !- Example: Utils */
+
+// import Example from './print';
+
 
 
 export default () =>
