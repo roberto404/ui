@@ -15,11 +15,11 @@ import toCSV from '@1studio/utils/array/toCSV';
 * @example
 * <GridDownload />
 */
-const GridDownload = ({ label, className }, context) =>
+const GridDownload = ({ id, label, className }, context) =>
 {
   const onClickDownloadHandler = () =>
   {
-    const grid = context.store.getState().grid[context.grid];
+    const grid = context.store.getState().grid[id || context.grid];
 
     if (grid)
     {
@@ -51,6 +51,7 @@ const GridDownload = ({ label, className }, context) =>
  */
 GridDownload.propTypes =
 {
+  id: PropTypes.string,
   label: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object,
@@ -64,10 +65,10 @@ GridDownload.propTypes =
  */
 GridDownload.defaultProps =
 {
+  id: '',
   label: 'Download',
   className: '',
 };
-
 
 /**
  * contextTypes
