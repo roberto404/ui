@@ -54,6 +54,7 @@ class AnalyticsTask extends \Phalcon\CLI\Task
         cikkszam,
         mennyiseg * if((sztorno = 'S'), -1, 1) as mennyiseg,
         round((ar * mennyiseg), 1) * if((sztorno = 'S'), -1, 1) as netto_osszesen,
+        round((ar * mennyiseg), 1) * if((sztorno = 'S'), -1, 1) * (afa + 100) / 100 as brutto_osszesen,
         megnevezes,
         vhely,
         datum as datum,
@@ -66,24 +67,14 @@ class AnalyticsTask extends \Phalcon\CLI\Task
       ON
         (sor.file = fej.file)
       WHERE
-      /*
-        (datum >= '2017-01-01' AND datum < '2019-09-01')
-      AND
-      */
         vnev NOT LIKE 'RS Bútorpiac Kft%' /* RS Árumozgás */
-      AND
-        (`mennyiseg` > 0 AND `osszesen_brutto` < 0) != 1 /* RS Engedmény */
     ");
 
     /*
+      RS Engedmény:
 
-6466 / 30mp
-
-ALTER TABLE `upload_szamla_sor` ADD INDEX(`file`);
-
-0.03mp
-
-ALTER TABLE `upload_szamla_fej` ADD INDEX(`file`);
+      AND
+        (`mennyiseg` > 0 AND `osszesen_brutto` < 0) != 1
      */
 
     foreach ($query->fetchAll() as $record)
@@ -102,6 +93,7 @@ ALTER TABLE `upload_szamla_fej` ADD INDEX(`file`);
         'b' => $product::parseBrand($product), // Brand
         't' => $product->title_orig_rest, // Title of product without brand
         'p' => $record['netto_osszesen'],
+        'p2' => $record['brutto_osszesen'],
         'l' => $record['vhely'], // Client's town
         'd' => $record['datum'],
         'sm' => $record['bizkod'], // Sales method (22 - prompt, 33 - order)

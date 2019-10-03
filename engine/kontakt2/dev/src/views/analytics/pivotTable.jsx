@@ -80,7 +80,8 @@ export const PivotTableFilter = () =>
       value="p"
       data={[
         { id: 'q', title: 'Mennyiség' },
-        { id: 'p', title: 'Ár' },
+        { id: 'p', title: 'Nettó ár' },
+        { id: 'p2', title: 'Bruttó ár' },
       ]}
       placeholder={false}
     />
