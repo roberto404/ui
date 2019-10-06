@@ -1,11 +1,70 @@
 
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import map from 'lodash/map';
 import isEmpty from 'lodash/isEmpty';
 import { FormattedMessage } from 'react-intl';
 
 /* !- React Elements */
+
+import IconArrow from '../../../src/icon/mui/navigation/expand_more';
+
+/**
+ * [Parent description]
+ */
+class Parent extends Component
+{
+  constructor(props)
+  {
+    super(props);
+
+    this.state = { active: false };
+  }
+
+  onClickButtonHandler = (event) =>
+  {
+    event.preventDefault();
+    this.setState({ active: !this.state.active });
+  }
+
+  render()
+  {
+    const rotate = 270 * (+!this.state.active);
+
+    return (
+      <div style={{ padding: `0 0 1.5rem ${this.props.level * 2}rem` }}>
+        <div className="h-center pointer" onClick={this.onClickButtonHandler}>
+          <IconArrow
+            className={`w-2 h-2 rotate-${rotate}`}
+            style={{ transition: 'all 0.2s ease-out' }}/>
+          <span className="pl-1 grow">{this.props.title}</span>
+        </div>
+        { this.state.active === true &&
+        <div className="pt-1">
+          {this.props.children}
+        </div>
+        }
+      </div>
+    );
+  }
+}
+
+export const Accordion = (props) =>
+{
+  if (props.children)
+  {
+    return (
+      <Parent
+        { ...props}
+        title={props.index}
+      >
+        {props.children}
+      </Parent>
+    );
+  }
+
+  return props.items;
+};
 
 /**
  * Results Component

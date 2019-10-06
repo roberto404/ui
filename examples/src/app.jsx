@@ -26,7 +26,7 @@ import Layer from '../../src/layer';
 // import Example from './form/flat';
 // import Example from './form/plain';
 // import Example from './form/collection';
-import Example from './form/slider';
+// import Example from './form/slider';
 
 
 /* !- Example: Grid */
@@ -45,6 +45,7 @@ import Example from './form/slider';
 // import Example from './grid/withoutGrid';
 // import Example from './grid/nestedList';
 // import Example from './grid/nestedListMenu';
+import Example from './grid/nestedListAccordion';
 
 
 /* !- Example: Layer */
