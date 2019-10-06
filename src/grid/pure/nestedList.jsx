@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl';
 
 /* !- React Elements */
 
-import IconArrow from '../../../src/icon/mui/navigation/expand_more';
+import IconArrow from '../../icon/mui/navigation/expand_more';
 
 /**
  * [Parent description]
