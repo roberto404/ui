@@ -75,7 +75,7 @@ class FormField extends Component
 
     const formState = form ? store.form[form] : store.form;
 
-    if (this.props.value && (!formState || !formState[this.props.id]))
+    if (this.props.value.length && (!formState || !formState[this.props.id]))
     {
       this.onChangeHandler(this.props.value);
       this.onChangeListener(); // redux subscription has not yet occurred

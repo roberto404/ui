@@ -29,6 +29,7 @@ const ExampleForm = ({ setValues }) =>
         label="Classic Field"
         id="input"
         placeholder="field use form id"
+        value="init value"
       />
       <Input
         id="input"

@@ -23,34 +23,13 @@ class Slider extends Field
 
     this.state = {
       ...this.state,
-      percent: 0,
+      value: [this.percentToValue(0), this.percentToValue(1)],
+      percent: [0, 1],
       active: false,
     };
   }
 
   /* !- Handlers */
-
-  /**
-   * @private
-   * @emits
-   * @param  {SytheticEvent} event
-   * @return {void}
-   */
-  onFocusHandler = (event) =>
-  {
-    this.props.onFocus({ id: this.props.name, value: event.target.value });
-  }
-
-  /**
-   * @private
-   * @emits
-   * @param  {SytheticEvent} event
-   * @return {void}
-   */
-  onBlurHandler = (event) =>
-  {
-    this.props.onBlur({ id: this.props.name, value: event.target.value });
-  }
 
 
   /**
@@ -59,7 +38,7 @@ class Slider extends Field
    * @param  {Integer} y
    * @return {Interger|String}   converted and formated value
    */
-  convertPositionToValue({ x, percent } = this.state)
+  percentToValue(percent)
   {
     const { from, to } = this.props;
 
@@ -70,7 +49,7 @@ class Slider extends Field
     return ((parseFloat(to) - parseFloat(from)) * percent) + parseFloat(from);
   }
 
-  convertPositionToPercent(x = this.state.x)
+  pixelToPercent(x)
   {
     if (!this.field)
     {
@@ -88,19 +67,41 @@ class Slider extends Field
     return percent;
   }
 
-  get percent()
+  percentToPixel(percent)
   {
-    return (parseFloat(this.state.value) - parseFloat(this.props.from))
-      / (parseFloat(this.props.to) - parseFloat(this.props.from));
+    if (!this.field)
+    {
+      return 0;
+    }
+
+    return this.field.offsetWidth * percent;
   }
+
+  getPercents = () =>
+    this.state.value.map(value =>
+      (parseFloat(value) - parseFloat(this.props.from))
+        / (parseFloat(this.props.to) - parseFloat(this.props.from)),
+    );
+
+  getValues = () => [
+    this.percentToValue(this.state.percent[0]),
+    this.percentToValue(this.state.percent[1]),
+  ];
 
   initHammerDrag()
   {
-    if (!this.hammerDragManager)
+    if (this.props.enableStartHandler && !this.hammerDragManagerStart)
     {
-      this.hammerDragManager = new Hammer.Manager(this.handle);
-      this.hammerDragManager.add(new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL }));
-      this.hammerDragManager.on('panstart panmove pancancel panend', this.dragListener);
+      this.hammerDragManagerStart = new Hammer.Manager(this.handleStart);
+      this.hammerDragManagerStart.add(new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL }));
+      this.hammerDragManagerStart.on('panstart panmove pancancel panend', this.dragListener);
+    }
+
+    if (!this.hammerDragManagerEnd)
+    {
+      this.hammerDragManagerEnd = new Hammer.Manager(this.handleEnd);
+      this.hammerDragManagerEnd.add(new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL }));
+      this.hammerDragManagerEnd.on('panstart panmove pancancel panend', this.dragListener);
     }
   }
 
@@ -111,25 +112,31 @@ class Slider extends Field
       this.setState({ active: true });
     }
 
+    const index = parseInt(event.target.dataset.index);
+
     const x = clamp(
       event.center.x - this.field.getBoundingClientRect().x,
-      0,
-      this.field.offsetWidth,
+      index === 0 ? 0 : this.percentToPixel(this.state.percent[0]),
+      index === 0 ? this.percentToPixel(this.state.percent[1]) : this.field.offsetWidth,
     );
 
     switch (event.type)
     {
       case 'panmove':
         {
-          const percent = this.convertPositionToPercent(x);
+          const percent = this.state.percent;
+          percent[index] = this.pixelToPercent(x);
 
-          if (this.state.percent !== percent)
+          if (this.state.percent[index] !== percent)
           {
             this.setState({
               percent,
             });
 
-            this.onChangeHandler(this.convertPositionToValue());
+            if (this.props.onTheFly)
+            {
+              this.onChangeHandler(this.getValues());
+            }
           }
           break;
         }
@@ -139,6 +146,8 @@ class Slider extends Field
           this.setState({
             active: false,
           });
+
+          this.onChangeHandler(this.getValues());
 
           break;
         }
@@ -153,24 +162,8 @@ class Slider extends Field
   {
     super.componentDidMount();
     this.initHammerDrag();
+    this.forceUpdate();
   }
-
-  // componentDidUpdate(props, nextState)
-  // {
-  //   /**
-  //    * next value = 0 percent 0
-  //    * state value = 2000 percent 0
-  //    */
-  //
-  //   if (!this.state.percent && this.state.value && !nextState.percent)
-  //   {
-  //     console.warn(
-  //       nextState,
-  //       this.state,
-  //     );
-  //   }
-  // }
-
 
 
   /* !- Renders */
@@ -182,7 +175,14 @@ class Slider extends Field
    */
   render()
   {
-    const percent = this.state.active ? this.state.percent : this.percent;
+    const percent = [
+      this.state.active ? this.state.percent[0] : this.getPercents()[0],
+      this.state.active ? this.state.percent[1] : this.getPercents()[1],
+    ];
+
+    const value = this.state.active ? this.props.stateFormat(this.getValues()) : this.state.value;
+
+    console.log(value);
 
     const sliderClass = classNames({
       slider: true,
@@ -192,10 +192,6 @@ class Slider extends Field
     return (
       <div
         className={`field slider-field ${this.props.className}`}
-        ref={(ref) =>
-        {
-          this.field = ref;
-        }}
       >
 
         { this.label }
@@ -206,7 +202,10 @@ class Slider extends Field
           <div className="prefix">{this.state.prefix}</div>
           }
 
-          <div className="value">{this.state.value}</div>
+          { this.props.enableStartHandler &&
+          <div className="value">{value[0]}</div>
+          }
+          <div className="value">{value[1]}</div>
 
           { this.props.postfix &&
           <div className="postfix">{this.state.postfix}</div>
@@ -214,19 +213,41 @@ class Slider extends Field
 
         </div>
 
-        <div className={sliderClass}>
+        <div
+          className={sliderClass}
+          ref={(ref) =>
+          {
+            this.field = ref;
+          }}
+        >
           <div className="inactive-line" />
           <div
             className="active-line"
-            style={{ width: `${Math.round(percent * 100)}%` }}
+            style={{
+              width: `${Math.round((percent[1] - percent[0]) * 100)}%`,
+              left: `${Math.round(this.percentToPixel(percent[0]))}px`,
+            }}
           />
+
+          { this.props.enableStartHandler &&
           <div
             className="handle"
             ref={(ref) =>
             {
-              this.handle = ref;
+              this.handleStart = ref;
             }}
-            style={{ left: `${Math.round(percent * 100)}%` }}
+            style={{ left: `${Math.round(percent[0] * 100)}%` }}
+            data-index="0"
+          />
+          }
+          <div
+            className="handle bg-red"
+            ref={(ref) =>
+            {
+              this.handleEnd = ref;
+            }}
+            style={{ left: `${Math.round(percent[1] * 100)}%` }}
+            data-index="1"
           />
         </div>
 
@@ -246,21 +267,27 @@ class Slider extends Field
 Slider.propTypes =
 {
   ...Slider.propTypes,
+  value: PropTypes.arrayOf(PropTypes.number),
   /**
-   *
+   * Slider value when handler is on 0%
    */
   from: PropTypes.number,
+  /**
+   * Slider value when handler is on 100%
+   */
   to: PropTypes.number,
-  format: PropTypes.number,
-
-  // prefix: PropTypes.oneOfType([
-  //   PropTypes.element,
-  //   PropTypes.string,
-  // ]),
-  // postfix: PropTypes.oneOfType([
-  //   PropTypes.element,
-  //   PropTypes.string,
-  // ]),
+  /**
+   * Sensitivity of handler x-axis moving
+   */
+  steps: PropTypes.number,
+  /**
+   * Component send data redux when handler is on moving
+   */
+  onTheFly: PropTypes.bool,
+  /**
+   * Enable to set start value. Visible two handler
+   */
+  enableStartHandler: PropTypes.bool,
 };
 
 /**
@@ -271,18 +298,13 @@ Slider.propTypes =
 Slider.defaultProps =
 {
   ...Slider.defaultProps,
-  // type: 'text',
-  // underlineStyle: {},
-  // onBlur()
-  // {},
-  // onFocus()
-  // {},
-  // regexp: '',
-  prefix: '',
-  postfix: '',
-  from: '0',
-  to: '100',
-  format: v => Math.round(v).toString(),
+  value: [],
+  stateFormat: state => (state || []).map(value => Math.round(value)),
+  steps: 0,
+  from: 0,
+  to: 100,
+  onTheFly: false,
+  enableStartHandler: false,
 };
 
 export default Slider;
