@@ -1,0 +1,71 @@
+button,
+.button
+{
+  padding: 0.9em;
+  border-radius: 0;
+  font-size: 1em;
+  text-transform: none;
+  color: $black;
+  font-weight: bold;
+
+  span
+  {
+    padding-top: 2px;
+  }
+
+  &:not(.no-fill):not([class^="fill-"]):not([class*=" fill-"])
+  {
+    svg
+    {
+      polygon,
+      path
+      {
+        fill: $black;
+      }
+
+      rectangle,
+      circle,
+      line
+      {
+        stroke: $black;
+      }
+    }
+
+    &:hover svg path
+    {
+      fill: $yellow;
+    }
+  }
+
+  &.outline
+  {
+    background-color: transparent;
+    border: 1px solid $black;
+    padding: calc(.9em - 1px);
+
+    &:hover
+    {
+      background-color: $black;
+      border-color: white;
+      color: white;
+    }
+
+    &:not(.no-fill):not([class^="fill-"]):not([class*=" fill-"]):hover svg path
+    {
+      fill: white;
+    }
+  }
+
+  &.small
+  {
+    font-size: .75em;
+    font-weight: 200;
+    padding: 0.7em;
+
+    svg
+    {
+      width: 1em;
+      height: 1em;
+    }
+  }
+}

@@ -7,9 +7,14 @@ import React from 'react';
 import Layer from '@1studio/ui/layer';
 
 
+/* !- Example: Style */
+
+import Example from './style/buttons';
+
+
 /* !- Example: Product */
 
-import Example from './product/thumbnail';
+// import Example from './product/thumbnail';
 
 
 
