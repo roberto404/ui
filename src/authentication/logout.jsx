@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
+import { withRouter } from 'react-router-dom';
 
 
 /* !- Redux Actions */
@@ -99,7 +100,7 @@ Logout.contextTypes = {
 };
 
 
-export default injectIntl(connect(
+export default withRouter(injectIntl(connect(
   (state, props) => ({
     intl: props.intl,
   }),
@@ -107,4 +108,4 @@ export default injectIntl(connect(
     modal: LayerActions.modal,
     logout: AuthenticationActions.logout,
   },
-)(Logout));
+)(Logout)));
