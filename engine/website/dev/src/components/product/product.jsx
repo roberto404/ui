@@ -60,7 +60,7 @@ const Product = (
     priority,
   } = record;
 
-  const fabrics = parse.fabrics(record, helper.fabrics) || [];
+  const fabrics = parse.fabrics(record, helper.fabrics);
   const stockSample = parse.stockSample(record).join(', ');
 
   const favourite = isFavourite ?

@@ -9,7 +9,7 @@ export const MAX_THUMBNAIL_FABRICS_LENGTH = 5;
 export const MAX_THUMBNAIL_FEATURE_LENGTH = 2;
 
 export const PRODUCT_DICTIONARY = {
-  i: 'id',
+  id: 'id',
   ri: 'related_id',
   b: 'brand',
   m: 'manufacturer',
@@ -42,6 +42,11 @@ export const STORE_INDEX = ['Budapest XIII', 'Budapest XVIII', 'Budaörs'];
 export const STOCK_DELIVER_MESSAGE = 'héten belül';
 
 
+/* !- FakeApi */
+
+export const loadProducts = records => () => new Promise(resolve => resolve({ status: 'SUCCESS', records }));
+
+
 /* !- Helper methods */
 
 export const productPropsParser = props =>
@@ -56,17 +61,26 @@ export const productPropsParser = props =>
       {},
     );
 
-
+/**
+ * Find + ORDER BY priority
+ * @example
+ * flag: [ 'HUN' ]
+ * // => [ { id: 'HUN', title: 'Magyar termék', priority: '1', description: null } ]
+ */
 export const parseFlag = ({ flag }, helper = []) =>
-  flag
-    .map(flagId => helper.find(({ id }) => id === flagId))
-    .filter(flagProps => flagProps !== null)
+  (Array.isArray(flag) ? flag : [])
+    .map(flagId => (helper ? helper.find(({ id }) => id === flagId) : undefined))
+    .filter(flagProps => flagProps !== undefined)
     .sort((a, b) => b.priority - a.priority);
 
-
+/**
+ * @example
+ * features: { '32': '3', '36': false }
+ * // => [ { id: '32', title: 'stílus', value: 'eco' } ]
+ */
 export const parseFeatures = ({ features }, helper = []) =>
   reduce(
-    features,
+    (String(features) === '[object Object]' && Array.isArray(helper) ? features : {}),
     (result, featureValue, featureId) =>
     {
       const feature = helper.find(({ id }) => id === featureId);
@@ -91,33 +105,39 @@ export const parseFeatures = ({ features }, helper = []) =>
     [],
   );
 
-
+/**
+ * @example
+ * color: 'R'
+ * // => [ { id: '32', title: 'stílus', value: 'eco' } ]
+ */
 export const parseFabrics = ({ color, brand, manufacturer }, helper = {}) =>
 {
-  if (helper[manufacturer])
+  if (String(helper[manufacturer]) !== '[object Object]' || helper[manufacturer] === undefined)
   {
-    /**
-     * NF1 color is a brand
-     */
-    if (color === brand)
-    {
-      let fabrics = [];
-
-      Object.keys(helper[manufacturer]).forEach((brands) =>
-      {
-        if (
-          brands.split(',').indexOf(brand.toLowerCase()) !== -1
-        )
-        {
-          fabrics = [...fabrics, ...helper[manufacturer][brands]];
-        }
-      });
-
-      return fabrics;
-    }
-
-    return helper[manufacturer][color.toLocaleLowerCase()];
+    return [];
   }
+
+  /**
+   * NF1 color is a brand
+   */
+  if (color === brand)
+  {
+    let fabrics = [];
+
+    Object.keys(helper[manufacturer]).forEach((brands) =>
+    {
+      if (
+        brands.split(',').indexOf(brand.toLowerCase()) !== -1
+      )
+      {
+        fabrics = [...fabrics, ...helper[manufacturer][brands]];
+      }
+    });
+
+    return fabrics;
+  }
+
+  return helper[manufacturer][color.toLocaleLowerCase()] || [];
 };
 
 
@@ -126,6 +146,7 @@ export const parseDimension = ({ dimension }) =>
     .map(key => dimension[key])
     .filter(key => key !== undefined)
     .join(' x ')} cm`;
+
 
 export const parseStock = ({ stock }) =>
 {

@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import capitalizeFirstLetter from '@1studio/utils/string/capitalizeFirstLetter';
 import formatThousand from '@1studio/utils/string/formatThousand';
@@ -26,7 +27,58 @@ import {
   parse,
   MAX_THUMBNAIL_FABRICS_LENGTH,
   MAX_THUMBNAIL_FEATURE_LENGTH,
+  productPropsParser,
 } from './const';
+
+/**
+ * Grid Connection UI
+ *
+ * @example
+ <GridView
+   id="products"
+   settings={{ paginate: { limit: 10 } }}
+   api={loadProducts(config.products)}
+ >
+   <Connect
+     className="grid-2-2"
+     UI={ProductConnectUI}
+   />
+ </GridView>
+ */
+export const ProductConnectUIWithoutRouter = ({ data, history }, { config }) =>
+{
+  if (!data.length)
+  {
+    return <div>Nincs találat</div>;
+  }
+
+  return (
+    <div className="grid-2-4">
+      { data.map(props => (
+        <div className="col-1-3" key={props.id}>
+          <ProductThumbnail
+            record={productPropsParser(props)}
+            className="bg-white pointer"
+            // onClick={() => history.push(`/termekek/${props.id}`)}
+            helper={{
+              flags: config.flags,
+              fabrics: config.fabrics,
+              features: config.features,
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+ProductConnectUIWithoutRouter.contextTypes =
+{
+  config: PropTypes.object,
+};
+
+export const ProductConnectUI = withRouter(ProductConnectUIWithoutRouter);
+
 
 /**
  * [ProductColorPalette description]
@@ -75,7 +127,7 @@ class ProductThumbnail extends Component
 
   onClickZoomHandler = () =>
   {
-    this.context.store.dispatch(dialog(<Product record={this.props.record} />));
+    this.context.store.dispatch(dialog(<Product record={this.props.record} helper={this.props.helper} />));
   }
 
   onMouseOverHandler = () =>
@@ -85,15 +137,11 @@ class ProductThumbnail extends Component
 
   onMouseOutHandler = (event) =>
   {
-    //this is the original element the event handler was assigned to
-    var e = event.toElement || event.relatedTarget;
-
-    if (e.parentNode === this || e === this)
+    if (event.currentTarget.contains(event.relatedTarget))
     {
       return;
     }
 
-    console.log(e, e.parentNode);
     this.setState({ active: false });
   }
 
@@ -102,6 +150,7 @@ class ProductThumbnail extends Component
   {
     const {
       record,
+      helper,
       className,
       onClick,
       isFavourite,
@@ -123,21 +172,26 @@ class ProductThumbnail extends Component
       stock,
     } = record;
 
-    const helper = this.context.register && this.context.register.data.products ? this.context.register.data.products : {};
-
-    //@TODO helper átrakni props-ra
-
-
     /**
      * Hover extra info => table (title|value)
      */
     const details = [
       { id: 'dimension', title: 'Méret', value: parse.dimension(record) },
       ...parse.features({ features }, helper.features)
-        .filter(({ value }) => value !== undefined).slice(0, MAX_THUMBNAIL_FEATURE_LENGTH),
+        .filter(({ value }) => value !== undefined)
+        .slice(0, MAX_THUMBNAIL_FEATURE_LENGTH),
       { id: 'delivery', title: 'Elérhetőség', value: parse.stock(record) },
-      { id: 'color', title: 'Színek', value: <ProductColorPalette fabrics={parse.fabrics(record, helper.fabrics)} /> },
     ];
+
+    const fabrics = parse.fabrics(record, helper.fabrics);
+    const flags = parse.flag(record, helper.flags);
+
+    if (fabrics.lenght)
+    {
+      details.push(
+        { id: 'color', title: 'Színek', value: <ProductColorPalette fabrics={fabrics} /> },
+      )
+    }
 
     const favourite = isFavourite ?
       <IconFavoriteActive className="w-2 fill-orange" /> : <IconFavorite className="w-2 fill-gray" />;
@@ -158,13 +212,13 @@ class ProductThumbnail extends Component
         onMouseOver={this.onMouseOverHandler}
         onMouseOut={this.onMouseOutHandler}
       >
-        { flag &&
+        { flags.length &&
         <div className="pin-top absolute m-1 tag">
           <span
             className="text-s"
             style={{ textTransform: 'none' }}
           >
-            {parse.flag(record, helper.flags)[0].title}
+            {flags[0].title}
           </span>
         </div>
         }
@@ -224,18 +278,16 @@ class ProductThumbnail extends Component
         { this.state.active === true &&
         <div
           className="absolute border-left border-right border-bottom px-2 bg-white"
-          style={{ right: '-1px', left: '-1px' }}
-          // onMouseOver={this.onMouseOverHandler}
-          // onMouseOut={this.onMouseOutHandler}
+          style={{ right: '-1px', left: '-1px', zIndex: 2 }}
         >
           {
           details.map(({ id, title, value }) => (
             <div key={id} className="flex pb-1 text-s">
-              <div className="col-1-2">
+              <div className="col-2-5">
                 <span className="light">{`${capitalizeFirstLetter(title)}: `}</span>
               </div>
-              <div className="col-1-2 text-right">
-                <span className="bold">{value}</span>
+              <div className="col-3-5 text-right">
+                <span className="bold">{capitalizeFirstLetter(value)}</span>
               </div>
             </div>
           ))
@@ -250,6 +302,8 @@ class ProductThumbnail extends Component
 
 ProductThumbnail.defaultProps =
 {
+  record: {},
+  helper: {},
   className: 'col-1-3 bg-white',
   onClick: () =>
   {},
