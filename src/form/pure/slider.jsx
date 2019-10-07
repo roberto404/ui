@@ -182,8 +182,6 @@ class Slider extends Field
 
     const value = this.state.active ? this.props.stateFormat(this.getValues()) : this.state.value;
 
-    console.log(value);
-
     const sliderClass = classNames({
       slider: true,
       active: this.state.active,
