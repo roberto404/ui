@@ -15,6 +15,11 @@ class ConfigTask extends \Phalcon\CLI\Task
 
   public function syncAction()
   {
+    $this->cacheAction();
+  }
+
+  public function cacheAction()
+  {
     $this->cacheWebsiteAction();
   }
 
@@ -47,8 +52,8 @@ class ConfigTask extends \Phalcon\CLI\Task
     file_put_contents(
       APP_DIR . FILE_NAME,
       json_encode(
-        $results
-        // JSON_PRETTY_PRINT
+        $results,
+        JSON_UNESCAPED_UNICODE /*| JSON_PRETTY_PRINT*/
       )
     );
   }
@@ -86,8 +91,8 @@ class ConfigTask extends \Phalcon\CLI\Task
     file_put_contents(
       APP_DIR . FILE_NAME,
       json_encode(
-        $results
-        // JSON_PRETTY_PRINT
+        $results,
+        JSON_UNESCAPED_UNICODE /*| JSON_PRETTY_PRINT*/
       )
     );
   }
