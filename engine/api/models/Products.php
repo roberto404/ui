@@ -1328,7 +1328,7 @@ class Products extends Model
   public function toWebsiteProps()
   {
     return [
-      'i' => $this->id,
+      'id' => $this->id,
       'ri' => $this->related_id,
       'b' => $this->brand,
       'm' => $this->manufacturer,
