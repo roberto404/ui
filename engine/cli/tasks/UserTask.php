@@ -13,6 +13,11 @@ class UserTask extends \Phalcon\CLI\Task
     echo "\nAvailable Stock actions: \033[1;33mupdateKontakt\033[0m\n\n";
   }
 
+  public function syncAction()
+  {
+    $this->updateKontaktAction();
+  }
+
   /**
    * fetch kozos.users and kozos.login and insert or update users db.
    * All user updating.
@@ -55,7 +60,7 @@ class UserTask extends \Phalcon\CLI\Task
       $user->name = $record->nev;
       $user->email = $record->email;
       // $user->manufacturerId = 0;
-      $user->permission = $this->convertKontaktPermission($groupPermission[$record->user]);
+      $user->permission = $this->convertKontaktPermission($groupPermission[$record->user], $user);
 
 
       if (!$user->save())
@@ -102,7 +107,7 @@ class UserTask extends \Phalcon\CLI\Task
       // $user->manufacturerId = 0;
       if (isset($groupPermission[$record->link]))
       {
-        $user->permission = $this->convertKontaktPermission($groupPermission[$record->link]);
+        $user->permission = $this->convertKontaktPermission($groupPermission[$record->link], $user);
       }
 
       if (!$user->save())
@@ -123,7 +128,7 @@ class UserTask extends \Phalcon\CLI\Task
    * @param  [string] $permissions Kontakt permission: 000010001...
    * @return [string]              5,10...
    */
-  private function convertKontaktPermission($permissions)
+  private function convertKontaktPermission($permissions, $user)
   {
     if (!count($this->availableRules))
     {
@@ -142,6 +147,14 @@ class UserTask extends \Phalcon\CLI\Task
       $ruleId = (string)($i + 1);
 
       if ($permissions{$i} != 0 && in_array($ruleId, $this->availableRules))
+      {
+        $newPermissions[] = $ruleId;
+      }
+    }
+
+    foreach (explode(',', $user->permission) as $ruleId)
+    {
+      if ((int) $ruleId > 250 &&  in_array($ruleId, $this->availableRules))
       {
         $newPermissions[] = $ruleId;
       }
