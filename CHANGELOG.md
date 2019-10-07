@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/roberto404/rs/compare/v1.2.2...v1.2.3) (2019-10-07)
+
+
+### Bug Fixes
+
+* **cli:** user ([f958a0e](https://github.com/roberto404/rs/commit/f958a0e))
+
 ## [1.2.2](https://github.com/roberto404/rs/compare/v1.2.1...v1.2.2) (2019-10-03)
 
 
