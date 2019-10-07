@@ -59,10 +59,9 @@ import routes from './routes';
 
 /* !- Locale */
 
-console.log(hu);
 addLocaleData([...hu]);
 // moment.locale('hu');
-// locale('hu'); // @1studio/ui moment locale
+locale('hu'); // @1studio/ui moment locale
 
 
 /**

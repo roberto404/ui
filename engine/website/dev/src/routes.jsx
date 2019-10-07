@@ -35,6 +35,14 @@ export const getRoutes = app => [
     path: '/kedvencek',
     component: Views.Favourites,
   },
+  {
+    path: '/termekek/:sku',
+    component: Views.Product,
+  },
+  {
+    path: '/termekek',
+    component: Views.ProductGrid,
+  },
   // {
   //   path: '/stock',
   //   component: Views.StockGrid,
@@ -102,6 +110,6 @@ export default (app, permission) =>
         strict
         key={index} // eslint-disable-line
         path={path}
-        render={() => React.createElement(component, props)}
+        render={({ match }) => React.createElement(component, { ...props, match })}
       />
     ));

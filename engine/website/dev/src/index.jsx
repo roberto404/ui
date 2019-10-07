@@ -1,5 +1,6 @@
 
-import { flattenMessagesRevert } from '/Users/roberto/Sites/utils/src/object/flattenMessages';
+import { flattenMessagesRevert } from '@1studio/utils/object/flattenMessages';
+import { productPropsParser } from './components/product/const';
 
 // core.js 37 Kbyte
 // 18Kb
@@ -14,8 +15,6 @@ import Application from '@1studio/utils/models/application';
 // 76Kb
 import store from '@1studio/ui/store';
 import { createUserStorage } from '@1studio/ui/authentication/reducers';
-
-
 
 
 /* !- React Elements */
@@ -62,7 +61,9 @@ const init = () =>
     .then((response) =>
     {
       const config = response.body;
+
       config.project.constants = flattenMessagesRevert(config.project.constants);
+      config.project.products = config.project.products.map(product => productPropsParser(product));
 
       createUserStorage({}, { password: '%>"u[In!5D"4<sqU', key: 'rsweb', sessionTime: SESSION_TIME }); // minutes
 

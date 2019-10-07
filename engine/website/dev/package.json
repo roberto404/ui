@@ -85,8 +85,8 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
-    "@1studio/ui": "1.11.12",
-    "@1studio/utils": "3.13.0",
+    "@1studio/ui": "1.12.3",
+    "@1studio/utils": "4.2.1",
     "classnames": "2.2.5",
     "lodash": "4.17.11",
     "moment": "2.24.0",
