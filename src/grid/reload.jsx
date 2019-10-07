@@ -31,7 +31,7 @@ class GridReload extends Component
   componentDidMount = () =>
   {
     this.reloadInterval = setInterval(this.reload, ((this.props.min * 60) + this.props.sec) * 1000);
-    this.reload();
+    // this.reload();
   }
 
   componentWillUnmount()
