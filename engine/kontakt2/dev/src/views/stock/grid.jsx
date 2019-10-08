@@ -29,7 +29,7 @@ import { SETTINGS } from './const';
  */
 const StockGrid = () => (
   <GridView id="stock" settings={SETTINGS} className="column">
-    <div className="grid" style={{ minHeight: '100px', height: '100px' }}>
+    <div className="grid" style={{ minHeight: '50px', height: '50px' }}>
       <div className="col-1-2">
         <Reload sec={10} className="text-s text-gray" />
       </div>
