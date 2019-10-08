@@ -2,6 +2,7 @@
 
 use
   App\Models\Config,
+  App\Models\CategoriesWeb,
   \App\Exceptions\HTTPException;
 
 
@@ -83,6 +84,8 @@ class ConfigTask extends \Phalcon\CLI\Task
         $this->getProducts(),
         array(
           "constants" => $this->getConfig(),
+          "menu" => CategoriesWeb::find()->toArray(),
+          // "menu" => $this->getMenu(),
           // "dictionary" => $this->getDictionary(),
         )
       ),
@@ -164,6 +167,18 @@ class ConfigTask extends \Phalcon\CLI\Task
     $results = array();
 
     foreach (Config::find([ 'columns' => 'title, options' ]) as $record)
+    {
+      $results[$record->title] = $record->options;
+    }
+
+    return $results;
+  }
+
+  private function getMenu()
+  {
+    $results = array();
+
+    foreach (CategoriesWeb::find([ 'columns' => 'id, title, pid, pos, props' ]) as $record)
     {
       $results[$record->title] = $record->options;
     }

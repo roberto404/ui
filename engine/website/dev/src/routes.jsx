@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
+import capitalizeFirstLetter from '@1studio/utils/string/capitalizeFirstLetter';
 
 
 /* !- React Elemens */
@@ -14,6 +15,8 @@ import Views from './views';
 
 
 /**
+ * Static predefined routes: Ex. /favourites
+ *
  * @example
  * // => pass props to component
  *
@@ -52,11 +55,14 @@ export const getRoutes = app => [
   // },
 ];
 
+/**
+ * Static route patterns
+ */
 const REWRITE_RULES = {
   '.*-[0-9]+$': 'Product',
 };
 
-const reWriteRoutes = () =>
+const reWriteRoutes = ({ menu }) =>
 {
   const path = window.location.pathname;
 
@@ -67,6 +73,37 @@ const reWriteRoutes = () =>
     return React.createElement(Views[REWRITE_RULES[index]]);
   }
 
+  /**
+   * Menu Slug
+   */
+  let menuProps = (menu.getItem(path) || {}).props;
+
+  if (menuProps)
+  {
+    menuProps = JSON.parse(menuProps);
+
+    const children = menuProps
+      .filter(({ modul }) => Views[capitalizeFirstLetter(modul)] !== undefined)
+      .map(({ title, subTitle, modul, props }, i) => (
+        <div key={i}>
+          { title &&
+            <div>{title}</div>
+          }
+          { subTitle &&
+          <div>{subTitle}</div>
+          }
+          {
+            React.createElement(Views[capitalizeFirstLetter(modul)], props)
+          }
+        </div>
+      ));
+
+    return <div>{children}</div>;
+  }
+
+  /**
+   * Not Found
+   */
   return <h1>{window.location.pathname}???</h1>;
 };
 
@@ -102,6 +139,9 @@ export default (app, permission) =>
     {
       path: '*',
       component: reWriteRoutes,
+      props: {
+        menu: app.getProjectConfig().menu,
+      },
     },
   ]
     .filter(route => isAccessGaranted(route, permission))
