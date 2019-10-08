@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/roberto404/rs/compare/v1.2.6...v1.3.0) (2019-10-08)
+
+
+### Features
+
+* **kontakt2:** stock ([46ede42](https://github.com/roberto404/rs/commit/46ede42))
+
 ## [1.2.6](https://github.com/roberto404/rs/compare/v1.2.5...v1.2.6) (2019-10-08)
 
 
