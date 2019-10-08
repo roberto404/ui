@@ -1,3 +1,10 @@
+## [1.2.4](https://github.com/roberto404/rs/compare/v1.2.3...v1.2.4) (2019-10-08)
+
+
+### Bug Fixes
+
+* **api:** product ([c14aa18](https://github.com/roberto404/rs/commit/c14aa18))
+
 ## [1.2.3](https://github.com/roberto404/rs/compare/v1.2.2...v1.2.3) (2019-10-07)
 
 
