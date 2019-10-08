@@ -1,3 +1,17 @@
+## [1.2.5](https://github.com/roberto404/rs/compare/v1.2.4...v1.2.5) (2019-10-08)
+
+
+### Bug Fixes
+
+* **api:** product ([4cc4aa1](https://github.com/roberto404/rs/commit/4cc4aa1))
+* **cli:** product ([9dee2ed](https://github.com/roberto404/rs/commit/9dee2ed))
+* **config:** cron ([10d6162](https://github.com/roberto404/rs/commit/10d6162))
+* **kontakt2:** build ([222474f](https://github.com/roberto404/rs/commit/222474f))
+* **kontakt2:** stock ([e683564](https://github.com/roberto404/rs/commit/e683564))
+* **kontakt2:** stock ([d9b5d16](https://github.com/roberto404/rs/commit/d9b5d16))
+* **kontakt2:** stock ([5d02236](https://github.com/roberto404/rs/commit/5d02236))
+* **website:** page ([60d3f5d](https://github.com/roberto404/rs/commit/60d3f5d))
+
 ## [1.2.4](https://github.com/roberto404/rs/compare/v1.2.3...v1.2.4) (2019-10-08)
 
 
