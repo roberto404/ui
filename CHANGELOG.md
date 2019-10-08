@@ -1,3 +1,10 @@
+## [1.2.6](https://github.com/roberto404/rs/compare/v1.2.5...v1.2.6) (2019-10-08)
+
+
+### Bug Fixes
+
+* **cli:** user ([b396e89](https://github.com/roberto404/rs/commit/b396e89))
+
 ## [1.2.5](https://github.com/roberto404/rs/compare/v1.2.4...v1.2.5) (2019-10-08)
 
 
