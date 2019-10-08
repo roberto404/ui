@@ -42,7 +42,7 @@ class CategoriesWeb extends Model
    *
    * @var string
    */
-  public $categories;
+  public $props;
 
 
 
