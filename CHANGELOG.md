@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/roberto404/rs/compare/v1.3.0...v1.3.1) (2019-10-08)
+
+
+### Bug Fixes
+
+* **kontakt2:** stock ([a10c71d](https://github.com/roberto404/rs/commit/a10c71d))
+
 # [1.3.0](https://github.com/roberto404/rs/compare/v1.2.6...v1.3.0) (2019-10-08)
 
 
