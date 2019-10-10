@@ -111,12 +111,6 @@ table
   overflow-y: auto;
 }
 
-.pointer
-{
-  cursor: pointer;
-}
-
-
 .no-select
 {
   user-select: none;
@@ -129,6 +123,11 @@ table
 .selectable > *
 {
   user-select: initial;
+}
+
+.pointer
+{
+  cursor: pointer;
 }
 
 .ratio
