@@ -82,7 +82,7 @@
     "sinon": "4.1.2"
   },
   "dependencies": {
-    "@1studio/utils": "4.3.1",
+    "@1studio/utils": "4.3.2",
     "@tinymce/tinymce-react": "2.5.0",
     "classnames": "2.2.5",
     "draft-js": "0.10.5",
