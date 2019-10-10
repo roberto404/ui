@@ -4,7 +4,7 @@ import slugify from '@1studio/utils/string/slugify';
 const DEFAULT_COMPARE = '_default';
 
 
-export const compareText = (subject, term) =>
+export const weakTextCompare = (subject, term) =>
   slugify(subject).indexOf(slugify(term)) !== -1;
 
 
@@ -24,8 +24,10 @@ export const compare = {
     );
   },
 
-  '=': (subject, term) => isNaN(subject) ? // eslint-disable-line
-    compareText(subject, term) : parseFloat(subject) === parseFloat(term),
+  '~=': (subject, term) => (isNaN(subject) ?
+    weakTextCompare(subject, term) : parseFloat(subject) === parseFloat(term)),
+  '=': (subject, term) => (isNaN(subject) ?
+    subject.indexOf(term) : parseFloat(subject) === parseFloat(term)),
   '==': (subject, term) => new RegExp(`^${term}$`, 'i').exec(subject) !== null,
   '!=': (subject, term) => new RegExp(`^${term}$`, 'i').exec(subject) === null,
   '*=': (subject, term) => new RegExp(term, 'i').exec(subject) !== null,
@@ -51,6 +53,23 @@ export const OPERATOR_REGEX = `(${
 
 export const LOGICAL_REGEX = '[|&]{1,2}';
 
+/**
+ * @example
+ * field=1&field>2
+ * //=>
+ * [field = 1, field > 2]
+ */
+const REGEX_QUERY_LEVEL1 = new RegExp(`([0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ]+[ ]*[${OPERATOR_KEYS.join('')}]+[ ]*)?[a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ0-9./-]+[ ,]*`, 'g');
+
+/**
+ * @example
+ * field > 2
+ * // =>
+ * [field, >, 2]
+ */
+const REGEX_QUERY_LEVEL2 = new RegExp(`^([a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ]+)([${OPERATOR_KEYS.join('')}]{1}[=]{0,1})([a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ0-9]+)$`);
+
+let SEARCH_CACHE = [];
 
 /**
  * Search filters handler
@@ -67,91 +86,94 @@ export const LOGICAL_REGEX = '[|&]{1,2}';
  *  }
  * @return {bool}
  */
-export const search = ({ record, value, helpers, hooks }) =>
+export const search = ({ record, value, helpers, hooks, index }) =>
 {
   /**
+   * Create SEARCH_CACHE
    * @example
-   * field = 1, field > 2
-   * value#1, value#2
+   * [
+   *  { columns: ['title', 'gender'], handlerIndes: '=', term: 'John' },
+   *  ...
+   * ]
    */
-  const regex = new RegExp(`([0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ]+[ ]*[${OPERATOR_KEYS.join('')}]+[ ]*)?[a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ0-9./-]+[ ,]*`, 'g');
-
-  /**
-   * Split search terms by regular expression
-   * @private
-   * @type {array}
-   */
-  const values = value.match(regex);
-
-  /**
-   * Condition every search term must have to fulfill (return true)
-   */
-  return values.every((thisValue) =>
+  if (index === 0)
   {
-    /**
-     * Determine which handler have to apply to compare term and record value
-     */
-    let handlerIndex = DEFAULT_COMPARE;
+    SEARCH_CACHE = [];
 
     /**
-     * Determine which record column have to observe
-     */
-    let columns = [];
-
-    /**
-     * Trimed search term
-     * @type {string}
-     */
-    let term = thisValue.replace(/[ ,]/g, '');
-
-    /**
-     * @example
-     * field > 2
-     */
-    const termRegex = new RegExp(`^([a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ]+)([${OPERATOR_KEYS.join('')}]{1}[=]{0,1})([a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ0-9]+)$`);
-
-    /**
-     * Determine term expressions: [field] [operator] [value]
+     * Split search terms by regular expression
+     * @private
      * @type {array}
      */
-    const termMatches = term.match(termRegex);
+    const values = value.match(REGEX_QUERY_LEVEL1);
 
-    /**
-     * If term use i18n field name convert to real record keys
-     * Eg.: Visit Date => vdate
-     * or just 'Vis', 'Visit', 'Date'
-     */
-    if (termMatches)
+    values.forEach((thisValue) =>
     {
-      term = termMatches[3];
-      handlerIndex = termMatches[2];
+      /**
+       * Determine which handler have to apply to compare term and record value
+       */
+      let handlerIndex = DEFAULT_COMPARE;
 
-      columns = Object.keys(hooks).reduce(
-        (accumulator, column) =>
-        {
-          const subject = (typeof hooks[column] === 'string') ? hooks[column] : hooks[column].title;
+      /**
+       * Determine which record column have to observe
+       */
+      let columns = [];
 
-          if (compare[DEFAULT_COMPARE](subject, termMatches[1]))
+      /**
+       * Trimed search term
+       * @type {string}
+       */
+      let term = thisValue.replace(/[ ,]/g, '');
+
+      /**
+       * Determine term expressions: [field] [operator] [value]
+       * @type {array}
+       */
+      const termMatches = term.match(REGEX_QUERY_LEVEL2);
+
+      /**
+       * If term use i18n field name convert to real record keys
+       * Eg.: Visit Date => vdate
+       * or just 'Vis', 'Visit', 'Date'
+       */
+      if (termMatches && hooks)
+      {
+        term = termMatches[3];
+        handlerIndex = termMatches[2];
+
+        columns = Object.keys(hooks).reduce(
+          (accumulator, column) =>
           {
-            accumulator.push(column);
-          }
-          return accumulator;
-        },
-        [termMatches[1]],
-      );
-    }
-    else
-    {
-      columns = Object.keys(record);
-    }
+            const subject = (typeof hooks[column] === 'string') ? hooks[column] : hooks[column].title;
 
-    /**
-     * Iterate record columns
-     * Change column value if it able to join helper object
-     * Transfer the converted column value (alias subject)
-     * to SearchHandler which compare term and subject
-     */
-    return columns.some(
+            if (compare[DEFAULT_COMPARE](subject, termMatches[1]))
+            {
+              accumulator.push(column);
+            }
+            return accumulator;
+          },
+          [termMatches[1]],
+        );
+      }
+      else
+      {
+        columns = Object.keys(record);
+      }
+
+      SEARCH_CACHE.push({ columns, handlerIndex, term });
+    });
+  }
+
+  /**
+   * Condition every search term must have to fulfill (return true).
+   *
+   * Iterate record columns
+   * Change column value if it able to join helper object
+   * Transfer the converted column value (alias subject)
+   * to SearchHandler which compare term and subject
+   */
+  return SEARCH_CACHE.every(({ columns, handlerIndex, term }) =>
+    columns.some(
       (column) =>
       {
         if (typeof record[column] === 'undefined')
@@ -183,8 +205,7 @@ export const search = ({ record, value, helpers, hooks }) =>
 
         return compare[handlerIndex](subject, term);
       },
-    );
-  });
+    ));
 };
 
 /**
