@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 
 /* !- Actions */
 
-import { setValues } from '../../form/actions';
+import { setValues, unsetValues } from '../../form/actions';
 import { dialog, flush } from '../../layer/actions';
 
 
@@ -84,7 +84,15 @@ const GridSearchDialog = ({ fields, prefix }, { store }) =>
     const collection = store.getState().form.searchCollection;
     const search = prefix + collection.map(i => i.field + i.operator + i.value).join('&');
 
-    store.dispatch(setValues({ search }));
+    if (search === prefix)
+    {
+      store.dispatch(unsetValues({ search: undefined }));
+    }
+    else
+    {
+      store.dispatch(setValues({ search }));
+    }
+
     store.dispatch(flush());
   };
 
@@ -114,7 +122,7 @@ GridSearchDialog.contextTypes = {
 /**
  * Search Filter width advance button
  */
-const GridSearch = ({ fields, prefix }, { store, grid }) =>
+const GridSearch = ({ fields, prefix, placeholder }, { store, grid }) =>
 {
   if (typeof fields === 'undefined' && grid)
   {
@@ -149,6 +157,10 @@ const GridSearch = ({ fields, prefix }, { store, grid }) =>
 
     if (prefix && term && term.substring(0, prefix.length) === prefix)
     {
+
+      const operatorChars = String.prototype.concat(...new Set(OPERATOR_KEYS.join('')))
+        .replace(/\*/g, '\\$&');
+
       /**
       * @example
       * // name=Á&gender==male&id<10 => [{ field, operator, value }]
@@ -156,10 +168,10 @@ const GridSearch = ({ fields, prefix }, { store, grid }) =>
       value = term
         .substring(prefix.length)
         .split(new RegExp(LOGICAL_REGEX))
-        .filter(exp => new RegExp(`^([^=><]+)${OPERATOR_REGEX}([^=><]+)$`).exec(exp) !== null)
+        .filter(exp => new RegExp(`^([^${operatorChars}]+)${OPERATOR_REGEX}([^${operatorChars}]+)$`).exec(exp) !== null)
         .map((exp) =>
         {
-          const matches = new RegExp(`^([^=><]+)${OPERATOR_REGEX}([^=><]+)$`).exec(exp);
+          const matches = new RegExp(`^([^${operatorChars}]+)${OPERATOR_REGEX}([^${operatorChars}]+)$`).exec(exp);
 
           return ({
             field: matches[1],
@@ -181,7 +193,7 @@ const GridSearch = ({ fields, prefix }, { store, grid }) =>
     <Input
       id="search"
       label={<div className="icon embed-search-gray">Keresés</div>}
-      placeholder="Name..."
+      placeholder={placeholder}
       postfix={(
         <button onClick={onClickSearchAdvanceHandler}>
           <IconAdvance />
@@ -193,11 +205,13 @@ const GridSearch = ({ fields, prefix }, { store, grid }) =>
 
 GridSearch.propTypes =
 {
+  placeholder: PropTypes.string,
   prefix: PropTypes.string,
 };
 
 GridSearch.defaultProps =
 {
+  placeholder: 'Search term',
   prefix: '',
 };
 
