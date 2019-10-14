@@ -95,14 +95,6 @@ class GridView extends Component
     if (this.settings)
     {
       this.props.setData([], this.settings, this.id);
-
-      // if (
-      //   this.context.addListener &&
-      //   this.settings.filters.findIndex(filter => filter.id === 'search') !== -1
-      // )
-      // {
-      //   this.context.addListener('keydown', (e) => console.log(e));
-      // }
     }
   }
 
@@ -172,6 +164,13 @@ class GridView extends Component
     if (this.context.register)
     {
       this.context.register.remove(this.id);
+    }
+
+    if (this.props.flushFiltersUnmount)
+    {
+      const grid = this.context.store.getState().grid[this.id];
+      const values = grid.filters.reduce((ids, { id }) => ({ ...ids, [id]: undefined }), {});
+      this.props.unsetValues(values);
     }
 
     this.props.flush(this.id);
@@ -318,15 +317,35 @@ class GridView extends Component
 
   get settings()
   {
+    let settings = {};
+
     if (!this.context.register || !this.context.register.data[`grid.${this.id}`])
     {
-      return this.props.settings || this.context.settings;
+      settings = this.props.settings || this.context.settings;
+    }
+    else
+    {
+      settings = {
+        ...(this.props.settings || this.context.settings),
+        ...this.context.register.data[`grid.${this.id}`],
+      };
     }
 
-    return ({
-      ...(this.props.settings || this.context.settings),
-      ...this.context.register.data[`grid.${this.id}`],
-    });
+    const form = this.context.store.getState().form;
+
+    if (settings.filters)
+    {
+      settings.filters.forEach(({ id }, index) =>
+      {
+        if (form[id] !== undefined)
+        {
+          settings.filters[index].arguments = [form[id]];
+          settings.filters[index].status = true;
+        }
+      });
+    }
+
+    return settings;
   }
 
   render()
@@ -399,6 +418,10 @@ GridView.propTypes =
    */
   className: PropTypes.string,
   /**
+   * flush filter form store when componentWillUnmount
+   */
+  flushFiltersUnmount: PropTypes.bool,
+  /**
    * Redux Grid Action
    * @private
    */
@@ -447,6 +470,7 @@ GridView.defaultProps =
   onLayer: false,
   onLoad: false,
   className: 'grid',
+  flushFiltersUnmount: true,
 };
 
 /**
@@ -483,6 +507,7 @@ export default connect(
     close,
     flush,
     setValues: FormActions.setValues,
+    unsetValues: FormActions.unsetValues,
     flushForm: FormActions.flush,
   },
 )(GridView);
