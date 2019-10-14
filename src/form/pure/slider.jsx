@@ -23,10 +23,17 @@ class Slider extends Field
 
     this.state = {
       ...this.state,
-      value: [this.percentToValue(0), this.percentToValue(1)],
-      percent: [0, 1],
+      percent: [0, 0],
       active: false,
     };
+  }
+
+  componentWillMount()
+  {
+    this.onChangeHandler([this.props.from, this.props.to]);
+    this.onChangeListener(); // redux subscription has not yet occurred
+
+    super.componentWillMount();
   }
 
   /* !- Handlers */
@@ -47,6 +54,20 @@ class Slider extends Field
      * @type {Integer}
      */
     return ((parseFloat(to) - parseFloat(from)) * percent) + parseFloat(from);
+  }
+
+  /**
+   * Convert value to percent
+   *
+   * @example
+   * value: 150, props { form: 100, to: 200 }
+   * // => 0.5
+   */
+  valueToPercent(value, props = this.props)
+  {
+    const { from, to } = props;
+
+    return (parseFloat(value) - parseFloat(from)) / (parseFloat(to) - parseFloat(from));
   }
 
   pixelToPercent(x)
@@ -77,11 +98,8 @@ class Slider extends Field
     return this.field.offsetWidth * percent;
   }
 
-  getPercents = () =>
-    this.state.value.map(value =>
-      (parseFloat(value) - parseFloat(this.props.from))
-        / (parseFloat(this.props.to) - parseFloat(this.props.from)),
-    );
+  getPercents = (props = this.props) =>
+    this.getValue().map(value => this.valueToPercent(value));
 
   getValues = () => [
     this.percentToValue(this.state.percent[0]),
@@ -122,6 +140,11 @@ class Slider extends Field
 
     switch (event.type)
     {
+      case 'panstart':
+        {
+          this.setState({ percent: this.getPercents() });
+          break;
+        }
       case 'panmove':
         {
           const percent = this.state.percent;
@@ -175,11 +198,7 @@ class Slider extends Field
    */
   render()
   {
-    const percent = [
-      this.state.active ? this.state.percent[0] : this.getPercents()[0],
-      this.state.active ? this.state.percent[1] : this.getPercents()[1],
-    ];
-
+    const percent = this.state.active ? this.state.percent : this.getPercents();
     const value = this.state.active ? this.props.stateFormat(this.getValues()) : this.state.value;
 
     const sliderClass = classNames({
@@ -296,6 +315,7 @@ Slider.propTypes =
 Slider.defaultProps =
 {
   ...Slider.defaultProps,
+  // value: [0, 100],
   value: [],
   stateFormat: state => (state || []).map(value => Math.round(value)),
   steps: 0,
