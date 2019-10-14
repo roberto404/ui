@@ -44,14 +44,17 @@ const SETTINGS = {
   [
     {
       id: 'search',
-      handler: (record, value) => search({
+      handler: (record, value, filters, model, index) => search({
         record,
         value,
         helpers: SETTINGS.helper,
         hooks: SETTINGS.hook,
+        index,
       }),
-      arguments: ['name=Á&gender==male&id<10'],
-      status: true,
+      arguments: [],
+      status: false,
+      // arguments: ['name=Á&gender==male&id<10'],
+      // status: true,
     },
   ],
 };
@@ -80,7 +83,7 @@ const Example = () =>
     <div className="filters">
       <GridSearch
         // fields={fieldData}
-        // prefix="?"
+        prefix="?"
       />
     </div>
 

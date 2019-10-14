@@ -157,16 +157,18 @@ const Example = (props, { store }) =>
       id="example"
       className="p-2"
     >
-      {/*<Collection
+      <Collection
         id="collection"
         label="Collection"
       />
+    
       <h2>Custom UI</h2>
       <Collection
         id="collection2"
         UI={CollectionItem}
-      />*/}
-    {/*<h2>Custom UI empty form</h2>
+      />
+
+      <h2>Custom UI empty form</h2>
       <Collection
         id="collection3"
         value={[{ field: '1', operator: '=', value: '' }]}
@@ -174,7 +176,8 @@ const Example = (props, { store }) =>
         uiProps={{
           fields: [{ id: 1, title: 'foo' }, { id: 2, title: 'bar' }],
         }}
-      />*/}
+      />
+
       <h2>Nested Collection</h2>
       <Collection
         id="collection4"
