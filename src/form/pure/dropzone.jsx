@@ -366,7 +366,7 @@ class DropzoneComponent extends Field
               this.element = ref;
             }}
           >
-            <IconAdd width="20em" height="20em" />
+            <IconAdd className="w-full h-full" />
           </div>
           }
         </div>
