@@ -687,7 +687,7 @@
     .value
     {
       padding-bottom: 1rem;
-      
+
       &:not(:first-child)
       {
         text-align: right;
@@ -696,10 +696,11 @@
 
     .slider
     {
+      margin-left: calc(1.5em / 2);
       margin-top: 1rem;
       position: relative;
       transform: translateY(50%);
-      width: 100%;
+      width: calc(100% - 1.5em);
 
       > *
       {
