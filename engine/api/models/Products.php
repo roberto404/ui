@@ -262,6 +262,18 @@ class Products extends Model
    */
   public $priority;
 
+  /**
+   *
+   * @var string
+   */
+  public $slug;
+
+  /**
+   *
+   * @var integer
+   */
+  public $slugIndex;
+
 
   /* !- Cache storeage */
 
@@ -287,6 +299,8 @@ class Products extends Model
    */
   public function beforeValidation()
   {
+    $filter = $this->di->get('filter');
+
     if (!$this->related_id)
     {
       $this->related_id = $this->id;
@@ -295,7 +309,6 @@ class Products extends Model
     $this->categoryModel = Categories::findFirst($this->category);
 
     $this->createTitle();
-
     // subtitle
     $this->createSubtitle();
     $this::parseDOSTitle($this);
@@ -355,6 +368,20 @@ class Products extends Model
     if (!$this->priority)
     {
       $this->priority = 0;
+    }
+
+    $this->slug = $filter->sanitize($this->brand . ' ' . $this->title, 'slug');
+
+    $lastSlugIndex = Products::findFirst([
+      'conditions' => 'slug = ?1 AND id != ?2',
+      'bind' => [ 1 => $this->slug, 2 => $this->id ],
+      'limit' => 1,
+      'order' => 'slugIndex desc',
+    ]);
+
+    if ($lastSlugIndex)
+    {
+      $this->slugIndex = (int) $lastSlugIndex->slugIndex + 1;
     }
   }
 
@@ -1341,10 +1368,12 @@ class Products extends Model
       'fe' => $this->getFeatures(),
       'di' => $this->getDimension(),
       'c' => $this->color,
+      'ct' => $this->category,
       'im' => $this->getImages(),
       'ic' => $this->incart,
       'de' => $this->description,
       'st' => $this->getStock(false),
+      'sg' => $this->slug . ($this->slugIndex ? '-' . $this->slugIndex : ''),
     ];
   }
 
