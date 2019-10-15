@@ -1900,7 +1900,7 @@ class Products extends Model
   {
     $product->color = '';
 
-    if (\in_array($product->manufacturer, ['NF1', 'NF3']))
+    if (\in_array($product->manufacturer, ['NF1']))
     {
       $product->color = $product->brand;
     }

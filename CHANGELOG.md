@@ -1,3 +1,52 @@
+## [1.3.2](https://github.com/roberto404/rs/compare/v1.3.1...v1.3.2) (2019-10-08)
+
+
+### Bug Fixes
+
+* **kontakt2:** stock ([9752a22](https://github.com/roberto404/rs/commit/9752a22))
+
+## [1.3.1](https://github.com/roberto404/rs/compare/v1.3.0...v1.3.1) (2019-10-08)
+
+
+### Bug Fixes
+
+* **kontakt2:** stock ([a10c71d](https://github.com/roberto404/rs/commit/a10c71d))
+
+# [1.3.0](https://github.com/roberto404/rs/compare/v1.2.6...v1.3.0) (2019-10-08)
+
+
+### Features
+
+* **kontakt2:** stock ([46ede42](https://github.com/roberto404/rs/commit/46ede42))
+
+## [1.2.6](https://github.com/roberto404/rs/compare/v1.2.5...v1.2.6) (2019-10-08)
+
+
+### Bug Fixes
+
+* **cli:** user ([b396e89](https://github.com/roberto404/rs/commit/b396e89))
+
+## [1.2.5](https://github.com/roberto404/rs/compare/v1.2.4...v1.2.5) (2019-10-08)
+
+
+### Bug Fixes
+
+* **api:** product ([4cc4aa1](https://github.com/roberto404/rs/commit/4cc4aa1))
+* **cli:** product ([9dee2ed](https://github.com/roberto404/rs/commit/9dee2ed))
+* **config:** cron ([10d6162](https://github.com/roberto404/rs/commit/10d6162))
+* **kontakt2:** build ([222474f](https://github.com/roberto404/rs/commit/222474f))
+* **kontakt2:** stock ([e683564](https://github.com/roberto404/rs/commit/e683564))
+* **kontakt2:** stock ([d9b5d16](https://github.com/roberto404/rs/commit/d9b5d16))
+* **kontakt2:** stock ([5d02236](https://github.com/roberto404/rs/commit/5d02236))
+* **website:** page ([60d3f5d](https://github.com/roberto404/rs/commit/60d3f5d))
+
+## [1.2.4](https://github.com/roberto404/rs/compare/v1.2.3...v1.2.4) (2019-10-08)
+
+
+### Bug Fixes
+
+* **api:** product ([c14aa18](https://github.com/roberto404/rs/commit/c14aa18))
+
 ## [1.2.3](https://github.com/roberto404/rs/compare/v1.2.2...v1.2.3) (2019-10-07)
 
 
