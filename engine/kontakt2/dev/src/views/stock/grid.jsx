@@ -9,7 +9,7 @@ import moment from 'moment';
 import GridView from '@1studio/ui/view/grid';
 import Connect from '@1studio/ui/grid/connect';
 // import Reload from '@1studio/ui/grid/reload';
-import Reload from '/Users/roberto/Sites/ui/src/grid/reload';
+import Reload from '@1studio/ui/grid/reload';
 import Grid from '@1studio/ui/grid/pure/grid';
 import GridDownload from '@1studio/ui/grid/pure/gridDownload';
 import Input from '@1studio/ui/form/pure/input';
