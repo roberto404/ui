@@ -122,15 +122,15 @@ class ProductController extends AppController
     $results = [];
     $offset = ($page -1) * 60;
     if ($page == 0) $limit = '';
-    else $limit = "LIMIT 60 OFFSET " . $page;
+    else $limit = "LIMIT 60 OFFSET " . $offset;
 
     if ($flag == 'DISCOUNT')
     {
-      $products = Products::find("price_discount > 0 {$limit}");
+      $products = Products::find("price_discount > 0 GROUP BY related_id {$limit} ");
     }
     else
     {
-      $products = Products::find("flag LIKE '%{$flag}%' {$limit}");
+      $products = Products::find("flag LIKE '%{$flag}%' GROUP BY related_id {$limit}");
     }
 
     if (!$products)
@@ -151,6 +151,7 @@ class ProductController extends AppController
       $results[] = $flagProduct->toWebProps();
     }
 
+    // return [results => $results, total => 1];
     return $results;
   }
   
