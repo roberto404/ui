@@ -19,4 +19,5 @@ engine/config/root.ini
 public_html/kontakt2/library
 .htaccess
 public_html/.htaccess
+public_html/kontakt2/json/app.json
 public_html/website/json/app.json
