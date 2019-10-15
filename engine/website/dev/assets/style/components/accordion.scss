@@ -1,0 +1,25 @@
+.accordion
+{
+  > div
+  {
+    padding: 0 !important;
+    border-bottom: 1px solid $gray-light;
+  }
+
+  .pointer
+  {
+    padding: 1rem 0 !important;
+
+    span
+    {
+      font-weight: bold;
+      padding-left: 0;
+    }
+
+    & ~ div
+    {
+      margin-top: -1rem;
+      padding-bottom: 2rem;
+    }
+  }
+}

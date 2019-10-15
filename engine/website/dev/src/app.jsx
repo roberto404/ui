@@ -59,10 +59,9 @@ import routes from './routes';
 
 /* !- Locale */
 
-console.log(hu);
 addLocaleData([...hu]);
 // moment.locale('hu');
-// locale('hu'); // @1studio/ui moment locale
+locale('hu'); // @1studio/ui moment locale
 
 
 /**
@@ -77,6 +76,7 @@ class Application extends Component
       api: this.injectedApi,
       media: this.props.app.getMedia(),
       register: this.props.app.register,
+      config: this.props.app.getProjectConfig(),
       // addListener: this.props.app.addListener,
       // removeListener: this.props.app.removeListener,
       // addShortcuts: this.props.app.addShortcuts,
@@ -184,6 +184,7 @@ Application.childContextTypes = {
   api: PropTypes.func,
   media: PropTypes.string,
   register: PropTypes.object,
+  config: PropTypes.object,
   // addListener: PropTypes.func,
   // removeListener: PropTypes.func,
   // addShortcuts: PropTypes.func,

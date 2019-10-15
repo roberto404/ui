@@ -20,19 +20,19 @@ import PropTypes from 'prop-types';
 
 
 /**
-* Product Component
+* Cart Component
 */
-const Product = (props, { register, store }) =>
+const Cart = (props, { register, store }) =>
 {
   return (
-    <div>Product</div>
+    <div>Cart</div>
   );
 };
 
-Product.contextTypes =
+Cart.contextTypes =
 {
   register: PropTypes.object,
   store: PropTypes.object,
 };
 
-export default Product;
+export default Cart;

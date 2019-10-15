@@ -1,0 +1,9 @@
+
+.layer.dialog .container
+{
+  @include respond-to(desktop)
+  {
+    max-width: 1100px;
+    width: 1100px;
+  }
+}

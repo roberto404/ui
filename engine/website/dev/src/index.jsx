@@ -1,4 +1,10 @@
 
+import { flattenMessagesRevert } from '@1studio/utils/object/flattenMessages';
+import { productPropsParser } from './components/product/const';
+// import Tree from '@1studio/utils/models/tree';
+import Tree from '@1studio/utils/models/tree';
+
+
 // core.js 37 Kbyte
 // 18Kb
 import request from 'superagent';
@@ -28,11 +34,21 @@ require('../assets/html/index.pug');
 
 /* !- Constants */
 
+const DATABASE_SYNC = 10 * 60; // 10 min (sec)
+
+//@TODO cames from config
+const SESSION_TIME = 4 * 60; // 4 h (min)
+
+/**
+ * Unix time ceil to database sync
+ * @type {Int}
+ */
+const timeStamp = parseInt(new Date().getTime() / 1000 / DATABASE_SYNC);
+
 /**
  * @type {String} config postfix dynamic timestamp on prod mode.
  */
-const configPostfix = (process.env.NODE_ENV === 'production') ?
-  `@${new Date().getTime()}` : '';
+const configPostfix = (process.env.NODE_ENV === 'production') ? `@${timeStamp}` : '';
 
 
 /**
@@ -49,17 +65,22 @@ const init = () =>
     {
       const config = response.body;
 
-      createUserStorage({}, { password: '%>"u[In!5D"4<sqU', key: 'rsweb', sessionTime: 10 }); // minutes
+      config.project.constants = flattenMessagesRevert(config.project.constants);
+      config.project.products = config.project.products.map(product => productPropsParser(product));
+      config.project.menu = new Tree(config.project.menu);
+      config.project.features = config.project.features.map(
+        feature => ({ ...feature, options: feature.options ? JSON.parse(feature.options) : '' }));
+
+      createUserStorage({}, { password: '%>"u[In!5D"4<sqU', key: 'rsweb', sessionTime: SESSION_TIME }); // minutes
 
       /**
        * Base Package:
        * -------------
-       * index.jsx (255Kb),
+       * this (255Kb),
        * React+Redux (167Kb),
        * Router (67Kb),
        * Intl (47Kb),
-       * Moment (262 Kb)
-       * // => 800 Kb
+       * // => 540 Kb
        * @type {Application}
        */
       const App = new Application({

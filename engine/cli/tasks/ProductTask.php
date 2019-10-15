@@ -29,7 +29,7 @@ class ProductTask extends \Phalcon\CLI\Task
   public function testAction()
   {
     $products = Products::find([
-      'conditions' => 'id = "F13233201P"',
+      'conditions' => 'id = "DMCS600"',
       // 'conditions' => 'features LIKE \'%\"41\":true%\'',
       // 'conditions' => 'id = "NF112I0220U01"',
       // 'conditions' => 'category = "15"',
@@ -52,20 +52,26 @@ class ProductTask extends \Phalcon\CLI\Task
       // $product::parseTitle($product);
       // $product->createSubtitle();
       // $product::parseDOSTitle($product);
-      // var_dump(
+
+
+      // var_dump(array(
         // $product->toArray()
         // $product::parseManufacturerTitle($product)
         // $product::parseStock($product)
+        // $product::parseDimension($product)
         // $product::parseOutlet($product)
         // $product::parseColor($product)
         // $product::parseDelivery($product),
         // $product->getStock()
-      // );
+      // ));
+
       //
-      var_dump(
-        $product::parseWebCategory($product)
-      );
-      die();
+      // var_dump(
+        // $product::parseWebCategory($product)
+        // $product->toWebsiteProps()
+        // $product->getStock(false)
+      // );
+      // die();
 
       // $product->createRelatedId();
 
@@ -88,18 +94,18 @@ class ProductTask extends \Phalcon\CLI\Task
       // continue;
       // die();
 
-      var_dump(array(
+      // var_dump(array(
       //   "id" => $product->id,
       //   // "price_orig_gross" => $product->price_orig_gross,
-        "price_sale_gross" => $product->price_sale_gross,
+        // "price_sale_gross" => $product->price_sale_gross,
       //   // "related_id" => $product->related_id,
-        "brand" => $product->brand,
+        // "brand" => $product->brand,
         // "title" => $product->title,
         // "subtitle" => $product->subtitle,
         // "title_orig" => $product->title_orig,
       //   // "category" => $product->category,
       //   // "manufacturerTitle" => $product->getManufacturerTitle(),
-      //   // "dimension" => $product->getDimension(),
+        // "dimension" => $product->getDimension(),
       //   "flag" => $product->getFlag(),
       //   // "priority" => $product->getPriority(),
       //   // "manufacturer" => $product->manufacturer,
@@ -114,7 +120,7 @@ class ProductTask extends \Phalcon\CLI\Task
       //   // "instore" => $product->instore,
       //   "features" => $product->features,
       //   // "stock" => $product->getStock()
-      ));
+      // ));
     }
   }
 
@@ -173,7 +179,11 @@ class ProductTask extends \Phalcon\CLI\Task
             'flags' => ProductsFlags::find([
               'conditions' => 'instore = 1',
               'columns' => 'id, title, priority, description'
-            ])->toArray()
+            ])->toArray(),
+            'category' => Categories::find([
+              'conditions' => 'status = 1',
+              'columns' => 'id, title'
+            ])->toArray(),
           ]
         ),
         JSON_UNESCAPED_UNICODE /*| JSON_PRETTY_PRINT*/

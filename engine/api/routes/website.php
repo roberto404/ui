@@ -16,5 +16,9 @@ return call_user_func(function() {
 
 		->get('/menu', 'readAllMenu')
 		->post('/menu/{id:[0-9]+}', 'updateOneMenu')
+		->delete('/menu/{id:[0-9]+}','deleteOneMenu')
+		->post('/menu', 'createOneMenu')
+
+    // ->get('/{id:[0-9]+}', 'readOne')
 	;
 });

@@ -1,14 +1,16 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import capitalizeFirstLetter from '@1studio/utils/string/capitalizeFirstLetter';
 import formatThousand from '@1studio/utils/string/formatThousand';
-import  { File } from '@1studio/ui/form/pure/dropzone';
+import { File } from '@1studio/ui/form/pure/dropzone';
+
 
 /* !- React Actions */
 
-import { setValues } from '@1studio/ui/form/actions';
+import { dialog } from '@1studio/ui/layer/actions';
 
 
 /* !- React Elements */
@@ -16,20 +18,86 @@ import { setValues } from '@1studio/ui/form/actions';
 import IconFavorite from '../../icons/heart';
 import IconFavoriteActive from '../../icons/heartSolid';
 import IconZoom from '../../icons/searchPlus';
+import Product from './product';
 
 
 /* !- Constants */
 
-import { parseFlag, parseFeatures, parseFabrics, parseDimension } from './const';
+import {
+  parse,
+  MAX_THUMBNAIL_FABRICS_LENGTH,
+  MAX_THUMBNAIL_FEATURE_LENGTH,
+} from './const';
 
-const MAX_FABRICS_LENGTH = 5;
-const MAX_FEATURE_LENGTH = 2;
+/**
+ * Grid Connection UI
+ *
+ * @example
+ <GridView
+   id="products"
+   settings={{ paginate: { limit: 10 } }}
+   api={loadProducts(config.products)}
+ >
+   <Connect
+     className="grid-2-2"
+     UI={ProductConnectUI}
+   />
+ </GridView>
+ */
+export const ProductConnectUIWithoutRouter = ({ data, history, url, col }, { config }) =>
+{
+  if (!data.length)
+  {
+    return <div>Nincs találat</div>;
+  }
+
+  return (
+    <div className="grid-2-4">
+      { data.map(record => (
+        <div className={`col-1-${col}`} key={record.id}>
+          <ProductThumbnail
+            record={record}
+            className="bg-white pointer"
+            onClick={() => history.push(url + record.slug)}
+            helper={{
+              flags: config.flags,
+              fabrics: config.fabrics,
+              features: config.features,
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+ProductConnectUIWithoutRouter.propTypes =
+{
+  col: PropTypes.number,
+  url: PropTypes.string,
+};
+
+ProductConnectUIWithoutRouter.defaultProps =
+{
+  col: 3,
+  url: `${window.location.pathname}/`,
+};
+
+ProductConnectUIWithoutRouter.contextTypes =
+{
+  config: PropTypes.object,
+};
+
+export const ProductConnectUI = withRouter(ProductConnectUIWithoutRouter);
 
 
+/**
+ * [ProductColorPalette description]
+ */
 export const ProductColorPalette = ({ fabrics }) => (
   <div className="h-center" style={{ display: 'inline-flex' }}>
     <div className="flex">
-      { fabrics.slice(0, MAX_FABRICS_LENGTH).map(({ colorHex, image }) => (
+      { fabrics.slice(0, MAX_THUMBNAIL_FABRICS_LENGTH).map(({ colorHex, image }) => (
         <div
           key={image}
           className="w-1.5 h-1.5 mr-1/2"
@@ -37,8 +105,8 @@ export const ProductColorPalette = ({ fabrics }) => (
         />
       ))}
     </div>
-    { fabrics.length > MAX_FABRICS_LENGTH &&
-    <div className="text-xs bold">{`+${fabrics.length - MAX_FABRICS_LENGTH}`}</div>
+    { fabrics.length > MAX_THUMBNAIL_FABRICS_LENGTH &&
+    <div className="text-xs bold">{`+${fabrics.length - MAX_THUMBNAIL_FABRICS_LENGTH}`}</div>
     }
   </div>
 );
@@ -46,7 +114,7 @@ export const ProductColorPalette = ({ fabrics }) => (
 /**
  * [Product description]
  */
-class ProductCard extends Component
+class ProductThumbnail extends Component
 {
   constructor(props)
   {
@@ -57,6 +125,24 @@ class ProductCard extends Component
     };
   }
 
+  onClickHandler = () =>
+  {
+    if (
+      typeof this.props.onClick === 'function'
+      && String(this.props.onClick) !== String(ProductThumbnail.defaultProps)
+    )
+    {
+      this.props.onClick(this.props.record);
+    }
+  }
+
+  onClickZoomHandler = (event) =>
+  {
+    this.context.store.dispatch(dialog(<Product record={this.props.record} helper={this.props.helper} />));
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
   onMouseOverHandler = () =>
   {
     this.setState({ active: true });
@@ -64,21 +150,25 @@ class ProductCard extends Component
 
   onMouseOutHandler = (event) =>
   {
-    //this is the original element the event handler was assigned to
-    var e = event.toElement || event.relatedTarget;
-
-    if (e.parentNode === this || e === this)
+    if (event.currentTarget.contains(event.relatedTarget))
     {
       return;
     }
 
-    console.log(e, e.parentNode);
     this.setState({ active: false });
   }
 
 
   render()
   {
+    const {
+      record,
+      helper,
+      className,
+      onClick,
+      isFavourite,
+    } = this.props;
+
     const {
       brand,
       title,
@@ -92,28 +182,29 @@ class ProductCard extends Component
       color,
       images,
       manufacturer,
-      className,
-      onClick,
-      isFavourite,
-    } = this.props;
+      stock,
+    } = record;
 
-    const helper = this.context.register && this.context.register.data.products ? this.context.register.data.products : {};
-
-    //@TODO átrakni record props-ra
-    //@TODO helper átrakni props-ra
-
-    const fabrics = parseFabrics({
-      color,
-      brand,
-      manufacturer,
-    }, helper.fabrics);
-
+    /**
+     * Hover extra info => table (title|value)
+     */
     const details = [
-      { id: 'dimension', title: 'Méret', value: parseDimension({ dimension })[0] },
-      ...parseFeatures({ features }, helper.features)
-        .filter(({ value }) => value !== undefined).slice(0, MAX_FEATURE_LENGTH),
-      { id: 'color', title: 'Színek', value: <ProductColorPalette fabrics={fabrics} /> },
+      { id: 'dimension', title: 'Méret', value: parse.dimension(record) },
+      ...parse.features({ features }, helper.features)
+        .filter(({ value }) => value !== undefined)
+        .slice(0, MAX_THUMBNAIL_FEATURE_LENGTH),
+      { id: 'delivery', title: 'Elérhetőség', value: parse.stock(record) },
     ];
+
+    const fabrics = parse.fabrics(record, helper.fabrics);
+    const flags = parse.flag(record, helper.flags);
+
+    if (fabrics.lenght)
+    {
+      details.push(
+        { id: 'color', title: 'Színek', value: <ProductColorPalette fabrics={fabrics} /> },
+      )
+    }
 
     const favourite = isFavourite ?
       <IconFavoriteActive className="w-2 fill-orange" /> : <IconFavorite className="w-2 fill-gray" />;
@@ -130,16 +221,17 @@ class ProductCard extends Component
       <div
         className={classes}
         style={{ minWidth: '250px' }}
+        onClick={this.onClickHandler}
         onMouseOver={this.onMouseOverHandler}
         onMouseOut={this.onMouseOutHandler}
       >
-        { flag &&
+        { flags.length > 0 &&
         <div className="pin-top absolute m-1 tag">
           <span
             className="text-s"
             style={{ textTransform: 'none' }}
           >
-            {parseFlag(flag, helper.flags)[0].title}
+            {flags[0].title}
           </span>
         </div>
         }
@@ -185,7 +277,7 @@ class ProductCard extends Component
             </div>
             <div className="col-2-12 text-right">
               <div className="mb-1/2">
-                <IconZoom className="w-2 fill-gray" />
+                <IconZoom className="w-2 fill-gray pointer" onClick={this.onClickZoomHandler} />
               </div>
               <div>
                 { favourite }
@@ -199,22 +291,20 @@ class ProductCard extends Component
         { this.state.active === true &&
         <div
           className="absolute border-left border-right border-bottom px-2 bg-white"
-          style={{ right: '-1px', left: '-1px' }}
-          // onMouseOver={this.onMouseOverHandler}
-          // onMouseOut={this.onMouseOutHandler}
+          style={{ right: '-1px', left: '-1px', zIndex: 2 }}
         >
-        {
+          {
           details.map(({ id, title, value }) => (
             <div key={id} className="flex pb-1 text-s">
-              <div className="col-1-2">
+              <div className="col-2-5">
                 <span className="light">{`${capitalizeFirstLetter(title)}: `}</span>
               </div>
-              <div className="col-1-2 text-right">
-                <span className="bold">{value}</span>
+              <div className="col-3-5 text-right">
+                <span className="bold">{capitalizeFirstLetter(value)}</span>
               </div>
             </div>
           ))
-        }
+          }
         </div>
         }
 
@@ -223,14 +313,19 @@ class ProductCard extends Component
   }
 }
 
-ProductCard.defaultProps =
+ProductThumbnail.defaultProps =
 {
+  record: {},
+  helper: {},
   className: 'col-1-3 bg-white',
+  onClick: () =>
+  {},
 };
 
-ProductCard.contextTypes =
+ProductThumbnail.contextTypes =
 {
+  store: PropTypes.object,
   register: PropTypes.object,
 };
 
-export default ProductCard;
+export default ProductThumbnail;

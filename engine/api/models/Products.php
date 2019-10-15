@@ -5,6 +5,7 @@ namespace App\Models;
 use
   Phalcon\DI,
   App\Models\Features,
+  App\Models\Stock,
   App\Models\Categories,
   Phalcon\Mvc\Model,
   App\Components\Menu;
@@ -261,6 +262,18 @@ class Products extends Model
    */
   public $priority;
 
+  /**
+   *
+   * @var string
+   */
+  public $slug;
+
+  /**
+   *
+   * @var integer
+   */
+  public $slugIndex;
+
 
   /* !- Cache storeage */
 
@@ -286,6 +299,8 @@ class Products extends Model
    */
   public function beforeValidation()
   {
+    $filter = $this->di->get('filter');
+
     if (!$this->related_id)
     {
       $this->related_id = $this->id;
@@ -294,7 +309,6 @@ class Products extends Model
     $this->categoryModel = Categories::findFirst($this->category);
 
     $this->createTitle();
-
     // subtitle
     $this->createSubtitle();
     $this::parseDOSTitle($this);
@@ -354,6 +368,20 @@ class Products extends Model
     if (!$this->priority)
     {
       $this->priority = 0;
+    }
+
+    $this->slug = $filter->sanitize($this->brand . ' ' . $this->title, 'slug');
+
+    $lastSlugIndex = Products::findFirst([
+      'conditions' => 'slug = ?1 AND id != ?2',
+      'bind' => [ 1 => $this->slug, 2 => $this->id ],
+      'limit' => 1,
+      'order' => 'slugIndex desc',
+    ]);
+
+    if ($lastSlugIndex)
+    {
+      $this->slugIndex = (int) $lastSlugIndex->slugIndex + 1;
     }
   }
 
@@ -765,13 +793,13 @@ class Products extends Model
 
   /**
    * Create stock informations
-   * @param boolean $human quantity informations is exact number or human information
+   * @param boolean $intl quantity informations is exact number or intl information
    * @return array {
    *    global: 'raktáron',
    *    stores: { "RS1": "utolsó darabok", "RS2": "raktáron": "RS3": "nincs készleten", "RS4": "megtekinthető" }
    *  }
    */
-  public function getStock($human = true)
+  public function getStock($intl = true)
   {
     $stock = Stock::findFirst("cikkszam = '{$this->id}'");
 
@@ -785,9 +813,19 @@ class Products extends Model
      */
     $maxQuantity = max($stock->getSupply('RS2'), $stock->getSupply('RS6'), $stock->getSupply('RS8'));
 
+    if ($intl)
+    {
+      return array(
+        'global' => $maxQuantity ? $stock->getSupplyMessageHelper($maxQuantity) : Products::parseDelivery($this),
+        'stores' => $stock->getSupplyMessage(),
+      );
+    }
+
+    $supplies = $stock->getSupplyMessage(null, false);
+
     return array(
-      'global' => $maxQuantity ? $stock->getSupplyMessageHelper($maxQuantity) : Products::parseDelivery($this),
-      'stores' => $stock->getSupplyMessage(),
+      Products::parseDelivery($this, false),
+      [$supplies['RS2'], $supplies['RS6'], $supplies['RS8']],
     );
   }
 
@@ -1317,7 +1355,7 @@ class Products extends Model
   public function toWebsiteProps()
   {
     return [
-      'i' => $this->id,
+      'id' => $this->id,
       'ri' => $this->related_id,
       'b' => $this->brand,
       'm' => $this->manufacturer,
@@ -1330,9 +1368,12 @@ class Products extends Model
       'fe' => $this->getFeatures(),
       'di' => $this->getDimension(),
       'c' => $this->color,
+      'ct' => $this->category,
       'im' => $this->getImages(),
       'ic' => $this->incart,
       'de' => $this->description,
+      'st' => $this->getStock(false),
+      'sg' => $this->slug . ($this->slugIndex ? '-' . $this->slugIndex : ''),
     ];
   }
 
@@ -2124,8 +2165,26 @@ class Products extends Model
       $product->dimension['e'] = 'fekvőfelület';
     }
 
-    $product->dimension = json_encode($product->dimension, JSON_UNESCAPED_UNICODE);
+    // change h to d if d missing
+    if (!isset($product->dimension[self::DIMENSIONS[2]]) && isset($product->dimension[self::DIMENSIONS[1]]))
+    {
+      $product->dimension[self::DIMENSIONS[2]] = $product->dimension[self::DIMENSIONS[1]];
+      unset($product->dimension[self::DIMENSIONS[1]]);
+    }
+    // change h1 to d1 if d1 missing
+    if (!isset($product->dimension[self::DIMENSIONS[2] . '1']) && isset($product->dimension[self::DIMENSIONS[1] . '1']))
+    {
+      $product->dimension[self::DIMENSIONS[2] . '1'] = $product->dimension[self::DIMENSIONS[1] . '1'];
+      unset($product->dimension[self::DIMENSIONS[1] . '1']);
+    }
+    // change h2 to d2 if d2 missing
+    if (!isset($product->dimension[self::DIMENSIONS[2] . '2']) && isset($product->dimension[self::DIMENSIONS[1] . '2']))
+    {
+      $product->dimension[self::DIMENSIONS[2] . '2'] = $product->dimension[self::DIMENSIONS[1] . '2'];
+      unset($product->dimension[self::DIMENSIONS[1] . '2']);
+    }
 
+    $product->dimension = json_encode($product->dimension, JSON_UNESCAPED_UNICODE);
     return $product->dimension;
   }
 
@@ -2180,7 +2239,7 @@ class Products extends Model
    * @param  [Products] $product
    * @return [string] [n] héten belül
    */
-  static function parseDelivery($product)
+  static function parseDelivery($product, $intl = true)
   {
     if (!$product)
     {
@@ -2225,7 +2284,7 @@ class Products extends Model
       if ($deliveryUnixDate)
       {
         $deliveryWeek = ceil(($deliveryUnixDate - time()) / (60 * 60 * 24) / 7);
-        return "$deliveryWeek héten belül";
+        return $intl ? "$deliveryWeek héten belül" : $deliveryWeek;
       }
     }
 
