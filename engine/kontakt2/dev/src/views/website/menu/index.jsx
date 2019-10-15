@@ -1,7 +1,12 @@
 
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import Tree from '@1studio/utils/models/tree';
+
+
+/* !- Redux Actions */
+
+import { flush } from '@1studio/ui/form/actions';
 
 
 /* !- React Elements */
@@ -12,6 +17,8 @@ import NestedList from '@1studio/ui/grid/pure/nestedList';
 import NestedListItem from './nestedList';
 import Form from './form';
 
+import IconAdd from '@1studio/ui/icon/mui/content/add_circle_outline';
+
 
 /* !- Constants */
 
@@ -21,16 +28,33 @@ import { SETTINGS } from './const';
 /**
 * WebMenu Component
 */
-const WebMenu = () =>
+const WebMenu = (props, context) =>
 (
   <GridView
     id="menu"
     settings={SETTINGS}
-    className="card m-0 p-0 shadow-outer border border-white column grow"
+    className="column"
   >
-    {/*<button onClick={() => window.location.href += '/0'}>Új létrehozása</button>*/}
+    {/* Add new + Filters */}
 
-    <div className="grid grow overflow">
+    <div className="grid">
+      <div className="col-1-3 mb-1">
+
+        <button
+          className="green outline shadow w-auto mr-2 inline-block"
+          onClick={() => context.store.dispatch(flush('menu'))}
+        >
+          <IconAdd />
+          <span>Új menu</span>
+        </button>
+      </div>
+
+      <div className="col-2-3">
+        <div className="filters" />
+      </div>
+    </div>
+
+    <div className="card mb-0 p-0 shadow-outer border border-white grid grow scroll-y">
       <Connect
         UI={({ rawData }) =>
         {
@@ -51,6 +75,11 @@ const WebMenu = () =>
     </div>
   </GridView>
 );
+
+WebMenu.contextTypes =
+{
+  store: PropTypes.object,
+};
 
 
 export default WebMenu;

@@ -17,16 +17,46 @@ import IconArrow from '@1studio/ui/icon/mui/navigation/expand_more';
 
 class Parent extends Component
 {
-  constructor(props)
+  constructor(props, context)
   {
     super(props);
 
-    this.state = { active: false };
+    const register = context.register.data[props.registerID] || [];
+
+    this.state = { active: register.indexOf(props.id) !== -1 };
   }
 
   onClickArrowHandler = () =>
   {
+    /**
+     * Save open or close state to register
+     */
+    if (this.props.registerID)
+    {
+      const register = this.context.register.data[this.props.registerID] || [];
+      const index = register.indexOf(this.props.id);
+
+      // closing
+      if (this.state.active && index !== -1)
+      {
+        register.splice(index, 1);
+      }
+      // opening
+      else if (this.state.active === false && index === -1)
+      {
+        register.push(this.props.id);
+      }
+
+      this.context.register.add({ [this.props.registerID]: register });
+    }
+
     this.setState({ active: !this.state.active });
+  }
+
+  onClickTitleHandler = () =>
+  {
+    this.onClickArrowHandler();
+    this.props.onClick();
   }
 
   render()
@@ -46,7 +76,7 @@ class Parent extends Component
           />
           <div
             className="pl-1 pointer"
-            onClick={this.props.onClick}
+            onClick={this.onClickTitleHandler}
           >
             {this.props.title}
           </div>
@@ -64,6 +94,7 @@ class Parent extends Component
 Parent.contextTypes =
 {
   store: PropTypes.object,
+  register: PropTypes.object,
 };
 
 const NestedListItem = (Menu) =>
@@ -83,6 +114,8 @@ const NestedListItem = (Menu) =>
       return (
         <Parent
           level={level}
+          id={index}
+          registerID="menuParents"
           title={Menu.getItem(index).title}
           onClick={onClickHandler}
           isActive={isActive}
@@ -95,7 +128,8 @@ const NestedListItem = (Menu) =>
     return (
       <div
         className={`pointer ${isActive ? 'active' : ''}`}
-        style={{ padding: `0 0 1rem ${Math.max(level + 3, 5)}rem` }}
+        style={{ padding: `0 0 1rem ${(level + 3)}rem` }}
+        // style={{ padding: `0 0 1rem ${Math.max(level + 3, 5)}rem` }}
         onClick={onClickHandler}
       >
         {Menu.getItem(index).title}
