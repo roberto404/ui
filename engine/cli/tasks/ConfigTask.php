@@ -24,6 +24,12 @@ class ConfigTask extends \Phalcon\CLI\Task
     $this->cacheWebsiteAction();
   }
 
+  public function updateAction()
+  {
+    //@TODO relation update need
+    $this->cacheWebsiteAction();
+  }
+
   public function cacheKontakt2Action()
   {
     define("APP_DIR", __DIR__ . '/../../../public_html/kontakt2/json/');

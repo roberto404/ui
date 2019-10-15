@@ -54,7 +54,7 @@ class ProductTask extends \Phalcon\CLI\Task
       // $product::parseDOSTitle($product);
 
 
-      var_dump(array(
+      // var_dump(array(
         // $product->toArray()
         // $product::parseManufacturerTitle($product)
         // $product::parseStock($product)
@@ -63,14 +63,14 @@ class ProductTask extends \Phalcon\CLI\Task
         // $product::parseColor($product)
         // $product::parseDelivery($product),
         // $product->getStock()
-      ));
+      // ));
 
       //
-      var_dump(
+      // var_dump(
         // $product::parseWebCategory($product)
         // $product->toWebsiteProps()
-        $product->getStock(false)
-      );
+        // $product->getStock(false)
+      // );
       // die();
 
       // $product->createRelatedId();
@@ -81,20 +81,20 @@ class ProductTask extends \Phalcon\CLI\Task
       // $product->addFeatures(['51' => '1']);
 
 
-      // if (!$product->save())
-      // {
-      //   echo "\n💩 \033[1;33mERROR\033[0m {$product->id}\n\n";
-      //   var_dump($product->getMessages());
-      //   var_dump(array(
-      //     "brand" => $product->brand,
-      //   ));
-      //   die();
-      // }
+      if (!$product->save())
+      {
+        echo "\n💩 \033[1;33mERROR\033[0m {$product->id}\n\n";
+        var_dump($product->getMessages());
+        var_dump(array(
+          "brand" => $product->brand,
+        ));
+        die();
+      }
 
       // continue;
       // die();
 
-      var_dump(array(
+      // var_dump(array(
       //   "id" => $product->id,
       //   // "price_orig_gross" => $product->price_orig_gross,
         // "price_sale_gross" => $product->price_sale_gross,
@@ -120,7 +120,7 @@ class ProductTask extends \Phalcon\CLI\Task
       //   // "instore" => $product->instore,
       //   "features" => $product->features,
       //   // "stock" => $product->getStock()
-      ));
+      // ));
     }
   }
 
@@ -179,7 +179,11 @@ class ProductTask extends \Phalcon\CLI\Task
             'flags' => ProductsFlags::find([
               'conditions' => 'instore = 1',
               'columns' => 'id, title, priority, description'
-            ])->toArray()
+            ])->toArray(),
+            'category' => Categories::find([
+              'conditions' => 'status = 1',
+              'columns' => 'id, title'
+            ])->toArray(),
           ]
         ),
         JSON_UNESCAPED_UNICODE /*| JSON_PRETTY_PRINT*/
