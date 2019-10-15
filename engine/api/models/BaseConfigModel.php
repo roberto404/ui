@@ -22,12 +22,13 @@ class BaseConfigModel extends Model
     private function updateCache()
     {
       putenv("SERVER_NAME=".$_SERVER['SERVER_NAME']);
-      $r = exec('php ' . __DIR__ . '/../../cli/cli.php config update  2>&1', $response);
-      // var_dump($response, $r);
-      // die();
-      // if ($respone)
-      // {
-      //   error_log($response);
-      // }
+      $r = exec('php ' . __DIR__ . '/../../cli/cli.php config cache  2>&1', $response);
+
+      if ($respone)
+      {
+        error_log($response);
+        // var_dump($response, $r);
+        // die();
+      }
     }
 }

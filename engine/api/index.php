@@ -192,34 +192,26 @@ try
   });
 
 
-  $di->set('filter', function()
+  /**
+   * Filters
+   */
+
+  $filter = $di->get('filter');
+
+  $di->set('filter', function() use ($filter)
   {
-    $filter = new Filter();
+    $collections = require_once(APPLICATION_PATH . 'library/filters/filterLoader.php');
 
-    $filter->add(
-        "hungarian",
-        function ($value)
-        {
-          $translations = array(
-            'À'=>'Á','Â'=>'Á','Ã'=>'Á','Ä'=>'Á','Å'=>'Á','Ā'=>'Á','Ą'=>'Á','Ă'=>'Á',
-            'à'=>'á','â'=>'á','ã'=>'á','ä'=>'á','å'=>'á','ā'=>'á','ą'=>'á','ă'=>'á',
-            'È'=>'É','Ê'=>'É','Ë'=>'É','Ē'=>'É','Ę'=>'É','Ě'=>'É','Ĕ'=>'É','Ė'=>'É',
-            'è'=>'é','ê'=>'é','ë'=>'é','ē'=>'é','ę'=>'é','ě'=>'é','ĕ'=>'é','ė'=>'é',
-            'Ì'=>'Í','Î'=>'Í','Ï'=>'Í','Ī'=>'Í','Ĩ'=>'Í','Ĭ'=>'Í','Į'=>'Í','İ'=>'Í',
-            'ì'=>'í','î'=>'í','ï'=>'í','ī'=>'í','ĩ'=>'í','ĭ'=>'í','į'=>'í',
-            'Ò'=>'Ó','Ô'=>'Ó','Õ'=>'Ö','Ō'=>'Ö','Ŏ'=>'Ő',
-            'ò'=>'ó','ô'=>'ó','õ'=>'ő','ō'=>'ö','ŏ'=>'ő',
-            'Ù'=>'Ú','Û'=>'Ü','Ū'=>'Ü','Ů'=>'Ü','Ŭ'=>'Ű','Ũ'=>'Ű',
-            'ú'=>'ú','û'=>'ü','ü'=>'ü','ū'=>'ü','ů'=>'ü','ŭ'=>'ű','ũ'=>'ű'
-          );
-
-          return strtr($value, $translations);
-        }
-    );
+    if (is_array($collections))
+    {
+      foreach ($collections as $filterName => $filterMethod)
+      {
+        $filter->add($filterName, $filterMethod);
+      }
+    }
 
     return $filter;
   });
-
 
   /**
    * Phalcon View Template engine
