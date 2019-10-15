@@ -13,7 +13,12 @@ import GridSearch, { FilterTerm } from '../../../src/grid/pure/gridSearch';
 
 /* !- Constants */
 
-import { DATA } from './constants';
+// import { DATA } from './constants';
+//
+const DATA = [
+  { "id": 1, "name": "Megan J. Cushman", "gender": '1', "visits": "2" },
+  { "id": 2, "name": "Taylor R. Fallin", "gender": '2', "visits": "22" },
+];
 
 
 
@@ -63,6 +68,8 @@ const SETTINGS = {
 const fieldData = [
   { id: 'name', title: 'Name' },
   { id: 'id', title: 'Id' },
+  { id: 'gender', title: 'Gender' },
+  { id: 'visits', title: 'Visits' },
 ];
 
 
@@ -82,7 +89,7 @@ const Example = () =>
 
     <div className="filters">
       <GridSearch
-        // fields={fieldData}
+        fields={fieldData}
         prefix="?"
       />
     </div>

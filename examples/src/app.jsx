@@ -35,7 +35,7 @@ import Layer from '../../src/layer';
 // import Example from './grid/connect';
 // import Example from './grid/dynamic';
 // import Example from './grid/filters';
-// import Example from './grid/search';
+import Example from './grid/search';
 // import Example from './grid/extra';
 // import Example from './grid/complex';
 // import Example from './grid/list';
@@ -45,7 +45,7 @@ import Layer from '../../src/layer';
 // import Example from './grid/withoutGrid';
 // import Example from './grid/nestedList';
 // import Example from './grid/nestedListMenu';
-import Example from './grid/nestedListAccordion';
+// import Example from './grid/nestedListAccordion';
 
 
 /* !- Example: Layer */

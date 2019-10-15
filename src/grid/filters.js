@@ -51,6 +51,10 @@ export const OPERATOR_REGEX = `(${
     .replace(/(\*|\^|\$)/g, '\\$&')
 })`;
 
+export const OPERATOR_UNIQUE = String.prototype.concat(...new Set(OPERATOR_KEYS.join('')))
+  .replace(/\*/g, '\\$&');
+
+
 export const LOGICAL_REGEX = '[|&]{1,2}';
 
 /**
@@ -59,7 +63,7 @@ export const LOGICAL_REGEX = '[|&]{1,2}';
  * //=>
  * [field = 1, field > 2]
  */
-const REGEX_QUERY_LEVEL1 = new RegExp(`([0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ_]+[ ]*[${OPERATOR_KEYS.join('')}]+[ ]*)?[a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ0-9./-]+[ ,]*`, 'g');
+const REGEX_QUERY_LEVEL1 = new RegExp(`([0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ_]+[ ]*[${OPERATOR_UNIQUE}]+[ ]*)?[a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ0-9./-]+[ ,]*`, 'g');
 
 /**
  * @example
@@ -67,7 +71,7 @@ const REGEX_QUERY_LEVEL1 = new RegExp(`([0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉ
  * // =>
  * [field, >, 2]
  */
-const REGEX_QUERY_LEVEL2 = new RegExp(`^([a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ_]+)([${OPERATOR_KEYS.join('')}]{1}[=]{0,1})([a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ0-9]+)$`);
+const REGEX_QUERY_LEVEL2 = new RegExp(`^([0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ_]+)([${OPERATOR_UNIQUE}]{1}[=]{0,1})([a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ0-9]+)$`);
 
 let SEARCH_CACHE = [];
 

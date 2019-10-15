@@ -24,10 +24,7 @@ import IconSearch from '../../icon/mui/action/search';
 
 /* !- Constants */
 
-import { OPERATOR_REGEX, LOGICAL_REGEX, OPERATOR_KEYS } from '../../grid/filters';
-
-
-
+import { OPERATOR_REGEX, LOGICAL_REGEX, OPERATOR_KEYS, OPERATOR_UNIQUE } from '../../grid/filters';
 
 
 /**
@@ -82,7 +79,10 @@ const GridSearchDialog = ({ fields, prefix }, { store }) =>
     event.preventDefault();
 
     const collection = store.getState().form.searchCollection;
-    const search = prefix + collection.map(i => i.field + i.operator + i.value).join('&');
+    const search = prefix +
+      collection
+        .map(i => i.field + i.operator + i.value)
+        .join('&');
 
     if (search === prefix)
     {
@@ -157,10 +157,6 @@ const GridSearch = ({ fields, prefix, placeholder }, { store, grid }) =>
 
     if (prefix && term && term.substring(0, prefix.length) === prefix)
     {
-
-      const operatorChars = String.prototype.concat(...new Set(OPERATOR_KEYS.join('')))
-        .replace(/\*/g, '\\$&');
-
       /**
       * @example
       * // name=Á&gender==male&id<10 => [{ field, operator, value }]
@@ -168,10 +164,10 @@ const GridSearch = ({ fields, prefix, placeholder }, { store, grid }) =>
       value = term
         .substring(prefix.length)
         .split(new RegExp(LOGICAL_REGEX))
-        .filter(exp => new RegExp(`^([^${operatorChars}]+)${OPERATOR_REGEX}([^${operatorChars}]+)$`).exec(exp) !== null)
+        .filter(exp => new RegExp(`^([^${OPERATOR_UNIQUE}]+)${OPERATOR_REGEX}([^${OPERATOR_UNIQUE}]*)$`).exec(exp) !== null)
         .map((exp) =>
         {
-          const matches = new RegExp(`^([^${operatorChars}]+)${OPERATOR_REGEX}([^${operatorChars}]+)$`).exec(exp);
+          const matches = new RegExp(`^([^${OPERATOR_UNIQUE}]+)${OPERATOR_REGEX}([^${OPERATOR_UNIQUE}]*)$`).exec(exp);
 
           return ({
             field: matches[1],
