@@ -1209,13 +1209,13 @@ class Products extends Model
 
     $colorFabrics = [];
 
-    if ($product->color)
+    if ($this->color)
     {
-      $colorFabrics = $product->getFabrics();
+      $colorFabrics = $this->getFabrics();
     }
-    else if ($product->features)
+    else if ($this->features)
     {
-      $productFeatures = json_decode($product->features, true);
+      $productFeatures = json_decode($this->features, true);
 
       // alapanyag fenyő
       if (isset($productFeatures['1']) && $productFeatures['1'] == '2')

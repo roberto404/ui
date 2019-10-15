@@ -5,6 +5,8 @@ import { Route } from 'react-router-dom';
 /* !- React Elemens */
 
 import IconProduct from './icons/product';
+import IconAnalytics from '@1studio/ui/icon/mui/action/timeline';
+import IconStock from '@1studio/ui/icon/mui/action/swap_vert';
 
 
 /* !- App Compontents */
@@ -65,7 +67,10 @@ export const getRoutes = app => [
   },
   {
     path: '/stock',
+    title: 'stock.title',
     component: Views.StockGrid,
+    icon: IconStock,
+    permission: ['stock'],
     props: {
       config: app ? app.getProjectConfig() : {},
     },
@@ -73,6 +78,13 @@ export const getRoutes = app => [
   {
     path: '/website/menu',
     component: Views.WebsiteMenu,
+  },
+  {
+    path: '/analytics',
+    title: 'analytics.title',
+    component: Views.Analytics,
+    icon: IconAnalytics,
+    permission: ['analytics'],
   },
 ];
 

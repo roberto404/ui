@@ -383,108 +383,6 @@ class ProductTask extends \Phalcon\CLI\Task
   }
 
 
-  public function fetchRelatedProductsFromStockAction()
-  {
-    ini_set("memory_limit","1024M");
-
-    $results = array();
-
-    $query = $this->db->query("
-      SELECT
-        *
-      FROM
-        rsdb.raktar
-      LEFT JOIN
-        products
-      ON
-        raktar.cikkszam = products.id
-      WHERE
-        products.id is NULL
-    ");
-
-    $query->setFetchMode(
-      \Phalcon\Db::FETCH_ASSOC
-    );
-
-    foreach ($query->fetchAll() as $record)
-    {
-      $stock = new Stock($record);
-      $product = $stock->toProduct();
-
-      $relatedProduct = Products::findFirst([
-        'conditions' => "related_id = ?1",
-        'bind' => [1 => $product->related_id]
-      ]);
-
-      if (!$relatedProduct)
-      {
-        $relatedProduct = Products::findFirst([
-          'conditions' => "
-              related_id LIKE ?1
-            AND
-              brand = ?2
-            AND
-              dimension = ?3
-            AND
-              SUBSTRING(title_orig, 1, (CHAR_LENGTH(title_orig) - CHAR_LENGTH(color) - 3)) LIKE ?4
-          ",
-          'bind' => [
-            1 => $product->related_id . '%',
-            2 => $product->brand,
-            3 => $product->dimension,
-            4 => substr(
-              $product->title_orig,
-              0,
-              (strlen($product->title_orig) - strlen($product->color) - 3)
-            ) . '%',
-          ]
-        ]);
-      }
-
-      if ($relatedProduct)
-      {
-        if (
-          $product->brand === $relatedProduct->brand
-          && $product->color && $product->color !== $relatedProduct->color
-          && $product->dimension === $relatedProduct->dimension
-          && $product->price_orig > 0
-        )
-        {
-          $product->flag = $relatedProduct->flag;
-          $product->category = $relatedProduct->category;
-          $product->features = $relatedProduct->features;
-          $product->instore = $relatedProduct->instore;
-          $product->incart = $relatedProduct->incart;
-
-          if (!$product->description)
-          {
-           $product->description = $relatedProduct->description;
-          }
-
-          $product->save();
-
-          if ($relatedProduct->related_id !== $product->related_id)
-          {
-            $relatedProducts = Products::find([
-              'conditions' => "
-                  related_id = ?1
-              ",
-              'bind' => [
-                1 => $relatedProduct->related_id
-              ]
-            ]);
-
-            foreach($relatedProducts as $rproduct)
-            {
-              $rproduct->related_id = $product->related_id;
-              $rproduct->save();
-            }
-          }
-        }
-      }
-    }
-  }
-
 
   public function updateAction($products = false)
   {
@@ -759,6 +657,135 @@ class ProductTask extends \Phalcon\CLI\Task
       {
         $product->removeFlag(Products::WARRANTY . '_5');
         $product->save();
+      }
+    }
+  }
+
+
+
+  /**
+   * Simplfy all NF2 Related ID
+   * @example
+   * id: NF2123RK, NF2123R, NF2123RA
+   * // -> NF2123
+   */
+  public function rebaseNF2RelatedIdAction()
+  {
+    $products = Products::find([
+      'conditions' => "manufacturer = 'NF2'"
+    ]);
+
+    foreach($products as $product)
+    {
+      $regex = '/(.*)R(K|A)?$/';
+
+      if ($product->id !== $product->related_id && preg_match($regex, $product->id, $matches))
+      {
+        $product->related_id = $matches[1];
+        $product->save();
+      }
+    }
+  }
+
+
+  public function fetchRelatedProductsFromStockAction()
+  {
+    ini_set("memory_limit","1024M");
+
+    $results = array();
+
+    $query = $this->db->query("
+      SELECT
+        *
+      FROM
+        rsdb.raktar
+      LEFT JOIN
+        products
+      ON
+        raktar.cikkszam = products.id
+      WHERE
+        products.id is NULL
+    ");
+
+    $query->setFetchMode(
+      \Phalcon\Db::FETCH_ASSOC
+    );
+
+    foreach ($query->fetchAll() as $record)
+    {
+      $stock = new Stock($record);
+      $product = $stock->toProduct();
+
+      $relatedProduct = Products::findFirst([
+        'conditions' => "related_id = ?1",
+        'bind' => [1 => $product->related_id]
+      ]);
+
+      if (!$relatedProduct)
+      {
+        $relatedProduct = Products::findFirst([
+          'conditions' => "
+              related_id LIKE ?1
+            AND
+              brand = ?2
+            AND
+              dimension = ?3
+            AND
+              title_orig LIKE ?4
+          ",
+          'bind' => [
+            1 => $product->related_id . '%',
+            2 => $product->brand,
+            3 => $product->dimension,
+            4 => substr(
+              $product->title_orig,
+              0,
+              (strlen($product->title_orig) - strlen($product->color) - 3)
+            ) . '%',
+          ]
+        ]);
+      }
+
+      if ($relatedProduct)
+      {
+        if (
+          $product->brand === $relatedProduct->brand
+          && $product->color && $product->color !== $relatedProduct->color
+          && $product->dimension === $relatedProduct->dimension
+          && $product->price_orig > 0
+        )
+        {
+          $product->flag = $relatedProduct->flag;
+          $product->category = $relatedProduct->category;
+          $product->features = $relatedProduct->features;
+          $product->instore = $relatedProduct->instore;
+          $product->incart = $relatedProduct->incart;
+
+          if (!$product->description)
+          {
+           $product->description = $relatedProduct->description;
+          }
+
+          $product->save();
+
+          if ($relatedProduct->related_id !== $product->related_id)
+          {
+            $relatedProducts = Products::find([
+              'conditions' => "
+                  related_id = ?1
+              ",
+              'bind' => [
+                1 => $relatedProduct->related_id
+              ]
+            ]);
+
+            foreach($relatedProducts as $rproduct)
+            {
+              $rproduct->related_id = $product->related_id;
+              $rproduct->save();
+            }
+          }
+        }
       }
     }
   }
