@@ -16,16 +16,28 @@ import NotFound from '../notFound';
 
 /* !- Constants */
 
-import { productPropsParser } from '../../components/product/const';
+// ..
 
 
 /**
 * ProductView Component
 */
-const ProductView = ({ match }, { config }) =>
+const ProductView = ({ match, config }) =>
 {
-  const { sku } = match.params;
-  const product = config.products.find(({ i }) => i === sku);
+  const sku = match.params;
+  const slug = match.url.substring(match.url.lastIndexOf('/') + 1);
+
+  let product;
+
+  if (sku)
+  {
+    product = config.products.find(({ id }) => id === sku)
+  }
+
+  if (!product)
+  {
+    product = config.products.find(product => product.slug === slug);
+  }
 
   if (!product)
   {
@@ -33,11 +45,18 @@ const ProductView = ({ match }, { config }) =>
   }
 
   return (
-    <Product
-      record={productPropsParser(product)}
-      helper={config}
-    />
+    <div className="wrapper">
+      <Product
+        record={product}
+        helper={config}
+      />
+    </div>
   );
+};
+
+ProductView.defaultProps =
+{
+  match: {},
 };
 
 ProductView.contextTypes =

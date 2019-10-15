@@ -5,7 +5,6 @@ import capitalizeFirstLetter from '@1studio/utils/string/capitalizeFirstLetter';
 
 /* !- React Elemens */
 
-// ...
 
 
 /* !- App Compontents */
@@ -41,6 +40,9 @@ export const getRoutes = app => [
   {
     path: '/termekek/:sku',
     component: Views.Product,
+    props: {
+      config: app ? app.getProjectConfig() : {},
+    },
   },
   {
     path: '/termekek',
@@ -62,15 +64,16 @@ const REWRITE_RULES = {
   '.*-[0-9]+$': 'Product',
 };
 
-const reWriteRoutes = ({ menu }) =>
+const reWriteRoutes = ({ config, match }) =>
 {
-  const path = window.location.pathname;
+  const menu = config.menu;
+  const path = match.url;
 
   const index = Object.keys(REWRITE_RULES).find(regexp => path.match(new RegExp(regexp)) !== null);
 
   if (index && Views[REWRITE_RULES[index]])
   {
-    return React.createElement(Views[REWRITE_RULES[index]]);
+    return React.createElement(Views[REWRITE_RULES[index]], { match, config });
   }
 
   /**
@@ -87,10 +90,10 @@ const reWriteRoutes = ({ menu }) =>
       .map(({ title, subTitle, modul, props }, i) => (
         <div key={i}>
           { title &&
-            <div>{title}</div>
+            <div className="wrapper heavy text-xxl">{title}</div>
           }
           { subTitle &&
-          <div>{subTitle}</div>
+          <div className="wrapper" style={{ paddingTop: '0' }}>{subTitle}</div>
           }
           {
             React.createElement(Views[capitalizeFirstLetter(modul)], props)
@@ -101,10 +104,11 @@ const reWriteRoutes = ({ menu }) =>
     return <div>{children}</div>;
   }
 
+
   /**
    * Not Found
    */
-  return <h1>{window.location.pathname}???</h1>;
+  return React.createElement(Views.Product, { config, match });
 };
 
 
@@ -140,7 +144,7 @@ export default (app, permission) =>
       path: '*',
       component: reWriteRoutes,
       props: {
-        menu: app.getProjectConfig().menu,
+        config: app.getProjectConfig(),
       },
     },
   ]

@@ -16,10 +16,33 @@ import IconFavorite from '../../icons/heart';
 import IconFavoriteActive from '../../icons/heartSolid';
 import IconZoom from '../../icons/searchPlus';
 
+import IconFlagHun from '../../icons/flagHun';
+import IconFlagWarranty5 from '../../icons/flagWarranty5';
+import IconFlagThm0 from '../../icons/flagThm0';
+import IconFlagRstop from '../../icons/flagRstop';
+import IconFlagFreeDelivery from '../../icons/flagFreeDelivery';
+import IconFlagElectric from '../../icons/flagElectric';
+import IconFlagMoneyBack30 from '../../icons/flagMoneyBack30';
+// import IconFlagLeather from '../../icons/flagLeather';
+
+
 
 /* !- Constants */
 
 import { parse, MAX_FABRICS_LENGTH } from './const';
+
+const flagIcons = {
+  // CLASS_2: IconFlagHun,
+  ELECTRIC: IconFlagElectric,
+  FREE_DELIVERY: IconFlagFreeDelivery,
+  HUN: IconFlagHun,
+  // LEATHER: IconFlagLeather,
+  MONEY_BACK_30: IconFlagMoneyBack30,
+  RSTOP: IconFlagRstop,
+  // SALE: IconFlagHun,
+  THM_0: IconFlagThm0,
+  WARRANTY_5: IconFlagWarranty5,
+};
 
 
 /**
@@ -102,8 +125,17 @@ const Product = (
         { flag && flag.length > 0 &&
         <parseFlag>
           <div className="mb-1 heavy zoom-1.1">Kiemelt tulajdonságok</div>
-          <div>
-            { parse.flag(record, helper.flags).map(({ id, title }) => <span key={id} className="tag mx-1">{title}</span>) }
+          <div className="py-1">
+            <div className="grid-2-2">
+              {
+                parse.flag(record, helper.flags)
+                  .filter(({ id }) => flagIcons[id] !== undefined)
+                  .map(({ id, title }) => React.createElement(
+                    flagIcons[id],
+                    { className: 'col-1-7', key: id, title },
+                  ))
+              }
+            </div>
           </div>
           <hr />
         </parseFlag>
@@ -165,7 +197,7 @@ const Product = (
         </div>
         <div className="text-s light text-line-l">{subtitle}</div>
         <hr />
-        <div className="mb-2 tag">{parse.stock(record)}</div>
+        <div className="mb-2 tag uppercase">{parse.stock(record)}</div>
         <div className="mb-1 text-s light">
           <span className="bold">Méret: </span>
           <span>{parse.dimension(record)}</span>
@@ -211,8 +243,8 @@ const Product = (
               </div>
             ))
             .concat([(
-              <div className="col-1-7 v-center h-center">
-                {`+ ${fabrics.length - MAX_FABRICS_LENGTH}`}
+              <div className="col-1-7 v-center h-center" key="more">
+                {fabrics.length > MAX_FABRICS_LENGTH ? `+ ${fabrics.length - MAX_FABRICS_LENGTH}` : ''}
               </div>
             )])
           }

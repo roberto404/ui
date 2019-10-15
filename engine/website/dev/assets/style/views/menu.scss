@@ -1,0 +1,42 @@
+.header-menu
+{
+  background-color: $black;
+  color: white;
+
+  .wrapper
+  {
+    padding: 0 0 0 40px;
+    align-items: center;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+
+    >div
+    {
+      font-weight: 200;
+      padding: 11px;
+      margin-left: 40px;
+      cursor: pointer;
+      position: relative;
+      font-size: 18px;
+
+      &::after
+      {
+        content: '';
+        position: absolute;
+        top: calc(100% - 2px);
+        left: 50%;
+        height: 2px;
+        background: #f8d53e;
+        width: 0;
+        transform: translate(-50%);
+        transition: .2s;
+      }
+
+      &:hover::after
+      {
+        width: 100%;
+      }
+    }
+  }
+}

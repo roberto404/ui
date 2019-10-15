@@ -25,7 +25,7 @@ import PropTypes from 'prop-types';
 const NotFound = () =>
 {
   return (
-    <h1>Nincs</h1>
+    <h1>Not found</h1>
   );
 };
 

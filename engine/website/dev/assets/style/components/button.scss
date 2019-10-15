@@ -13,7 +13,8 @@ button,
     padding-top: 2px;
   }
 
-  &:not(.no-fill):not([class^="fill-"]):not([class*=" fill-"])
+  &:not(.no-fill):not([class^="fill-"]):not([class*=" fill-"]),
+  &.primary:not(.no-fill):not([class^="fill-"]):not([class*=" fill-"])
   {
     svg
     {
@@ -34,6 +35,36 @@ button,
     &:hover svg path
     {
       fill: $yellow;
+    }
+  }
+
+// button.yellow:not(.no-fill):not([class^="fill-"]):not([class*=" fill-"]) svg path
+// button:not(.no-fill):not([class^="fill-"]):not([class*=" fill-"]) svg path
+
+  &.yellow
+  {
+    &:not(.no-fill):not([class^="fill-"]):not([class*=" fill-"])
+    {
+      svg
+      {
+        polygon,
+        path
+        {
+          fill: $black;
+        }
+
+        rectangle,
+        circle,
+        line
+        {
+          stroke: $black;
+        }
+      }
+
+      &:hover svg path
+      {
+        fill: $black;
+      }
     }
   }
 
@@ -66,6 +97,25 @@ button,
     {
       width: 1em;
       height: 1em;
+    }
+  }
+
+  &.primary
+  {
+    color: $black;
+    transition: .2s;
+
+    &:hover:not(.no-fill):not([class^="fill-"]):not([class*=" fill-"])
+    {
+      svg path
+      {
+        fill: $black;
+      }
+    }
+
+    &:hover
+    {
+      box-shadow: 0 2px 10px 0 rgba(0,0,0,.15);
     }
   }
 }

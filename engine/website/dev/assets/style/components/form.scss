@@ -1,9 +1,72 @@
 .field
 {
+
+  &.checkbox-field
+  {
+    .value
+    {
+      padding: 0.225rem 0;
+
+      input
+      {
+        display: none;
+      }
+
+      label
+      {
+        position: relative;
+        padding-left: 2.5rem;
+        // padding-bottom: 0.05em;
+        font-size: .75em;
+        font-weight: 200;
+
+        &::before
+        {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0.25em;
+          width: .85em;
+          height: .85em;
+          border: 1px solid $gray-dark;
+          background: white;
+          transition: .2s;
+        }
+
+        &::after
+        {
+          content: '';
+          position: absolute;
+          width: 0.25em;
+          height: 0.25em;
+          top: 0.7em;
+          left: 0.425em;
+          background: white;
+          transition: .2s;
+        }
+      }
+
+      input:checked ~ label::after
+      {
+        width: .5em;
+        height: .5em;
+        top: 0.5em;
+        left: 0.25em;
+        background: $yellow;
+      }
+    }
+    }
+
+
   /* !- Slider */
 
   &.slider-field
   {
+    .value
+    {
+      font-size: 0.9em;
+    }
+
     .slider
     {
       .handle

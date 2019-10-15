@@ -2,7 +2,7 @@
 import { flattenMessagesRevert } from '@1studio/utils/object/flattenMessages';
 import { productPropsParser } from './components/product/const';
 // import Tree from '@1studio/utils/models/tree';
-import Tree from '/Users/roberto/Sites/utils/src/models/tree';
+import Tree from '@1studio/utils/models/tree';
 
 
 // core.js 37 Kbyte
@@ -68,6 +68,8 @@ const init = () =>
       config.project.constants = flattenMessagesRevert(config.project.constants);
       config.project.products = config.project.products.map(product => productPropsParser(product));
       config.project.menu = new Tree(config.project.menu);
+      config.project.features = config.project.features.map(
+        feature => ({ ...feature, options: feature.options ? JSON.parse(feature.options) : '' }));
 
       createUserStorage({}, { password: '%>"u[In!5D"4<sqU', key: 'rsweb', sessionTime: SESSION_TIME }); // minutes
 

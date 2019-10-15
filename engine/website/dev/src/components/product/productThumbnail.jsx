@@ -27,7 +27,6 @@ import {
   parse,
   MAX_THUMBNAIL_FABRICS_LENGTH,
   MAX_THUMBNAIL_FEATURE_LENGTH,
-  productPropsParser,
 } from './const';
 
 /**
@@ -45,7 +44,7 @@ import {
    />
  </GridView>
  */
-export const ProductConnectUIWithoutRouter = ({ data, history }, { config }) =>
+export const ProductConnectUIWithoutRouter = ({ data, history, url, col }, { config }) =>
 {
   if (!data.length)
   {
@@ -54,12 +53,12 @@ export const ProductConnectUIWithoutRouter = ({ data, history }, { config }) =>
 
   return (
     <div className="grid-2-4">
-      { data.map(props => (
-        <div className="col-1-3" key={props.id}>
+      { data.map(record => (
+        <div className={`col-1-${col}`} key={record.id}>
           <ProductThumbnail
-            record={productPropsParser(props)}
+            record={record}
             className="bg-white pointer"
-            // onClick={() => history.push(`/termekek/${props.id}`)}
+            onClick={() => history.push(url + record.slug)}
             helper={{
               flags: config.flags,
               fabrics: config.fabrics,
@@ -70,6 +69,18 @@ export const ProductConnectUIWithoutRouter = ({ data, history }, { config }) =>
       ))}
     </div>
   );
+};
+
+ProductConnectUIWithoutRouter.propTypes =
+{
+  col: PropTypes.number,
+  url: PropTypes.string,
+};
+
+ProductConnectUIWithoutRouter.defaultProps =
+{
+  col: 3,
+  url: `${window.location.pathname}/`,
 };
 
 ProductConnectUIWithoutRouter.contextTypes =
@@ -125,9 +136,11 @@ class ProductThumbnail extends Component
     }
   }
 
-  onClickZoomHandler = () =>
+  onClickZoomHandler = (event) =>
   {
     this.context.store.dispatch(dialog(<Product record={this.props.record} helper={this.props.helper} />));
+    event.preventDefault();
+    event.stopPropagation();
   }
 
   onMouseOverHandler = () =>
@@ -212,7 +225,7 @@ class ProductThumbnail extends Component
         onMouseOver={this.onMouseOverHandler}
         onMouseOut={this.onMouseOutHandler}
       >
-        { flags.length &&
+        { flags.length > 0 &&
         <div className="pin-top absolute m-1 tag">
           <span
             className="text-s"

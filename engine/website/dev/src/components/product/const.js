@@ -1,9 +1,13 @@
 
 import reduce from 'lodash/reduce';
+import max from 'lodash/max';
+import isEmpty from 'lodash/isEmpty';
+import slugify from '@1studio/utils/string/slugify';
+
 
 export const DIMENSION_KEYS = ['w', 'h', 'd'];
 
-export const MAX_FABRICS_LENGTH = 13
+export const MAX_FABRICS_LENGTH = 13;
 
 export const MAX_THUMBNAIL_FABRICS_LENGTH = 5;
 export const MAX_THUMBNAIL_FEATURE_LENGTH = 2;
@@ -22,10 +26,12 @@ export const PRODUCT_DICTIONARY = {
   fe: 'features',
   di: 'dimension',
   c: 'color',
+  ct: 'category',
   im: 'images',
   ic: 'incart',
   de: 'description',
   st: 'stock',
+  sg: 'slug',
 };
 
 //@todo dictionary!!!
@@ -47,15 +53,74 @@ export const STOCK_DELIVER_MESSAGE = 'héten belül';
 export const loadProducts = records => () => new Promise(resolve => resolve({ status: 'SUCCESS', records }));
 
 
+/* !- Filter methods */
+
+export const EMPTY_FILTER = '-';
+
+export const filters = {
+  product: (record, terms) =>
+    terms.every((term) =>
+    {
+      const hashIndex = term.indexOf('#');
+      const filterIndex = term.substring(0, hashIndex);
+      const filterTerm = term.substring(hashIndex + 1);
+
+      return filters[filterIndex || filterTerm] ?
+        filters[filterIndex || filterTerm](record, [filterTerm]) : false;
+    }),
+
+  category: ({ category }, terms) =>
+    !terms.length
+    || (terms[0] === EMPTY_FILTER && isEmpty(category))
+    || terms.some(term => parseInt(category) === parseInt(term)),
+  discount: ({ price_discount }) => parseInt(price_discount) > 0,
+  stock: ({ stock }, terms) => parseInt(max(stock[1])) >= (parseInt(terms) || 1),
+  flag: ({ flag }, terms) => terms.every(term => flag.indexOf(term) !== -1),
+  price: ({ price_sale_gross }, terms) =>
+    parseInt(price_sale_gross) >= terms[0] && parseInt(price_sale_gross) <= terms[1],
+  features: ({ features }, terms) =>
+    features
+    && Object
+      .keys(terms)
+      .every(id =>
+        terms[id].length === 0
+        || (
+          features[id]
+          && (
+            features[id] === terms[id]
+            || terms[id].every(v =>
+              (
+                Array.isArray(features[id]) ?
+                  features[id].indexOf(v) !== -1 : features[id].toString() === v
+              ),
+            )
+          )
+        ),
+      ),
+};
+
+
 /* !- Helper methods */
 
-export const productPropsParser = props =>
+export const getSlug = ({ brand, title, slugIndex }) =>
+{
+  const index = slugIndex ? `-${slugIndex}` : '';
+
+  return slugify(`${brand} ${title}${index}`);
+};
+
+export const productPropsParser = product =>
   Object
-    .keys(props)
+    .keys(PRODUCT_DICTIONARY)
     .reduce(
       (results, index) =>
       {
-        results[PRODUCT_DICTIONARY[index] ? PRODUCT_DICTIONARY[index] : index] = props[index]; // eslint-disable-line
+        if (PRODUCT_DICTIONARY[index] === 'slugIndex')
+        {
+          product[index] = getSlug(product);
+        }
+
+        results[PRODUCT_DICTIONARY[index] ? PRODUCT_DICTIONARY[index] : index] = product[index]; // eslint-disable-line
         return results;
       },
       {},
@@ -90,14 +155,12 @@ export const parseFeatures = ({ features }, helper = []) =>
         return result;
       }
 
-      const featureOptions = JSON.parse(feature.options || '{}');
-
       result.push({
         id: feature.id,
         title: feature.title,
         value: Array.isArray(featureValue) ?
-          featureValue.map(featureValueIndex => featureOptions[featureValueIndex])
-          : featureOptions[featureValue],
+          featureValue.map(featureValueIndex => feature.options[featureValueIndex])
+          : feature.options[featureValue],
       });
 
       return result;
@@ -166,7 +229,7 @@ export const parseStock = ({ stock }) =>
 
 export const parseStockSample = ({ stock }) =>
   stock[1]
-    .map((status, index) => status < 0 ? undefined : STORE_INDEX[index])
+    .map((status, index) => (status < 0 ? undefined : STORE_INDEX[index]))
     .filter(store => store !== undefined);
 
 export const parse = {

@@ -49,7 +49,6 @@ describe('Product › parsers', () =>
 
   it('parseFabrics', () =>
   {
-    console.log(parse.fabrics(PRODUCTS[0], HELPERS.fabrics));
     // expect(parse.fabrics(PRODUCTS[0], HELPERS.fabricss).length).to.equal(PRODUCTS[0].fabrics.length);
 
     // empty product fabrics
