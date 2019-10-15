@@ -262,6 +262,18 @@ class Products extends Model
    */
   public $priority;
 
+  /**
+   *
+   * @var string
+   */
+  public $slug;
+
+  /**
+   *
+   * @var integer
+   */
+  public $slugIndex;
+
 
   /* !- Cache storeage */
 
@@ -287,6 +299,8 @@ class Products extends Model
    */
   public function beforeValidation()
   {
+    $filter = $this->di->get('filter');
+
     if (!$this->related_id)
     {
       $this->related_id = $this->id;
@@ -295,7 +309,6 @@ class Products extends Model
     $this->categoryModel = Categories::findFirst($this->category);
 
     $this->createTitle();
-
     // subtitle
     $this->createSubtitle();
     $this::parseDOSTitle($this);
@@ -355,6 +368,20 @@ class Products extends Model
     if (!$this->priority)
     {
       $this->priority = 0;
+    }
+
+    $this->slug = $filter->sanitize($this->brand . ' ' . $this->title, 'slug');
+
+    $lastSlugIndex = Products::findFirst([
+      'conditions' => 'slug = ?1 AND id != ?2',
+      'bind' => [ 1 => $this->slug, 2 => $this->id ],
+      'limit' => 1,
+      'order' => 'slugIndex desc',
+    ]);
+
+    if ($lastSlugIndex)
+    {
+      $this->slugIndex = (int) $lastSlugIndex->slugIndex + 1;
     }
   }
 
@@ -794,12 +821,12 @@ class Products extends Model
       );
     }
 
-    return array(
-      // 'global' => $maxQuantity ? $stock->getSupplyMessageHelper($maxQuantity, null, null, false) : Products::parseDelivery($this),
-      'stores' => $stock->getSupplyMessage(null, false),
-    );
+    $supplies = $stock->getSupplyMessage(null, false);
 
-    // return [$stock->getSupply('RS2'), $stock->getSupply('RS6'), $stock->getSupply('RS8')];
+    return array(
+      Products::parseDelivery($this, false),
+      [$supplies['RS2'], $supplies['RS6'], $supplies['RS8']],
+    );
   }
 
 
@@ -1328,7 +1355,7 @@ class Products extends Model
   public function toWebsiteProps()
   {
     return [
-      'i' => $this->id,
+      'id' => $this->id,
       'ri' => $this->related_id,
       'b' => $this->brand,
       'm' => $this->manufacturer,
@@ -1341,10 +1368,12 @@ class Products extends Model
       'fe' => $this->getFeatures(),
       'di' => $this->getDimension(),
       'c' => $this->color,
+      'ct' => $this->category,
       'im' => $this->getImages(),
       'ic' => $this->incart,
       'de' => $this->description,
       'st' => $this->getStock(false),
+      'sg' => $this->slug . ($this->slugIndex ? '-' . $this->slugIndex : ''),
     ];
   }
 
@@ -1871,7 +1900,7 @@ class Products extends Model
   {
     $product->color = '';
 
-    if (\in_array($product->manufacturer, ['NF1', 'NF3']))
+    if (\in_array($product->manufacturer, ['NF1']))
     {
       $product->color = $product->brand;
     }
@@ -2210,7 +2239,7 @@ class Products extends Model
    * @param  [Products] $product
    * @return [string] [n] héten belül
    */
-  static function parseDelivery($product)
+  static function parseDelivery($product, $intl = true)
   {
     if (!$product)
     {
@@ -2255,7 +2284,7 @@ class Products extends Model
       if ($deliveryUnixDate)
       {
         $deliveryWeek = ceil(($deliveryUnixDate - time()) / (60 * 60 * 24) / 7);
-        return "$deliveryWeek héten belül";
+        return $intl ? "$deliveryWeek héten belül" : $deliveryWeek;
       }
     }
 

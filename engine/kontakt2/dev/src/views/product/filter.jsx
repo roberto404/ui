@@ -193,6 +193,7 @@ const filterProducts = ({ data, className }, { register, store }) =>
       return (
         <div key={feature.id}>
           <Checkbox
+            valueClassName="col-1-1"
             className="h-max-30 scroll-y"
             id="filterFeature"
             label={capitalizeFirstLetter(feature.title)}
@@ -208,6 +209,7 @@ const filterProducts = ({ data, className }, { register, store }) =>
     <div className={className}>
 
       <Checkbox
+        valueClassName="col-1-1"
         label="Címkék"
         className="h-max-30 scroll-y"
         id="filterFlag"
@@ -217,6 +219,7 @@ const filterProducts = ({ data, className }, { register, store }) =>
       {FeatureFilters}
 
       <Checkbox
+        valueClassName="col-1-1"
         label="Termékcsalád"
         className="h-max-30 scroll-y"
         id="filterBrand"
@@ -224,6 +227,7 @@ const filterProducts = ({ data, className }, { register, store }) =>
       />
 
       <Checkbox
+        valueClassName="col-1-1"
         label="Gyártó"
         className="h-max-30 scroll-y"
         id="filterManufacturer"
@@ -231,6 +235,7 @@ const filterProducts = ({ data, className }, { register, store }) =>
       />
 
       <Checkbox
+        valueClassName="col-1-1"
         label="Szín csoport"
         className="h-max-30 scroll-y"
         id="filterColor"

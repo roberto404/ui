@@ -8,6 +8,10 @@ $iconPath: '../../node_modules/@1studio/ui/assets/icon/';
 @import "../../node_modules/@1studio/ui/assets/style/icons.scss";
 $iconPath: '../icon/';
 
+
+// --> embed-icons
+@import "icons";
+
 // --> UI Theme
 // @import "../../node_modules/@1studio/ui/assets/style/.scss";
 
@@ -40,5 +44,4 @@ $iconPath: '../icon/';
     // margin: 0 auto;
     padding: 1.5rem;
   }
-
 }

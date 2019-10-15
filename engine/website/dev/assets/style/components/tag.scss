@@ -1,0 +1,19 @@
+.tag
+{
+  &:not(.uppercase)
+  {
+    text-transform: none;
+  }
+
+  svg
+  {
+    padding-left: .5em;
+    width: 1.8em;
+    height: 1.8em;
+  }
+
+  &.gray
+  {
+    background-color: $gray-light;
+  }
+}

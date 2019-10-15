@@ -95,12 +95,10 @@ export const parseFeatures = (featureCollection = {}, features = []) =>
           });
       }
     }
-  })
+  });
 
   return results;
-}
-
-
+};
 
 
 /**
@@ -150,7 +148,7 @@ export const ProductCard = (
     [className]: true,
   })
 
-  const Favourite = priority > 0 ? <IconFavoriteActive className="active" /> : <IconFavorite />
+  const Favourite = priority > 0 ? <IconFavoriteActive className="favorite active" /> : <IconFavorite className="favorite" />
 
   return (
     <div className={classes} style={{ minWidth: '250px' }} onClick={() => onClick(props)}>

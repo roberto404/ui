@@ -28,43 +28,30 @@ import { SETTINGS } from './const';
  * StockGrid Component
  */
 const StockGrid = () => (
-  <GridView
-    id="stock"
-    settings={SETTINGS}
-    // className="grid"
-  >
-    <div className="col-1-2">
-      <div className="text-gray-dark p-2">Termék kereső</div>
-    </div>
+  <GridView id="stock" settings={SETTINGS} className="column">
+    <div className="grid" style={{ minHeight: '50px', height: '50px' }}>
+      <div className="col-1-2">
+        <Reload sec={10} className="text-s text-gray" />
+      </div>
 
-    <div className="col-1-2 filters">
-      <Input
-        id="search"
-        label={<div className="icon embed-search-gray-dark">Keresés</div>}
-        placeholder="Cikkszám vagy terméknév..."
-      />
+      <div className="col-1-2 filters">
+        <Input
+          id="search"
+          label={<div className="icon embed-search-gray-dark">Keresés</div>}
+          placeholder="Cikkszám vagy terméknév..."
+        />
+      </div>
     </div>
 
     <Connect
       UI={Grid}
       uiProps={{
-        className: 'card',
+        freezeHeader: true,
+        className: 'card grow grid overflow',
         noResults: 'stock.noResults',
+        infinity: true,
       }}
     />
-
-    <div className="col-3-12">
-      <Reload sec={10} className="text-s text-gray" />
-    </div>
-
-    <div className="col-6-12">
-      <Connect
-        UI={Pagination}
-        uiProps={{
-          limit: 5,
-        }}
-      />
-    </div>
   </GridView>
 );
 

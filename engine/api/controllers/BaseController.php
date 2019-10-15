@@ -422,7 +422,7 @@ class BaseController extends Controller
       return $records->getMessages();
     }
 
-    return $record;
+    $this->respondWithConfig($record);
   }
 
   /**

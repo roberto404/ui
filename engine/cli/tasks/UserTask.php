@@ -154,7 +154,7 @@ class UserTask extends \Phalcon\CLI\Task
 
     foreach (explode(',', $user->permission) as $ruleId)
     {
-      if ((int) $ruleId > 250 &&  in_array($ruleId, $this->availableRules))
+      if ((int) $ruleId >= 1000 &&  in_array($ruleId, $this->availableRules))
       {
         $newPermissions[] = $ruleId;
       }

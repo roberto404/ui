@@ -1,10 +1,6 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { FormattedNumber } from 'react-intl';
-// import map from 'lodash/map';
-// import classNames from 'classnames';
-// import capitalizeFirstLetter from '@1studio/utils/string/capitalizeFirstLetter';
 import formatThousand from '@1studio/utils/string/formatThousand';
 import { File } from '@1studio/ui/form/pure/dropzone';
 import capitalizeFirstLetter from '@1studio/utils/string/capitalizeFirstLetter';
@@ -16,19 +12,37 @@ import capitalizeFirstLetter from '@1studio/utils/string/capitalizeFirstLetter';
 
 /* !- React Elements */
 
-// import IconFavorite from '../icons/heart';
-// import IconFavoriteActive from '../icons/heartSolid';
-// import IconZoom from '../icons/searchPlus';
+import IconFavorite from '../../icons/heart';
+import IconFavoriteActive from '../../icons/heartSolid';
+import IconZoom from '../../icons/searchPlus';
+
+import IconFlagHun from '../../icons/flagHun';
+import IconFlagWarranty5 from '../../icons/flagWarranty5';
+import IconFlagThm0 from '../../icons/flagThm0';
+import IconFlagRstop from '../../icons/flagRstop';
+import IconFlagFreeDelivery from '../../icons/flagFreeDelivery';
+import IconFlagElectric from '../../icons/flagElectric';
+import IconFlagMoneyBack30 from '../../icons/flagMoneyBack30';
+// import IconFlagLeather from '../../icons/flagLeather';
+
 
 
 /* !- Constants */
 
-// import { IMAGE_URL } from '../views/product/const';
+import { parse, MAX_FABRICS_LENGTH } from './const';
 
-// const IMAGE_URL = 'foo';
-
-
-import { parseFlag, parseFeatures, parseFabrics } from './const';
+const flagIcons = {
+  // CLASS_2: IconFlagHun,
+  ELECTRIC: IconFlagElectric,
+  FREE_DELIVERY: IconFlagFreeDelivery,
+  HUN: IconFlagHun,
+  // LEATHER: IconFlagLeather,
+  MONEY_BACK_30: IconFlagMoneyBack30,
+  RSTOP: IconFlagRstop,
+  // SALE: IconFlagHun,
+  THM_0: IconFlagThm0,
+  WARRANTY_5: IconFlagWarranty5,
+};
 
 
 /**
@@ -36,6 +50,13 @@ import { parseFlag, parseFeatures, parseFabrics } from './const';
  */
 const Product = (
   {
+    record,
+    isFavourite,
+    helper,
+  },
+) =>
+{
+  const {
     id,
     related_id,
     brand,
@@ -60,46 +81,13 @@ const Product = (
     incart,
     description,
     priority,
-  },
-  {
-    register,
-  },
-) =>
-{
-  const helper = register && register.data.products ? register.data.products : {};
-  // let fabrics = [];
+  } = record;
 
-  const fabrics = parseFabrics({
-    color,
-    brand,
-    manufacturer,
-  }, helper.fabrics
-  );
+  const fabrics = parse.fabrics(record, helper.fabrics);
+  const stockSample = parse.stockSample(record).join(', ');
 
-  console.log(helper.fabrics, color, brand, manufacturer);
-
-  // if (helper.fabrics[manufacturer])
-  // {
-  //   fabrics = helper.fabrics[manufacturer][color.toLocaleLowerCase()];
-  // }
-
-  console.log()
-
-  console.log(fabrics);
-
-  // Color category = brand (NF1)
-
-
-  console.log(helper.flags);
-  console.log(flag);
-
-  console.log(
-  flag
-    .map(flagId => helper.flags.find(({ id }) => id === flagId))
-    .filter(flagProps => flagProps !== null)
-    .sort((a, b) => b.priority - a.priority)
-  );
-
+  const favourite = isFavourite ?
+    <IconFavoriteActive className="w-2 fill-orange" /> : <IconFavorite className="w-2 fill-gray" />;
 
 
   return (
@@ -125,17 +113,29 @@ const Product = (
           }
         />
 
-        <div className="mb-1 heavy zoom-1.1">Leírás</div>
-
-        <div className="light text-line-l">{description || '-'}</div>
+        { description !== '' &&
+        <div>
+          <div className="mb-1 heavy zoom-1.1">Leírás</div>
+          <div className="light text-line-l">{description}</div>
+        </div>
+        }
 
         <hr />
 
         { flag && flag.length > 0 &&
         <parseFlag>
           <div className="mb-1 heavy zoom-1.1">Kiemelt tulajdonságok</div>
-          <div>
-            { parseFlag(flag, helper.flags).map(({ id, title }) => <span key={id} className="tag mx-1">{title}</span>) }
+          <div className="py-1">
+            <div className="grid-2-2">
+              {
+                parse.flag(record, helper.flags)
+                  .filter(({ id }) => flagIcons[id] !== undefined)
+                  .map(({ id, title }) => React.createElement(
+                    flagIcons[id],
+                    { className: 'col-1-7', key: id, title },
+                  ))
+              }
+            </div>
           </div>
           <hr />
         </parseFlag>
@@ -144,17 +144,29 @@ const Product = (
         <div className="grid-2 light">
           <div className="col-1-3">
             <div className="mb-1 heavy">Méretek</div>
-            <div className="mb-1/2">Szélesség: {dimension.w || '-'} cm</div>
-            <div className="mb-1/2">Magasság: {dimension.h || '-'} cm</div>
-            <div>Mélység: {dimension.d || '-'} cm</div>
+            { dimension.w &&
+            <div className="mb-1/2">{`Szélesség: ${dimension.w} cm`}</div>
+            }
+            { dimension.h &&
+            <div className="mb-1/2">{`Magasság: ${dimension.h} cm`}</div>
+            }
+            { dimension.d &&
+            <div className="mb-1/2">{`Mélység: ${dimension.d} cm`}</div>
+            }
           </div>
           <div className="col-1-3">
-            <div className="mb-1 heavy">{dimension.e || 'Egyéb méretek'}</div>
+            <div className="mb-1 heavy">{capitalizeFirstLetter(dimension.e) || 'Egyéb méretek'}</div>
             { (dimension.e || dimension.w2 || dimension.h2 || dimension.d2) &&
             <div>
-              <div className="mb-1/2">Szélesség: {dimension.w2 || '-'} cm</div>
-              <div className="mb-1/2">Magasság: {dimension.h2 || '-'} cm</div>
-              <div>Mélység: {dimension.d2 || '-'} cm</div>
+              { dimension.w2 &&
+              <div className="mb-1/2">{`Szélesség: ${dimension.w2} cm`}</div>
+              }
+              { dimension.h2 &&
+              <div className="mb-1/2">{`Magasság: ${dimension.h2} cm`}</div>
+              }
+              { dimension.d2 &&
+              <div className="mb-1/2">{`Mélység: ${dimension.d2} cm`}</div>
+              }
             </div>
             }
           </div>
@@ -162,7 +174,7 @@ const Product = (
             <div className="mb-1 heavy">Jellemzők</div>
             <span>
               {
-                parseFeatures(features, helper.features).map(({ id, title, value }) => (
+                parse.features(record, helper.features).map(({ id, title, value }) => (
                   <div key={id} className="mb-1/2">
                     <span>{capitalizeFirstLetter(title)}</span>
                     { value &&
@@ -178,16 +190,21 @@ const Product = (
       </div>
 
       <div className="p-0 mobile:order--1 desktop:w-35" style={{ minWidth: '35rem' }}>
-        <div className="mb-1 light"><span className="bold">Cikkszám:</span> {id}</div>
-        <div className="mb-1 text-l bold">{brand} {title}</div>
-        <div className="text-s light">{subtitle}</div>
+        <div className="mb-1 light"><span className="bold">Cikkszám: </span>{id}</div>
+        <div className="flex">
+          <div className="mb-1 text-l bold grow">{`${brand} ${title}`}</div>
+          <div>{favourite}</div>
+        </div>
+        <div className="text-s light text-line-l">{subtitle}</div>
         <hr />
-        <div className="mb-2 tag">raktáron</div>
+        <div className="mb-2 tag uppercase">{parse.stock(record)}</div>
         <div className="mb-1 text-s light">
           <span className="bold">Méret: </span>
-          <span>{dimension.w || '-'} x {dimension.h || '-'} x {dimension.d || '-'} cm</span>
+          <span>{parse.dimension(record)}</span>
         </div>
-        <div className="text-s light"><span className="bold">Megtekinthető:</span> Budaörs</div>
+        { stockSample &&
+        <div className="text-s light"><span className="bold">Megtekinthető: </span>{stockSample}</div>
+        }
         <hr />
         <div className="mb-1/2">
           { parseInt(price_discount) > 0 &&
@@ -211,13 +228,13 @@ const Product = (
         <hr />
         <div className="mb-1 bold">Szín:</div>
         <div className="mb-2 text-s light">A képen nem a választott szín jelenik meg!</div>
-        <div className="grid-2-2">
+        <div className="grid-1-1">
           {
-            fabrics.map(f => (
-              <div className="col-2-12" key={f.image}>
+            fabrics.slice(0, MAX_FABRICS_LENGTH).map(f => (
+              <div className="col-1-7" key={f.image}>
                 <div
                   title={f.title}
-                  className="ratio embed border"
+                  className="ratio embed border border-gray"
                   style={{
                     backgroundColor: f.colorHex,
                     backgroundImage: `url(http://kontakt.rs.hu/gyartoi_szinmintak/upload/${f.image})`,
@@ -225,6 +242,11 @@ const Product = (
                 />
               </div>
             ))
+            .concat([(
+              <div className="col-1-7 v-center h-center" key="more">
+                {fabrics.length > MAX_FABRICS_LENGTH ? `+ ${fabrics.length - MAX_FABRICS_LENGTH}` : ''}
+              </div>
+            )])
           }
         </div>
         <hr />
