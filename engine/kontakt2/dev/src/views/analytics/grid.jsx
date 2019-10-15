@@ -1,7 +1,5 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
-
 
 /* !- Actions */
 
@@ -13,11 +11,9 @@ import Grid from '@1studio/ui/grid/pure/grid';
 import Connect from '@1studio/ui/grid/connect';
 import GridModal from './gridModal';
 
-
 /* !- Constants */
 
 import { GRID_HOOK } from './const';
-
 
 /**
  * [AnalyticsGrid description]
@@ -25,9 +21,8 @@ import { GRID_HOOK } from './const';
 const AnalyticsGrid = (props, { store }) =>
 {
   const onClickCellHandler = ({ id, row }) =>
-  {
-    const data = store.getState().grid.analytics.data
-      .filter(record => String(record[row]) === id);
+{
+    const data = store.getState().grid.analytics.data.filter(record => String(record[row]) === id);
 
     store.dispatch(dialog(<GridModal data={data} />));
   };
@@ -38,19 +33,13 @@ const AnalyticsGrid = (props, { store }) =>
         id="analytics-grid"
         className="card mb-0 p-0 shadow-outer border border-white grid grow scroll-y"
       >
-        <Grid
-          hook={GRID_HOOK}
-          freezeHeader
-          infinity
-          onClickCell={onClickCellHandler}
-        />
+        <Grid hook={GRID_HOOK} freezeHeader infinity onClickCell={onClickCellHandler} />
       </Connect>
     </div>
   );
 };
 
-AnalyticsGrid.contextTypes =
-{
+AnalyticsGrid.contextTypes = {
   store: PropTypes.object,
 };
 
