@@ -5,6 +5,8 @@ import isEmpty from 'lodash/isEmpty';
 // import { getFields, getScheme, DEFAULT_FIELDS, DEFAULT_SCHEME } from '@1studio/ui/form/constants';
 // import * as Filters from '@1studio/ui/grid/filters';
 
+import { search } from '/Users/roberto/Sites/ui/src/grid/filters';
+
 
 /* !- Components */
 
@@ -102,7 +104,20 @@ export const SETTINGS = {
   [
     {
       id: 'search',
-      handler: SEARCH_MULTIPLE_HANDLER(['id', 'brand', 'title', 'title_orig']),
+      // handler: SEARCH_MULTIPLE_HANDLER(['id', 'brand', 'title', 'title_orig']),
+      handler: (record, value, filters, model, index) =>
+      {
+        return value[0] === '?' ?
+          search({
+            record,
+            value: value.substring(1),
+            helpers: {},
+            hooks: {},
+            // hooks: HOOK_TABLE,
+            index,
+          })
+          : SEARCH_MULTIPLE_HANDLER(['id', 'brand', 'title', 'title_orig'])(record, value)
+      },
       arguments: [],
       status: false,
     },

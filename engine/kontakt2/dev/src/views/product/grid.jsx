@@ -18,6 +18,7 @@ import GridView from '@1studio/ui/view/grid';
 import Connect from '@1studio/ui/grid/connect';
 import Grid from '@1studio/ui/grid/pure/grid';
 import OrderMenu from '@1studio/ui/grid/pure/gridOrder';
+import GridSearch from '@1studio/ui/grid/pure/gridSearch';
 import GridFieldGroupBy from '@1studio/ui/grid/pure/gridFieldGroupBy';
 import Product, { ProductCard } from '../../components/product';
 
@@ -160,11 +161,24 @@ const ProductGrid = (props, { register, store }) =>
 
         <div className="col-2-3">
           <div className="filters">
-            <Input
+
+            <GridSearch
               id="search"
-              label={<div className="icon embed-search-gray-dark">Keresés</div>}
               placeholder="Cikkszám vagy terméknév..."
-              // forceFocus
+              fields={[
+                { id: 'id', title: 'Sku' },
+                // { id: 'flag', title: 'Címke' }, // select
+                { id: 'brand', title: 'Márka' },
+                { id: 'title', title: 'Megnevezés' },
+                { id: 'price_sale_gross', title: 'Ár' },
+                { id: 'price_discount', title: 'Kevezmény' },
+                { id: 'manufacturer', title: 'Gyártó' }, // select
+                // { id: 'category', title: 'Kategória' }, // select
+                // { id: 'features', title: 'Jellemző' }, // ???
+                // { id: 'dimension', title: 'Méret?' }, // ???
+                // { id: 'priority', title: 'Prioritás' }, // ???
+              ]}
+              prefix="?"
             />
 
             <GridFieldGroupBy
