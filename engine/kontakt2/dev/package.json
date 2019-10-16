@@ -85,7 +85,7 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
-    "@1studio/ui": "1.13.2",
+    "@1studio/ui": "1.13.4",
     "@1studio/utils": "4.4.0",
     "blob-stream": "0.1.3",
     "classnames": "2.2.5",

@@ -1,3 +1,12 @@
+## [1.4.2](https://github.com/roberto404/rs/compare/v1.4.1...v1.4.2) (2019-10-16)
+
+
+### Bug Fixes
+
+* **kontakt2:** analytics remove extra search, websitemenu collection name ([c651c43](https://github.com/roberto404/rs/commit/c651c43))
+* **kontakt2:** gridsearch ([44d553c](https://github.com/roberto404/rs/commit/44d553c))
+* **kontakt2:** header ([c10f6a5](https://github.com/roberto404/rs/commit/c10f6a5))
+
 ## [1.4.1](https://github.com/roberto404/rs/compare/v1.4.0...v1.4.1) (2019-10-15)
 
 
