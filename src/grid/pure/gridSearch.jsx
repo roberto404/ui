@@ -35,7 +35,7 @@ export const CollectionItem = ({ onChange, record, fields }) =>
 {
   const onChangeHandler = ({ id, value }) =>
   {
-    const collectionId = id.substring(id.indexOf('#') + 1)
+    const collectionId = id.substring(id.indexOf('#') + 1);
     onChange({ ...record, [collectionId]: value });
   };
 
