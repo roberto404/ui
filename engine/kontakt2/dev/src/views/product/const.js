@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty';
 // import { getFields, getScheme, DEFAULT_FIELDS, DEFAULT_SCHEME } from '@1studio/ui/form/constants';
 // import * as Filters from '@1studio/ui/grid/filters';
 
-import { search } from '/Users/roberto/Sites/ui/src/grid/filters';
+import { search } from '@1studio/ui/grid/filters';
 
 
 /* !- Components */

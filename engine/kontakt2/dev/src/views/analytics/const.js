@@ -1,14 +1,14 @@
-
 import React from 'react';
 import moment from 'moment';
-
 
 /* !- React Elements */
 
 import { GridColumnStore, GridColumnStar } from './gridRow';
-
+import * as Filters from '@1studio/ui/grid/filters';
 
 /* !- Constants */
+
+import { SEARCH_MULTIPLE_HANDLER } from '../../constants/filters';
 
 export const UNIT = {
   q: 'db',
@@ -18,27 +18,31 @@ export const UNIT = {
 
 export const SIMPLIFY_ROOT = 1000;
 export const SIMPLIFY_UNITS = ['', 'e', 'm', 'mrd'];
-export const SIMPLIFY_FORMAT = ({ value, unit }) => (Math.round(value * 100) / 100) + unit;
+export const SIMPLIFY_FORMAT = ({ value, unit }) => Math.round(value * 100) / 100 + unit;
 
 export const DATE_FORMAT = 'YYYY-MM';
 
 export const HISTORY_MONTHS = 24;
 
 export const SETTINGS = {
-  paginate:
-  {
+  paginate: {
     page: 1,
     limit: 0,
   },
-  filters:
-  [
+  filters: [
     {
       id: 'search',
-      handler: (record, term) => term.split(/[ ,]+/g).every(word =>
-        record.pi.toString().toLowerCase().indexOf(word.toString().toLowerCase()) >= 0
-        || record.b.toString().toLowerCase().indexOf(word.toString().toLowerCase()) >= 0
-        || record.t.toString().toLowerCase().indexOf(word.toString().toLowerCase()) >= 0,
-      ),
+      handler: (record, value, filters, model, index) =>
+        value[0] === '?'
+          ? Filters.search({
+            record,
+            value: value.substring(1),
+            helpers: {},
+            hooks: {},
+              // hooks: HOOK_TABLE,
+            index,
+          })
+          : SEARCH_MULTIPLE_HANDLER(['pi', 'b', 't'])(record, value),
       arguments: [],
       status: false,
     },
@@ -59,13 +63,10 @@ export const SETTINGS = {
   ],
 };
 
-
 export const GRID_HOOK = {
-  title:
-  {
+  title: {
     title: 'Megnevezés',
-    format: ({ record }) =>
-    (
+    format: ({ record }) => (
       <div>
         <div>{record.title}</div>
         <div className="text-s text-gray light">{record.subtitle}</div>
@@ -74,47 +75,40 @@ export const GRID_HOOK = {
     align: 'left',
     width: 'calc(100% - 80rem)',
   },
-  traffic:
-  {
+  traffic: {
     title: 'Forgalom',
     format: ({ record }) => <GridColumnStore {...record} observe="traffic" />,
     align: 'right',
     width: '15rem',
   },
-  rs2:
-  {
+  rs2: {
     title: 'RS2',
     format: ({ record }) => <GridColumnStore {...record} observe="rs2" />,
     align: 'right',
     width: '15rem',
   },
-  rs6:
-  {
+  rs6: {
     title: 'RS6',
     format: ({ record }) => <GridColumnStore {...record} observe="rs6" />,
     align: 'right',
     width: '15rem',
   },
-  rs8:
-  {
+  rs8: {
     title: 'RS8',
     format: ({ record }) => <GridColumnStore {...record} observe="rs8" />,
     align: 'right',
     width: '15rem',
   },
-  rate:
-  {
+  rate: {
     title: 'Elemzés',
     format: ({ record }) => <GridColumnStar {...record} />,
     width: '20rem',
   },
 };
 
-
 export const GRID_LAYER_HOOK = {
   id: 'ID',
-  b:
-  {
+  b: {
     id: 'b',
     title: 'megnevezés',
     format: ({ record }) => (
@@ -129,8 +123,7 @@ export const GRID_LAYER_HOOK = {
   q: 'db',
   p: 'össz.nettó',
   // pi: 'SKU',
-  d:
-  {
+  d: {
     title: 'dátum',
     width: '10em',
   },
@@ -139,4 +132,4 @@ export const GRID_LAYER_HOOK = {
   // l: 'location'
   // sm: 'method'
   // sp: 'salesperson'
-}
+};

@@ -179,7 +179,7 @@ const Header = ({
 
       { title &&
       <div className="w-4 text-center">
-        <IconHamburger className="fill-gray" style={{ width: '1.5rem' }} onClick={onClickHamburgerHandler} />
+        <IconHamburger className="fill-gray pointer" style={{ width: '1.5rem' }} onClick={onClickHamburgerHandler} />
       </div>
       }
 

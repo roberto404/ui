@@ -166,7 +166,7 @@ const ProductGrid = (props, { register, store }) =>
               id="search"
               placeholder="Cikkszám vagy terméknév..."
               fields={[
-                { id: 'id', title: 'Sku' },
+                { id: 'id', title: 'Cikkszám' },
                 // { id: 'flag', title: 'Címke' }, // select
                 { id: 'brand', title: 'Márka' },
                 { id: 'title', title: 'Megnevezés' },
