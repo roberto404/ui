@@ -35,7 +35,8 @@ export const CollectionItem = ({ onChange, record, fields }) =>
 {
   const onChangeHandler = ({ id, value }) =>
   {
-    onChange({ ...record, [id]: value });
+    const collectionId = id.substring(id.indexOf('#') + 1)
+    onChange({ ...record, [collectionId]: value });
   };
 
   /**
@@ -44,7 +45,7 @@ export const CollectionItem = ({ onChange, record, fields }) =>
   return (
     <div className="grid-2">
       <Select
-        id="field"
+        id="search#field"
         onChange={onChangeHandler}
         data={fields}
         dataTranslate={false}
@@ -52,7 +53,7 @@ export const CollectionItem = ({ onChange, record, fields }) =>
         value={record.field}
       />
       <Select
-        id="operator"
+        id="search#operator"
         onChange={onChangeHandler}
         data={OPERATOR_KEYS.map(id => ({ id, title: id }))}
         dataTranslate={false}
@@ -60,7 +61,7 @@ export const CollectionItem = ({ onChange, record, fields }) =>
         value={record.operator}
       />
       <Input
-        id="value"
+        id="search#value"
         className="col-5-12"
         value={record.value}
         onChange={onChangeHandler}
