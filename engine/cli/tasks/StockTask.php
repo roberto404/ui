@@ -134,6 +134,7 @@ class StockTask extends \Phalcon\CLI\Task
         "rs8" => $record->keszlet9,
         "rs81" => $record->keszletrs8_gyartoi_minta,
         "rs82" => $record->keszletrs8_kivett_keszlet,
+        "rsT" => $record->keszlet1 + $record->keszlet29 + $record->keszlet9 + ($record->keszletrs2_gyartoi_minta + $record->keszletrs2_kivett_keszlet + $record->keszletrs6_gyartoi_minta + $record->keszletrs6_kivett_keszlet + $record->keszletrs8_gyartoi_minta + $record->keszletrs8_kivett_keszlet) / 100, // össz keszlet
         "r" => $record->keszlet4, // rendelés
         "p1" => round($record->akcar_float * $vat, -1),
         "p0" => round($record->listaar * $vat, -1),

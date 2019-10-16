@@ -22,7 +22,7 @@ export const SETTINGS = {
         </div>
       ),
     },
-    rs: {
+    rsT: {
       title: <div className="text-left pl-4">Összesen</div>,
       format: ({ record }) => (
         <Popover record={record}>
