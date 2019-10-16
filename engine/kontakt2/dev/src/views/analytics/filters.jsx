@@ -50,23 +50,18 @@ const AnalyticsFilters = () => (
 
     <div className="col-2-3">
       <div className="filters">
-        <Input
-          id="search"
-          label={<div className="icon embed-search-gray-dark">Keresés</div>}
-          placeholder="Cikkszám vagy terméknév..."
-        />
         <GridSearch
           id="search"
           placeholder="Cikkszám vagy terméknév..."
           fields={[
             { id: 'pi', title: 'Cikkszám' },
             { id: 'm', title: 'Gyártói prefix' },
-            { id: 'l', title: 'Cím' },
-            { id: 'b', title: 'Termék márka' },
+            { id: 'b', title: 'Márka' },
             { id: 't', title: 'Termék név' },
-            { id: 'q', title: 'Darab' },
-            { id: 'p', title: 'Nettó összesen' },
-            { id: 's', title: 'RS' },
+            { id: 'q', title: 'Mennyiség' },
+            { id: 'p', title: 'Nettó ár' },
+            { id: 's', title: 'Áruház (2,6,8)' },
+            { id: 'l', title: 'Város' },
             { id: 'sp', title: 'Eladó' },
           ]}
           prefix="?"

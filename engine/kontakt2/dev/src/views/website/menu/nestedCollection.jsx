@@ -44,25 +44,26 @@ const NestedCollectionItem = ({ record, index, id, onChange }) =>
 
   const onChangeHandler = ({ id, value }) =>
   {
-    onChange({ ...record, [id]: value });
+    const collectionId = id.substring(id.indexOf('#') + 1);
+    onChange({ ...record, [collectionId]: value });
   };
 
   return (
     <div className="w-full border shadow rounded p-2 mb-4">
       <Input
-        id="title"
+        id="props#title"
         label="Title"
         value={record.title}
         onChange={onChangeHandler}
       />
       <Input
-        id="subTitle"
+        id="props#subTitle"
         label="Subtitle"
         value={record.subTitle}
         onChange={onChangeHandler}
       />
       <Select
-        id="modul"
+        id="props#modul"
         label="Type"
         onChange={onChangeHandler}
         data={[{ id: 'ProductGrid', title: 'Termékek' }, { id: 'Gallery', title: 'Galéria' }]}
