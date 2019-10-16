@@ -1,3 +1,11 @@
+## [1.4.3](https://github.com/roberto404/rs/compare/v1.4.2...v1.4.3) (2019-10-16)
+
+
+### Bug Fixes
+
+* **kontakt2:** analytics ([ad5230d](https://github.com/roberto404/rs/commit/ad5230d))
+* **kontakt2:** stock ([2fa82f0](https://github.com/roberto404/rs/commit/2fa82f0))
+
 ## [1.4.2](https://github.com/roberto404/rs/compare/v1.4.1...v1.4.2) (2019-10-16)
 
 
