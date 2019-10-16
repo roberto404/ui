@@ -4,7 +4,7 @@ import React from 'react';
 
 /* !- React Elements */
 
-import Layer from '@1studio/ui/layer';
+import Layer from '/Users/roberto/Sites/ui/src/layer';
 
 
 /* !- Example: Style */

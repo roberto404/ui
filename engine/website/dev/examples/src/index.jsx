@@ -11,12 +11,12 @@ import { IntlProvider } from 'react-intl';
 
 /* !- Redux Store */
 
-import store from '@1studio/ui/store';
+import store from '/Users/roberto/Sites/ui/src/store';
 
 
 /* !- Locale */
 
-import locale from '@1studio/ui/locale';
+import locale from '/Users/roberto/Sites/ui/src/locale';
 
 locale('hu');
 

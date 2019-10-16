@@ -1,10 +1,10 @@
 import React from 'react';
 
-import Icon from '@1studio/ui/icon/mui/action/done';
-import IconPlus from '@1studio/ui/icon/mui/content/add';
-import IconDuplicate from '@1studio/ui/icon/mui/content/add';
-import IconDelete from '@1studio/ui/icon/mui/content/remove';
-import IconArrow from '@1studio/ui/icon/mui/navigation/expand_more';
+import Icon from '/Users/roberto/Sites/ui/src/icon/mui/action/done';
+import IconPlus from '/Users/roberto/Sites/ui/src/icon/mui/content/add';
+import IconDuplicate from '/Users/roberto/Sites/ui/src/icon/mui/content/add';
+import IconDelete from '/Users/roberto/Sites/ui/src/icon/mui/content/remove';
+import IconArrow from '/Users/roberto/Sites/ui/src/icon/mui/navigation/expand_more';
 
 const ExampleForm = () =>
 (
