@@ -28,14 +28,14 @@ const CalendarMonthIntervalCaroussel = props => (
     <div className="col-1-5">
       <Pager
         id={[props.fromId, props.toId]}
-        date={[new Date(), new Date()]}
+        date={[moment().startOf('day').toDate(), moment().endOf('day').toDate()]}
         className="border border-gray-light white mb-1 py-1"
       >
         Ma
       </Pager>
       <Pager
         id={[props.fromId, props.toId]}
-        date={[moment().subtract(1, 'days').toDate(), moment().subtract(1, 'days').toDate()]}
+        date={[moment().startOf('day').subtract(1, 'days').toDate(), moment().endOf('day').subtract(1, 'days').toDate()]}
         className="border border-gray-light white mb-1 py-1"
       >
         Tegnap
@@ -49,7 +49,7 @@ const CalendarMonthIntervalCaroussel = props => (
       </Pager>
       <Pager
         id={[props.fromId, props.toId]}
-        date={[moment().subtract(1, 'weeks').startOf('week').toDate(), moment().subtract(1, 'weeks').endOf('week').toDate()]}
+        date={[moment().startOf('week').subtract(1, 'weeks').toDate(), moment().endOf('week').subtract(1, 'weeks').toDate()]}
         className="border border-gray-light white mb-1 py-1"
       >
         Múlt héten
