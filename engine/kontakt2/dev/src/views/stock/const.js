@@ -7,6 +7,8 @@ import Popover from './popover';
 
 /* !- Constants */
 
+import { SEARCH_MULTIPLE_HANDLER } from '../../constants/filters';
+
 export const SETTINGS = {
   hook: {
     t: {
@@ -118,19 +120,17 @@ export const SETTINGS = {
   filters: [
     {
       id: 'search',
-      handler: (record, term) =>
-        term.split(/[ ,]+/g).every(
-          word =>
-            !record.t ||
-            record.id
-              .toString()
-              .toLowerCase()
-              .indexOf(word.toString().toLowerCase()) >= 0 ||
-            record.t
-              .toString()
-              .toLowerCase()
-              .indexOf(word.toString().toLowerCase()) >= 0,
-        ),
+      handler: (record, value, filters, model, index) =>
+        value[0] === '?'
+          ? Filters.search({
+            record,
+            value: value.substring(1),
+            helpers: {},
+            hooks: {},
+              // hooks: HOOK_TABLE,
+            index,
+          })
+          : SEARCH_MULTIPLE_HANDLER(['id', 't'])(record, value),
       arguments: [],
       status: false,
     },

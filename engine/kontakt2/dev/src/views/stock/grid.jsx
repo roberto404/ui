@@ -7,7 +7,7 @@ import moment from 'moment';
 import GridView from '@1studio/ui/view/grid';
 import Connect from '@1studio/ui/grid/connect';
 import Reload from '@1studio/ui/grid/reload';
-// import Reload from '/Users/roberto/Sites/ui/src/grid/reload';
+// import Reload from '@1studio/ui/grid/reload';
 import Grid from '@1studio/ui/grid/pure/grid';
 import GridDownload from '@1studio/ui/grid/pure/gridDownload';
 import Input from '@1studio/ui/form/pure/input';
@@ -15,6 +15,7 @@ import Toggle from '@1studio/ui/form/pure/toggle';
 import Button from '@1studio/ui/form/pure/button';
 import Pagination from '@1studio/ui/pagination/pure/pagination';
 import ShowAll from '@1studio/ui/pagination/pure/showall';
+import GridSearch from '@1studio/ui/grid/pure/gridSearch';
 // import Calendar from '@1studio/ui/form/pure/calendarMonthCaroussel';
 import CalendarMonthCaroussel, {
   CalendarButton,
@@ -35,10 +36,26 @@ const StockGrid = () => (
       </div>
 
       <div className="col-1-2 filters">
-        <Input
+        <GridSearch
           id="search"
-          label={<div className="icon embed-search-gray-dark">Keresés</div>}
           placeholder="Cikkszám vagy terméknév..."
+          fields={[
+            { id: 'id', title: 'Cikkszám' },
+            { id: 't', title: 'Megnevezés' },
+            { id: 'rs', title: 'Összes szabad készlet' },
+            { id: 'rs2', title: 'RS2 szabad készlet' },
+            { id: 'rs21', title: 'RS2 gyártói minta' },
+            { id: 'rs22', title: 'RS2 kivett készlet' },
+            { id: 'rs6', title: 'RS6 szabad készlet' },
+            { id: 'rs61', title: 'RS6 gyártói minta' },
+            { id: 'rs62', title: 'RS6 kivett készlet' },
+            { id: 'rs8', title: 'RS8 szabad készlet' },
+            { id: 'rs81', title: 'RS8 gyártói minta' },
+            { id: 'rs82', title: 'RS8 kivett készlet' },
+            { id: 'p1', title: 'Eladási ár' },
+            { id: 'r', title: 'Rendelési készlet' },
+          ]}
+          prefix="?"
         />
       </div>
     </div>
