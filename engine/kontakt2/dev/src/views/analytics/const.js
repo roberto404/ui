@@ -120,7 +120,12 @@ export const GRID_HOOK = {
 };
 
 export const GRID_LAYER_HOOK = {
-  id: 'ID',
+  a: {
+    id: 'a',
+    title: 'számla',
+    align: 'left',
+    width: '40%',
+  },
   b: {
     id: 'b',
     title: 'megnevezés',
