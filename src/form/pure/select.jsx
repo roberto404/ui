@@ -74,13 +74,13 @@ class Select extends Field
 
         { this.label }
 
-        <div className="table">
+        <div className="h-center">
 
           { this.state.prefix &&
           <div className="prefix">{this.state.prefix}</div>
           }
 
-          <div>
+          <div className="w-full">
             <select
               id={this.props.id}
               name={this.props.id}

@@ -535,7 +535,7 @@ class FormField extends Component
 
         { this.label }
 
-        <div className="table">
+        <div className="h-center">
 
           { this.state.prefix &&
           <div className="prefix">{this.state.prefix}</div>

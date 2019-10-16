@@ -43,7 +43,7 @@ class Input extends Field
 
         { this.label }
 
-        <div className="table">
+        <div className="h-center">
 
           { this.state.prefix &&
           <div className="prefix">{this.state.prefix}</div>
