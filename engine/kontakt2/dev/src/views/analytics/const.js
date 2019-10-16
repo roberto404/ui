@@ -8,6 +8,7 @@ import * as Filters from '@1studio/ui/grid/filters';
 
 /* !- Constants */
 
+import { DATE_FORMAT_HTML5 } from '@1studio/ui/calendar/constants';
 import { SEARCH_MULTIPLE_HANDLER } from '../../constants/filters';
 
 export const UNIT = {
@@ -49,10 +50,22 @@ export const SETTINGS = {
     {
       id: 'date',
       handler: (record, terms) => record.d.indexOf(terms) === 0,
-      // arguments: [],
-      // status: false,
-      arguments: [moment().format(DATE_FORMAT)],
+      arguments: [],
+      status: false,
+      // arguments: [moment().format(DATE_FORMAT)],
+      // status: true,
+    },
+    {
+      id: 'start',
+      handler: (record, terms) => moment(record.d) >= moment(terms),
+      arguments: [moment().startOf('month').format(DATE_FORMAT_HTML5)],
       status: true,
+    },
+    {
+      id: 'end',
+      handler: (record, terms) => moment(record.d) <= moment(terms),
+      arguments: [],
+      status: false,
     },
     {
       id: 'method',

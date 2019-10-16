@@ -59,7 +59,8 @@ class AnalyticsTask extends \Phalcon\CLI\Task
         vhely,
         datum as datum,
         fej.bizkod,
-        fej.munkaszam
+        fej.munkaszam,
+        fej.szamlaszam
       FROM
         rsdb.upload_szamla_sor as sor
       LEFT JOIN
@@ -86,6 +87,7 @@ class AnalyticsTask extends \Phalcon\CLI\Task
 
       $results[] = array(
         'id' => $record['id'], // Id of purchase created by DOS
+        'a' => $record['szamlaszam'], // account num
         'pi' => $record['cikkszam'],
         's' => $record['bolt'], // Store id: RS2, RS6, RS8
         'q' => $record['mennyiseg'], // Quantity

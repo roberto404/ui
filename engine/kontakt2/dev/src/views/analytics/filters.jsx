@@ -11,6 +11,7 @@ import produceNumericArray from '@1studio/utils/array/produceNumericArray';
 /* !- React Elements */
 
 import { Input, Dropdown } from '@1studio/ui/form/pure/intl';
+import { CalendarMonthIntervalCarousselButton } from '@1studio/ui/form/pure/calendarMonthIntervalCaroussel';
 
 import PivotTable from './pivotTable';
 import GridSearch from '@1studio/ui/grid/pure/gridSearch';
@@ -74,19 +75,14 @@ const AnalyticsFilters = () => (
           placeholder="Összes"
           data={[{ id: '22', title: 'Azonnali' }, { id: '33', title: 'Megrendeléses' }]}
         />
-        <Dropdown
-          id="date"
-          buttonClassName="gray outline shadow"
+        <CalendarMonthIntervalCarousselButton
           label="Időszak"
-          placeholder="Teljes időszak"
-          data={dateData}
         />
         <Dropdown
           id="dateCompare"
           buttonClassName="gray outline shadow"
           label="Hasonlít"
           placeholder="&empty;"
-          // value="2019-01"
           data={dateData}
         />
       </div>

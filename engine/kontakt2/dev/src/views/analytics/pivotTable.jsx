@@ -82,6 +82,7 @@ export const PivotTableFilter = () =>
         { id: 'q', title: 'Mennyiség' },
         { id: 'p', title: 'Nettó ár' },
         { id: 'p2', title: 'Bruttó ár' },
+        { id: 'a', title: 'Számlaszám' },
       ]}
       placeholder={false}
     />
