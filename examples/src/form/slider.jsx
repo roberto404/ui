@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 
-import { setValues } from '../../../src/form/actions';
+import { setValues, unsetValues } from '../../../src/form/actions';
 
 import Form,
 {
@@ -13,7 +13,7 @@ from '../../../src/form/pure';
 
 
 
-const Example = ({ setValues }) =>
+const Example = ({ setValues, unsetValues }) =>
 {
   return (
     <Form
@@ -26,8 +26,11 @@ const Example = ({ setValues }) =>
         value={[0, 30]}
         steps={10}
       />
-    <div className="button value" onClick={() => setValues({ slider: [0, 50] }, 'example')}>
+      <div className="button value" onClick={() => setValues({ slider: [0, 50] }, 'example')}>
         set center
+      </div>
+      <div className="button value" onClick={() => unsetValues({ slider: undefined }, 'example')}>
+        reset
       </div>
 
       <Slider
@@ -43,6 +46,9 @@ const Example = ({ setValues }) =>
       <div className="button value" onClick={() => setValues({ slider2: [1400, 1800] }, 'example')}>
         set center
       </div>
+      <div className="button value" onClick={() => unsetValues({ slider2: undefined }, 'example')}>
+        reset
+      </div>
 
     </Form>
   );
@@ -52,5 +58,6 @@ export default connect(
   null,
   {
     setValues,
+    unsetValues,
   }
 )(Example);

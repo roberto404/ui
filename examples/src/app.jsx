@@ -26,7 +26,7 @@ import Layer from '../../src/layer';
 // import Example from './form/flat';
 // import Example from './form/plain';
 // import Example from './form/collection';
-// import Example from './form/slider';
+import Example from './form/slider';
 
 
 /* !- Example: Grid */
@@ -35,7 +35,7 @@ import Layer from '../../src/layer';
 // import Example from './grid/connect';
 // import Example from './grid/dynamic';
 // import Example from './grid/filters';
-import Example from './grid/search';
+// import Example from './grid/search';
 // import Example from './grid/extra';
 // import Example from './grid/complex';
 // import Example from './grid/list';

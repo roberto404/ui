@@ -30,8 +30,11 @@ class Slider extends Field
 
   componentWillMount()
   {
-    this.onChangeHandler([this.props.from, this.props.to]);
-    this.onChangeListener(); // redux subscription has not yet occurred
+    if (this.props.value.length === 0)
+    {
+      this.onChangeHandler([this.props.from, this.props.to]);
+      this.onChangeListener(); // redux subscription has not yet occurred
+    }
 
     super.componentWillMount();
   }
@@ -134,8 +137,8 @@ class Slider extends Field
 
     const x = clamp(
       event.center.x - this.field.getBoundingClientRect().x,
-      index === 0 ? 0 : this.percentToPixel(this.state.percent[0]),
-      index === 0 ? this.percentToPixel(this.state.percent[1]) : this.field.offsetWidth,
+      index === 0 ? 0 : this.percentToPixel(this.state.percent[0]) + this.handleStart.offsetWidth,
+      index === 0 ? this.percentToPixel(this.state.percent[1]) - this.handleEnd.offsetWidth : this.field.offsetWidth,
     );
 
     switch (event.type)

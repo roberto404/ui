@@ -683,15 +683,14 @@
 
   &.slider-field
   {
+    .h-center
+    {
+      justify-content: space-between;
+    }
 
     .value
     {
       padding-bottom: 1rem;
-
-      &:not(:first-child)
-      {
-        text-align: right;
-      }
     }
 
     .slider
