@@ -19,6 +19,8 @@ export const ShowMore = (
   format,
   className,
   buttonClassName,
+  exponentialLimit,
+  disableLimitExponential,
 },
 {
   store,
@@ -30,7 +32,10 @@ export const ShowMore = (
   {
     event.preventDefault();
 
-    const limit = model.paginate.limit + addLimit;
+    const multiplier = disableLimitExponential ?
+      1 : Math.min(Math.ceil(model.paginate.limit / addLimit), exponentialLimit);
+
+    const limit = model.paginate.limit + (multiplier * addLimit);
     store.dispatch(modifyLimit(limit, grid));
   };
 
@@ -68,6 +73,8 @@ ShowMore.propTypes =
   className: PropTypes.string,
   buttonClassName: PropTypes.string,
   addLimit: PropTypes.number,
+  exponentialLimit: PropTypes.number,
+  disableLimitExponential: PropTypes.bool,
   format: PropTypes.func,
 };
 
@@ -75,6 +82,8 @@ ShowMore.defaultProps =
 {
   label: 'Show More',
   addLimit: 24,
+  exponentialLimit: 240,
+  disableLimitExponential: false,
   className: 'col-1-4 m-auto mt-4',
   buttonClassName: 'primary w-auto m-auto',
   format: ({ current, limit }) => `${current} of ${limit} items`,
