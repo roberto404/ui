@@ -88,8 +88,18 @@ class GridFilters extends Component
 
       if (Array.isArray(values))
       {
-        const index = values.findIndex(v => v === value);
-        newValues = [...values.slice(0, index), ...values.slice(index + 1)];
+        const index = values.findIndex(v =>
+          ((!isNaN(v) && !isNaN(value)) ? parseFloat(v) === parseFloat(value) : v === value)
+        );
+
+        if (index !== -1)
+        {
+          newValues = [...values.slice(0, index), ...values.slice(index + 1)];
+        }
+        else
+        {
+          newValues = [];
+        }
 
         if (newValues.length === 0)
         {
@@ -120,6 +130,8 @@ class GridFilters extends Component
         }
       }
 
+      newValues = this.props.onClick({ id, value, values, newValues, event });
+
       if (newValues !== undefined)
       {
         this.context.store.dispatch(setValues({ [id]: newValues }));
@@ -128,6 +140,7 @@ class GridFilters extends Component
       {
         this.context.store.dispatch(unsetValues({ id }));
       }
+
     }
   }
 
@@ -194,6 +207,7 @@ class GridFilters extends Component
  */
 GridFilters.propTypes =
 {
+  onClick: PropTypes.func,
   /**
    * Format field value.
    */
@@ -208,6 +222,7 @@ GridFilters.propTypes =
  */
 GridFilters.defaultProps =
 {
+  onClick: ({ newValues }) => newValues,
   className: '',
   tagClassName: 'tag pointer no-select',
   format: filter => filter.value,
