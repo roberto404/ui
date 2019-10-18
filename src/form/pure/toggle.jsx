@@ -90,6 +90,10 @@ Toggle.defaultProps =
 {
   ...Toggle.defaultProps,
   data: [],
+  /**
+   * Cast to boolean, because Formfield getClasses always give back active
+   */
+  stateFormat: value => !!+value,
 };
 
 export default Toggle;
