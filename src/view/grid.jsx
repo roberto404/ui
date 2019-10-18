@@ -100,34 +100,7 @@ class GridView extends Component
 
   componentDidMount = () =>
   {
-    // fetch data via api
-    if (this.api)
-    {
-      this.props
-        .fetchData(this.onLoad, this.id, this.settings, this.id)
-        .then((action) =>
-        {
-          const grid = this.context.store.getState().grid[this.id];
-
-          if (this.props.onLoad)
-          {
-            if (typeof this.props.onLoad === 'function')
-            {
-              this.props.onLoad({ action, grid });
-            }
-            else
-            {
-              switch (this.props.onLoad)
-              {
-                case 'selectFirst':
-                  this.props.setValues({ id: FORM_PREFIX + this.id, value: [grid.data[0].id] });
-                  break;
-                default:
-              }
-            }
-          }
-        });
-    }
+    this.fetchDataViaApi();
 
     (this.settings.filters || []).forEach((filter) =>
     {
@@ -175,6 +148,7 @@ class GridView extends Component
 
     this.props.flush(this.id);
   }
+
 
   /* !- Handlers */
 
@@ -346,6 +320,39 @@ class GridView extends Component
     }
 
     return settings;
+  }
+
+
+  fetchDataViaApi()
+  {
+    // fetch data via api
+    if (this.api)
+    {
+      this.props
+        .fetchData(this.onLoad, this.id, this.settings, this.id)
+        .then((action) =>
+        {
+          const grid = this.context.store.getState().grid[this.id];
+
+          if (this.props.onLoad)
+          {
+            if (typeof this.props.onLoad === 'function')
+            {
+              this.props.onLoad({ action, grid });
+            }
+            else
+            {
+              switch (this.props.onLoad)
+              {
+                case 'selectFirst':
+                  this.props.setValues({ id: FORM_PREFIX + this.id, value: [grid.data[0].id] });
+                  break;
+                default:
+              }
+            }
+          }
+        });
+    }
   }
 
   render()
