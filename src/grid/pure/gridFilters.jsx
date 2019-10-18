@@ -140,7 +140,6 @@ class GridFilters extends Component
       {
         this.context.store.dispatch(unsetValues({ id }));
       }
-
     }
   }
 
@@ -156,7 +155,11 @@ class GridFilters extends Component
     const tags = this.state.filters.reduce(
       (result, filter) =>
       {
-        if (Array.isArray((filter.values[0])))
+        if (typeof filter.values[0] === 'string')
+        {
+          result.push({ id: filter.id, value: filter.values[0] });
+        }
+        else if (Array.isArray((filter.values[0])))
         {
           filter.values[0].forEach(value => result.push({ id: filter.id, value }));
         }
