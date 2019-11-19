@@ -114,7 +114,7 @@ export default connect(
 
 Cross-browser testing provided by:
 
-<a href="http://browserstack.com"><img height="80" src="https://roberto404.github.io/ui/images/browserstack.png" alt="BrowserStack"></a>
+<a href="http://browserstack.com"><img height="42" src="https://roberto404.github.io/ui/images/browserstack.png" alt="BrowserStack"></a>
 
 ## License
 
