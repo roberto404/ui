@@ -1,4 +1,5 @@
-# ui &middot; [![travis build](https://img.shields.io/travis/roberto404/ui.svg)](https://travis-ci.org/roberto404/ui) [![codecov coverage](https://img.shields.io/codecov/c/github/roberto404/ui.svg)](https://codecov.io/gh/roberto404/ui) [![version](https://img.shields.io/npm/v/@1studio/ui.svg)](http://npm.im/@1studio/ui) [![commit](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/) [![type](https://img.shields.io/badge/type%20checking-flow-yellow.svg)](https://flow.org/)
+# ui &middot; [![travis build](https://img.shields.io/travis/roberto404/ui.svg)](https://travis-ci.org/roberto404/ui) [![codecov coverage](https://img.shields.io/codecov/c/github/roberto404/ui.svg)](https://codecov.io/gh/roberto404/ui) [![version](https://img.shields.io/npm/v/@1studio/ui.svg)](http://npm.im/@1studio/ui) [![commit](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/) [![type](https://img.shields.io/badge/type%20checking-flow-yellow.svg)](https://flow.org/) [![BrowserStack Status](https://automate.browserstack.com/badge.svg?badge_key=aTd0NExIVkRlU1paUE9wb28wZ29ZeldnYkhCSEh1ZFduMm80NkpabHBjdz0tLVJXQWM2aFBDNWlsdE5sK0tiakl0bHc9PQ==--4107ce3902fc6062c0099cef44e9051b637f7b96)](https://automate.browserstack.com/public-build/aTd0NExIVkRlU1paUE9wb28wZ29ZeldnYkhCSEh1ZFduMm80NkpabHBjdz0tLVJXQWM2aFBDNWlsdE5sK0tiakl0bHc9PQ==--4107ce3902fc6062c0099cef44e9051b637f7b96)
+
 A collection of useful React/Redux UI elements. [Examples](https://roberto404.github.io/ui/)
 
 ## Installation
@@ -108,6 +109,12 @@ export default connect(
 ```
 
 [More about Actions](./MANUAL.md).
+
+## Testing
+
+Cross-browser testing provided by:
+
+<a href="http://browserstack.com"><img height="80" src="https://roberto404.github.io/ui/images/browserstack.png" alt="BrowserStack"></a>
 
 ## License
 
