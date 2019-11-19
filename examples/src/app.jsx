@@ -1,98 +1,106 @@
 
-import React from 'react';
+import React, { Component } from 'react';
+import Tree from '@1studio/utils/models/tree';
 
 
 /* !- React Elements */
 
-// import Layer from '@1studio/ui/layer';
+import Connect from '../../src/connect';
+import NestedList, { Menu as NestedListItem } from '../../src/grid/pure/nestedList';
 import Layer from '../../src/layer';
 
 
-/* !- Example: Style */
+/* !- Constants */
 
-// import Example from './style/avatar';
-// import Example from './style/buttons';
-// import Example from './style/screen';
-// import Example from './icon/mui';
-// import Example from './icon/la';
+import Examples from './examples';
 
+const ExamplesTree = [];
 
-/* !- Example: Form */
+Object.keys(Examples).forEach((parent, parentIndex) =>
+{
+  const parentId = ExamplesTree.length + 1;
 
-// import Example from './form/basic';
-// import Example from './form/fields';
-// import Example from './form/submit';
-// import Example from './form/connect';
-// import Example from './form/flat';
-// import Example from './form/plain';
-// import Example from './form/collection';
-import Example from './form/slider';
+  ExamplesTree.push({
+    id: parentId,
+    status: 1,
+    title: parent,
+    pid: 0,
+    pos: parentIndex,
+  });
 
+  Object.keys(Examples[parent]).forEach((child, childIndex) =>
+  {
+    const childId = ExamplesTree.length + 1;
 
-/* !- Example: Grid */
-
-// import Example from './grid/static';
-// import Example from './grid/connect';
-// import Example from './grid/dynamic';
-// import Example from './grid/filters';
-// import Example from './grid/search';
-// import Example from './grid/extra';
-// import Example from './grid/complex';
-// import Example from './grid/list';
-// import Example from './grid/casual';
-// import Example from './grid/pivotTable';
-// import Example from './grid/pivotTableComplex';
-// import Example from './grid/withoutGrid';
-// import Example from './grid/nestedList';
-// import Example from './grid/nestedListMenu';
-// import Example from './grid/nestedListAccordion';
+    ExamplesTree.push({
+      id: childId,
+      status: 1,
+      title: child,
+      pid: parentId,
+      pos: childIndex,
+    });
+  });
+});
 
 
-/* !- Example: Layer */
+const Menu = new Tree(ExamplesTree);
 
-// import Example from './layer/actions';
+/**
+ * [Content description]
+ * @extends Component
+ */
+class Content extends Component
+{
+  constructor(props)
+  {
+    super(props);
 
+    this.state = {
+      title: 'Form / Fields',
+      component: Examples.form.fields,
+    };
+  }
 
-/* !- Example: Caroussel */
+  onClickItemHandler = ({ pid, title }) =>
+  {
+    const parent = Menu.getItem(pid);
 
-// import Example from './caroussel/slides';
-// import Example from './caroussel/caroussel';
-// import Example from './caroussel/dynamic';
+    this.setState({
+      title: `${parent.title} / ${title}`,
+      component: Examples[parent.title][title],
+    });
+  }
 
-
-/* !- Example: Calendar */
-
-// import Example from './calendar/static';
-// import Example from './calendar/week';
-// import Example from './calendar/dynamic';
-// import Example from './calendar/caroussel';
-// import Example from './calendar/filters';
-
-
-/* !- Example: Chart */
-
-// import Example from './chart/coordinate';
-// import Example from './chart/complex';
-// import Example from './chart/barChart';
-
-
-/* !- Example: Map */
-
-// import Example from './map/gmaps';
-// import Example from './map/mapbox/static';
-// import Example from './map/mapbox/dynamic';
-
-
-/* !- Example: Utils */
-
-// import Example from './print';
-
+  render()
+  {
+    return (
+      <div className="column h-screen">
+        <div className="px-4 py-2 grow overflow grid">
+          <div className="col-1-4 scroll-y bg-gray-light p-2">
+            <Connect>
+              <NestedList
+                nestedData={Menu.getNestedTree()}
+                UI={NestedListItem(Menu, this.onClickItemHandler)}
+              />
+            </Connect>
+          </div>
+          <div className="scroll-y bg-white-light p-2">
+            <h2>{this.state.title}</h2>
+            <div>
+              {React.createElement(this.state.component)}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
 
 
 export default () =>
 (
   <div className="application">
-    <Example />
+    <Content />
     <Layer />
   </div>
 );

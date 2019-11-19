@@ -5,7 +5,6 @@ import Tree from '@1studio/utils/models/tree';
 
 /* !- React Elements */
 
-import { Grid as GridView } from '../../../src/view';
 import Connect from '../../../src/connect';
 import NestedList from '../../../src/grid/pure/nestedList';
 import IconArrow from '../../../src/icon/mui/navigation/expand_more';
@@ -24,9 +23,8 @@ const Menu = new Tree([
 ]);
 
 /**
- *
+ * import { Parent } from '../../../src/grid/pure/nestedList';
  */
-
 class Parent extends Component
 {
   constructor(props)
@@ -65,6 +63,14 @@ class Parent extends Component
 }
 
 
+/**
+ * import NestedList, { Menu as NestedListItem } from '../../src/grid/pure/nestedList';
+ *
+ * <NestedList
+ *   nestedData={Menu.getNestedTree()}
+ *   UI={NestedListItem(Menu)}
+ * />
+ */
 const NestedListItem = ({ index, children, level, items }) =>
 {
   if (children && children.length)
