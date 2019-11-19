@@ -66,6 +66,29 @@ export const Accordion = (props) =>
   return props.items;
 };
 
+export const Menu = (Tree, onClick) => ({ index, children, level, items }) =>
+{
+  if (children && children.length)
+  {
+    return (
+      <Parent
+        level={level}
+        title={Tree.getItem(index.substring(1)).title}
+      >
+        {children}
+      </Parent>
+    );
+  }
+
+  const item = Tree.getItem(index.substring(1));
+
+  return (
+    <div onClick={() => onClick(item)} className="" style={{ padding: `0 0 1rem ${Math.max(level + 3, 5)}rem` }}>
+      {item.title}
+    </div>
+  );
+};
+
 /**
  * Results Component
  * display every record width children
