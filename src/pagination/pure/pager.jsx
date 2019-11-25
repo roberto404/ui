@@ -38,7 +38,7 @@ export const Pager = (
         {prev}
       </button>
       <button
-        className={classNames({ active: page !== totalPage && totalPage > 0 })}
+        className={classNames({ active: page < totalPage && totalPage > 0 })}
         onClick={onClickButtonHandler}
         data-direction="1"
       >

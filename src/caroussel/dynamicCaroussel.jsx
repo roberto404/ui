@@ -28,12 +28,12 @@ export const CAROUSSEL_SETTINGS = {
  * @param  {[array]} data static data
  * @return {[array]}      active three data
  */
-const fetchData = (page, data) =>
+const fetchData = (page, data, visibleSlides) =>
 {
   const items = [];
   const length = data.length;
 
-  for (let i = 0; i < 3; i += 1)
+  for (let i = 0; i < 3 * visibleSlides; i += 1)
   {
     /**
     * infinite loop determine current loop position
@@ -98,17 +98,43 @@ class DynamicCaroussel extends Component
   componentWillMount()
   {
     // Enable caroussel settings and create datas if it is non-static
-    this.updateSlides(this.props);
+    this.updateSlides();
   }
 
-  updateSlides = (props) =>
+  updateSlides = (props = this.props) =>
   {
-    this.context.store.dispatch(
-      setData(
-        props.fetchData(this.carousselPage, props.data),
-        CAROUSSEL_SETTINGS,
-        props.id,
-      ));
+    const store = this.context.store.getState().grid[this.props.id];
+
+    /**
+     * Length of data less than necessary number of items
+     */
+    if (props.data.length && props.data.length < 3 * props.visibleSlides)
+    {
+      if (!store)
+      {
+        this.context.store.dispatch(
+          setData(
+            props.data,
+            {
+              paginate: {
+                limit: 1,
+                page: 1,
+              },
+            },
+            props.id,
+          ),
+        );
+      }
+    }
+    else
+    {
+      this.context.store.dispatch(
+        setData(
+          props.fetchData(this.carousselPage, props.data, props.visibleSlides),
+          CAROUSSEL_SETTINGS,
+          props.id,
+        ));
+    }
   }
 
   carousselPage = 0;
@@ -122,13 +148,7 @@ class DynamicCaroussel extends Component
     if (this.carousselPage !== nextPage)
     {
       this.carousselPage = nextPage;
-
-      this.context.store.dispatch(
-        setData(
-          this.props.fetchData(this.carousselPage, this.props.data),
-          CAROUSSEL_SETTINGS,
-          this.props.id,
-        ));
+      this.updateSlides();
     }
   }
 
@@ -155,15 +175,15 @@ DynamicCaroussel.propTypes =
   * @param {data} array static data
   */
   fetchData: PropTypes.func,
+  visibleSlides: PropTypes.number,
 };
-
 
 DynamicCaroussel.defaultProps =
 {
   data: [],
   fetchData,
+  visibleSlides: 1,
 };
-
 
 DynamicCaroussel.contextTypes = {
   store: PropTypes.object,

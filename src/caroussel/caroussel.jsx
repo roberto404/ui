@@ -15,7 +15,7 @@ import * as GridActions from '../grid/actions';
 import Slides, { Slide } from './slides';
 import Pager from '../pagination/pure/pager';
 import Pages from '../pagination/pure/pages';
-import IconArrow from '../icon/arrow';
+import IconArrow from '../icon/mui/navigation/expand_less';
 
 
 /* !- Constants */
@@ -60,6 +60,8 @@ const Caroussel = (
   className,
   autoplay,
   disablePages,
+  pagerNextUI,
+  pagerPrevUI,
 },
 ) =>
 {
@@ -78,27 +80,21 @@ const Caroussel = (
    * stepSlides = 10
    * => remakePage = 1...5
    */
-  // const remakePage = Math.floor(page / stepSlides) + 1;
   const remakePage = Math.ceil(page / stepSlides);
 
 
   /* !-- Handlers -- */
-  //
-  // const onClickPager = (nextPage, prevPage) =>
-  // {
-  //   const direction = nextPage > prevPage ? 1 : -1;
-  //
-  //   return goToPage(
-  //     (Math.floor((nextPage + (direction * stepSlides)) / stepSlides) * stepSlides) + 1,
-  //     id,
-  //   );
-  // };
 
-  const onClickPage = nextPage =>
-    goToPage(
-      ((nextPage - 1) * stepSlides) + 1,
-      id,
-    );
+  const onClickPage = (nextPage) =>
+  {
+    if (nextPage > 0 && nextPage <= remakeTotalPage)
+    {
+      goToPage(
+        ((nextPage - 1) * stepSlides) + 1,
+        id,
+      );
+    }
+  };
 
   const carousselClasses = classNames({
     caroussel: true,
@@ -121,8 +117,8 @@ const Caroussel = (
         totalPage={remakeTotalPage}
         page={remakePage}
         goToPage={onClickPage}
-        prevText={<IconArrow />}
-        nextText={<IconArrow />}
+        prevText={pagerPrevUI}
+        nextText={pagerNextUI}
       />
       }
 
@@ -153,6 +149,8 @@ Caroussel.propTypes =
   className: PropTypes.string,
   autoplay: PropTypes.number,
   disablePages: PropTypes.bool,
+  pagerNextUI: PropTypes.element,
+  pagerPrevUI: PropTypes.element,
 };
 
 /**
@@ -169,6 +167,8 @@ Caroussel.defaultProps =
   Slide,
   autoplay: 0,
   disablePages: false,
+  pagerNextUI: <IconArrow />,
+  pagerPrevUI: <IconArrow />,
 };
 
 

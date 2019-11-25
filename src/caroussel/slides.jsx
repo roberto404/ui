@@ -4,11 +4,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Hammer from 'hammerjs';
 import isEqual from 'lodash/isEqual';
-import { CAROUSSEL_SETTINGS } from './caroussel';
+import clamp from '@1studio/utils/math/clamp';
 
 /* !- Redux Actions */
 
 import * as GridActions from '../grid/actions';
+
+
+/* !- Constants */
+
+import { CAROUSSEL_SETTINGS } from './caroussel';
 
 
 /* !- React Components */
@@ -162,9 +167,10 @@ class Slides extends Component
 
   dragListener = (event) =>
   {
-    if (!this.StartCoord)
+    if (!this.startCoord)
     {
-      this.StartCoord = event.center;
+      this.startCoord = event.center;
+      this.startCoord.left = this.slides.offsetLeft;
 
       if (this.state.active === false)
       {
@@ -174,8 +180,8 @@ class Slides extends Component
     }
 
     const shift = {
-      x: event.center.x - this.StartCoord.x,
-      y: event.center.y - this.StartCoord.y,
+      x: event.center.x - this.startCoord.x,
+      y: event.center.y - this.startCoord.y,
     };
 
 
@@ -183,7 +189,12 @@ class Slides extends Component
     {
       case 'panmove':
         {
-          if (this.state.x !== shift.x || this.state.y !== shift.y)
+          if (
+            this.startCoord.left + shift.x < this.slides.offsetWidth * 0.3
+            && this.startCoord.left + shift.x >
+              (this.slides.scrollWidth * -1) + (this.slides.offsetWidth * 0.7)
+            && (this.state.x !== shift.x || this.state.y !== shift.y)
+          )
           {
             this.setState(shift);
           }
@@ -192,16 +203,16 @@ class Slides extends Component
 
       case 'panend':
         {
-          this.StartCoord = null;
+          this.startCoord = null;
 
           if (Math.abs(this.state.x) / this.mask.offsetWidth > 0.1)
           {
             const direction = this.state.x < 0 ? 1 : -1;
-            const steps = Math.ceil(
+            const steps = Math.round(
               Math.abs(this.state.x) / (this.mask.offsetWidth / this.props.visibleSlides),
             );
 
-            this.props.goToPage(this.props.page + (steps * direction), this.props.id);
+            this.goToSlide(this.props.page + (steps * direction), this.props.id);
           }
 
           this.setState({
@@ -222,13 +233,42 @@ class Slides extends Component
     }
   }
 
+  onMouseOverHandler = () =>
+  {
+    if (this.props.autoplay)
+    {
+      clearInterval(this.autoplay);
+    }
+  }
+
+  // onMouseOutHandler = (event) =>
+  // {
+    // if (this.props.autoplay && !event.currentTarget.contains(event.relatedTarget))
+    // {
+    //
+    // }
+  // }
+
+  goToSlide = (page) =>
+  {
+    const nextPage = clamp(page, 1, this.props.totalPage - this.props.visibleSlides + 1);
+
+    if (nextPage !== this.props.page)
+    {
+      this.props.goToPage(
+        nextPage,
+        this.props.id,
+      );
+    }
+  }
+
   goToNextSlide = () =>
   {
     const nextPage =
       (this.props.page === (this.props.totalPage - this.props.visibleSlides + 1)) ?
         1 : this.props.page + 1;
 
-    this.props.goToPage(nextPage, this.props.id);
+    this.goToSlide(nextPage);
   }
 
   render()
@@ -240,6 +280,8 @@ class Slides extends Component
     return (
       <div
         className="slide-mask"
+        onMouseOver={this.onMouseOverHandler}
+        // onMouseOut={this.onMouseOutHandler}
         ref={(ref) =>
         {
           this.mask = ref;
