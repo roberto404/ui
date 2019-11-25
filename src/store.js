@@ -1,11 +1,14 @@
-
+import React from 'react';
 import { createStore, applyMiddleware, compose } from 'redux';
 import promise from 'redux-promise';
 import { createLogger } from 'redux-logger';
 import isEmpty from 'lodash/isEmpty';
+import UserError from '@1studio/utils/error/userError';
 
-import Reducers from './reducers';
+import defaultReducers from './reducers';
 import { setUser } from './authentication/actions';
+import { dialog } from './layer/actions';
+
 
 const loadStateFromLocalStorage = () =>
 {
@@ -54,46 +57,70 @@ export const userRefurbishMiddleware = store => next => (action) =>
   // user localStorage erased, this notify redux store
   if (user.isLogged && isEmpty(user.model.data))
   {
+    // next(dialog(<div>111</div>));
+
     return next(setUser());
   }
-  // update not necessary
-  // else
-  // {
-  //   next(setUser());
-  // }
-
 
   return next(action);
 };
 
 
 /**
+ * Catch javascript error
+ * @ TODO
+ * editable message to model
+ * modal on click reload page from baseUrl
+ */
+export const expectionHandler = (error, extra) =>
+{
+  if (error.name === 'UserError')
+  {
+    error.dev = { ...error.dev, ...extra };
+    throw error;
+  }
+  else
+  {
+    throw new UserError(error, extra);
+  }
+};
+
+/**
  * Sends crash reports as state is updated and listeners are notified.
  */
-// const crashReporter = store => next => action => {
-//   try {
-//     return next(action)
-//   } catch (err) {
-//     console.error('Caught an exception!', err)
-//     Raven.captureException(err, {
-//       extra: {
-//         action,
-//         state: store.getState()
-//       }
-//     })
-//     throw err
-//   }
-// }
-
-
-export const storeWrapper = (reducers = null) =>
+export const crashReporterMiddleware = exception => store => next => (action) =>
 {
-  const middlewares = [promise];
+  try
+  {
+    return next(action);
+  }
+  catch (error)
+  {
+    if (!exception)
+    {
+      throw error;
+    }
 
+    exception(
+      error,
+      {
+        action,
+        state: store.getState(),
+      },
+      next,
+    );
+  }
+};
+
+
+export const storeWrapper = (reducers = null, middlewares = []) =>
+{
   if (process.env.NODE_ENV !== 'production')
   {
-    middlewares.push(createLogger());
+    middlewares.unshift(createLogger());
   }
+
+  middlewares.unshift(promise);
 
   middlewares.push(userRefurbishMiddleware);
 
@@ -115,7 +142,7 @@ export const storeWrapper = (reducers = null) =>
   }
 
   return createStore(
-    reducers || Reducers,
+    reducers || defaultReducers,
     loadStateFromLocalStorage(),
     enhancers,
   );
