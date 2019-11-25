@@ -33,7 +33,7 @@ button,
     height: 1.5em;
     margin: -.5em 0 -.5em 0;
     position: relative;
-    top: -1px;
+    display: block;
     transition: .2s;
 
     &:first-child:not(:last-child)
