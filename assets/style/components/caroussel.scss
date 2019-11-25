@@ -36,18 +36,23 @@
 
   .pager button
   {
+    box-sizing: content-box;
     position: absolute;
     right: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: auto;
+    padding: 0;
+    width: 2em;
+    height: 2em;
     border: none;
 
     svg
     {
-      transform: rotate(-90deg);
-      width: 2rem;
-      height: 2rem;
+      width: 100%;
+      height: 100%;
+      transform: rotate(90deg);
+      // width: 2em;
+      // height: 2em;
 
       path
       {
@@ -71,7 +76,7 @@
 
       svg
       {
-        transform: rotate(90deg);
+        transform: rotate(-90deg);
       }
     }
 
