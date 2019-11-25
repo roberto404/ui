@@ -33,13 +33,6 @@ export const fetchData = (
 ) =>
   fetchApi(optionsApi).then((response) =>
   {
-    if (isEmpty(response))
-    {
-      return {
-        type: 'SET_GRID_DATA',
-      };
-    }
-
     const isExtend = (response.data && response.settings);
 
     return setData(

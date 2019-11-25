@@ -1,6 +1,5 @@
 // @flow
 
-// import Data from '@1studio/utils/models/data';
 import Data from '@1studio/utils/models/data';
 import findIndex from 'lodash/findIndex';
 import omit from 'lodash/omit';
@@ -94,7 +93,7 @@ const reducers = (state = {}, action = {}) =>
           return state;
         }
 
-        model.data = action.data;
+        model.data = action.data || [];
 
         return reducers(
           createNextState(state, model, action.grid),
@@ -167,35 +166,37 @@ const reducers = (state = {}, action = {}) =>
 
     case 'SET_SETTINGS':
       {
+        // @todo check action settings type
         // hook, helper, paginate, order, filters
 
         const model = getModel(state, action) || new Data([]);
 
-        // @todo action.settings wrong;
-
-        if (action.settings.paginate)
+        if (action.settings)
         {
-          model.paginate = action.settings.paginate;
-        }
+          if (action.settings.paginate)
+          {
+            model.paginate = action.settings.paginate;
+          }
 
-        if (action.settings.order)
-        {
-          model.order = action.settings.order;
-        }
+          if (action.settings.order)
+          {
+            model.order = action.settings.order;
+          }
 
-        if (action.settings.filters)
-        {
-          model.filters = action.settings.filters;
+          if (action.settings.filters)
+          {
+            model.filters = action.settings.filters;
+          }
         }
 
         const next = createStateFromModel(model);
 
-        if (action.settings.hook)
+        if (action.settings && action.settings.hook)
         {
           next.hook = action.settings.hook;
         }
 
-        if (action.settings.helper)
+        if (action.settings && action.settings.helper)
         {
           next.helper = action.settings.helper;
         }
