@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import Tree from '@1studio/utils/models/tree';
+import getParam from '@1studio/utils/location/getParam';
 
 
 /* !- React Elements */
@@ -8,6 +9,7 @@ import Tree from '@1studio/utils/models/tree';
 import Connect from '../../src/connect';
 import NestedList, { Menu as NestedListItem } from '../../src/grid/pure/nestedList';
 import Layer from '../../src/layer';
+import GitHubIcon from '../../src/icon/la/github';
 
 
 /* !- Constants */
@@ -55,9 +57,17 @@ class Content extends Component
   {
     super(props);
 
+    let example = getParam('example').split('/');
+
+    if (example.length !== 2)
+    {
+      example = ['form', 'fields'];
+    }
+
     this.state = {
-      title: 'Form / Fields',
-      component: Examples.form.fields,
+      title: `${example[0]} / ${example[1]}`,
+      component: Examples[example[0]][example[1]],
+      path: example,
     };
   }
 
@@ -68,7 +78,15 @@ class Content extends Component
     this.setState({
       title: `${parent.title} / ${title}`,
       component: Examples[parent.title][title],
+      path: [parent.title, title],
     });
+  }
+
+  onClickGitHubHandler = () =>
+  {
+    const url = `https://github.com/roberto404/ui/blob/master/examples/src/${this.state.path[0]}/${this.state.path[1]}.jsx`;
+    const newTab = window.open(url, '_blank');
+    newTab.focus();
   }
 
   render()
@@ -85,8 +103,11 @@ class Content extends Component
             </Connect>
           </div>
           <div className="scroll-y bg-white-light p-2">
-            <h2>{this.state.title}</h2>
-            <div>
+            <div className="relative">
+              <button className="w-auto pin-r absolute" onClick={this.onClickGitHubHandler}>
+                <GitHubIcon className="text-xxl" />
+              </button>
+              <h2>{this.state.title}</h2>
               {React.createElement(this.state.component)}
             </div>
           </div>

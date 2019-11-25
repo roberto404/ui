@@ -22,6 +22,7 @@ const SLIDES = [
   { id: 4, slide: <div>4</div> },
   { id: 5, slide: <div>5</div> },
   { id: 6, slide: <div>6</div> },
+  { id: 7, slide: <div>7</div> },
 ];
 
 
@@ -36,6 +37,22 @@ const Example = ({ setData }) =>
     <DynamicCaroussel
       data={SLIDES}
       id="sample1"
+    />
+
+    <DynamicCaroussel
+      data={SLIDES}
+      id="sample1b"
+      visibleSlides={2}
+      // autoplay={3}
+    />
+
+    <h2>Not enough static data for loop</h2>
+
+    <DynamicCaroussel
+      data={SLIDES}
+      id="sample1c"
+      visibleSlides={4}
+      // autoplay={3}
     />
 
     <h2>Dynamic data load</h2>
