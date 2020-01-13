@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
 import omit from 'lodash/omit';
+import clone from 'lodash/clone';
 
 
 /* !- Actions */
@@ -45,7 +46,7 @@ class Connect extends Component
     this.store = props.store || (context.form ? 'form' : 'grid');
 
     // state = redux store
-    this.state = this.getState(props, context);
+    this.data = this.getState(props, context);
   }
 
 
@@ -74,15 +75,17 @@ class Connect extends Component
   onChangeListener()
   {
     const state = this.getState();
-    const listens = Array.isArray(this.props.listen) ? this.props.listen : [this.props.listen];
+    const listen = this.props.listen || Object.keys(state);
+    const listens = Array.isArray(listen) ? listen : [listen];
 
-    if (state && listens.some(listen => !isEqual(state[listen], this.state[listen])))
+    if (state && listens.some(listen => !isEqual(state[listen], this.data[listen])))
     {
-      this.setState(state);
+      this.data = state;
+      this.forceUpdate();
 
       if (typeof this.props.onChange === 'function')
       {
-        this.props.onChange(state, this.state);
+        this.props.onChange(state, this.data);
       }
     }
   }
@@ -91,7 +94,7 @@ class Connect extends Component
 
   getState(props = this.props, context = this.context)
   {
-    return context.store.getState()[this.store][props.id || context[this.store]] || {};
+    return clone(context.store.getState()[this.store][props.id || context[this.store]]) || {};
   }
 
   render()
@@ -101,7 +104,7 @@ class Connect extends Component
     const props = {
       // ...childProps,
       ...omit(this.props, 'UI'),
-      ...this.state,
+      ...this.data,
       ...uiProps,
     };
 
@@ -164,7 +167,7 @@ Connect.defaultProps =
   UI: () =>
   {},
   uiProps: {},
-  listen: 'data',
+  // listen: 'data',
   children: undefined,
 };
 
