@@ -1,101 +1,59 @@
 
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import isEqual from 'lodash/isEqual';
+
+
+/* !- Actions */
+
+import { changeOrder, goToPage } from './actions';
+
+
+/* !- Element */
+
+import Connect from '../connect';
 
 
 /**
- * Connect static component to Form Redux.
+ * Provider Component
+ * Connect static component to Grid Redux.
  * Update every affected changes.
+ *
+ * state = selected form redux
  *
  * @example
  *  <Connect
  *    id="user"
- *    ui={({ state }) => <div>{state}</div>}
+ *    UI={Grid}
+ *    listen="rawData"
+ *   />
+ *
+ * // => <Grid { ...store.form.user + formActions } />
+ *
+ * @example children
+ *  <Connect
+ *    listen="rawData"
+ *  >
+ *    <Grid />
+ *  <Connect />
+ *
+ * @example OnChange
+ *  <Connect
+ *    listen="rawData"
+ *    onChange={(state, prevState) => console.log(state.totalPage)}
  *   />
  */
-class FormConnect extends Component
+const FormConnect = (props, { store, form }) =>
 {
-  constructor(props, context)
-  {
-    super(props);
+  const id = props.id || form;
 
-    this.state = context.store.getState().form[props.id || context.id] || {};
-  }
-
-
-  componentDidMount = () =>
-  {
-    if (this.context.store)
-    {
-      this.unsubscribe = this.context.store.subscribe(() => this.onChangeListener());
-    }
-  }
-
-  componentWillUnmount()
-  {
-    if (this.unsubscribe)
-    {
-      this.unsubscribe();
-    }
-  }
-
-  /* !- Listeners */
-
-  /**
-   * Ivoke applyFilter when the form state change
-   * @private
-   */
-  onChangeListener()
-  {
-    const state = this.context.store.getState().form[this.id] || {};
-    // const listen = this.props.listen;
-
-    if (!isEqual(state, this.state))
-    {
-      this.state = {};
-      this.setState(state);
-      this.props.onChange(state, this.extendProps);
-    }
-  }
-
-  /* !- Getters */
-
-  get id()
-  {
-    return this.props.id || this.context.form;
-  }
-
-  render()
-  {
-    const { UI, uiProps } = this.props;
-
-    return (
-      <UI
-        {...this.state}
-        {...uiProps}
-      />
-    );
-  }
-}
-
-FormConnect.propTypes =
-{
-  id: PropTypes.string,
-  UI: PropTypes.func.isRequired,
-  uiProps: PropTypes.shape(),
-  onChange: PropTypes.func,
-  // listen: PropTypes.string,
+  return (
+    <Connect
+      store="form"
+      {...props}
+    />
+  );
 };
 
-FormConnect.defaultProps =
-{
-  id: '',
-  uiProps: {},
-  onChange: () =>
-  {},
-  // listen: 'data',
-};
 
 /**
  * contextTypes
@@ -103,8 +61,8 @@ FormConnect.defaultProps =
  */
 FormConnect.contextTypes =
 {
-  store: PropTypes.object,
   form: PropTypes.string,
+  store: PropTypes.object,
 };
 
 

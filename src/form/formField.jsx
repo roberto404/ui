@@ -634,7 +634,10 @@ FormField.propTypes =
   /**
    * The placeholder content
    */
-  placeholder: PropTypes.string,
+  placeholder: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.bool,
+  ]),
   /**
    * Element visible inline before the field
    */
