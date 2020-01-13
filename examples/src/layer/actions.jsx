@@ -12,6 +12,7 @@ import * as LayerActions from '../../../src/layer/actions';
 
 import CalendarMonthInterval from '../../../src/form/pure/calendarMonthInterval';
 import IconLogout from '../../../src/icon/mui/action/lock';
+import Tooltip from '../../../src/layer/tooltip';
 
 
 const PopoverComponent = () =>
@@ -33,6 +34,7 @@ const Example = ({
   fullscreen,
   sidebar,
   popover,
+  tooltip,
   show,
   hide,
   toggle,
@@ -108,6 +110,18 @@ const Example = ({
       >
         Popover
       </button>
+
+      <h2>Tooltip</h2>
+      <button
+        className="outline gray w-auto"
+        onClick={event => tooltip(PopoverComponent, event)}
+      >
+        Tooptip
+      </button>
+
+      <Tooltip title={<div>Hello tooltip</div>}>
+        <div className="button outline gray w-auto inline-block">Tooltip component</div>
+      </Tooltip>
 
       <h2>Menu</h2>
       <button className="outline gray w-auto" onClick={event => menu(menuProps, event)}>Menu</button>
