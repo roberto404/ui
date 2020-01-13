@@ -16,15 +16,7 @@ import { setData } from '@1studio/ui/grid/actions';
 
 /* !- Constants */
 
-// import { SLIDES, PHOTO_SLIDES, CUSTOM_SLIDES } from './constants';
-
-const SLIDES = [
-  { id: 1, slide: <div>1</div> },
-  { id: 2, slide: <div>2</div> },
-  { id: 3, slide: <div>3</div> },
-  { id: 4, slide: <div>4</div> },
-];
-
+import { SLIDES, PHOTO_SLIDES, CUSTOM_SLIDES } from './constants';
 
 
 /**
@@ -33,11 +25,11 @@ const SLIDES = [
 const Example = ({ setData }) =>
 {
   setData(SLIDES, {}, 'sample');
-  // setData(SLIDES, {}, 'sample2');
-  // setData(PHOTO_SLIDES, {}, 'sample_photo');
-  // setData(PHOTO_SLIDES, {}, 'sample_autoplay');
-  // setData(PHOTO_SLIDES, {}, 'sample_more');
-  // setData(CUSTOM_SLIDES, {}, 'sample_custom');
+  setData(SLIDES, {}, 'sample2');
+  setData(PHOTO_SLIDES, {}, 'sample_photo');
+  setData(PHOTO_SLIDES, {}, 'sample_autoplay');
+  setData(PHOTO_SLIDES, {}, 'sample_more');
+  setData(CUSTOM_SLIDES, {}, 'sample_custom');
 
   return (
     <div>
@@ -45,7 +37,7 @@ const Example = ({ setData }) =>
 
       <h2>Simple caroussel</h2>
       <Caroussel id="sample" visibleSlides={4} />
-{/*
+
       <h2>Photo caroussel</h2>
       <div style={{ width: '300px', height: '200px' }}>
         <Caroussel id="sample_photo" />
@@ -74,7 +66,7 @@ const Example = ({ setData }) =>
         onClick={() => window.location.href = '/?example=caroussel/slides'}
       >
         More example in the Slides component
-      </div>*/}
+      </div>
     </div>
   );
 };

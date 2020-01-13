@@ -1,19 +1,34 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import classNames from 'classnames';
 import clamp from '@1studio/utils/math/clamp';
 
 
+/* !- Redux Actions */
+
+import * as GridActions from '../../grid/actions';
+
+
+/* !- React Elements */
+
 const Page = ({ active, onClick, page }) =>
   <a className={classNames({ active })} onClick={onClick}><span className="page">{page}</span></a>;
 
+
+/**
+ * [Pages description]
+ */
 export const Pages = (
 {
+  id,
   totalPage,
   page,
   goToPage,
   limit,
+  UI,
+  className,
 },
 ) =>
 {
@@ -42,24 +57,22 @@ export const Pages = (
       const thisPage = i + 1;
 
       nodes.push(
-        <Page
-          key={i}
-          page={thisPage}
-          active={thisPage === page}
-          onClick={
-            (e) =>
-            {
-              e.preventDefault();
-              goToPage(thisPage, page);
-            }
-          }
-        />,
+        React.createElement(UI, {
+          key: i,
+          page: thisPage,
+          active: thisPage === page,
+          onClick: (e) =>
+          {
+            e.preventDefault();
+            goToPage(thisPage, id);
+          },
+        })
       );
     }
   }
 
   return (
-    <div className="pages">
+    <div className={className}>
       {nodes}
     </div>
   );
@@ -68,12 +81,32 @@ export const Pages = (
 
 Pages.propTypes =
 {
+  className: PropTypes.string,
   limit: PropTypes.number,
+  UI: PropTypes.func,
 };
 
 Pages.defaultProps =
 {
+  className: 'pages',
   limit: 0,
+  UI: Page,
 };
 
-export default Pages;
+
+export const ConnectedPages = connect(
+  (state, { id }) =>
+  {
+    const grid = state.grid[id] || {};
+
+    return ({
+      totalPage: grid.totalPage,
+      page: grid.page,
+    });
+  },
+  {
+    goToPage: GridActions.goToPage,
+  },
+)(Pages);
+
+export default ConnectedPages;

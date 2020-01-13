@@ -84,7 +84,7 @@ ShowMore.defaultProps =
   addLimit: 24,
   exponentialLimit: 240,
   disableLimitExponential: false,
-  className: 'col-1-4 m-auto mt-4',
+  className: 'desktop:col-1-4 mobile:px-4 m-auto mt-4',
   buttonClassName: 'primary w-auto m-auto',
   format: ({ current, limit }) => `${current} of ${limit} items`,
 };

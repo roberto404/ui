@@ -302,6 +302,7 @@ class Slides extends Component
           (
             <div
               key={i.id}
+              // className="px-1/2"
               style={{ width }}
             >
               {i.slide || <Slide {...i} active={this.state.active} />}

@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import isEqual from 'lodash/isEqual';
 
 
 /* !- Redux Actions */
@@ -32,6 +33,11 @@ const fetchData = (page, data, visibleSlides) =>
 {
   const items = [];
   const length = data.length;
+
+  if (!length)
+  {
+    return [];
+  }
 
   for (let i = 0; i < 3 * visibleSlides; i += 1)
   {
@@ -100,6 +106,21 @@ class DynamicCaroussel extends Component
     // Enable caroussel settings and create datas if it is non-static
     this.updateSlides();
   }
+
+  //TODO kellene egy minta app ahol props.data valtozik
+  // componentDidUpdate(nextProps, nextState)
+  // {
+  //   if (!isEqual(this.props.data, nextProps.data))
+  //   {
+  //     this.context.store.dispatch(
+  //       setData(
+  //         nextProps.data,
+  //         null,
+  //         props.id,
+  //       ),
+  //     );
+  //   }
+  // }
 
   updateSlides = (props = this.props) =>
   {

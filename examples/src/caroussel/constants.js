@@ -4,6 +4,9 @@ export const SLIDES = [
   { id: 1, slide: <div>1</div> },
   { id: 2, slide: <div>2</div> },
   { id: 3, slide: <div>3</div> },
+  { id: 4, slide: <div>4</div> },
+  { id: 5, slide: <div>5</div> },
+  { id: 6, slide: <div>6</div> },
 ];
 
 export const PHOTO_SLIDES = [

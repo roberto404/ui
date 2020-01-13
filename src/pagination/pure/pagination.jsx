@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
 
-import Pages from './pages';
+import { Pages } from './pages';
 
 
 export const Pager = (

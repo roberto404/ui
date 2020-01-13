@@ -14,7 +14,7 @@ import * as GridActions from '../grid/actions';
 
 import Slides, { Slide } from './slides';
 import Pager from '../pagination/pure/pager';
-import Pages from '../pagination/pure/pages';
+import { Pages } from '../pagination/pure/pages';
 import IconArrow from '../icon/mui/navigation/expand_less';
 
 
