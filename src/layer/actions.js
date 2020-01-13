@@ -174,6 +174,25 @@ export const popover = (element: React.Element, event: {} = {}, options = {}) =>
   });
 };
 
+/**
+ * Create and show tooltip layer.
+ *
+ * @since 1.15.0
+ * @memberof Actions/Layer
+ * @param {ReactElement} element Layer (tooltip) content
+ * @param {object} event
+ */
+export const tooltip = (element: React.Element, event: {} = {}, options = {}) =>
+{
+  return ({
+    ...popover(element, event, options),
+    options: {
+      ...options,
+      className: 'tooltip',
+    }
+  });
+};
+
 
 /**
  * Set the layer visible.

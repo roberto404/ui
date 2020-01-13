@@ -99,6 +99,11 @@ const Layer = (
     {
       $(document).on('keyup.layer', onKeyUpListener);
     }
+
+    if (method === "fullscreen")
+    {
+      window.scrollTo(0, 0);
+    }
   }
   else
   {
