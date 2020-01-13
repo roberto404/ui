@@ -11,7 +11,7 @@ import isEqual from 'lodash/isEqual';
 
 /* !- Actions */
 
-import { switchGroup, setSettings, toggleView } from './actions';
+import { switchGroup, SwitchView, setSettings, toggleView } from './actions';
 import { menu, close } from '../layer/actions';
 
 
@@ -82,8 +82,6 @@ export const ViewMenu = connect(
     toggleView,
   },
 )(ViewMenuComponent);
-
-
 
 
 

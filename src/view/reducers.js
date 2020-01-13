@@ -32,31 +32,31 @@ const reducers = (state = {}, action = {}) =>
         );
       }
 
-      case 'VIEW_SET_VIEWS':
+    case 'VIEW_SET_VIEWS':
+      {
+        if (!action.groupIndex)
         {
-          if (!action.groupIndex)
-          {
-            action.groupIndex = state.active
-          }
-
-          action.settings = {
-            ...state.settings,
-            groups: {
-              ...state.settings.groups,
-              [action.groupIndex]: action.views,
-            }
-          }
-
-          if (checkPropTypes(action.settings, SCHEME.settings))
-          {
-            return state;
-          }
-
-          return ({
-            ...state,
-            ...action.settings,
-          });
+          action.groupIndex = state.active
         }
+
+        action.settings = {
+          ...state.settings,
+          groups: {
+            ...state.settings.groups,
+            [action.groupIndex]: action.views,
+          }
+        }
+
+        if (checkPropTypes(action.settings, SCHEME.settings))
+        {
+          return state;
+        }
+
+        return ({
+          ...state,
+          ...action.settings,
+        });
+      }
 
     case 'VIEW_SWITCH_GROUP':
       {
@@ -90,6 +90,20 @@ const reducers = (state = {}, action = {}) =>
             status: action.status !== undefined ? action.status : (group.status + 1) % 2,
           };
         });
+
+        return {
+          ...state,
+          groups: {
+            ...state.groups,
+            [state.active]: activeGroup,
+          },
+        };
+      }
+
+    case 'VIEW_SWITCH_VIEW':
+      {
+        const activeGroup = state.groups[state.active].map((view) =>
+          ({ ...view, status: view.id === action.id }));
 
         return {
           ...state,

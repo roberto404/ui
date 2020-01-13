@@ -6,6 +6,9 @@ export const setSettings = (settings: {}) =>
   settings,
 });
 
+/**
+ * Add new view group
+ */
 export const setViews = (views: [], groupIndex?: string) =>
 ({
   type: 'VIEW_SET_VIEWS',
@@ -34,4 +37,14 @@ export const toggleView = (id: string | number, status?: 0 | 1) =>
   type: 'VIEW_TOGGLE_VIEW',
   id,
   status,
+});
+
+/**
+ * Change visibility of selected view all components
+ * @param  {string} id [description]
+ */
+export const SwitchView = (id: string | number, status?: 0 | 1) =>
+({
+  type: 'VIEW_SWITCH_VIEW',
+  id,
 });
