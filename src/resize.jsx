@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
  * Calculate parent element dimension and
  * push width and height props to children
  *
- *
  * @example
  * <Resize>{width => <svg width={width} />}</Resize>
  */
