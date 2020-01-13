@@ -54,6 +54,8 @@ describe.only('Grid Filters', () =>
   it('Search Simple', () =>
   {
     expectFilter('2016-12-04');
+
+    expectFilter('fasd', false);
   });
 
   it('Search helper data', () =>
@@ -61,8 +63,12 @@ describe.only('Grid Filters', () =>
     expectFilter('inact');
     expectFilter('InAct');
     expectFilter('robert');
+    expectFilter('rob');
     expectFilter('BERT');
+
+    expectFilter('roberto', false);
   });
+
 
   it('Search hook format', () =>
   {
@@ -76,18 +82,19 @@ describe.only('Grid Filters', () =>
   it('Search more term', () =>
   {
     expectFilter('CAFE,ROB');
+    expectFilter('cafe,rob');
     expectFilter('rob,  cafe');
-    expectFilter('nincs,  cafe', false);
-    expectFilter('Rob cafe');
+    expectFilter('Rob, cafe');
     expectFilter('cafe   Rob');
     expectFilter('cafe   Tom', false);
+    expectFilter('nincs,  cafe', false);
   });
 
   it('Search expression equal', () =>
   {
-    // expectFilter('person=2');
-    // expectFilter('person=3', false);
-    // expectFilter('person==2');
+    expectFilter('person=2');
+    expectFilter('person=3', false);
+    expectFilter('person==2');
 
     expectFilter('restaurant=cafe');
     expectFilter('restaurant=Cafe');
@@ -133,5 +140,28 @@ describe.only('Grid Filters', () =>
     expectFilter('person=2,person=16', false);
     expectFilter('person=2,Rob', true);
     expectFilter('person=2,John', false);
+  });
+
+  it('search OR expression', () =>
+  {
+    expectFilter('person=2|id=16');
+    expectFilter('person=2|id>16');
+    expectFilter('person=3|id=16');
+    expectFilter('person=3|id>16', false);
+  });
+
+  it('search OR/AND expression', () =>
+  {
+    expectFilter('person=2&id=18|restaurant=cafe');
+    expectFilter('person=2&id=18|id=16&restaurant=cafe');
+
+    expectFilter('person=2&id=18|id=18&restaurant=cafe', false);
+    expectFilter('person=3|id=18&restaurant=cafe', false);
+  });
+
+  it('search FULL expression', () =>
+  {
+    expectFilter('rob,person=2&id=18|cafe, id=16');
+    expectFilter('rob,person=2&id=18|cafe, id=17', false);
   });
 });
