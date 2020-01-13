@@ -12,21 +12,23 @@ import { setValues } from '../../../src/form/actions';
 
 import Form,
 {
-    Checkbox,
-
+  Checkbox,
   Input,
   Select,
   Collection,
 }
 from '../../../src/form/pure/intl';
 
-import { CollectionItem } from '../../../src/grid/pure/gridSearch';
+import { CollectionItem, NestedCollectionItem } from '../../../src/grid/pure/gridSearch';
 
 
 /* !- Constants */
 
 
-const NestedCollectionItem = ({ record, index, id, onChange }) =>
+/**
+ * CollectionItem contains collection. Inside colleciton pass data to parent Collection
+ */
+const CustomNestedCollectionItem = ({ record, index, id, onChange }) =>
 {
   const onChangePropsFiltersHandler = ({ value }) =>
   {
@@ -35,6 +37,7 @@ const NestedCollectionItem = ({ record, index, id, onChange }) =>
       onChange({ ...record, props: { ...record.props, filters: value } });
     }
   }
+
   const onChangePropsHandler = ({ value, id }) =>
   {
     if (!isEqual(value, record.props))
@@ -107,11 +110,11 @@ const NestedCollectionItem = ({ record, index, id, onChange }) =>
         <div className="label">Filter</div>
         <Collection
           id={`${id}-${index}`}
-          UI={CollectionItem}
+          UI={NestedCollectionItem}
           uiProps={{
             fields: [{ id: 1, title: 'foo' }, { id: 2, title: 'bar' }],
           }}
-          value={record.props.filters && record.props.filters.length ? record.props.filters : [{ field: '1', operator: '=', value: '' }]}
+          value={record.props.filters && record.props.filters.length ? record.props.filters : [[{ field: '1', operator: '=', value: '' }]]}
           onChange={onChangePropsFiltersHandler}
           className="border shadow-outer-3 p-2 rounded bg-gray-light"
         />
@@ -138,18 +141,6 @@ const Example = (props, { store }) =>
       { field: 'gender', operator: '==', value: 'male' },
       { field: 'id', operator: '<', value: '10' },
     ],
-    // collection4: [
-    //   {
-    //     modul: 'product',
-    //     title: 'Title',
-    //     subTitle: 'subTitle',
-    //     props: [
-    //       { field: 'name', operator: '=', value: 'Á' },
-    //       { field: 'gender', operator: '==', value: 'male' },
-    //       { field: 'id', operator: '<', value: '10' },
-    //     ],
-    //   },
-    // ],
   }, 'example'));
 
   return (
@@ -157,20 +148,16 @@ const Example = (props, { store }) =>
       id="example"
       className="p-2"
     >
+      <h2>Default collection UI items</h2>
       <Collection
         id="collection"
         label="Collection"
-      />
-    
-      <h2>Custom UI</h2>
-      <Collection
-        id="collection2"
-        UI={CollectionItem}
+        value={[{ id: 1, title: 'foo' }]}
       />
 
-      <h2>Custom UI empty form</h2>
+      <h2>Custom UI items (GridSearch)</h2>
       <Collection
-        id="collection3"
+        id="collection2"
         value={[{ field: '1', operator: '=', value: '' }]}
         UI={CollectionItem}
         uiProps={{
@@ -178,10 +165,23 @@ const Example = (props, { store }) =>
         }}
       />
 
-      <h2>Nested Collection</h2>
+    <h2>Custom UI Nested items (GridSearch)</h2>
+      <Collection
+        id="collection3"
+        value={[[{ field: '1', operator: '=', value: '' }]]}
+        UI={NestedCollectionItem}
+        uiProps={{
+          fields: [
+            { id: 1, title: 'foo' },
+            { id: 2, title: 'bar' },
+          ],
+        }}
+      />
+
+      <h2>Complex Nested Collection</h2>
       <Collection
         id="collection4"
-        UI={NestedCollectionItem}
+        UI={CustomNestedCollectionItem}
         value={[
           {
             modul: 'product',
@@ -191,7 +191,7 @@ const Example = (props, { store }) =>
               colNum: 4,
               rowNum: 0,
               features: ['order', 'filter'],
-              filters: [{ field: '1', operator: '=', value: 'a' }],
+              filters: [[{ field: '1', operator: '=', value: 'a' }]],
             },
           },
         ]}

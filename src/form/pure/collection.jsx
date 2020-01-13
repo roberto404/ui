@@ -50,7 +50,15 @@ class Collection extends Field
 {
   onChangeItemListener = (record, index) =>
   {
-    this.onChangeHandler(this.state.value.map((v, i) => i === index ? record : v));
+    // nested collection empty child
+    if (Array.isArray(record) && !record.length)
+    {
+      this.onChangeHandler(this.state.value.filter((v, i) => i !== index));
+    }
+    else
+    {
+      this.onChangeHandler(this.state.value.map((v, i) => i === index ? record : v));
+    }
   }
 
   onClickRemoveHandler = (event, index) =>
@@ -64,22 +72,32 @@ class Collection extends Field
   {
     event.preventDefault();
 
-    const item = {};
+    let item;
 
-    const keys = this.state.value.length ? this.state.value[0] : this.props.value[0];
-
-    Object.keys(keys).forEach((key) =>
+    // nested collection add new array
+    if (Array.isArray(this.props.value[0]))
     {
-      if (key === 'id')
+      item = this.props.value[0]
+    }
+    else
+    {
+      item = {};
+
+      const keys = this.state.value.length ? this.state.value[0] : this.props.value[0];
+
+      Object.keys(keys).forEach((key) =>
       {
-        item.id = this.state.value.length + 1;
-      }
-      else
-      {
-        item[key] = (this.props.value.length && typeof this.props.value[0][key] !== 'undefined') ?
-          this.props.value[0][key] : undefined;
-      }
-    });
+        if (key === 'id')
+        {
+          item.id = this.state.value.length + 1;
+        }
+        else
+        {
+          item[key] = (this.props.value.length && typeof this.props.value[0][key] !== 'undefined') ?
+            this.props.value[0][key] : undefined;
+        }
+      });
+    }
 
     this.onChangeHandler([...this.state.value, item]);
   }
@@ -98,7 +116,7 @@ class Collection extends Field
 
         { this.label }
 
-        { this.state.value.map((record, index) =>
+        { Array.isArray(this.state.value) && this.state.value.map((record, index) =>
           (
             <div key={index} className="v-center">
               <UI
@@ -133,15 +151,6 @@ class Collection extends Field
 Collection.propTypes =
 {
   ...Collection.propTypes,
-  /**
-   */
-  // data: PropTypes.oneOfType([
-  //   PropTypes.func,
-  //   PropTypes.arrayOf(PropTypes.shape({
-  //     id: PropTypes.string.isRequired,
-  //     title: PropTypes.string.isRequired,
-  //   })),
-  // ]),
   UI: PropTypes.func,
 };
 
