@@ -18,6 +18,7 @@ import FormFlat from './form/flat';
 import FormPlain from './form/plain';
 import FormCollection from './form/collection';
 import FormSlider from './form/slider';
+import FormDropzone from './form/dropzone';
 
 
 /* !- Example: Grid */
@@ -60,6 +61,13 @@ import CalendarCaroussel from './calendar/caroussel';
 import CalendarFilters from './calendar/filters';
 
 
+/* !- Example: Card */
+
+import CardCard from './card/card';
+import CardMarker from './card/marker';
+import CardResponsible from './card/responsible';
+
+
 /* !- Example: Chart */
 
 import ChartCoordinate from './chart/coordinate';
@@ -72,6 +80,17 @@ import ChartBar from './chart/barChart';
 // import Example from './map/gmaps';
 // import Example from './map/mapbox/static';
 // import Example from './map/mapbox/dynamic';
+
+
+/* !- Example: Drag and drop */
+
+import DndBasic from './dragAndDrop/basic';
+
+
+/* !- Example: Drag and drop */
+
+import ViewBasic from './view/basic';
+import ViewTab from './view/tab';
 
 
 /* !- Example: Utils */
@@ -89,6 +108,7 @@ export default {
     plain: FormPlain,
     collection: FormCollection,
     slider: FormSlider,
+    dropzone: FormDropzone,
   },
   grid: {
     static: GridStatic,
@@ -122,10 +142,22 @@ export default {
     caroussel: CalendarCaroussel,
     filters: CalendarFilters,
   },
+  card: {
+    card: CardCard,
+    responsible: CardResponsible,
+    marker: CardMarker,
+  },
   chart: {
     coordinate: ChartCoordinate,
     complex: ChartComplex,
     bar: ChartBar,
+  },
+  view: {
+    basic: ViewBasic,
+    tab: ViewTab,
+  },
+  dragAndDrop: {
+    basic: DndBasic,
   },
   style: {
     avatar: StyleAvatar,

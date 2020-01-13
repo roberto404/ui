@@ -4,8 +4,7 @@ import produceNumericArray from '@1studio/utils/array/produceNumericArray';
 
 /* !- React Elements */
 
-import Grid from '@1studio/ui/grid/pure/grid';
-// import Grid from '../../../src/grid/pure/grid';
+import Grid from '../../../src/grid/pure/grid';
 import GridRow from './row';
 
 /* !- Constants */

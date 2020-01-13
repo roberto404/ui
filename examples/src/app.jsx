@@ -94,7 +94,7 @@ class Content extends Component
     return (
       <div className="column h-screen">
         <div className="px-4 py-2 grow overflow grid">
-          <div className="col-1-4 scroll-y bg-gray-light p-2">
+          <div className="col-1-4 mobile:hidden scroll-y bg-gray-light p-2">
             <Connect>
               <NestedList
                 nestedData={Menu.getNestedTree()}

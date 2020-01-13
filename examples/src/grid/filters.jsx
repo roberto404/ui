@@ -1,5 +1,11 @@
 
 import React from 'react';
+import PropTypes from 'prop-types';
+
+
+/* !- Actions */
+
+import { unsetValues, setValues } from '../../../src/form/actions';
 
 
 /* !- React Elements */
@@ -11,6 +17,7 @@ import Grid from '../../../src/grid/pure/grid';
 import GridDate from '../../../src/grid/pure/gridDate';
 import GridSelectGroupBy from '../../../src/grid/pure/gridSelectGroupBy';
 import GridFieldGroupBy from '../../../src/grid/pure/gridFieldGroupBy';
+import GridFilters from '../../../src/grid/pure/gridFilters';
 
 import {
   Input,
@@ -28,7 +35,7 @@ const fakeApi = () => new Promise(resolve => resolve({ status: 'SUCCESS', record
 /**
  * Connect
  */
-const Example = () =>
+const Example = (props, { store }) =>
 (
   <GridView
     id="sample"
@@ -37,6 +44,21 @@ const Example = () =>
     className="p-4"
   >
     <h1>Grid Filters</h1>
+
+    <button className="outline shadow w-auto mb-4" onClick={e => {
+        e.preventDefault();
+        store.dispatch(unsetValues({ search: undefined }));  // test
+        store.dispatch(setValues({ search: 's. taylor' }));
+        store.dispatch(setValues({ search: 's. taylor2' }));
+      }}>
+      apply filter outside
+    </button>
+
+    <GridFilters
+      // format={gridFilterFormat}
+      className="mb-2"
+      tagClassName="tag button outline small shadow w-auto blue mr-1/2"
+    />
 
     <div className="filters">
       <Input
@@ -78,5 +100,10 @@ const Example = () =>
 
   </GridView>
 );
+
+Example.contextTypes =
+{
+  store: PropTypes.object,
+};
 
 export default Example;
