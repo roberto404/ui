@@ -10,13 +10,21 @@ import md5 from 'crypto-js/md5';
 
 /* !- Redux Action */
 
-import { modal } from '../../layer/actions';
+import { modal, preload, close } from '../../layer/actions';
 
 
 /* !- React Elements */
 
 import Field from '../../form/formField';
 import IconAdd from '../../icon/addCircleOutline';
+
+
+import DynamicCaroussel from '../../caroussel/dynamicCaroussel';
+import FileList from './dropzoneFileList';
+
+import Card from '../../card/card';
+import Marker from '../../card/marker';
+import IconPlus from '../../icon/mui/content/add';
 
 
 const FILE_PATTERN = /^(([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})[a-f0-9]{24})/;
@@ -38,6 +46,26 @@ export const formatDropzoneFileId = (value) =>
 
   return value.slice(0, lastIndex).concat(value[lastIndex].id);
 };
+
+export const formatDropzoneFileIdAndExt = (value) =>
+{
+  const lastIndex = value.length - 1;
+  const lastItem = value[lastIndex];
+
+  if (lastItem && lastItem.path)
+  {
+    return [
+      ...value.slice(0, lastIndex),
+      {
+        id: lastItem.id,
+        ext: lastItem.ext,
+      },
+    ];
+  }
+
+  return value;
+}
+
 
 export class File
 {
@@ -98,6 +126,7 @@ export class File
   getThumbnail = () => this.getUrl('250x250')
   getAvatar = () => this.getUrl('32x32')
 }
+
 
 
 /**
@@ -178,17 +207,9 @@ class DropzoneComponent extends Field
    *
    * @param {object} file
    */
-  onAddedFileHandler(file)
+  onAddedFileHandler = (file) =>
   {
-    // var reader = new FileReader();
-    //
-    // reader.onloadend = (evt) => {
-    //   if (evt.target.readyState == FileReader.DONE)
-    //   { // DONE == 2
-    //      evt.target.result
-    //   }
-    // };
-    // reader.readAsBinaryString(file);
+    // this.context.store.dispatch(preload());
   }
 
   /**
@@ -261,7 +282,6 @@ class DropzoneComponent extends Field
 
       if (response && response.records && typeof response.records.id !== 'undefined')
       {
-
         /**
          * id, path, name, ext, title, mimeMajor, mimeMinor
          * @type {Array}
@@ -269,6 +289,7 @@ class DropzoneComponent extends Field
         value[index] = response.records;
 
         this.onChangeHandler(value);
+        // this.context.store.dispatch(close());
         return;
       };
     }
@@ -276,7 +297,7 @@ class DropzoneComponent extends Field
     if (response)
     {
       this.context.store.dispatch(modal({
-        title: response.message,
+        title: this.props.intl ? this.props.intl.formatMessage({ id: response.code }) : response.message,
         content: response.more,
         classes: 'error',
       }));
@@ -291,6 +312,17 @@ class DropzoneComponent extends Field
    */
   onErrorHandler = (file, message) =>
   {
+    const id = parseInt(file.lastModified + '' + file.size);
+    const index = this.state.value.findIndex(item => item.id === id);
+
+    if (index !== -1)
+    {
+      this.onChangeHandler([
+        ...this.state.value.slice(0, index),
+        ...this.state.value.slice(index + 1),
+      ]);
+    }
+
     if (typeof message === 'string')
     {
       this.context.store.dispatch(modal({
@@ -308,46 +340,47 @@ class DropzoneComponent extends Field
   }
 
 
-  renderItems()
-  {
-    const items = this.state.value;
-    const children = [];
-
-    items.map((item) =>
-    {
-      let img = '';
-
-      switch (typeof item)
-      {
-        case 'string':
-        case 'number':
-          img = new File({ id: item }).getThumbnail();
-          break;
-
-        case 'object':
-          img = new File(item).getThumbnail();
-      }
-
-      children.push(
-        <div
-          key={item.id}
-          className="file"
-        >
-          <div style={{ backgroundImage: `url(${img})` }} />
-          {/* <div
-            className="progress"
-            data-value={items.percent}
-          /> */}
-        </div>
-      );
-    });
-
-    return children;
-  }
+  // renderItems()
+  // {
+  //   const items = this.state.value;
+  //   const children = [];
+  //
+  //   return renderInCaroussel(items);
+  //
+  //   items.map((item) =>
+  //   {
+  //     let img = '';
+  //
+  //     switch (typeof item)
+  //     {
+  //       case 'string':
+  //       case 'number':
+  //         img = new File({ id: item }).getThumbnail();
+  //         break;
+  //
+  //       case 'object':
+  //         img = new File(item).getThumbnail();
+  //     }
+  //
+  //     children.push(
+  //       <div
+  //         key={item.id}
+  //         className="file"
+  //       >
+  //         <div style={{ backgroundImage: `url(${img})` }} />
+  //         {/* <div
+  //           className="progress"
+  //           data-value={items.percent}
+  //         /> */}
+  //       </div>
+  //     );
+  //   });
+  //
+  //   return children;
+  // }
 
   render()
   {
-
     return (
       <div className={`field file-field ${this.props.className}`}>
 
@@ -355,19 +388,33 @@ class DropzoneComponent extends Field
 
         <div className="files">
 
-          { this.renderItems() }
+          { this.state.value.length > 0 &&
+            React.cloneElement(
+              this.props.children,
+              {
+                id: this.props.id,
+                items: this.state.value,
+                onChange: this.onChangeHandler,
+              },
+            )
+          }
+
+          { this.state.value.length > 0 && this.props.maxFiles > this.state.value.length &&
+          <div className="h-1" />
+          }
 
           { this.props.maxFiles > this.state.value.length &&
-          <div
-            className="file add"
-            onClick={this.onClickButtonHandler}
-            ref={(ref) =>
-            {
-              this.element = ref;
-            }}
-          >
-            <IconAdd className="w-full h-full" />
-          </div>
+            <button
+              className="w-auto border shadow white fill-red"
+              onClick={this.onClickButtonHandler}
+              ref={(ref) =>
+              {
+                this.element = ref;
+              }}
+            >
+              <IconAdd />
+              <span>Add new file</span>
+            </button>
           }
         </div>
       </div>
@@ -408,6 +455,7 @@ DropzoneComponent.defaultProps =
   maxFiles: 30,
   maxFilesSize: 5,
   acceptedFiles: 'image/jpg,image/jpeg,image/png,application/pdf',
+  children: <FileList />,
 };
 
 
