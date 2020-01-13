@@ -44,6 +44,7 @@
   },
   "homepage": "https://github.com/roberto404/ui#readme",
   "devDependencies": {
+    "@1studio/utils": "4.7.1",
     "autoprefixer": "9.3.1",
     "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.3",
@@ -82,7 +83,6 @@
     "sinon": "4.1.2"
   },
   "dependencies": {
-    "@1studio/utils": "4.5.1",
     "@tinymce/tinymce-react": "2.5.0",
     "classnames": "2.2.5",
     "draft-js": "0.10.5",
