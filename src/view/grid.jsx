@@ -345,7 +345,10 @@ class GridView extends Component
               switch (this.props.onLoad)
               {
                 case 'selectFirst':
-                  this.props.setValues({ id: FORM_PREFIX + this.id, value: [grid.data[0].id] });
+                  if (grid.data[0])
+                  {
+                    this.props.setValues({ id: FORM_PREFIX + this.id, value: [grid.data[0].id] });
+                  }
                   break;
                 default:
               }
