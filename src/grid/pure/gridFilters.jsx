@@ -22,10 +22,7 @@ class GridFilters extends Component
   constructor(props)
   {
     super(props);
-
-    this.state = {
-      filters: [],
-    };
+    this.filters = [];
   }
 
   /* !- React Lifecycle */
@@ -63,9 +60,10 @@ class GridFilters extends Component
         .filter(({ status }) => status)
         .map(filter => ({ id: filter.id, values: filter.arguments }));
 
-      if (!isEqual(filters, this.state.filters))
+      if (!isEqual(filters, this.filters))
       {
-        this.setState({ filters });
+        this.filters = filters;
+        this.forceUpdate();
       }
     }
   }
@@ -152,7 +150,7 @@ class GridFilters extends Component
    */
   render()
   {
-    const tags = this.state.filters.reduce(
+    const tags = this.filters.reduce(
       (result, filter) =>
       {
         if (typeof filter.values[0] === 'string')

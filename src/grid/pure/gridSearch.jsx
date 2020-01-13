@@ -2,6 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
+import isEqual from 'lodash/isEqual';
 
 
 /* !- Actions */
@@ -39,6 +40,8 @@ export const CollectionItem = ({ onChange, record, fields }) =>
     onChange({ ...record, [collectionId]: value });
   };
 
+  const field = (fields.find(field => field.id === record.field) || {}).field;
+
   /**
    * form collection pass onChange method
    */
@@ -60,15 +63,59 @@ export const CollectionItem = ({ onChange, record, fields }) =>
         className="col-3-12"
         value={record.operator}
       />
+      { field !== undefined &&
+          React.cloneElement(
+            field,
+            {
+              className: 'col-5-12',
+              id: 'search#value',
+              onChange: onChangeHandler,
+              value: record.value,
+            },
+          )
+      }
+      { field === undefined &&
       <Input
         id="search#value"
         className="col-5-12"
         value={record.value}
         onChange={onChangeHandler}
       />
+      }
     </div>
   );
 };
+
+CollectionItem.defaultProps =
+{
+  fields: [],
+}
+
+export const NestedCollectionItem = ({ record, index, id, onChange, fields }) =>
+{
+  const onChangePropsFiltersHandler = ({ value }) =>
+  {
+    if (!isEqual(value, record))
+    {
+      onChange(value);
+    }
+  }
+
+  return (
+    <Collection
+      id={`${id}-${index}`}
+      UI={CollectionItem}
+      uiProps={{
+        fields,
+      }}
+      value={record}
+      onChange={onChangePropsFiltersHandler}
+      className="border shadow-outer-3 p-2 rounded w-full"
+    />
+  )
+}
+
+
 
 /**
  * Advance Search Dialog

@@ -18,6 +18,7 @@ const createStateFromModel = dataModel =>
   model: dataModel,
   rawData: dataModel.data,
   data: dataModel.paginate.results,
+  results: dataModel.results,
   orderColumn: dataModel.order.column,
   orderDirection: dataModel.order.direction,
   page: dataModel.paginate.page,

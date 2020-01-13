@@ -48,7 +48,9 @@ const GridConnect = (props, { store, grid }) =>
 
   return (
     <Connect
+      id={id}
       store="grid"
+      listen="data"
       onChangeOrder={column => store.dispatch(changeOrder(column, id))}
       onChangePage={nextPage => store.dispatch(goToPage(nextPage, id))}
       onClickCell={props.onClick || (props.children ? props.children.props.onClickCell : undefined)}
