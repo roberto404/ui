@@ -38,13 +38,13 @@
   {
     box-sizing: content-box;
     position: absolute;
-    right: 0;
+    right: 1rem;
     top: 50%;
     transform: translateY(-50%);
     padding: 0;
     width: 2em;
     height: 2em;
-    border: none;
+    z-index: 2;
 
     svg
     {
@@ -71,7 +71,7 @@
 
     &:first-child
     {
-      left: 0;
+      left: 1rem;
       right: auto;
 
       svg

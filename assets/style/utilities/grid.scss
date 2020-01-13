@@ -20,7 +20,14 @@
     {
       display: flex;
       flex-grow: 1;
-      flex-direction: column;
+      flex-direction: column; //iebug 11*
+
+      @media all and (-ms-high-contrast: none), (-ms-high-contrast: active)
+      {
+        /* IE10+ CSS styles go here */
+        flex-direction: inherit;
+      }
+
     }
 
     /*
@@ -130,6 +137,18 @@
   }
 }
 
+.grid-3-3
+{
+  @extend .grid-3;
+  width: calc(100% + 3rem);
+  margin-bottom: -3rem;
+
+  > *
+  {
+    padding-bottom: 3rem;
+  }
+}
+
 /* Vertical-Gap between columns 4 rem */
 .grid-4
 {
@@ -178,6 +197,18 @@
   }
 }
 
+/* Vertical-Gap between columns 4 rem */
+.grid-6
+{
+  @extend .grid;
+  margin-right: -6rem;
+
+  > *
+  {
+    padding-right: 6rem;
+  }
+}
+
 
 
 .grid-center
@@ -190,78 +221,94 @@
 .col-1-1, .col {
   width: 100%;
   min-width: 100%;
+  max-width: 100%;
 }
 
 .col-2-3, .col-8-12 {
   width: 66.66%;
   min-width: 66.66%;
+  max-width: 66.66%;
 }
 
 .col-1-2, .col-6-12 {
   width: 50%;
   min-width: 50%;
+  max-width: 50%;
 }
 
 .col-1-3, .col-4-12 {
   width: 33.33%;
   min-width: 33.33%;
+  max-width: 33.33%;
 }
 
 .col-1-4, .col-3-12 {
   width: 25%;
   min-width: 25%;
+  max-width: 25%;
 }
 
 .col-1-5 {
   width: 20%;
   min-width: 20%;
+  max-width: 20%;
 }
 .col-2-5 {
   width: 40%;
   min-width: 40%;
+  max-width: 40%;
 }
 .col-3-5 {
   width: 60%;
   min-width: 60%;
+  max-width: 60%;
 }
 .col-4-5 {
   width: 80%;
   min-width: 80%;
+  max-width: 80%;
 }
 
 .col-1-6, .col-2-12 {
   width: 16.667%;
   min-width: 16.667%;
+  max-width: 16.667%;
 }
 
 .col-1-7 {
   width: 14.28%;
   min-width: 14.28%;
+  max-width: 14.28%;
 }
 
 .col-1-8 {
   width: 12.5%;
   min-width: 12.5%;
+  max-width: 12.5%;
 }
 
 .col-1-9 {
   width: 11.1%;
   min-width: 11.1%;
+  max-width: 11.1%;
 }
 
 .col-1-10 {
   width: 10%;
   min-width: 10%;
+  max-width: 10%;
 }
 
 .col-1-11 {
   width: 9.09%;
   min-width: 9.09%;
+  max-width: 9.09%;
 }
 
 .col-1-12 {
   width: 8.33%;
   min-width: 8.33%;
+  max-width: 8.33%;
 }
 
 
@@ -270,26 +317,31 @@
 .col-11-12 {
   width: 91.66%;
   min-width: 91.66%;
+  max-width: 91.66%;
 }
 
 .col-10-12 {
   width: 83.333%;
   min-width: 83.333%;
+  max-width: 83.333%;
 }
 
 .col-9-12 {
   width: 75%;
   min-width: 75%;
+  max-width: 75%;
 }
 
 .col-5-12 {
   width: 41.66%;
   min-width: 41.66%;
+  max-width: 41.66%;
 }
 
 .col-7-12 {
   width: 58.33%;
   min-width: 58.33%;
+  max-width: 58.33%;
 }
 
 
@@ -404,6 +456,22 @@
 
 @include respond-to(desktop)
 {
+  .desktop\:grid-3
+  {
+    display: flex;
+    flex-wrap: wrap;
+
+    margin-right: -3rem;
+
+    > *
+    {
+      align-items: stretch;
+      align-content: flex-start;
+
+      padding-right: 3rem;
+    }
+  }
+
   .desktop\:grid-2
   {
     display: flex;
@@ -413,7 +481,6 @@
 
     > *
     {
-      width: 100%;
       align-items: stretch;
       align-content: flex-start;
 
@@ -431,7 +498,6 @@
 
     > *
     {
-      width: 100%;
       align-items: stretch;
       align-content: flex-start;
 
@@ -442,6 +508,7 @@
 
   .desktop\:grid-2-4
   {
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
 
@@ -450,7 +517,6 @@
 
     > *
     {
-      width: 100%;
       align-items: stretch;
       align-content: flex-start;
 
@@ -591,63 +657,89 @@
   .mobile\:col
   {
     width: 100%;
+    min-width: 100%;
+    max-width: 100%;
   }
 
   .mobile\:col-1-2
   {
     width: 50%;
+    min-width: 50%;
+    max-width: 50%;
   }
 
   .mobile\:col-1-4
   {
     width: 25%;
+    min-width: 25%;
+    max-width: 25%;
   }
 
   .mobile\:col-1-8
   {
     width: 12.5%;
+    min-width: 12.5%;
+    max-width: 12.5%;
   }
 
   .mobile\:col-1-12
   {
     width: 8.33%;
+    min-width: 8.33%;
+    max-width: 8.33%;
   }
 
   .mobile\:col-2-12
   {
     width: 16.66%;
+    min-width: 16.66%;
+    max-width: 16.66%;
   }
 
   .mobile\:col-3-12
   {
     width: 25%;
+    min-width: 25%;
+    max-width: 25%;
   }
 
   .mobile\:col-4-12 {
     width: 33.33%;
+    min-width: 33.33%;
+    max-width: 33.33%;
   }
 
   .mobile\:col-5-12
   {
     width: 41.66%;
+    min-width: 41.66%;
+    max-width: 41.66%;
   }
 
   .mobile\:col-6-12
   {
     width: 50%;
+    min-width: 50%;
+    max-width: 50%;
   }
 
   .mobile\:col-7-12
   {
     width: 58.33%;
+    min-width: 58.33%;
+    max-width: 58.33%;
   }
 
   .mobile\:col-8-12 {
     width: 66.66%;
+    min-width: 66.66%;
+    max-width: 66.66%;
   }
 
   .mobile\:col-10-12
   {
     width: 83.33%;
+    min-width: 83.33%;
+    max-width: 83.33%;
   }
 }

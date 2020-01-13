@@ -1,6 +1,6 @@
 hr
 {
-  border: 0.5px solid $gray-light;
+  border: 0.5px solid $black-light;
   margin: 2rem 0;
 }
 
@@ -120,6 +120,11 @@ hr
   border-color: $gray-light;
 }
 
+.border-black
+{
+  border-color: $black;
+}
+
 .bg-black,
 .hover\:bg-black:hover
 {
@@ -198,6 +203,11 @@ hr
   background-color: $yellow-dark;
 }
 
+.fill-black-light *
+{
+  fill: $black-light;
+}
+
 .fill-white *
 {
   fill: $white;
@@ -238,6 +248,16 @@ hr
   fill: $green;
 }
 
+.hover\:fill-black:hover *
+{
+  fill: $black;
+}
+
+.rotate-45
+{
+  transform: rotate(45deg);
+}
+
 .rotate-90
 {
   transform: rotate(90deg);
@@ -253,10 +273,40 @@ hr
   transform: rotate(-90deg);
 }
 
+.hover\:rotate-45:hover
+{
+  transform: rotate(45deg);
+}
+
 
 
 @include respond-to(mobile)
 {
+  .mobile\:border
+  {
+    border: 1px solid $black-light;
+  }
+
+  .mobile\:border-bottom
+  {
+    border-bottom: 1px solid $black-light;
+  }
+
+  .mobile\:border-top
+  {
+    border-top: 1px solid $black-light;
+  }
+
+  .mobile\:border-right
+  {
+    border-right: 1px solid $black-light;
+  }
+
+  .mobile\:border-left
+  {
+    border-left: 1px solid $black-light;
+  }
+
   .mobile\:border-none
   {
     border-style: none;

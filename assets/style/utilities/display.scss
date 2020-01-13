@@ -11,6 +11,8 @@
   width: 100%;
 }
 
+
+
 .grow
 {
   display: flex;
@@ -49,6 +51,12 @@
 {
   display: flex;
   justify-content: center;
+}
+
+.v-justify
+{
+  display: flex;
+  justify-content: space-between;
 }
 
 .block
@@ -138,6 +146,11 @@ table
 .ratio-4-3
 {
   @include aspect-ratio(4,3);
+}
+
+.ratio-16-9
+{
+  @include aspect-ratio(16,9);
 }
 
 
@@ -257,21 +270,32 @@ table
 
 @include respond-to(mobile)
 {
-  .mobile\:hidden {
-    display: none;
-  }
-
-  .mobile\:hide {
-    display: none;
+  .mobile\:hidden,
+  .mobile\:hide
+  {
+    display: none !important;
   }
 
   .mobile\:fixed {
     position: fixed;
   }
 
-  .mobil\:absolute {
+  .mobile\:absolute {
     position: absolute;
   }
+
+  .mobile\:flex {
+    display: flex;
+  }
+
+  .mobile\:v-center {
+    display: flex;
+    justify-content: center;
+  }
+
+
+
+
 
   .mobile\:pin-l {
     left: 0;

@@ -210,6 +210,13 @@
   padding-left: 4rem;
 }
 
+.pl-6 {
+  padding-left: 6rem;
+}
+
+.pb-6 {
+  padding-bottom: 6rem;
+}
 
 .pb-8 {
   padding-bottom: 8rem;
@@ -238,6 +245,11 @@
   margin: .5rem;
 }
 
+.mx-1\/2 {
+  margin-left: .5rem;
+  margin-right: .5rem;
+}
+
 .m-1 {
   margin: 1rem;
 }
@@ -246,8 +258,16 @@
   margin: 2rem;
 }
 
+.ml-2 {
+  margin-left: 2rem;
+}
+
 .m-3 {
   margin: 3rem;
+}
+
+.ml-3 {
+  margin-left: 3rem;
 }
 
 .m-4 {
@@ -512,12 +532,22 @@
     padding-left: 2rem;
   }
 
+  .mobile\:pb-1 {
+    padding-bottom: 1rem;
+  }
+
   .mobile\:pb-2 {
     padding-bottom: 2rem;
   }
 
   .mobile\:pb-4 {
     padding-bottom: 4rem;
+  }
+
+  .mobile\:px-4
+  {
+    padding-left: 4rem;
+    padding-right: 4rem;
   }
 
   .mobile\:pb-8 {
@@ -528,11 +558,38 @@
     padding-bottom: 16rem;
   }
 
-  .mobile\:mt-4 {
-    margin-top: 4rem;
+  .mobile\:m-0 {
+    margin: 0rem;
+  }
+
+  .mobile\:m-auto {
+    margin: auto;
+  }
+
+  .mobile\:mb-1 {
+    margin-bottom: 1rem;
+  }
+
+  .mobile\:mx-1 {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .mobile\:my-1 {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
   }
 
   .mobile\:mb-2 {
     margin-bottom: 2rem;
+  }
+
+  .mobile\:my-2 {
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+  }
+
+  .mobile\:mt-4 {
+    margin-top: 4rem;
   }
 }

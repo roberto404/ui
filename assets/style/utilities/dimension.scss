@@ -24,6 +24,7 @@
 }
 .w-4 {
   width: 4rem;
+  min-width: 4rem; // flex-grow
 }
 .h-4 {
   height: 4rem;
@@ -133,6 +134,14 @@
 
   .mobile\:w-screen {
     width: 100vw;
+  }
+
+  .mobile\:w-2 {
+    width: 2rem;
+  }
+
+  .mobile\:h-2 {
+    height: 2rem;
   }
 }
 
