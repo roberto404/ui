@@ -151,6 +151,7 @@ export const sidebar = (element: React.Element) =>
  * @memberof Actions/Layer
  * @param {ReactElement} element Layer (popover) content
  * @param {object} event
+ * @param {object} options { className: 'no-close' }
  */
 export const popover = (element: React.Element, event: {} = {}, options = {}) =>
 {
