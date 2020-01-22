@@ -125,10 +125,8 @@ const Layer = (
         </div>
 
         <div className="content">
-          <div className="wrapper">
-            { React.isValidElement(element) && element }
-            { typeof element === 'function' && element() }
-          </div>
+          { React.isValidElement(element) && element }
+          { typeof element === 'function' && element() }
         </div>
 
       </div>
