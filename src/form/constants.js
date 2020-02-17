@@ -55,6 +55,11 @@ const formatPhone = (value, reduce) =>
   {
     return value.substring(0, value.length - 1);
   }
+  // paste or load value without space
+  else if (/^[0-9]+$/.exec(value))
+  {
+    return value.replace(/^([0-9]{2})([0-9]{3})([0-9]+)$/, "$1 $2 $3");
+  }
 
   return value;
 };
@@ -78,7 +83,19 @@ export const DEFAULT_FIELDS = {
   name: {
     id: 'name',
     label: 'field.name',
-    placeholder: 'placeholder.name',
+    // placeholder: 'placeholder.name',
+    length: '128',
+  },
+  firstName: {
+    id: 'firstName',
+    label: 'field.firstName',
+    // placeholder: 'placeholder.firstName',
+    length: '128',
+  },
+  lastName: {
+    id: 'lastName',
+    label: 'field.lastName',
+    // placeholder: 'placeholder.lastName',
     length: '128',
   },
   email: {
@@ -95,6 +112,7 @@ export const DEFAULT_FIELDS = {
     prefix: 'prefix.phone',
     length: '11',
     format: formatPhone,
+    // stateFormat: value => value.replace(/[ ]+/g, ""),
     type: 'tel',
   },
   password: {
@@ -132,10 +150,32 @@ export const DEFAULT_FIELDS = {
     label: 'field.city',
     data: [],
   },
+  street: {
+    id: 'street',
+    label: 'field.street',
+    length: '64',
+  },
+  streetNo: {
+    id: 'streetNo',
+    label: 'field.streetNo',
+    length: '8',
+  },
+  floor: {
+    id: 'floor',
+    label: 'field.floor',
+    type: 'tel',
+    length: '2',
+    regexp: '^[0-9]{0,2}$',
+  },
+  houseNumber: {
+    id: 'houseNumber',
+    label: 'field.houseNumber',
+    length: '8',
+  },
   taxcode: {
     id: 'taxcode',
     label: 'field.taxcode',
-    regexp: '^([0-9]{0,9}|[0-9]{8}-|[0-9]{8}-[1-5]{1}[0-9]{0,1}-?|[0-9]{8}-[1-5]{1}-[0-9]{0,2})$',
+    regexp: '^([0-9]{0,9}|[0-9]{8}-|[0-9]{8}-[1-5]{1}[0-9]{0,1}-?|[0-9]{8}-[1-5]{1}-[0-9]{0,2})?$',
     format: formatTaxcode,
     type: 'tel',
   },
@@ -146,6 +186,9 @@ export const DEFAULT_FIELDS = {
   newsletter: {
     id: 'newsletter',
     label: 'field.newsletter',
+    data: [{ id: '1', title: 'field.newsletter.data' }],
+    format: value => +(value[0] !== undefined),
+    stateFormat: value => value ? [value.toString()]: [],
   },
   pid: {
     id: 'pid',
@@ -158,6 +201,11 @@ export const DEFAULT_FIELDS = {
     label: 'field.pos',
     // placeholder: 'placeholder.pos',
     dataTranslate: false,
+  },
+  message: {
+    id: 'message',
+    label: 'field.message',
+    placeholder: 'placeholder.message',
   },
 };
 
@@ -182,6 +230,24 @@ export const DEFAULT_SCHEME = {
       message: '^validator.name',
     },
   },
+  firstName: {
+    presence: {
+      message: '^validator.presence',
+    },
+    format: {
+      pattern: '^[A-zÀ-ÿőűŐŰ]{2,}$',
+      message: '^validator.format',
+    },
+  },
+  lastName: {
+    presence: {
+      message: '^validator.presence',
+    },
+    format: {
+      pattern: '^[A-zÀ-ÿőűŐŰ]{2,}$',
+      message: '^validator.format',
+    },
+  },
   email: {
     presence: {
       message: '^validator.presence',
@@ -195,7 +261,7 @@ export const DEFAULT_SCHEME = {
       message: '^validator.presence',
     },
     format: {
-      pattern: '[0-9 ]{11}',
+      pattern: '([0-9 ]{9,11})?',
       message: '^validator.format',
       // message: '^A helyes formátum 11 számjegy.',
     },
@@ -284,6 +350,11 @@ export const DEFAULT_SCHEME = {
       message: '^validator.format',
     },
   },
+  message: {
+    // presence: {
+    //   message: '^validator.presence',
+    // },
+  },
 };
 
 
@@ -291,6 +362,8 @@ export const DEFAULT_SCHEME = {
  * Get predefined fields props
  * @param  {array} fetchFields [title, phone]
  * @return {object}             fields { title: {...}, phone: {...}}
+ * @example
+ * getFields(['password', 'zipcode'])
  */
 export const getFields = fetchFields =>
   fetchFields.reduce((result, field) =>
