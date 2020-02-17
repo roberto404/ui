@@ -190,7 +190,13 @@ class Checkbox extends Field
                 }}
               />
 
-              <label htmlFor={`${slugify(this.props.id)}-${slugify(this.props.label)}-${id}-${uid}`}>{title}</label>
+              <label htmlFor={`${slugify(this.props.id)}-${slugify(this.props.label)}-${id}-${uid}`}>
+                {
+                  this.props.intl && this.props.dataTranslate ?
+                    this.props.intl.formatMessage({ id: title, default: title })
+                    : title
+                }
+              </label>
             </div>
           ),
         )}
@@ -226,6 +232,10 @@ Checkbox.propTypes =
    * valueClassName="col-1-4"
    */
   valueClassName: PropTypes.string,
+  /**
+   * Disable select options i18n translatations
+   */
+  dataTranslate: PropTypes.bool,
 };
 
 /**
@@ -237,6 +247,7 @@ Checkbox.defaultProps =
   ...Checkbox.defaultProps,
   data: [],
   valueClassName: '',
+  dataTranslate: true,
 };
 
 export default Checkbox;
