@@ -488,7 +488,7 @@ class Grid extends Component
       ));
 
 
-      nodeTableHeaderColumns.unshift(<Checkbox />);
+      nodeTableHeaderColumns.unshift(<Checkbox key="checkbox" />);
     }
 
     return (
@@ -572,7 +572,7 @@ class Grid extends Component
     // insert checkbox first row
     if (selectable && checkboxSelect)
     {
-      nodeTableRowColumns.unshift(<div className="checkbox" />);
+      nodeTableRowColumns.unshift(<div className="checkbox" key="checkbox" />);
     }
 
     /**
