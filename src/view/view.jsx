@@ -11,7 +11,7 @@ import isEqual from 'lodash/isEqual';
 
 /* !- Actions */
 
-import { switchGroup, SwitchView, setSettings, toggleView } from './actions';
+import { switchGroup, switchView, setSettings, toggleView } from './actions';
 import { menu, close } from '../layer/actions';
 
 

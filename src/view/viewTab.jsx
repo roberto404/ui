@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 /* !- Actions */
 
-import { SwitchView } from './actions';
+import { switchView } from './actions';
 
 
 /* !- Elements */
@@ -26,7 +26,7 @@ import View from './view';
 const ViewTabButtonsComponent = ({
   active,
   views,
-  SwitchView,
+  switchView,
   className,
   classNameButton,
   classNameButtonActive,
@@ -35,7 +35,7 @@ const ViewTabButtonsComponent = ({
   const onClickTabHandler = (event, id) =>
   {
     event.preventDefault();
-    SwitchView(id);
+    switchView(id);
   }
 
   const items = views.map(({ id, status, title }) => (
@@ -78,7 +78,7 @@ const ViewTabButtons = connect(
     };
   },
   {
-    SwitchView,
+    switchView,
   },
 )(ViewTabButtonsComponent);
 
@@ -103,8 +103,8 @@ const ViewTab = ({
 
       <View
         className={classNameChildren}
-        id='tab'
-        defaultView='tab'
+        id="tab"
+        defaultView="tab"
         settings={{
           groups: {
             tab: items.map((item, n) => ({ id: `tab-${n}`, pos: n, ...item }))
