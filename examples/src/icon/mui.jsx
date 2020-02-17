@@ -33,6 +33,10 @@ import SrcIconMuiHardverKeyboardbackspace from '../../../src/icon/mui/hardver/ke
 import SrcIconMuiImageAddphoto_alternate from '../../../src/icon/mui/image/add_photo_alternate';
 import SrcIconMuiImageLens from '../../../src/icon/mui/image/lens';
 import SrcIconMuiToggleStar from '../../../src/icon/mui/toggle/star';
+import SrcIconMuiSocialPersonadd from '../../../src/icon/mui/social/person_add';
+import SrcIconMuiSocialNotifications from '../../../src/icon/mui/social/notifications';
+import SrcIconMuiSocialNotificationsnone from '../../../src/icon/mui/social/notifications_none';
+import SrcIconMuiSocialPerson from '../../../src/icon/mui/social/person';
 import SrcIconMuiActionFavoriteborder from '../../../src/icon/mui/action/favorite_border';
 import SrcIconMuiActionDone from '../../../src/icon/mui/action/done';
 import SrcIconMuiActionPrint from '../../../src/icon/mui/action/print';
@@ -49,6 +53,7 @@ import SrcIconMuiActionCheckcircle from '../../../src/icon/mui/action/check_circ
 import SrcIconMuiActionExplore from '../../../src/icon/mui/action/explore';
 import SrcIconMuiActionSettingsethernet from '../../../src/icon/mui/action/settings_ethernet';
 import SrcIconMuiActionCode from '../../../src/icon/mui/action/code';
+import SrcIconMuiActionBook from '../../../src/icon/mui/action/book';
 import SrcIconMuiActionToday from '../../../src/icon/mui/action/today';
 import SrcIconMuiActionDragindicator from '../../../src/icon/mui/action/drag_indicator';
 import SrcIconMuiActionComparearrows from '../../../src/icon/mui/action/compare_arrows';
@@ -273,6 +278,30 @@ import SrcIconMuiEditorFormatindent_increase from '../../../src/icon/mui/editor/
       
 
         <div className="col-1-5 h-center">
+        <SrcIconMuiSocialPersonadd className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/social/person_add</div>
+        </div>
+      
+
+        <div className="col-1-5 h-center">
+        <SrcIconMuiSocialNotifications className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/social/notifications</div>
+        </div>
+      
+
+        <div className="col-1-5 h-center">
+        <SrcIconMuiSocialNotificationsnone className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/social/notifications_none</div>
+        </div>
+      
+
+        <div className="col-1-5 h-center">
+        <SrcIconMuiSocialPerson className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/social/person</div>
+        </div>
+      
+
+        <div className="col-1-5 h-center">
         <SrcIconMuiActionFavoriteborder className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/favorite_border</div>
         </div>
@@ -365,6 +394,12 @@ import SrcIconMuiEditorFormatindent_increase from '../../../src/icon/mui/editor/
         <div className="col-1-5 h-center">
         <SrcIconMuiActionCode className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/code</div>
+        </div>
+      
+
+        <div className="col-1-5 h-center">
+        <SrcIconMuiActionBook className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/book</div>
         </div>
       
 
