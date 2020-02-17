@@ -119,7 +119,7 @@ let SEARCH_CACHE = [];
  * if column join helper use helper value to matching
  *
  * @param  {object} object {
- *  record: observe database,
+ *  record: observe data,
  *  value: search term
  *  helper: database related value (userId:1 => 'john doe')
  *  hook: record keys i18n title or record value formatter
@@ -190,24 +190,28 @@ export const search = ({ record, value, helpers, hooks, index = 0 }) =>
          * Eg.: Visit Date => vdate
          * or just 'Vis', 'Visit', 'Date'
          */
-        if (termMatches && hooks)
+        if (termMatches)
         {
           term = termMatches[3];
           handlerIndex = termMatches[2];
+          columns = [termMatches[1]];
 
-          columns = Object.keys(hooks).reduce(
-            (accumulator, column) =>
-            {
-              const subject = (typeof hooks[column] === 'string') ? hooks[column] : hooks[column].title;
-
-              if (compare[DEFAULT_COMPARE](subject, termMatches[1]))
+          if (hooks)
+          {
+            columns = Object.keys(hooks).reduce(
+              (accumulator, column) =>
               {
-                accumulator.push(column);
-              }
-              return accumulator;
-            },
-            [termMatches[1]],
-          );
+                const subject = (typeof hooks[column] === 'string') ? hooks[column] : hooks[column].title;
+
+                if (compare[DEFAULT_COMPARE](subject, termMatches[1]))
+                {
+                  accumulator.push(column);
+                }
+                return accumulator;
+              },
+              [termMatches[1]],
+            );
+          }
         }
         else
         {
