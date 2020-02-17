@@ -107,6 +107,11 @@ class DynamicCaroussel extends Component
     this.updateSlides();
   }
 
+  componentWillReceiveProps(props)
+  {
+    this.updateSlides(props);
+  }
+
   //TODO kellene egy minta app ahol props.data valtozik
   // componentDidUpdate(nextProps, nextState)
   // {
