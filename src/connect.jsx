@@ -108,7 +108,7 @@ class Connect extends Component
       ...uiProps,
     };
 
-    return children ? React.cloneElement(children, props) : <UI {...props} />;
+    return children ? React.cloneElement(children, props) : React.createElement(UI, props);
   }
 }
 
