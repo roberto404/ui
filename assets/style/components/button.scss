@@ -72,32 +72,6 @@ button,
     }
   }
 
-  &.small
-  {
-    font-size: .6em;
-  }
-
-  &.large
-  {
-    font-size: .9em;
-  }
-
-  &.wide
-  {
-    padding-left: 4em;
-    padding-right: 4em;
-  }
-
-  &.desktop\:wide
-  {
-    @include respond-to(desktop)
-    {
-      padding-left: 4em;
-      padding-right: 4em;
-    }
-  }
-
-
   &.green,
   &.yellow,
   &.blue,
@@ -261,7 +235,12 @@ button,
   {
     background-color: transparent;
     border: 2px solid $white-dark;
-    padding: calc(1em - 2px);
+
+
+    &::not(.wide)
+    {
+      padding: calc(1em - 2px);
+    }
 
     &:hover
     {
@@ -352,6 +331,34 @@ button,
       &:not(:hover):not(.no-fill):not([class^="fill-"]):not([class*=" fill-"]) svg path { fill: $gray };
     }
   }
+
+
+
+  &.small
+  {
+    font-size: .6em;
+  }
+
+  &.large
+  {
+    font-size: .9em;
+  }
+
+  &.wide
+  {
+    padding-left: 4em;
+    padding-right: 4em;
+  }
+
+  &.desktop\:wide
+  {
+    @include respond-to(desktop)
+    {
+      padding-left: 4em;
+      padding-right: 4em;
+    }
+  }
+
 
   &.action
   {

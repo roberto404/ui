@@ -42,6 +42,11 @@
         content: "*";
       }
     }
+
+    &:first-letter
+    {
+      text-transform: uppercase;
+    }
   }
 
 
