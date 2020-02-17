@@ -18,8 +18,11 @@ import * as AuthenticationActions from './actions';
 */
 const Logout = (
   {
+    className,
     logout,
     modal,
+    preload,
+    close,
     history,
     intl,
   },
@@ -37,12 +40,18 @@ const Logout = (
       {
         modal(response.modal);
       }
+      else
+      {
+        close();
+      }
 
       history.replace('/');
     });
 
+  preload();
+
   return (
-    <div>{intl.formatMessage({ id: 'logout.inprogress' })}</div>
+    <div className={className}>{intl.formatMessage({ id: 'logout.inprogress' })}</div>
   );
 };
 
@@ -53,6 +62,11 @@ const Logout = (
  */
 Logout.propTypes =
 {
+  /**
+   * @private
+   * Authentication Redux action
+   */
+  className: PropTypes.string,
   /**
    * @private
    * Authentication Redux action
@@ -85,6 +99,7 @@ Logout.propTypes =
  */
 Logout.defaultProps =
 {
+  className: '',
   intl: {
     formatMessage: ({ id }) => id,
   },
@@ -106,6 +121,8 @@ export default withRouter(injectIntl(connect(
   }),
   {
     modal: LayerActions.modal,
+    close: LayerActions.modal,
+    preload: LayerActions.preload,
     logout: AuthenticationActions.logout,
   },
 )(Logout)));
