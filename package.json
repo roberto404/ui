@@ -44,7 +44,7 @@
   },
   "homepage": "https://github.com/roberto404/ui#readme",
   "devDependencies": {
-    "@1studio/utils": "4.7.1",
+    "@1studio/utils": "4.7.2",
     "autoprefixer": "9.3.1",
     "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.3",
