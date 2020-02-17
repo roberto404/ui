@@ -12,11 +12,12 @@ import { FORM_ERRORS_KEY } from '../../form/constants';
 /**
 * Submit From Component.
 * - call Api (via context or props) with this object { method: formId, payload: ReduxFrom }
-* - you can overwrite this method with onClick
-* - or you can subscribe Api method (default use <Form> methods):
+* - execute Form context handlers
 *   - onStart (before the process),
 *   - onError (form scheme validation error),
 *   - onFinish (when api return width response)
+*
+* You can overwrite or extend this method with onClick
 *
 * @example
 * <Form id="user">
