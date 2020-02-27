@@ -46,7 +46,7 @@ export const CollectionItem = ({ onChange, record, fields }) =>
    * form collection pass onChange method
    */
   return (
-    <div className="grid-2">
+    <div className="grid-2 w-full">
       <Select
         id="search#field"
         onChange={onChangeHandler}

@@ -155,13 +155,13 @@ export const sidebar = (element: React.Element) =>
  */
 export const popover = (element: React.Element, event: {} = {}, options = {}) =>
 {
-  let containerStyle = {};
+  let containerStyle = options.containerStyle || {};
 
   const target = event.currentTarget;
 
   if (target)
   {
-    containerStyle = getDynamicPopoverStyle(target);
+    containerStyle = { ...getDynamicPopoverStyle(target), ...containerStyle };
   }
 
   return ({

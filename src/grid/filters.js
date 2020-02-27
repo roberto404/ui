@@ -80,9 +80,10 @@ export const OPERATOR_REGEX = `(${
     .replace(/(\*|\^|\$)/g, '\\$&')
 })`;
 
-export const OPERATOR_UNIQUE = String.prototype.concat(...new Set(OPERATOR_KEYS.join('')))
-  .replace(/\*/g, '\\$&');
-
+// TODO IE11 NOT WORKING
+// export const OPERATOR_UNIQUE = String.prototype.concat(...new Set(OPERATOR_KEYS.join('')))
+//   .replace(/\*/g, '\\$&');
+export const OPERATOR_UNIQUE = "=~!\*^$><";
 
 export const LOGICAL_REGEX = '[|&]{1,2}';
 
@@ -97,7 +98,8 @@ const FIELD_CHARS = '0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ_';
  * //=>
  * [field = 1, field > 2]
  */
-const REGEX_QUERY_LEVEL1 = new RegExp(`([${FIELD_CHARS}]+[ ]*[${OPERATOR_UNIQUE}]+[ ]*)?[${FIELD_CHARS}"{}[\\].-:]+[ ,]*`, 'g');
+// const REGEX_QUERY_LEVEL1 = new RegExp(`([${FIELD_CHARS}]+[ ]*[${OPERATOR_UNIQUE}]+[ ]*)?[${FIELD_CHARS}"{}[\\].-:^+()*\\]+[ ,]*`, 'g');
+const REGEX_QUERY_LEVEL1 = new RegExp(`([${FIELD_CHARS}]+[ ]*[${OPERATOR_UNIQUE}]+[ ]*)?[^ ,&=><]+`, 'g');
 
 /**
  * @example
@@ -241,7 +243,13 @@ export const search = ({ record, value, helpers, hooks, index = 0 }) =>
         {
           return false;
         }
+
         let subject = record[column];
+
+        if (typeof subject === 'object')
+        {
+          subject = JSON.stringify(subject);
+        }
 
         if (compare[handlerIndex](subject, term) === true)
         {

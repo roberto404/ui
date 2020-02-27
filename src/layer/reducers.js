@@ -80,6 +80,11 @@ const reducers = (state = DEFAULT_STATE, action = {}) =>
         const containerStyle = (action.containerStyle instanceof Object) ? action.containerStyle : {};
         const options = (action.options instanceof Object) ? action.options : {};
 
+        if (action.method === 'popover' && state.active && ['dialog', 'fullscreen', 'sidebar'].indexOf(state.method) !== -1)
+        {
+          return state;
+        }
+
         return {
           active: reducers(state, { type: 'SET_LAYER_VISIBLE', active: action.active }).active,
           element: reducers(state, { type: 'SET_LAYER_ELEMENT', element: action.element }).element,
