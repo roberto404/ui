@@ -96,6 +96,11 @@ const Card = ({
 
   const onMouseOutHandler = (event) =>
   {
+    if (!markers || !markers.length)
+    {
+      return false;
+    }
+
     cardElement = event.currentTarget;
 
     if (
@@ -148,7 +153,7 @@ const Card = ({
       </div>
       }
       { (title || subTitle) &&
-        <div className={classNameCaption} style={{ minHeight: `calc(${imagePadding})`, padding: `${captionPadding / 2}em` }}>
+        <div className={classNameCaption} style={{ minHeight: `calc(${imagePadding})`, padding: `${captionPadding / 2}em`, bottom: 0 }}>
           { title &&
           <div className={classNameTitle} style={{ wordBreak: 'break-word' }}>{title}</div>
           }
@@ -167,7 +172,7 @@ Card.defaultProps =
   title: '',
   subTitle: '',
   className: '',
-  classNameCaption: 'bg-white p-2 pin-b absolute w-full',
+  classNameCaption: 'bg-white p-2 absolute w-full',
   classNameTitle: 'text-l bold text-line-m',
   classNameSubTitle: 'pt-1/2 light text-line-l',
   createMarkers,
