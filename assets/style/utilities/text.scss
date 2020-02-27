@@ -274,3 +274,34 @@ h3,
     font-size: 1.75em;
   }
 }
+
+@include respond-to(desktop)
+{
+  .desktop\:text-left {
+    text-align: left;
+  }
+  .desktop\:text-right {
+    text-align: right;
+  }
+  .desktop\:text-center {
+    text-align: center;
+  }
+  .desktop\:text-xxs {
+    font-size: 0.5em;
+  }
+  .desktop\:text-xs {
+    font-size: 0.75em;
+  }
+  .desktop\:text-s {
+    font-size: 0.875em;
+  }
+  .desktop\:text-m {
+    font-size: 1.25em;
+  }
+  .desktop\:text-l {
+    font-size: 1.5em;
+  }
+  .desktop\:text-xl {
+    font-size: 1.75em;
+  }
+}
