@@ -25,6 +25,7 @@ import FileList from './dropzoneFileList';
 import Card from '../../card/card';
 import Marker from '../../card/marker';
 import IconPlus from '../../icon/mui/content/add';
+import IconArrow from '../../icon/mui/navigation/arrow_forward';
 
 
 const FILE_PATTERN = /^(([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})[a-f0-9]{24})/;
@@ -404,17 +405,28 @@ class DropzoneComponent extends Field
           }
 
           { this.props.maxFiles > this.state.value.length &&
-            <button
-              className="w-auto border shadow white fill-red"
-              onClick={this.onClickButtonHandler}
-              ref={(ref) =>
-              {
-                this.element = ref;
-              }}
-            >
-              <IconAdd />
-              <span>Add new file</span>
-            </button>
+            <div className="buttons concat">
+              <button
+                className="w-auto border shadow white fill-red"
+                onClick={this.onClickButtonHandler}
+                ref={(ref) =>
+                  {
+                    this.element = ref;
+                  }}
+              >
+                <IconArrow className="rotate-270" />
+                <span>{this.state.placeholder}</span>
+              </button>
+              { this.props.onClickBrowse &&
+              <button
+                onClick={event => this.props.onClickBrowse(event, file => this.onChangeHandler([...this.state.value, file]))}
+                className="w-auto border shadow gray fill-white"
+              >
+                <IconAdd />
+                <span>Tallózás</span>
+              </button>
+              }
+            </div>
           }
         </div>
       </div>
@@ -451,6 +463,7 @@ DropzoneComponent.propTypes =
 DropzoneComponent.defaultProps =
 {
   ...DropzoneComponent.defaultProps,
+  placeholder: 'Upload new file',
   value: [],
   maxFiles: 30,
   maxFilesSize: 5,

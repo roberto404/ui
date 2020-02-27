@@ -30,7 +30,7 @@ class DropZoneFiles extends Component
 
   /* !- Handlers */
 
-  onChangeHandler = (item) =>
+  onChangeHandler = (item, close) =>
   {
     if (item)
     {
@@ -47,7 +47,10 @@ class DropZoneFiles extends Component
       ]);
     }
 
-    this.setState({ itemIndex: null })
+    if (close !== false)
+    {
+      this.setState({ itemIndex: null })
+    }
   }
 
   onEditListener = (itemIndex) =>
