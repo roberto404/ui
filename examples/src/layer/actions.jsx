@@ -125,6 +125,26 @@ const Example = ({
 
       <h2>Menu</h2>
       <button className="outline gray w-auto" onClick={event => menu(menuProps, event)}>Menu</button>
+
+
+      <h2>Overwrite Popover</h2>
+
+      <button
+        className="outline gray w-auto"
+        onClick={event => popover(
+          () =>
+            <div className="w-screen text-center bg-red text-white">hello</div>,
+          {},
+          {
+            className: 'no-close no-padding',
+            containerStyle: { borderRadius: '0px', top: '0px' },
+          }
+        )}
+      >
+        Popover
+      </button>
+
+
     </div>
   );
 };
