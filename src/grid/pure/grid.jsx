@@ -760,6 +760,7 @@ class Grid extends Component
       freezeHeader,
       height,
       showHeader,
+      style,
     } = this.props;
 
     const gridClassName = classNames({
@@ -772,7 +773,7 @@ class Grid extends Component
     return (
       <div
         className={gridClassName}
-        style={{ height }}
+        style={{ height, ...style }}
         ref={(ref) =>
         {
           this.element = ref;
@@ -959,6 +960,10 @@ Grid.propTypes =
   className: PropTypes.string,
   headClassName: PropTypes.string,
   bodyClassName: PropTypes.string,
+  /**
+   * Classic style
+   */
+  style: PropTypes.objectOf(PropTypes.string),
   height: PropTypes.string,
   /**
    * Always visible header, you must set height
@@ -998,6 +1003,7 @@ Grid.defaultProps =
   className: 'grid',
   headClassName: 'thead',
   bodyClassName: 'tbody',
+  style: {},
   height: '',
   freezeHeader: false,
   infinity: false,

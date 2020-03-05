@@ -32,6 +32,7 @@ import GridExtra from './grid/extra';
 import GridComplex from './grid/complex';
 import GridList from './grid/list';
 import GridCasual from './grid/casual';
+import GridFilelist from './grid/filelist';
 import GridPivotTable from './grid/pivotTable';
 import GridPivotTableComplex from './grid/pivotTableComplex';
 import GridWithoutGrid from './grid/withoutGrid';
@@ -119,6 +120,7 @@ export default {
     extra: GridExtra,
     complex: GridComplex,
     list: GridList,
+    filelist: GridFilelist,
     casual: GridCasual,
     pivotTable: GridPivotTable,
     pivotTableComplex: GridPivotTableComplex,

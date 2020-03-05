@@ -83,7 +83,7 @@ const Example = (props, { store }) =>
       id="example"
     >
       <Dropzone
-        url={`/api/v3/file/upload?resize=${JSON.stringify(imageSizes)}`}
+        url={`http://kontakt2.rs.loc/api/v3/file/upload?resize=${JSON.stringify(imageSizes)}`}
         maxFilesSize={10}
         id="images"
       >

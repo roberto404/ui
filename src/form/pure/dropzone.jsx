@@ -6,6 +6,7 @@ import request from 'superagent';
 import findIndex from 'lodash/findIndex';
 import find from 'lodash/find';
 import md5 from 'crypto-js/md5';
+import classNames from 'classnames';
 
 
 /* !- Redux Action */
@@ -49,23 +50,8 @@ export const formatDropzoneFileId = (value) =>
 };
 
 export const formatDropzoneFileIdAndExt = (value) =>
-{
-  const lastIndex = value.length - 1;
-  const lastItem = value[lastIndex];
-
-  if (lastItem && lastItem.path)
-  {
-    return [
-      ...value.slice(0, lastIndex),
-      {
-        id: lastItem.id,
-        ext: lastItem.ext,
-      },
-    ];
-  }
-
-  return value;
-}
+  value.map(({ id, title, ext, percent }) =>
+    percent === undefined ? ({ id, ext }) : ({ id, title, percent }));
 
 
 export class File
@@ -182,10 +168,10 @@ class DropzoneComponent extends Field
 
   /* !- Handlers */
 
-  onClickButtonHandler(event)
+  onClickButtonHandler = (event) =>
   {
     event.preventDefault();
-    // this.element.click();
+    this.element.click();
   }
 
 
@@ -382,8 +368,18 @@ class DropzoneComponent extends Field
 
   render()
   {
+    const buttonsClass = classNames({
+      'buttons concat': this.props.onClickBrowse,
+    });
+
     return (
-      <div className={`field file-field ${this.props.className}`}>
+      <div
+        className={`field file-field ${this.props.className}`}
+        ref={(ref) =>
+          {
+            this.element = ref;
+          }}
+      >
 
         { this.label }
 
@@ -405,18 +401,8 @@ class DropzoneComponent extends Field
           }
 
           { this.props.maxFiles > this.state.value.length &&
-            <div className="buttons concat">
-              <button
-                className="w-auto border shadow white fill-red"
-                onClick={this.onClickButtonHandler}
-                ref={(ref) =>
-                  {
-                    this.element = ref;
-                  }}
-              >
-                <IconArrow className="rotate-270" />
-                <span>{this.state.placeholder}</span>
-              </button>
+            <div className={buttonsClass}>
+              { React.createElement(this.props.UI, { ...this.props, onClick: this.onClickButtonHandler })}
               { this.props.onClickBrowse &&
               <button
                 onClick={event => this.props.onClickBrowse(event, file => this.onChangeHandler([...this.state.value, file]))}
@@ -453,6 +439,7 @@ DropzoneComponent.propTypes =
    * image/*,application/pdf,.psd
    */
   acceptedFiles: PropTypes.string,
+  UI: PropTypes.func,
 };
 
 /**
@@ -469,6 +456,15 @@ DropzoneComponent.defaultProps =
   maxFilesSize: 5,
   acceptedFiles: 'image/jpg,image/jpeg,image/png,application/pdf',
   children: <FileList />,
+  UI: ({ onClick, placeholder }) => (
+    <div
+      className="button inline-block w-auto border shadow white fill-red"
+      onClick={onClick}
+      >
+      <IconArrow className="rotate-270" />
+      <span>{placeholder}</span>
+    </div>
+  ),
 };
 
 

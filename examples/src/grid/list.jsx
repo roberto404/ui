@@ -62,6 +62,7 @@ const Example = () =>
     id="sample"
     api={fakeApi}
     className="column h-screen p-4"
+    style={{ height: '400px' }}
     settings={{ ...SETTINGS, hook: HOOK_LIST, paginate: { limit: 0 } }}
     onLoad="selectFirst"
   >
@@ -84,6 +85,7 @@ const Example = () =>
             id="search"
             label={<div className="icon embed-search-gray-dark">Search</div>}
             placeholder="Name..."
+            autoFocus // important for infinity or reload dom
           />
         </div>
       </div>
