@@ -173,7 +173,7 @@ Card.defaultProps =
   subTitle: '',
   className: '',
   classNameCaption: 'bg-white p-2 absolute w-full',
-  classNameTitle: 'text-l bold text-line-m',
+  classNameTitle: 'text-l bold text-line-m mobile:text-m',
   classNameSubTitle: 'pt-1/2 light text-line-l',
   createMarkers,
   onClick: () =>
