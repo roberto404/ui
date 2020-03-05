@@ -437,8 +437,9 @@ button,
   &.concat
   {
     display: flex;
-    
-    > button
+
+    > button,
+    .button
     {
       &:first-child
       {

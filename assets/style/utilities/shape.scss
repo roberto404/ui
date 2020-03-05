@@ -7,7 +7,17 @@ hr
 
 .rounded
 {
-  border-radius: 4px;
+  border-radius: .5rem;
+}
+
+.rounded-m
+{
+  border-radius: 1rem;
+}
+
+.rounded-l
+{
+  border-radius: 2rem;
 }
 
 .circle
@@ -203,6 +213,18 @@ hr
   background-color: $yellow-dark;
 }
 
+.bg-blue,
+.hover\:bg-blue:hover
+{
+  background-color: $blue;
+}
+
+.bg-blue-dark,
+.hover\:bg-blue-dark:hover
+{
+  background-color: $blue-dark;
+}
+
 .fill-black-light *
 {
   fill: $black-light;
@@ -319,5 +341,10 @@ hr
   .desktop\:border-none
   {
     border-style: none;
+  }
+
+  .desktop\:border-right
+  {
+    border-right: 1px solid $black-light;
   }
 }
