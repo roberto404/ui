@@ -360,7 +360,7 @@ class GridView extends Component
 
   render()
   {
-    return <div id={this.props.id} className={this.props.className}>{this.props.children}</div>;
+    return <div id={this.props.id} className={this.props.className} style={this.props.style}>{this.props.children}</div>;
   }
 }
 
@@ -428,6 +428,10 @@ GridView.propTypes =
    */
   className: PropTypes.string,
   /**
+   * Classic style
+   */
+  style: PropTypes.objectOf(PropTypes.string),
+  /**
    * flush filter form store when componentWillUnmount
    */
   flushFiltersUnmount: PropTypes.bool,
@@ -481,6 +485,7 @@ GridView.defaultProps =
   onLoad: false,
   className: 'grid',
   flushFiltersUnmount: true,
+  style: {},
 };
 
 /**
