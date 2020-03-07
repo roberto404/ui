@@ -6,6 +6,7 @@ import StyleButtons from './style/buttons';
 import StyleScreen from './style/screen';
 import StyleMui from './icon/mui';
 import StyleLa from './icon/la';
+import StyleGrid from './style/grid';
 
 
 /* !- Example: Form */
@@ -164,6 +165,7 @@ export default {
   style: {
     avatar: StyleAvatar,
     buttons: StyleButtons,
+    grid: StyleGrid,
     screen: StyleScreen,
     mui: StyleMui,
     la: StyleLa,
