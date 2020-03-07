@@ -61,7 +61,7 @@ MarkerInfoBox.contextTypes =
  */
 export const MARKER_ELEMENTS = {
   heading: settings => (
-    <div className="p-2 text-white heavy" style={{ fontSize: '4em' }}>
+    <div className="p-2 text-white heavy text-xxl mobile:text-s">
       {settings}
     </div>
   ),
