@@ -5,6 +5,7 @@ import reduce from 'lodash/reduce';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import isEqual from 'lodash/isEqual';
+import sum from 'lodash/sum';
 import ReactList from 'react-list';
 
 
@@ -16,6 +17,11 @@ import { setValues, unsetValues } from '../../form/actions';
 /* !- Constants */
 
 import { FORM_PREFIX } from '../constants';
+
+
+/* !- React Elements */
+
+import Sortable from '../../dragAndDrop/sortable';
 
 
 /**
@@ -370,6 +376,18 @@ class Grid extends Component
     return null;
   };
 
+
+  getColumnsWidthByHook = (hook) =>
+    Object.keys(hook)
+      .map(id => parseInt((hook[id].width || '').replace('%', '')) || 0)
+      .filter(width => width > 0);
+
+  getRestColumnWidthByHook = (hook) =>
+  {
+    const colWidths = this.getColumnsWidthByHook(hook);
+    return Math.floor((100 - sum(colWidths)) / (Object.keys(hook).length - colWidths.length))
+  }
+
   /**
   * Render the title row of table
   * @private
@@ -389,6 +407,8 @@ class Grid extends Component
     const {
       store,
     } = this.context;
+
+    const getRestColumnWidth = this.getRestColumnWidthByHook(hook);
 
     const nodeTableHeaderColumns = this.getColumns().map((column) =>
     {
@@ -436,7 +456,7 @@ class Grid extends Component
           onClick={() => onChangeOrder(column)}
           style={{
             width: (typeof columnHook.width !== 'undefined') ?
-              columnHook.width : `${Math.ceil(100 / Object.keys(hook).length)}%`,
+              columnHook.width : `${getRestColumnWidth}%`,
           }}
           className={orderColumn === column ? 'active' : ''}
         >
@@ -514,6 +534,8 @@ class Grid extends Component
     let value = record[column];
     const columnHook = hook[column] || {};
 
+    const getRestColumnWidth = this.getRestColumnWidthByHook(hook);
+
     // format value of field
     if (typeof columnHook.format === 'function')
     {
@@ -537,7 +559,7 @@ class Grid extends Component
           textAlign: (typeof columnHook.align !== 'undefined') ?
             columnHook.align : 'center',
           width: (typeof columnHook.width !== 'undefined') ?
-            columnHook.width : `${Math.floor(100 / Object.keys(hook).length)}%`,
+            columnHook.width : `${getRestColumnWidth}%`,
           cursor: this.isClickRows ? 'pointer' : 'default',
         }}
       >
@@ -705,6 +727,7 @@ class Grid extends Component
       freezeHeader,
       infinity,
       noResults,
+      sortable,
     } = this.props;
 
     if (Array.isArray(data) && data.length)
@@ -733,16 +756,14 @@ class Grid extends Component
         infinity,
       });
 
-      return (
-        <div
-          className={bodyClasses}
-          ref={(ref) =>
-          {
-            this.elementBody = ref;
-          }}
-        >
-          {nodeTableRows}
-        </div>
+      return React.createElement(
+        sortable ? Sortable : 'div',
+        {
+          className: bodyClasses,
+          ref: ref =>  this.elementBody = ref,
+          onChange: this.props.onSort,
+        },
+        nodeTableRows,
       );
     }
 
