@@ -1,7 +1,6 @@
 .form
 {
   width: 100%;
-  @extend .no-select;
 
   &.active
   {
@@ -20,6 +19,8 @@
 
 .field
 {
+  @extend .no-select;
+
   &:not(.m-0)
   {
     margin-bottom: 2.5rem;
@@ -256,9 +257,9 @@
   {
     button
     {
-      width: 4em;
+      width: 4em !important;
       height: 2em;
-      background: $gray-light;
+      background-color: $gray-light !important;
       padding: 2px;
       box-sizing: content-box;
       border-radius: 1em;
@@ -905,7 +906,6 @@
       font-size: 0.8em;
       line-height: 120%;
       border: none;
-      // background: none;
       background-color: transparent !important;
       text-transform: uppercase;
       box-shadow: none;
@@ -929,7 +929,7 @@
 
       &:focus
       {
-        border: none;
+        border: none !important;
       }
 
       &:hover
@@ -969,6 +969,17 @@
         > *
         {
           font-size: 100%;
+        }
+      }
+    }
+
+    &.dropdown-field
+    {
+      &.active
+      {
+        button.embed-arrow-down-gray
+        {
+          @extend .embed-arrow-down-white;
         }
       }
     }
