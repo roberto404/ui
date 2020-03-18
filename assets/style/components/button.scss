@@ -221,13 +221,17 @@ button,
 
   &.disabled
   {
-    color: $white;
-    background-color: $gray-light;
-    cursor: no-drop;
+    cursor: no-drop !important;
+    opacity: 0.3;
 
     &:hover
     {
-      background-color: $gray-light;
+      // background-color: inherit;
+
+      svg path
+      {
+        fill: inherit !important;
+      }
     }
   }
 
