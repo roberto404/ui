@@ -102,7 +102,8 @@ button,
     }
   }
 
-  &.white
+  &.white,
+  &.gray-light
   {
     background-color: $white-light;
     color: $black;

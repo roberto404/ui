@@ -214,6 +214,10 @@
   padding-left: 4rem;
 }
 
+.pr-6 {
+  padding-right: 6rem;
+}
+
 .pl-6 {
   padding-left: 6rem;
 }
@@ -530,6 +534,12 @@
   {
     padding-top: 2rem;
     padding-bottom: 2rem;
+  }
+
+  .mobile\:py-4
+  {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
   }
 
   .mobile\:pt-1 {

@@ -13,6 +13,11 @@
   }
 }
 
+.grid .col-br
+{
+  padding-right: 0 !important;
+}
+
 .grid
 {
   &.grow
@@ -58,13 +63,15 @@
 {
   @extend .grid;
 
-  [class^="col-"]:not(.col-1-1),,
-  [class*=" col-"]:not(.col-1-1),
+  > .columns > [class^="col-"]:not(.col-1-1),
+  > .columns > [class*=" col-"]:not(.col-1-1),
+  > [class^="col-"]:not(.col-1-1):not(.col),
+  > [class*=" col-"]:not(.col-1-1):not(.col)
   {
     padding-right: 1rem;
   }
 
-  .columns
+  > .columns
   {
     margin-right: -1rem;
     width: calc(100% + 1rem);
@@ -75,13 +82,15 @@
 {
   @extend .grid-1;
 
-  [class^="col-"],
-  [class*=" col-"]
+  > .columns > [class^="col-"],
+  > .columns > [class*=" col-"],
+  > [class^="col-"],
+  > [class*=" col-"]
   {
     padding-bottom: 1rem;
   }
 
-  .columns
+  > .columns
   {
     margin-bottom: -1rem;
   }
@@ -92,13 +101,15 @@
 {
   @extend .grid;
 
-  [class^="col-"]:not(.col-1-1),,
-  [class*=" col-"]:not(.col-1-1),
+  > .columns > [class^="col-"]:not(.col-1-1),
+  > .columns > [class*=" col-"]:not(.col-1-1),
+  > [class^="col-"]:not(.col-1-1):not(.col),
+  > [class*=" col-"]:not(.col-1-1):not(.col)
   {
     padding-right: 2rem;
   }
 
-  .columns
+  > .columns
   {
     margin-right: -2rem;
     width: calc(100% + 2rem);
@@ -110,13 +121,15 @@
 {
   @extend .grid-2;
 
-  [class^="col-"],
-  [class*=" col-"]
+  > .columns > [class^="col-"],
+  > .columns > [class*=" col-"],
+  > [class^="col-"],
+  > [class*=" col-"]
   {
     padding-bottom: 1rem;
   }
 
-  .columns
+  > .columns
   {
     margin-bottom: -1rem;
   }
@@ -126,13 +139,15 @@
 {
   @extend .grid-2;
 
-  [class^="col-"],
-  [class*=" col-"]
+  > .columns > [class^="col-"],
+  > .columns > [class*=" col-"],
+  > [class^="col-"],
+  > [class*=" col-"]
   {
     padding-bottom: 2rem;
   }
 
-  .columns
+  > .columns
   {
     margin-bottom: -2rem;
   }
@@ -142,13 +157,15 @@
 {
   @extend .grid-2;
 
-  [class^="col-"],
-  [class*=" col-"]
+  > .columns > [class^="col-"],
+  > .columns > [class*=" col-"],
+  > [class^="col-"],
+  > [class*=" col-"]
   {
     padding-bottom: 4rem;
   }
 
-  .columns
+  > .columns
   {
     margin-bottom: -4rem;
   }
@@ -158,13 +175,15 @@
 {
   @extend .grid;
 
-  [class^="col-"]:not(.col-1-1),
-  [class*=" col-"]:not(.col-1-1)
+  > .columns > [class^="col-"]:not(.col-1-1),
+  > .columns > [class*=" col-"]:not(.col-1-1),
+  > [class^="col-"]:not(.col-1-1):not(.col),
+  > [class*=" col-"]:not(.col-1-1):not(.col)
   {
     padding-right: 3rem;
   }
 
-  .columns
+  > .columns
   {
     margin-right: -3rem;
     width: calc(100% + 3rem);
@@ -175,13 +194,15 @@
 {
   @extend .grid-3;
 
-  [class^="col-"],
-  [class*=" col-"]
+  > .columns > [class^="col-"],
+  > .columns > [class*=" col-"],
+  > [class^="col-"],
+  > [class*=" col-"]
   {
     padding-bottom: 3rem;
   }
 
-  .columns
+  > .columns
   {
     margin-bottom: -3rem;
   }
@@ -192,13 +213,15 @@
 {
   @extend .grid;
 
-  [class^="col-"]:not(.col-1-1),,
-  [class*=" col-"]:not(.col-1-1),
+  > .columns > [class^="col-"]:not(.col-1-1),
+  > .columns > [class*=" col-"]:not(.col-1-1),
+  > [class^="col-"]:not(.col-1-1):not(.col),
+  > [class*=" col-"]:not(.col-1-1):not(.col)
   {
     padding-right: 4rem;
   }
 
-  .columns
+  > .columns
   {
     margin-right: -4rem;
     width: calc(100% + 4rem);
@@ -209,13 +232,15 @@
 {
   @extend .grid-4;
 
-  [class^="col-"],
-  [class*=" col-"]
+  > .columns > [class^="col-"],
+  > .columns > [class*=" col-"],
+  > [class^="col-"],
+  > [class*=" col-"]
   {
     padding-bottom: 2rem;
   }
 
-  .columns
+  > .columns
   {
     margin-bottom: -2rem;
   }
@@ -225,13 +250,15 @@
 {
   @extend .grid-4;
 
-  [class^="col-"],
-  [class*=" col-"]
+  > .columns > [class^="col-"],
+  > .columns > [class*=" col-"],
+  > [class^="col-"],
+  > [class*=" col-"]
   {
     padding-bottom: 4rem;
   }
 
-  .columns
+  > .columns
   {
     margin-bottom: -4rem;
   }
@@ -241,13 +268,15 @@
 {
   @extend .grid-4;
 
-  [class^="col-"],
-  [class*=" col-"]
+  > .columns > [class^="col-"],
+  > .columns > [class*=" col-"],
+  > [class^="col-"],
+  > [class*=" col-"]
   {
     padding-bottom: 6rem;
   }
 
-  .columns
+  > .columns
   {
     margin-bottom: -6rem;
   }
@@ -258,13 +287,15 @@
 {
   @extend .grid;
 
-  [class^="col-"]:not(.col-1-1),,
-  [class*=" col-"]:not(.col-1-1),
+  > .columns > [class^="col-"]:not(.col-1-1),
+  > .columns > [class*=" col-"]:not(.col-1-1),
+  > [class^="col-"]:not(.col-1-1):not(.col),
+  > [class*=" col-"]:not(.col-1-1):not(.col)
   {
     padding-right: 6rem;
   }
 
-  .columns
+  > .columns
   {
     margin-right: -6rem;
     width: calc(100% + 6rem);
@@ -725,11 +756,26 @@
     max-width: 100%;
   }
 
+  [class^="grid-"] > .mobile\:col,
+  [class*=" grid-"] > .mobile\:col
+  {
+    padding-right: 0 !important;
+  }
+
+
+
   .mobile\:col-1-2
   {
     width: 50%;
     min-width: 50%;
     max-width: 50%;
+  }
+
+  .mobile\:col-1-3
+  {
+    width: 33.3%;
+    min-width: 33.3%;
+    max-width: 33.3%;
   }
 
   .mobile\:col-1-4
