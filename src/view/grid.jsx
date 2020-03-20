@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import isEqual from 'lodash/isEqual';
 import forEach from 'lodash/forEach';
+import isEmpty from 'lodash/isEmpty';
 import getParam from '@1studio/utils/location/getParam';
 import { concatMultipleFormRecords } from './form';
 
@@ -92,7 +93,7 @@ class GridView extends Component
 
   componentWillMount = () =>
   {
-    if (this.settings)
+    if (!isEmpty(this.settings))
     {
       this.props.setData([], this.settings, this.id);
     }
@@ -286,7 +287,8 @@ class GridView extends Component
 
   get api()
   {
-    return this.props.api || this.context.api;
+
+    return this.props.api !== undefined ? this.props.api : this.context.api;
   }
 
   get settings()
@@ -479,7 +481,7 @@ GridView.propTypes =
 GridView.defaultProps =
 {
   id: '',
-  api: false,
+  api: undefined,
   settings: {},
   onLayer: false,
   onLoad: false,
