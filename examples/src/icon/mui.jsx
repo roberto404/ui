@@ -79,445 +79,445 @@ import SrcIconMuiEditorFormatindent_increase from '../../../src/icon/mui/editor/
     (
       <div className="grid-4-4 text-center">
         
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiAvWeb className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/av/web</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiAvPlaylistplay className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/av/playlist_play</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiNavigationExpandless className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/navigation/expand_less</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiNavigationMenu className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/navigation/menu</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiNavigationMorevert className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/navigation/more_vert</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiNavigationArrowforward className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/navigation/arrow_forward</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiNavigationSubdirectoryarrow_right className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/navigation/subdirectory_arrow_right</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiNavigationArrowdrop_down className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/navigation/arrow_drop_down</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiNavigationClose className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/navigation/close</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiNavigationMorehoriz className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/navigation/more_horiz</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiNavigationExpandmore className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/navigation/expand_more</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiNavigationSubdirectoryarrow_left className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/navigation/subdirectory_arrow_left</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiNavigationCheck className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/navigation/check</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiNavigationApps className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/navigation/apps</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiNavigationArrowback className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/navigation/arrow_back</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiNavigationCancel className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/navigation/cancel</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiNavigationArrowdrop_up className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/navigation/arrow_drop_up</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiContentRemovecircle className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/content/remove_circle</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiContentBlock className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/content/block</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiContentAddcircle className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/content/add_circle</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiContentUndo className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/content/undo</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiContentRemove className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/content/remove</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiContentReport className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/content/report</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiContentAdd className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/content/add</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiContentAddcircle_outline className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/content/add_circle_outline</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiContentClear className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/content/clear</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiContentCreate className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/content/create</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiContentRemovecircle_outline className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/content/remove_circle_outline</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiHardverKeyboardreturn className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/hardver/keyboard_return</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiHardverKeyboardbackspace className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/hardver/keyboard_backspace</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiImageAddphoto_alternate className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/image/add_photo_alternate</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiImageLens className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/image/lens</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiToggleStar className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/toggle/star</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiSocialPersonadd className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/social/person_add</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiSocialNotifications className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/social/notifications</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiSocialNotificationsnone className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/social/notifications_none</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiSocialPerson className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/social/person</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionFavoriteborder className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/favorite_border</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionDone className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/done</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionPrint className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/print</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionOpenwith className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/open_with</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionCached className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/cached</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionZoomout className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/zoom_out</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionDelete className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/delete</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionDeleteforever className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/delete_forever</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionTimeline className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/timeline</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionAutorenew className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/autorenew</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionFavorite className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/favorite</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionSwapvert className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/swap_vert</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionCheckcircle className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/check_circle</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionExplore className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/explore</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionSettingsethernet className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/settings_ethernet</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionCode className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/code</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionBook className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/book</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionToday className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/today</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionDragindicator className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/drag_indicator</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionComparearrows className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/compare_arrows</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionLockopen className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/lock_open</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionCalendartoday className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/calendar_today</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionLock className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/lock</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionSwaphoriz className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/swap_horiz</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionTextrotate_vertical className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/text_rotate_vertical</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionVisibility className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/visibility</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionSavealt className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/save_alt</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionZoomin className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/zoom_in</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionBackup className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/backup</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiActionSearch className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/search</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiCommunicationLocationon className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/communication/location_on</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiCommunicationPhone className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/communication/phone</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiCommunicationMessage className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/communication/message</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiCommunicationEmail className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/communication/email</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiCommunicationMailoutline className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/communication/mail_outline</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiEditorFormatindent_decrease className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/editor/format_indent_decrease</div>
         </div>
       
 
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <SrcIconMuiEditorFormatindent_increase className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/editor/format_indent_increase</div>
         </div>

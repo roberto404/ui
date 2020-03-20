@@ -39,7 +39,7 @@ process.stdin.on('end', function()
 
       imports.push(`import ${child} from '../../../${m[1]}';`);
       childs.push(`
-        <div className="col-1-5 h-center">
+        <div className="col-1-5">
         <${child} className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">${m[1].replace('src/icon/', '')}</div>
         </div>

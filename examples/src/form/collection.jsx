@@ -25,6 +25,32 @@ import { CollectionItem, NestedCollectionItem } from '../../../src/grid/pure/gri
 /* !- Constants */
 
 
+const CustomCollectionItem = ({ onChange, record, fields }) =>
+{
+  const onChangeHandler = ({ id, value }) =>
+  {
+    const collectionId = id.substring(id.indexOf('#') + 1);
+    onChange({ ...record, [collectionId]: value });
+  };
+
+  return (
+    <div className="grid-2 w-full">
+      <Input
+        id="search#title"
+        className="col-1-2"
+        value={record.title}
+        onChange={onChangeHandler}
+      />
+      <Input
+        id="search#url"
+        className="col-1-2 col-br"
+        value={record.url}
+        onChange={onChangeHandler}
+      />
+    </div>
+  );
+};
+
 /**
  * CollectionItem contains collection. Inside colleciton pass data to parent Collection
  */
@@ -153,6 +179,26 @@ const Example = (props, { store }) =>
         id="collection"
         label="Collection"
         value={[{ id: 1, title: 'foo' }]}
+      />
+
+    <h2>Custom UI items</h2>
+      <Collection
+        id="collection"
+        label="Collection"
+        value={[{ id: 1, title: 'foo' }]}
+      />
+
+      <Collection
+        label={(
+          <div className="grid-2 pr-4">
+            <div className="col pb-2">Mellékelt dokumentumok</div>
+            <div className="col-1-2 text-gray">Megnevezés</div>
+            <div className="col-1-2 text-gray">Webcím</div>
+          </div>
+        )}
+        id="docs"
+        value={[{ title: '', url: '' }]}
+        UI={CustomCollectionItem}
       />
 
       <h2>Custom UI items (GridSearch)</h2>

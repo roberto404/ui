@@ -13,6 +13,7 @@ import StyleGrid from './style/grid';
 
 import FormBasic from './form/basic';
 import FormFields from './form/fields';
+import FormFormat from './form/format';
 import FormSubmit from './form/submit';
 import FormConnect from './form/connect';
 import FormFlat from './form/flat';
@@ -111,6 +112,7 @@ export default {
     collection: FormCollection,
     slider: FormSlider,
     dropzone: FormDropzone,
+    format: FormFormat,
   },
   grid: {
     static: GridStatic,
