@@ -316,7 +316,7 @@ export const DEFAULT_SCHEME = {
       message: '^validator.presence',
     },
     format: {
-      pattern: /^[0-9]{8}-[1-5]{1}-[0-9]{2}$/,
+      pattern: /^([0-9]{8}-[1-5]{1}-[0-9]{2})?$/,
       message: '^validator.format',
     },
   },
