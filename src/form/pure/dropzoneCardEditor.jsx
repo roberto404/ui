@@ -56,7 +56,7 @@ class CardEditor extends Component
 
     if (marker)
     {
-      this.setState({ markers: [...this.state.markers, marker] });
+      this.setState({ markers: [...this.state.markers || [], marker] });
     }
   }
 
