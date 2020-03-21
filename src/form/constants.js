@@ -182,6 +182,9 @@ export const DEFAULT_FIELDS = {
   terms: {
     id: 'terms',
     label: 'field.terms',
+    className: 'label:hidden',
+    stateFormat: value => (value ? [value] : []),
+    format: value => value[0],
   },
   newsletter: {
     id: 'newsletter',
