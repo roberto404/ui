@@ -171,7 +171,7 @@ class GridView extends Component
           {
             this.props.modal(response.modal);
           }
-          else
+          else if (this.context.store.getState().layer.method === 'preload')
           {
             this.props.close();
           }
