@@ -28,10 +28,10 @@ import { LOGIN_SCHEME, LOGIN_FIELDS } from './constants';
 * Reset: classic password change form component.
 * If login success set user via Redux.
 */
-const Reset = ({ setUser, history }) =>
+const Reset = ({ id, setUser, history }) =>
 (
   <Form
-    id="reset"
+    id={id}
     scheme={{
       password: LOGIN_SCHEME.password,
       password2: LOGIN_SCHEME.password2,
@@ -52,6 +52,10 @@ const Reset = ({ setUser, history }) =>
   </Form>
 );
 
+Reset.defaultProps =
+{
+  id: "reset",
+}
 
 /**
  * propTypes
