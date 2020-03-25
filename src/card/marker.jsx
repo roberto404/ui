@@ -82,8 +82,8 @@ export const MARKER_ELEMENTS = {
 export const createMarkersHelper = ({ elements, aligns }) => markers =>
   markers
     .filter(({ category }) => elements[category])
-    .map(({ position, category, settings }, n) => (
-      <Marker key={n} position={position} align={aligns[category]}>
+    .map(({ position, category, settings, draggable }, n) => (
+      <Marker key={n} index={n} position={position} align={aligns[category]} draggable={draggable}>
         {elements[category](settings)}
       </Marker>
     ));
@@ -103,10 +103,12 @@ export const createMarkers = createMarkersHelper({ elements: MARKER_ELEMENTS, al
  * </Marker>
  */
 export const Marker = ({
+  index,
   children,
   position,
   align,
   onClick,
+  draggable,
 }) =>
 {
   const classes = classNames({
@@ -119,6 +121,8 @@ export const Marker = ({
       className={classes}
       style={{ left: `${position[0]}%`, top: `${position[1]}%`, transform: `translate(${align[0]}%, ${align[1]}%)` }}
       onClick={onClick}
+      draggable={draggable}
+      data-index={index}
     >
       {children}
     </div>

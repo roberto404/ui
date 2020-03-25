@@ -33,6 +33,7 @@ const Card = ({
   markers,
   createMarkers,
   onClick,
+  onDragMarker,
   children,
 },
 {
@@ -132,6 +133,22 @@ const Card = ({
     }
   }
 
+  /**
+   * Invoke when marker position chage by drag.
+   * Marker draging enable by onDragMarker props function.
+   */
+  const onDragEndHandler = (event) =>
+  {
+    const targetRect = event.currentTarget.getBoundingClientRect();
+
+    const x = Math.round((event.clientX - targetRect.x) / targetRect.width * 1000) / 10;
+    const y = Math.round((event.clientY - targetRect.y) / targetRect.height * 1000) / 10;
+
+    const index = event.target.dataset.index;
+
+    onDragMarker({ x, y, index });
+  }
+
   return (
     <div
       className={classes}
@@ -140,7 +157,9 @@ const Card = ({
       style={{ paddingBottom: `calc(${imagePadding})` }}
     >
       { image &&
-      <div className="relative">
+      <div className="relative"
+        onDragEnd={onDragMarker ? onDragEndHandler : undefined}
+      >
         <img
           className="block w-full h-auto"
           src={image}
@@ -149,7 +168,7 @@ const Card = ({
           alt={title}
           // onError={this.onErrorImageListener}
         />
-        {markers ? createMarkers(markers) : children}
+        { markers ? createMarkers(onDragMarker ? markers.map(marker => ({...marker, draggable: true })) : markers) : children }
       </div>
       }
       { (title || subTitle) &&
@@ -179,6 +198,11 @@ Card.defaultProps =
   onClick: () =>
   {},
 };
+
+Card.propTypes =
+{
+  onDragMarker: PropTypes.func,
+}
 
 Card.contextTypes =
 {

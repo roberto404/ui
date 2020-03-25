@@ -8,6 +8,8 @@ import Connect from '../../../src/grid/connect';
 import Grid from '../../../src/grid/pure/grid';
 import Sortable from '../../../src/dragAndDrop/sortable';
 
+import Card from '../../../src/card/card';
+import { createMoveableMarkersHelper, createMarkers, MARKER_ELEMENTS, MARKER_ALIGNS } from '../../../src/card/marker';
 
 /* !- Constants */
 
@@ -18,7 +20,31 @@ const fakeApi = () => new Promise(resolve => resolve({ status: 'SUCCESS', record
 const Basic = () =>
 (
   <div>
-    <h1>Basic</h1>
+    <Card
+      image="http://beta.rs.hu/img/uploads/5821x2890_1562579018.5589_5d230d4e5e765.jpg"
+      markers={[
+        {
+          category: 'heading',
+          position: [0, 100],
+          settings: 'Nappali bútorok',
+        },
+        {
+          category: 'tooltip',
+          position: [17, 36],
+          settings: 'Nem eladó!',
+        },
+        {
+          category: 'product',
+          position: [50, 50],
+          settings: 'sku',
+        },
+      ]}
+      onDragMarker={marker => console.log(marker)}
+    />
+
+
+
+    {/*<h1>Basic</h1>
     <Sortable onChange={data => console.log(data)} className="grid-2-2 p-4 border">
       <div className="col-1-4"><div className="bg-red border">1</div></div>
       <div className="col-1-4"><div className="bg-red border">2</div></div>
@@ -27,7 +53,7 @@ const Basic = () =>
       <div className="col-1-4"><div className="bg-red border">5</div></div>
       <div className="col-1-4"><div className="bg-red border">6</div></div>
     </Sortable>
-
+*/}
     {/*<h1>Grid</h1>
     <GridView
       id="sample"
