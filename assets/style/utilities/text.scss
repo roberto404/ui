@@ -131,6 +131,11 @@ h3,
   color: $black;
 }
 
+.hover\:text-black:hover
+{
+  color: $black;
+}
+
 .text-black-light
 {
   color: $black-light;
@@ -146,7 +151,17 @@ h3,
   color: $gray;
 }
 
+.hover\:text-gray:hover
+{
+  color: $gray;
+}
+
 .text-gray-light
+{
+  color: $gray-light;
+}
+
+.hover\:text-gray-light:hover
 {
   color: $gray-light;
 }
