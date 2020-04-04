@@ -54,8 +54,8 @@ export const formatDropzoneFileIdAndExt = (value) =>
     percent === undefined ? ({ id, ext }) : ({ id, title, percent }));
 
 export const formatDropzoneMarkers = value =>
-  value.map(({ id, title, ext, percent, markers, url }) =>
-    percent === undefined ? ({ id, title, ext, markers, url }) : ({ id, title, percent }));
+  value.map(({ id, title, ext, percent, markers, url, subTitle }) =>
+    percent === undefined ? ({ id, title, ext, markers, url, subTitle }) : ({ id, title, percent }));
 
 
 export class File
