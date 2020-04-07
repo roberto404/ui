@@ -109,7 +109,7 @@ class Slides extends Component
     this.initHammerDrag();
     this.initPaginationListener();
 
-    if (this.props.autoplay)
+    if (this.props.autoplay && parseInt(this.props.autoplay) > 0)
     {
       this.autoplay = setInterval(this.goToNextSlide, this.props.autoplay * 1000);
     }
@@ -235,7 +235,7 @@ class Slides extends Component
 
   onMouseOverHandler = () =>
   {
-    if (this.props.autoplay)
+    if (this.props.autoplay && this.autoplay)
     {
       clearInterval(this.autoplay);
     }
