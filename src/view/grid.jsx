@@ -80,6 +80,7 @@ class GridView extends Component
     this.ref = 'grid';
     this.formPrevState = {};
     this.gridPrevSelectedItemIds = [];
+    this.currentProps = props;
   }
 
   getChildContext()
@@ -91,6 +92,9 @@ class GridView extends Component
 
   /* !- React lifecycle */
 
+  /**
+   * Load Redux grid settings
+   */
   componentWillMount = () =>
   {
     if (!isEmpty(this.settings))
@@ -121,6 +125,11 @@ class GridView extends Component
     {
       this.unsubscribe = this.context.store.subscribe(() => this.onChangeListener());
     }
+  }
+
+  componentWillReceiveProps(nextProps)
+  {
+    this.currentProps = nextProps;
   }
 
   componentWillUnmount()
@@ -297,12 +306,12 @@ class GridView extends Component
 
     if (!this.context.register || !this.context.register.data[`grid.${this.id}`])
     {
-      settings = this.props.settings || this.context.settings;
+      settings = this.currentProps.settings || this.context.settings;
     }
     else
     {
       settings = {
-        ...(this.props.settings || this.context.settings),
+        ...(this.currentProps.settings || this.context.settings),
         ...this.context.register.data[`grid.${this.id}`],
       };
     }
