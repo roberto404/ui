@@ -146,83 +146,87 @@ export const search = ({ record, value, helpers, hooks, index = 0 }) =>
     /**
      * Split OR expressions
      */
-    SEARCH_CACHE = value.split('|').map(valueOR =>
-    {
-      /**
-       * Split AND expressions
-       *
-       * @example
-       * field=1&field>2
-       * //=>
-       * [field = 1, field > 2]
-       *
-       * @example
-       * term1, term2
-       * //=>
-       * [term1, term2]
-       */
-      const values = valueOR.match(REGEX_QUERY_LEVEL1);
-
-      return values.map((thisValue) =>
-      {
-        /**
-         * Determine which handler have to apply to compare term and record value
-         */
-        let handlerIndex = DEFAULT_COMPARE;
-
-        /**
-         * Determine which record column have to observe
-         */
-        let columns = [];
-
-        /**
-         * Trimed search term
-         * @type {string}
-         */
-        let term = thisValue.replace(/,? *$/, '');
-
-        /**
-         * Determine term expressions: [field] [operator] [value]
-         * @type {array}
-         */
-        const termMatches = term.match(REGEX_QUERY_LEVEL2);
-
-        /**
-         * If term use i18n field name convert to real record keys
-         * Eg.: Visit Date => vdate
-         * or just 'Vis', 'Visit', 'Date'
-         */
-        if (termMatches)
+    SEARCH_CACHE =
+      value
+        .split('|')
+        .map(valueOR =>
         {
-          term = termMatches[3];
-          handlerIndex = termMatches[2];
-          columns = [termMatches[1]];
+          /**
+           * Split AND expressions
+           *
+           * @example
+           * field=1&field>2
+           * //=>
+           * [field = 1, field > 2]
+           *
+           * @example
+           * term1, term2
+           * //=>
+           * [term1, term2]
+           */
+          const values = valueOR.match(REGEX_QUERY_LEVEL1) || [];
 
-          if (hooks)
+          return values.map((thisValue) =>
           {
-            columns = Object.keys(hooks).reduce(
-              (accumulator, column) =>
+            /**
+             * Determine which handler have to apply to compare term and record value
+             */
+            let handlerIndex = DEFAULT_COMPARE;
+
+            /**
+             * Determine which record column have to observe
+             */
+            let columns = [];
+
+            /**
+             * Trimed search term
+             * @type {string}
+             */
+            let term = thisValue.replace(/,? *$/, '');
+
+            /**
+             * Determine term expressions: [field] [operator] [value]
+             * @type {array}
+             */
+            const termMatches = term.match(REGEX_QUERY_LEVEL2);
+
+            /**
+             * If term use i18n field name convert to real record keys
+             * Eg.: Visit Date => vdate
+             * or just 'Vis', 'Visit', 'Date'
+             */
+            if (termMatches)
+            {
+              term = termMatches[3];
+              handlerIndex = termMatches[2];
+              columns = [termMatches[1]];
+
+              if (hooks)
               {
-                const subject = (typeof hooks[column] === 'string') ? hooks[column] : hooks[column].title;
+                columns = Object.keys(hooks).reduce(
+                  (accumulator, column) =>
+                  {
+                    const subject = (typeof hooks[column] === 'string') ? hooks[column] : hooks[column].title;
 
-                if (compare[DEFAULT_COMPARE](subject, termMatches[1]))
-                {
-                  accumulator.push(column);
-                }
-                return accumulator;
-              },
-              [termMatches[1]],
-            );
-          }
-        }
-        else
-        {
-          columns = Object.keys(record);
-        }
+                    if (compare[DEFAULT_COMPARE](subject, termMatches[1]))
+                    {
+                      accumulator.push(column);
+                    }
+                    return accumulator;
+                  },
+                  [termMatches[1]],
+                );
+              }
+            }
+            else
+            {
+              columns = Object.keys(record);
+            }
 
-        return ({ columns, handlerIndex, term });
-      });
-    });
+            return ({ columns, handlerIndex, term });
+          });
+        })
+        .filter(i => i.length);
   }
 
   // console.log(SEARCH_CACHE[0]);

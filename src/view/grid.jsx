@@ -130,6 +130,7 @@ class GridView extends Component
   componentWillReceiveProps(nextProps)
   {
     this.currentProps = nextProps;
+    this.fetchDataViaApi();
   }
 
   componentWillUnmount()
@@ -291,13 +292,13 @@ class GridView extends Component
 
   get id()
   {
-    return this.props.id || this.context.grid;
+    return this.currentProps.id || this.context.grid;
   }
 
   get api()
   {
 
-    return this.props.api !== undefined ? this.props.api : this.context.api;
+    return this.currentProps.api !== undefined ? this.currentProps.api : this.context.api;
   }
 
   get settings()
