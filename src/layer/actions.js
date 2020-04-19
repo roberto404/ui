@@ -104,6 +104,7 @@ export const dialog = (element: React.Element, options = {}) =>
   method: 'dialog',
   element,
   options,
+  containerStyle: options.containerStyle,
 });
 
 
@@ -123,6 +124,7 @@ export const fullscreen = (element: React.Element, options = {}) =>
   method: 'fullscreen',
   element,
   options,
+  containerStyle: options.containerStyle,
 });
 
 
