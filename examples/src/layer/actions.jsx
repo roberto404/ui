@@ -145,6 +145,24 @@ const Example = ({
       </button>
 
 
+      <h2>Overwrite Dialog</h2>
+
+      <button
+        className="outline gray w-auto"
+        onClick={event => dialog(
+          () =>
+            <div className="w-screen text-center bg-red text-white">hello</div>,
+          {
+            className: 'no-close no-padding',
+            containerStyle: { borderRadius: '0px', top: '0px' },
+          }
+        )}
+      >
+        Dialog
+      </button>
+
+
+
     </div>
   );
 };
