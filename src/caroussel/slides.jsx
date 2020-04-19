@@ -167,6 +167,16 @@ class Slides extends Component
 
   dragListener = (event) =>
   {
+    const angle = Math.abs(event.angle);
+
+    // if (
+    //   (angle >= 90 && angle < 150)
+    //   || (angle > 30 && angle < 90)
+    // )
+    // {
+    //   return;
+    // }
+
     if (!this.startCoord)
     {
       this.startCoord = event.center;
@@ -194,6 +204,11 @@ class Slides extends Component
             && this.startCoord.left + shift.x >
               (this.slides.scrollWidth * -1) + (this.slides.offsetWidth * 0.7)
             && (this.state.x !== shift.x || this.state.y !== shift.y)
+            && event.isFinal !== true
+            && !(
+              (angle >= 90 && angle < 150)
+              || (angle > 30 && angle < 90)
+            )
           )
           {
             this.setState(shift);
@@ -208,7 +223,7 @@ class Slides extends Component
           if (Math.abs(this.state.x) / this.mask.offsetWidth > 0.1)
           {
             const direction = this.state.x < 0 ? 1 : -1;
-            const steps = Math.round(
+            const steps = Math.ceil(
               Math.abs(this.state.x) / (this.mask.offsetWidth / this.props.visibleSlides),
             );
 

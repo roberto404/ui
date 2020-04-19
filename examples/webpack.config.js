@@ -144,6 +144,7 @@ module.exports = (env) =>
       compress: true,
       port: 9009,
       hot: true,
+      host: '192.168.0.206',
       historyApiFallback: true,
     },
     plugins: [
