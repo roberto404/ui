@@ -63,10 +63,12 @@
 {
   @extend .grid;
 
-  > .columns > [class^="col-"]:not(.col-1-1),
-  > .columns > [class*=" col-"]:not(.col-1-1),
-  > [class^="col-"]:not(.col-1-1):not(.col),
-  > [class*=" col-"]:not(.col-1-1):not(.col)
+  > .columns > [class^="col-"],
+  > .columns > [class*=" col-"],
+  > [class^="col-"],
+  > [class*=" col-"],
+  > .columns > .col,
+  > .col
   {
     padding-right: 1rem;
   }
@@ -85,7 +87,9 @@
   > .columns > [class^="col-"],
   > .columns > [class*=" col-"],
   > [class^="col-"],
-  > [class*=" col-"]
+  > [class*=" col-"],
+  > .columns > .col,
+  > .col
   {
     padding-bottom: 1rem;
   }
@@ -101,10 +105,12 @@
 {
   @extend .grid;
 
-  > .columns > [class^="col-"]:not(.col-1-1),
-  > .columns > [class*=" col-"]:not(.col-1-1),
-  > [class^="col-"]:not(.col-1-1):not(.col),
-  > [class*=" col-"]:not(.col-1-1):not(.col)
+  > .columns > [class^="col-"],
+  > .columns > [class*=" col-"],
+  > [class^="col-"],
+  > [class*=" col-"],
+  > .columns > .col,
+  > .col
   {
     padding-right: 2rem;
   }
@@ -124,7 +130,9 @@
   > .columns > [class^="col-"],
   > .columns > [class*=" col-"],
   > [class^="col-"],
-  > [class*=" col-"]
+  > [class*=" col-"],
+  > .columns > .col,
+  > .col
   {
     padding-bottom: 1rem;
   }
@@ -142,7 +150,9 @@
   > .columns > [class^="col-"],
   > .columns > [class*=" col-"],
   > [class^="col-"],
-  > [class*=" col-"]
+  > [class*=" col-"],
+  > .columns > .col,
+  > .col
   {
     padding-bottom: 2rem;
   }
@@ -160,7 +170,9 @@
   > .columns > [class^="col-"],
   > .columns > [class*=" col-"],
   > [class^="col-"],
-  > [class*=" col-"]
+  > [class*=" col-"],
+  > .columns > .col,
+  > .col
   {
     padding-bottom: 4rem;
   }
@@ -175,10 +187,12 @@
 {
   @extend .grid;
 
-  > .columns > [class^="col-"]:not(.col-1-1),
-  > .columns > [class*=" col-"]:not(.col-1-1),
-  > [class^="col-"]:not(.col-1-1):not(.col),
-  > [class*=" col-"]:not(.col-1-1):not(.col)
+  > .columns > [class^="col-"],
+  > .columns > [class*=" col-"],
+  > [class^="col-"],
+  > [class*=" col-"],
+  > .columns > .col,
+  > .col
   {
     padding-right: 3rem;
   }
@@ -197,7 +211,9 @@
   > .columns > [class^="col-"],
   > .columns > [class*=" col-"],
   > [class^="col-"],
-  > [class*=" col-"]
+  > [class*=" col-"],
+  > .columns > .col,
+  > .col
   {
     padding-bottom: 3rem;
   }
@@ -213,10 +229,12 @@
 {
   @extend .grid;
 
-  > .columns > [class^="col-"]:not(.col-1-1),
-  > .columns > [class*=" col-"]:not(.col-1-1),
-  > [class^="col-"]:not(.col-1-1):not(.col),
-  > [class*=" col-"]:not(.col-1-1):not(.col)
+  > .columns > [class^="col-"],
+  > .columns > [class*=" col-"],
+  > [class^="col-"],
+  > [class*=" col-"],
+  > .columns > .col,
+  > .col
   {
     padding-right: 4rem;
   }
@@ -235,7 +253,9 @@
   > .columns > [class^="col-"],
   > .columns > [class*=" col-"],
   > [class^="col-"],
-  > [class*=" col-"]
+  > [class*=" col-"],
+  > .columns > .col,
+  > .col
   {
     padding-bottom: 2rem;
   }
@@ -253,7 +273,9 @@
   > .columns > [class^="col-"],
   > .columns > [class*=" col-"],
   > [class^="col-"],
-  > [class*=" col-"]
+  > [class*=" col-"],
+  > .columns > .col,
+  > .col
   {
     padding-bottom: 4rem;
   }
@@ -271,7 +293,9 @@
   > .columns > [class^="col-"],
   > .columns > [class*=" col-"],
   > [class^="col-"],
-  > [class*=" col-"]
+  > [class*=" col-"],
+  > .columns > .col,
+  > .col
   {
     padding-bottom: 6rem;
   }
@@ -287,10 +311,12 @@
 {
   @extend .grid;
 
-  > .columns > [class^="col-"]:not(.col-1-1),
-  > .columns > [class*=" col-"]:not(.col-1-1),
-  > [class^="col-"]:not(.col-1-1):not(.col),
-  > [class*=" col-"]:not(.col-1-1):not(.col)
+  > .columns > [class^="col-"],
+  > .columns > [class*=" col-"],
+  > [class^="col-"],
+  > [class*=" col-"],
+  > .columns > .col,
+  > .col
   {
     padding-right: 6rem;
   }
