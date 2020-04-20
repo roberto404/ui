@@ -97,6 +97,8 @@ class Slides extends Component
       y: 0,
       active: false,
     };
+
+    this.forceStart = !!props.forceStart;
   }
 
   componentWillMount()
@@ -108,11 +110,7 @@ class Slides extends Component
   {
     this.initHammerDrag();
     this.initPaginationListener();
-
-    if (this.props.autoplay && parseInt(this.props.autoplay) > 0)
-    {
-      this.autoplay = setInterval(this.goToNextSlide, this.props.autoplay * 1000);
-    }
+    this.startAutoPlay();
   }
 
 
@@ -126,20 +124,31 @@ class Slides extends Component
     {
       this.setState({ active: false });
     }
+
+    if (!this.autoplay && nextProps.page !== this.props.page)
+    {
+      this.forceStart = false;
+    }
+
+    if (this.autoplay && !nextProps.autoplay)
+    {
+      this.flushAutoplay();
+    }
   }
 
-  // componentUnmount()
-  // {
-    // kell leszedni vagy a dom megsemmisül
-    // this.slides Remountnal megmarad??? autoplaynel is kerdes
-    //
-    //
-    //
-    // if (!this.slidesManager)
-    // {
-    //   this.slides.removeEventListener('transitionend', this.props.onPaginate);
-    // }
-  // }
+  componentDidUpdate(prevProps)
+  {
+    if (!this.autoplay && this.props.autoplay && !prevProps.autoplay)
+    {
+      this.forceStart = !!this.props.forceStart;
+      this.startAutoPlay();
+    }
+  }
+
+  componentWillUnmount()
+  {
+    this.flushAutoplay();
+  }
 
   /**
    * Listen to the end of transition, that is the end of pagination.
@@ -168,14 +177,6 @@ class Slides extends Component
   dragListener = (event) =>
   {
     const angle = Math.abs(event.angle);
-
-    // if (
-    //   (angle >= 90 && angle < 150)
-    //   || (angle > 30 && angle < 90)
-    // )
-    // {
-    //   return;
-    // }
 
     if (!this.startCoord)
     {
@@ -250,19 +251,16 @@ class Slides extends Component
 
   onMouseOverHandler = () =>
   {
-    if (this.props.autoplay && this.autoplay)
-    {
-      clearInterval(this.autoplay);
-    }
+    this.flushAutoplay();
   }
 
-  // onMouseOutHandler = (event) =>
-  // {
-    // if (this.props.autoplay && !event.currentTarget.contains(event.relatedTarget))
-    // {
-    //
-    // }
-  // }
+  onMouseOutHandler = (event) =>
+  {
+    if (!event.currentTarget.parentElement.contains(event.relatedTarget))
+    {
+      this.startAutoPlay();
+    }
+  }
 
   goToSlide = (page) =>
   {
@@ -286,6 +284,23 @@ class Slides extends Component
     this.goToSlide(nextPage);
   }
 
+  startAutoPlay = () =>
+  {
+    if (this.forceStart && this.props.autoplay && parseInt(this.props.autoplay) > 0)
+    {
+      this.autoplay = setInterval(this.goToNextSlide, this.props.autoplay * 1000);
+    }
+  }
+
+  flushAutoplay = () =>
+  {
+    if (this.props.autoplay && this.autoplay)
+    {
+      clearInterval(this.autoplay);
+      this.autoplay = 0;
+    }
+  }
+
   render()
   {
     const { rawData, page, transition, visibleSlides, Slide } = this.props;
@@ -296,7 +311,7 @@ class Slides extends Component
       <div
         className="slide-mask"
         onMouseOver={this.onMouseOverHandler}
-        // onMouseOut={this.onMouseOutHandler}
+        onMouseOut={this.onMouseOutHandler}
         ref={(ref) =>
         {
           this.mask = ref;
@@ -376,6 +391,10 @@ Slides.propTypes =
    */
   autoplay: PropTypes.number,
   /**
+   * Start autoplay if leave it
+   */
+  forceStart: PropTypes.bool,
+  /**
    * Redux grid prop
    * @private
    */
@@ -423,6 +442,7 @@ Slides.defaultProps =
   visibleSlides: 1,
   Slide: SlideHelperComponent,
   autoplay: 0,
+  forceStart: true,
 };
 
 
