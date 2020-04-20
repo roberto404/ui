@@ -28,6 +28,11 @@ export const ShowMore = (
 },
 ) =>
 {
+  if (!Array.isArray(data))
+  {
+    return <div />;
+  }
+
   const onClickButtonHandler = (event) =>
   {
     event.preventDefault();
