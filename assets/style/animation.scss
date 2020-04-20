@@ -4,6 +4,18 @@
   transition: .2s;
 }
 
+.transition-0\.5
+{
+  transition: .5s;
+}
+
+.ease-in-out
+{
+  transition-timing-function: ease-in-out;
+  transition-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+
 .spinning
 {
   animation: spin 1.5s infinite linear;
