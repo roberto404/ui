@@ -90,6 +90,11 @@ import ChartBar from './chart/barChart';
 import DndBasic from './dragAndDrop/basic';
 
 
+/* !- Example: Sticky */
+
+import Sticky from './sticky/sticky';
+
+
 /* !- Example: Drag and drop */
 
 import ViewBasic from './view/basic';
@@ -160,6 +165,9 @@ export default {
   view: {
     basic: ViewBasic,
     tab: ViewTab,
+  },
+  sticky: {
+    sticky: Sticky,
   },
   dragAndDrop: {
     basic: DndBasic,
