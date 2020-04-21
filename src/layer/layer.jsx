@@ -35,6 +35,10 @@ const Layer = (
     close,
     containerStyle,
     className,
+    options
+  },
+  {
+    store
   },
 ) =>
 {
@@ -111,9 +115,28 @@ const Layer = (
     $('body').scrollTop($('body').data('scrollTop'));
   }
 
+  // const documentOnClickListener = (e) =>
+  // {
+  //   document.onclick = null;
+  //   const layer = store.getState().layer;
+  //
+  //   console.log(element);
+  //
+  //   if (layer.active && layer.method === 'popover' && element.toString() === layer.element.toString())
+  //   {
+  //     close();
+  //   }
+  // }
+  //
+  // if (method === 'popover')
+  // {
+  //   document.onclick = documentOnClickListener;
+  // }
+
   return (
     <div
       className={layerClasses}
+      style={options.style || {}}
       onClick={onClickLayerCurtain}
     >
       <div
@@ -159,6 +182,12 @@ Layer.defaultProps =
   className: '',
   closeable: true,
   containerStyle: {},
+  options: {},
+};
+
+Layer.contextTypes =
+{
+  store: PropTypes.object,
 };
 
 
@@ -169,6 +198,7 @@ export default connect(
     element: layer.element,
     closeable: layer.closeable,
     containerStyle: layer.containerStyle,
+    options: layer.options,
     className: ((layer.options) ? layer.options.className || '' : ''),
   }),
   {
