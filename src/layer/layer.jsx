@@ -35,7 +35,8 @@ const Layer = (
     close,
     containerStyle,
     className,
-    options
+    options,
+    flush,
   },
   {
     store
@@ -84,6 +85,12 @@ const Layer = (
     [className]: true,
   });
 
+  if (options.autoClose)
+  {
+    setTimeout(() => flush(), parseInt(options.autoClose) * 1000);
+  }
+
+
   $(document).off('.layer');
 
   if (active)
@@ -115,17 +122,16 @@ const Layer = (
     $('body').scrollTop($('body').data('scrollTop'));
   }
 
-  // const documentOnClickListener = (e) =>
+  // const documentOnClickListener = (event) =>
   // {
   //   document.onclick = null;
   //   const layer = store.getState().layer;
   //
-  //   console.log(element);
   //
-  //   if (layer.active && layer.method === 'popover' && element.toString() === layer.element.toString())
-  //   {
-  //     close();
-  //   }
+  //   // if (layer.active && layer.method === 'popover' && JSON.stringify(layer.containerStyle()) === layer.element.toString())
+  //   // {
+  //   //   close();
+  //   // }
   // }
   //
   // if (method === 'popover')
