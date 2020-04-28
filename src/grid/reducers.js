@@ -71,6 +71,8 @@ const getModel = (state, action) =>
   }
 
   // todo???
+  // solution like APPLY_GRID_FILTER
+  // van ilyen eset h applyFilter lefut de meg nincs model, ures {} nem lehet
   // console.warn('not found grid Model');
   // return {};
 }
@@ -246,44 +248,50 @@ const reducers = (state = {}, action = {}) =>
       {
         const model = getModel(state, action);
 
-        model.filters = action.filters;
-
-        return createNextState(state, model, action.grid);
+        if (model)
+        {
+          model.filters = action.filters;
+          return createNextState(state, model, action.grid);
+        }
       }
 
     case 'DETACH_GRID_FILTER':
       {
         const model = getModel(state, action);
-        const filters = model.filters;
 
-        const index = findIndex(filters, { id: action.filterId });
-
-        if (index === -1)
+        if (model)
         {
-          return state;
-        }
+          const filters = model.filters;
 
-        if (
-          typeof action.filterValue !== 'undefined' &&
-          Array.isArray(filters[index].arguments[0])
-        )
-        {
-          const valueIndex = filters[index].arguments[0].indexOf(action.filterValue);
+          const index = findIndex(filters, { id: action.filterId });
 
-          if (valueIndex > -1)
+          if (index === -1)
           {
-            filters[index].arguments[0].splice(valueIndex, 1);
+            return state;
           }
-        }
-        else
-        {
-          filters[index].arguments = [];
-        }
 
-        return reducers(
-          state,
-          { ...action, filters, type: 'APPLY_GRID_FILTER' },
-        );
+          if (
+            typeof action.filterValue !== 'undefined' &&
+            Array.isArray(filters[index].arguments[0])
+            )
+            {
+              const valueIndex = filters[index].arguments[0].indexOf(action.filterValue);
+
+              if (valueIndex > -1)
+              {
+                filters[index].arguments[0].splice(valueIndex, 1);
+              }
+            }
+            else
+            {
+              filters[index].arguments = [];
+            }
+
+            return reducers(
+              state,
+              { ...action, filters, type: 'APPLY_GRID_FILTER' },
+            );
+        }
       }
 
     case 'FLUSH_GRID':
@@ -295,11 +303,9 @@ const reducers = (state = {}, action = {}) =>
 
         return {};
       }
-
-
-    default:
-      return state;
   }
+
+  return state;
 };
 
 export default reducers;
