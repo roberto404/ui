@@ -72,7 +72,7 @@ const getModel = (state, action) =>
 
   // todo???
   // console.warn('not found grid Model');
-  return {};
+  // return {};
 }
 
 
