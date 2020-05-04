@@ -20,8 +20,10 @@ const CalendarDateTime = ({ id, form, className, onClickCalendar }) =>
       form={form}
       disableTime
       disableDay
+      className="m-0"
     />
-    <div style={{ marginTop: '-70px' }}>
+  <div className="overflow" style={{ marginTop: '-1rem', marginBottom: '-2rem' }}>
+    <div style={{ marginTop: '-3.5rem' }}>
       <CalendarMonth
         id={id}
         form={form}
@@ -29,6 +31,7 @@ const CalendarDateTime = ({ id, form, className, onClickCalendar }) =>
         onClick={onClickCalendar}
       />
     </div>
+  </div>
   </div>
 );
 
@@ -41,7 +44,7 @@ CalendarDateTime.propTypes = {
 
 CalendarDateTime.defaultProps = {
   id: 'calendarDateTime',
-  className: '',
+  className: 'overflow',
   onClickCalendar: () => true,
 };
 
