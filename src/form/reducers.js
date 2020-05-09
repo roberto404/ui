@@ -18,7 +18,7 @@ validate.validators.custom = (fieldValue, scheme, fieldId, formData) =>
     return scheme.message;
   }
 
-  if (typeof results === 'string')
+  if (typeof result === 'string')
   {
     return result;
   }
