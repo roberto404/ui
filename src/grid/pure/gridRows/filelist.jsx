@@ -34,9 +34,16 @@ const FileListGridRow = ({ data, onClick, className, dispatch }) =>
             <div className="preloader" />
           </div>
           }
-          { data.percent === undefined &&
+          { data.percent === undefined && ['jpg', 'jpeg', 'png'].indexOf(data.ext) !== -1 &&
           <div className="border border-white border-3 shadow-outer">
             <img src={imageSrc} width="100%" className="block" />
+          </div>
+          }
+          { data.percent === undefined &&
+          <div className="border border-white border-3 shadow-outer grow h-full">
+            <div className="v-center h-center w-full">
+              <div className="tag red">{data.ext}</div>
+            </div>
           </div>
           }
         </div>
