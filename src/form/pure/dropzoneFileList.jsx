@@ -73,6 +73,9 @@ class DropZoneFiles extends Component
       React.createElement(
         this.props.editor,
         {
+          id: this.props.id,
+          items: this.props.items,
+          onEdit: this.onEditListener,
           item: this.props.items[this.state.itemIndex],
           onChange: this.onChangeHandler,
         }
