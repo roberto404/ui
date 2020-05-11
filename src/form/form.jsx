@@ -227,16 +227,20 @@ class Form extends Component
     {
       if (typeof this.props.onSuccess === 'function')
       {
-        this.props.onSuccess(response);
-        // return;
+        if (this.props.onSuccess(response) === false)
+        {
+          return;
+        }
       }
 
       this.clear();
     }
     else
     {
-      this.props.onFailed(response);
-      // return;
+      if (this.props.onFailed(response) === false)
+      {
+        return;
+      }
     }
 
     if (response.modal)
