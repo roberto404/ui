@@ -21,7 +21,7 @@ const CalendarMonthButton = (props, { form }) =>
     placeholder="placeholder.select"
     className="w-content"
     buttonClassName="shadow outline fill-gray"
-    popover={<CalendarDateTime id={props.id} form={form} />}
+    popover={<CalendarDateTime id={props.id} form={form} onClickCalendar={props.onClickCalendar} />}
     stateFormat={value => value ? moment(value).format('LL') : ''} // eslint-disable-line
     icon={IconCalendar}
     {...props}
