@@ -121,7 +121,7 @@ export default withRouter(injectIntl(connect(
   }),
   {
     modal: LayerActions.modal,
-    close: LayerActions.modal,
+    close: LayerActions.close,
     preload: LayerActions.preload,
     logout: AuthenticationActions.logout,
   },
