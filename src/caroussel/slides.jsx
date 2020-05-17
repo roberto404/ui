@@ -176,6 +176,11 @@ class Slides extends Component
 
   dragListener = (event) =>
   {
+    if (!this.slides || !this.mask || !this.slides.offsetWidth || !this.mask.offsetWidth)
+    {
+      return;
+    }
+
     const angle = Math.abs(event.angle);
 
     if (!this.startCoord)

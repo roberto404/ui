@@ -75,7 +75,7 @@ class Slider extends Field
 
   pixelToPercent(x)
   {
-    if (!this.field)
+    if (!this.field || !this.field.offsetWidth)
     {
       return 0;
     }
