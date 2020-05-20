@@ -109,7 +109,7 @@ const Card = ({
       event.relatedTarget &&
       (
         event.currentTarget.contains(event.relatedTarget)
-        || event.relatedTarget.closest('.layer')
+        || (event.relatedTarget.closest && event.relatedTarget.closest('.layer'))
       )
     )
     {
