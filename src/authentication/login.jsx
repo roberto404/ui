@@ -45,7 +45,7 @@ import { LOGIN_SCHEME, LOGIN_FIELDS } from './constants';
 *
 * <Login />
 */
-const Login = ({ scheme, fields, setUser }) =>
+const Login = ({ scheme, fields, setUser, onSuccess }) =>
 (
   <Form
     id="login"
@@ -55,7 +55,17 @@ const Login = ({ scheme, fields, setUser }) =>
       password: scheme.password,
     }}
     fields={fields}
-    onSuccess={response => setUser(response.records)}
+    onSuccess={(response) =>
+    {
+      if (onSuccess)
+      {
+        if (onSuccess(response) === true)
+        {
+          return;
+        }
+      }
+      setUser(response.records);
+    }}
   >
     <Input {...fields.email} focus />
     <Input {...fields.password} />
@@ -81,6 +91,7 @@ Login.propTypes =
     email: PropTypes.object.isRequired,
     password: PropTypes.object.isRequired,
   }),
+  onSuccess: PropTypes.func,
   setUser: PropTypes.func.isRequired,
 };
 
