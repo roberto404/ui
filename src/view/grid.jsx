@@ -194,12 +194,18 @@ class GridView extends Component
             this.context.register.add({ [this.id]: response.config });
 
             this.props.settings.helper = response.config;
-
-            return {
-              data: response.records,
-              settings: { helper: response.config },
-            };
           }
+
+          if (typeof this.props.responseParser === 'function')
+          {
+            return this.props.responseParser(response);
+          }
+
+          return {
+            data: response.records,
+            settings: { helper: response.config },
+          };
+
           return response.records;
         }
 
