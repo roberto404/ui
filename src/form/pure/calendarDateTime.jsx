@@ -27,7 +27,7 @@ const CalendarDateTime = ({ id, form, className, onClickCalendar }) =>
       <CalendarMonth
         id={id}
         form={form}
-        disableTitle
+        disableLabel
         onClick={onClickCalendar}
       />
     </div>

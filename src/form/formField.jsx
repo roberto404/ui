@@ -438,7 +438,7 @@ class FormField extends Component
    */
   get label()
   {
-    if (!this.state.label)
+    if (!this.state.label || this.props.disableLabel === true)
     {
       return undefined;
     }
@@ -737,6 +737,7 @@ FormField.propTypes =
    * Intl id for multiple data
    */
   multipleData: PropTypes.string,
+  disableLabel: PropTypes.bool,
 };
 
 /**
@@ -770,6 +771,7 @@ FormField.defaultProps =
   {},
   data: [],
   multipleData: 'placeholder.multipledata',
+  disableLabel: false,
 };
 
 FormField.contextTypes =

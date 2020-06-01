@@ -115,6 +115,7 @@ class DateTime extends Field
             stateFormat={this.stateFormat('YYYY')}
             onChange={this.onChangeDateHandler('year')}
             form={this.props.form}
+            disableLabel
           />
 
           <Select
@@ -123,6 +124,7 @@ class DateTime extends Field
             stateFormat={this.stateFormat('MM')}
             onChange={this.onChangeDateHandler('month')}
             form={this.props.form}
+            disableLabel
           />
 
           { this.props.disableDay === false &&
@@ -138,6 +140,7 @@ class DateTime extends Field
             stateFormat={this.stateFormat('DD')}
             onChange={this.onChangeDateHandler('date')}
             form={this.props.form}
+            disableLabel
           />
           }
 
