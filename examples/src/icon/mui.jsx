@@ -1,5 +1,6 @@
 
     import React from 'react';
+import SrcIconMuiMapsMenubook from '../../../src/icon/mui/maps/menu_book';
 import SrcIconMuiAvWeb from '../../../src/icon/mui/av/web';
 import SrcIconMuiAvPlaylistplay from '../../../src/icon/mui/av/playlist_play';
 import SrcIconMuiNavigationExpandless from '../../../src/icon/mui/navigation/expand_less';
@@ -70,6 +71,7 @@ import SrcIconMuiActionSearch from '../../../src/icon/mui/action/search';
 import SrcIconMuiCommunicationLocationon from '../../../src/icon/mui/communication/location_on';
 import SrcIconMuiCommunicationPhone from '../../../src/icon/mui/communication/phone';
 import SrcIconMuiCommunicationMessage from '../../../src/icon/mui/communication/message';
+import SrcIconMuiCommunicationListalt from '../../../src/icon/mui/communication/list_alt';
 import SrcIconMuiCommunicationEmail from '../../../src/icon/mui/communication/email';
 import SrcIconMuiCommunicationMailoutline from '../../../src/icon/mui/communication/mail_outline';
 import SrcIconMuiEditorFormatindent_decrease from '../../../src/icon/mui/editor/format_indent_decrease';
@@ -79,6 +81,12 @@ import SrcIconMuiEditorFormatindent_increase from '../../../src/icon/mui/editor/
     (
       <div className="grid-4-4 text-center">
         
+        <div className="col-1-5">
+        <SrcIconMuiMapsMenubook className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/maps/menu_book</div>
+        </div>
+      
+
         <div className="col-1-5">
         <SrcIconMuiAvWeb className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/av/web</div>
@@ -496,6 +504,12 @@ import SrcIconMuiEditorFormatindent_increase from '../../../src/icon/mui/editor/
         <div className="col-1-5">
         <SrcIconMuiCommunicationMessage className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/communication/message</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiCommunicationListalt className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/communication/list_alt</div>
         </div>
       
 
