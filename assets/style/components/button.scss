@@ -1,25 +1,28 @@
 button,
 .button
 {
-  font-family: $font;
-  @extend .no-select;
-  cursor: pointer !important;
-  display: block;
-  width: 100%;
-  padding: 1em;
-  position: relative;
-  border-radius: 4px;
-  background-color: transparent;
-  border: none;
-  transition: background-color 0.5s ease;
-  font-size: .8em;
-  text-align: center;
-  text-transform: uppercase;
-  color: $gray-dark;
-  // background: $white-dark;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  &:not(.initial)
+  {
+    font-family: $font;
+    @extend .no-select;
+    cursor: pointer !important;
+    display: block;
+    width: 100%;
+    padding: 1em;
+    position: relative;
+    border-radius: 4px;
+    background-color: transparent;
+    border: none;
+    transition: background-color 0.5s ease;
+    font-size: .8em;
+    text-align: center;
+    text-transform: uppercase;
+    color: $gray-dark;
+    // background: $white-dark;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
 
   &:hover
@@ -465,5 +468,4 @@ button,
       }
     }
   }
-
 }

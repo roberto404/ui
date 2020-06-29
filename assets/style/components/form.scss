@@ -177,6 +177,14 @@
   textarea
   {
     line-height: 200%;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    resize: vertical;
+  }
+
+  textarea::placeholder
+  {
+    color: $gray;
   }
 
   input::placeholder

@@ -189,10 +189,23 @@ hr
   background-color: $green;
 }
 
+.bg-green-light,
+.hover\:bg-green-light:hover
+{
+  background-color: $green-light;
+}
+
 .bg-red,
 .hover\:bg-red:hover
 {
   background-color: $red;
+}
+
+
+.bg-red-light,
+.hover\:bg-red-light:hover
+{
+  background-color: $red-light;
 }
 
 .bg-transparent,
@@ -213,6 +226,12 @@ hr
   background-color: $yellow-dark;
 }
 
+.bg-yellow-light,
+.hover\:bg-yellow-light:hover
+{
+  background-color: $yellow-light;
+}
+
 .bg-blue,
 .hover\:bg-blue:hover
 {
@@ -223,6 +242,12 @@ hr
 .hover\:bg-blue-dark:hover
 {
   background-color: $blue-dark;
+}
+
+.bg-blue-light,
+.hover\:bg-blue-light:hover
+{
+  background-color: $blue-light;
 }
 
 .fill-black-light *
