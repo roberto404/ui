@@ -76,6 +76,7 @@ class Textarea extends Field
           id={this.props.id}
           name={this.props.name}
           value={Array.isArray(this.state.value) ? '' : this.state.value}
+          className="block"
 
           disabled={this.props.disabled}
           maxLength={this.props.length}

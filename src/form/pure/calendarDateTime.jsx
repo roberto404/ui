@@ -12,7 +12,7 @@ import DateTime from './datetime';
  * DateTime + CalendarMonth Component Combo
  * @type {[type]}
  */
-const CalendarDateTime = ({ id, form, className, onClickCalendar }) =>
+const CalendarDateTime = ({ id, form, className, onClickCalendar, value, dateFormat }) =>
 (
   <div className={className}>
     <DateTime
@@ -21,6 +21,8 @@ const CalendarDateTime = ({ id, form, className, onClickCalendar }) =>
       disableTime
       disableDay
       className="m-0"
+      value={value}
+      dateFormat={dateFormat}
     />
   <div className="overflow" style={{ marginTop: '-1rem', marginBottom: '-2rem' }}>
     <div style={{ marginTop: '-3.5rem' }}>
@@ -29,6 +31,8 @@ const CalendarDateTime = ({ id, form, className, onClickCalendar }) =>
         form={form}
         disableLabel
         onClick={onClickCalendar}
+        value={value}
+        dateFormat={dateFormat}
       />
     </div>
   </div>
