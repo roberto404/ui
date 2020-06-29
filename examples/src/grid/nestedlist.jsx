@@ -1,5 +1,6 @@
 
 import React, { Component } from 'react';
+import moment from 'moment';
 
 
 /* !- React Elements */
@@ -7,14 +8,18 @@ import React, { Component } from 'react';
 import { Grid as GridView } from '../../../src/view';
 import Connect from '../../../src/connect';
 import NestedList from '../../../src/grid/pure/nestedList';
+import Messages from '../../../src/grid/pure/nestedItems/messages';
 import IconArrow from '../../../src/icon/mui/navigation/expand_more';
 
 
 /* !- Constants */
 
-import { DATA, SETTINGS } from './constants';
+import { DATE_FORMAT, DATETIME_FORMAT } from '../../../src/calendar/constants';
+import { DATA, DATA_MESSAGES, SETTINGS } from './constants';
 
 const fakeApi = () => new Promise(resolve => resolve({ status: 'SUCCESS', records: DATA }));
+const fakeApiMessages = () => new Promise(resolve => resolve({ status: 'SUCCESS', records: DATA_MESSAGES }));
+
 
 
 class Parent extends Component
@@ -54,6 +59,8 @@ class Parent extends Component
   }
 }
 
+
+
 const NestedListItem = ({ index, children, level, items }) =>
 {
   if (children)
@@ -81,24 +88,51 @@ const NestedListItem = ({ index, children, level, items }) =>
  */
 const Example = () =>
 (
-  <GridView
-    id="sample"
-    api={fakeApi}
-    settings={SETTINGS}
-    className="p-4"
-  >
-    <div className="p-2">
-      <h1>NestedList</h1>
-      <h2>Basic nested list</h2>
-      <Connect>
-        <NestedList
-          groupBy={['visits', 'gender']}
-          UI={NestedListItem}
-        />
-      </Connect>
-    </div>
+  <div>
+    <h1>NestedList</h1>
 
-  </GridView>
+    <GridView
+      id="sample"
+      api={fakeApi}
+      settings={SETTINGS}
+    >
+      <div className="p-2">
+        <h2>Tree style nested list</h2>
+        <Connect>
+          <NestedList
+            groupBy={['visits', 'gender']}
+            UI={NestedListItem}
+          />
+        </Connect>
+      </div>
+
+    </GridView>
+
+    <GridView
+      id="sample-chat"
+      api={fakeApiMessages}
+      settings={SETTINGS}
+      responseParser={({ records }) => records.map(record => ({
+        ...record,
+        createdDate: moment(record.createdDateTime, DATETIME_FORMAT).format(DATE_FORMAT),
+      }))}
+    >
+      <div className="p-2">
+        <h2>Chat style nested list (group by time and user)</h2>
+        <Connect>
+          <NestedList
+            groupBy={['createdDate', 'userId']}
+            UI={Messages}
+            UiProps={{
+              userId: 2,
+            }}
+          />
+        </Connect>
+      </div>
+
+    </GridView>
+
+  </div>
 );
 
 export default Example;

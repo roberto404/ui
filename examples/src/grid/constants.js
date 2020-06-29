@@ -15,6 +15,14 @@ export const DATA = [
   { "id": 12, "name": "Weston S. Taylor", "gender": 1, "visits": "2015-07-23" },
 ];
 
+export const DATA_MESSAGES = [
+  { id: 1, sender: 1, name: 'Michael', content: 'first message', createdDateTime: '2020-06-03 20:05:52' },
+  { id: 2, sender: 1, name: 'Michael', content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', createdDateTime: '2020-06-03 20:05:55' },
+  { id: 5, sender: 2, name: 'Joseph', content: 're-second message', createdDateTime: '2020-06-03 20:06:55', deliveredDateTime: '2020-06-03 20:06:55' },
+  { id: 3, sender: 1, name: 'Michael', content: 'first message', createdDateTime: '2020-06-04 20:05:52' },
+  { id: 4, sender: 1, name: 'Michael', content: 'second message', createdDateTime: '2020-06-04 20:05:55' },
+];
+
 
 // const NOW = new Date();
 

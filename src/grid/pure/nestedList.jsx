@@ -105,7 +105,7 @@ const Results = ({ index, children, level }) =>
  * No Results Component
  * it will be display if length of grid.model zero
  */
-const NoResults = () => (
+const NoResultsComponent = () => (
   <div>
     <FormattedMessage id="global.noResults" />.
   </div>
@@ -171,7 +171,9 @@ const NestedList = (
     model,
     groupBy,
     UI,
+    UiProps,
     className,
+    NoResults,
   }
 ) =>
 {
@@ -201,7 +203,16 @@ const NestedList = (
       (items, index) =>
         React.createElement(
           Array.isArray(UI) ? UI[level] : UI,
-          { key: `list-${level}-${index}`, items, index, level, groupBy },
+          {
+            key: `list-${level}-${index}`,
+            items,
+            index,
+            level,
+            groupBy,
+            isFirst: Object.keys(nestedItems).indexOf(index.toString()) === 0,
+            isLast:  Object.keys(nestedItems).indexOf(index.toString()) === Object.keys(nestedItems).length - 1,
+            ...UiProps,
+          },
           (
             ((groupBy === undefined || level < groupBy.length))
             && (!Array.isArray(UI) || UI[level + 1])
@@ -235,7 +246,9 @@ NestedList.defaultProps =
 {
   data: {},
   UI: Results,
+  UiProps: {},
   className: 'nested-list',
+  NoResults: NoResultsComponent,
 };
 
 export default NestedList;
