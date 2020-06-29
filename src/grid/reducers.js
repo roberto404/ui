@@ -109,6 +109,11 @@ const reducers = (state = {}, action = {}) =>
       {
         const model = getModel(state, action);
 
+        if (!model)
+        {
+          return reducers(state, { type: 'SET_GRID_DATA', data: [action.record], grid: action.grid });
+        }
+
         if (typeof action.record !== 'object' || Array.isArray(action.record))
         {
           // @todo exception
