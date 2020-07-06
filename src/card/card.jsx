@@ -173,7 +173,7 @@ const Card = ({
       </div>
       }
       { (title || subTitle) &&
-        <div className={classNameCaption} style={{ minHeight: `calc(${imagePadding})`, padding: `${captionPadding / 2}em`, bottom: 0 }}>
+        <div className={classNameCaption} style={{ minHeight: `calc(${imagePadding})`, padding: `${captionPadding / 2}em 1em`, bottom: 0 }}>
           { title &&
           <div className={classNameTitle} style={{ wordBreak: 'break-word' }}>{title}</div>
           }
