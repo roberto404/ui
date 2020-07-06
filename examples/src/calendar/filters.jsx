@@ -7,8 +7,7 @@ import moment from 'moment';
 import Button from '../../../src/form/pure/button';
 import CalendarMonthButton from '../../../src/form/pure/calendarMonthButton';
 import CalendarMonthCaroussel, { CalendarMonthCarousselButton } from '../../../src/form/pure/calendarMonthCaroussel';
-import { CalendarMonthIntervalCarousselButton } from '../../../src/form/pure/calendarMonthIntervalCaroussel';
-
+import { CalendarMonthIntervalCaroussel, CalendarMonthIntervalCarousselButton } from '../../../src/form/pure/calendarMonthIntervalCaroussel';
 
 /**
  * Calendar Example
@@ -42,6 +41,7 @@ const Example = () =>
         fromId="a"
         toId="b"
         placeholder="placeholder"
+        realTime={false}
       />
     </div>
   </div>
