@@ -1,0 +1,18 @@
+
+
+button.tab,
+.button.tab
+{
+  border-radius: 0;
+  margin: 0 1rem;
+  padding: 0 0 1rem 0;
+  width: auto;
+  text-transform: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+
+  &.active
+  {
+    border-bottom-color: $black;
+  }
+}
