@@ -6,7 +6,7 @@ import classNames from 'classnames';
 
 /* !- React Actions */
 
-import { tooltip } from '../layer/actions';
+import { tooltip, close } from '../layer/actions';
 
 
 /* !- React Elements */
@@ -36,7 +36,23 @@ export const MarkerInfoBox = ({ children }, { store }) =>
 {
   const onMouseHandler = (event) =>
   {
-    store.dispatch(tooltip(children, event));
+    event.preventDefault();
+    event.stopPropagation();
+
+    const layer = store.getState().layer;
+
+    if (
+      layer.active === true
+      && children.props.id !== undefined
+      && children.props.id === ((layer.element || {}).props || {}).id
+    )
+    {
+      store.dispatch(close());
+    }
+    else
+    {
+      store.dispatch(tooltip(children, event));
+    }
   };
 
   return (
