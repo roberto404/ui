@@ -30,6 +30,7 @@ const Card = ({
   classNameCaption,
   classNameTitle,
   classNameSubTitle,
+  titleZoom,
   border,
   markers,
   createMarkers,
@@ -155,11 +156,13 @@ const Card = ({
       className={classes}
       onClick={onClick}
       onMouseOut={onMouseOutHandler}
-      style={{ paddingBottom: `calc(${imagePadding})` }}
+      style={{ paddingBottom: `calc(${imagePadding})`, fontSize: `${titleZoom}%` }}
     >
       { image &&
-      <div className="relative"
+      <div
+        className="relative"
         onDragEnd={onDragMarker ? onDragEndHandler : undefined}
+        style={{ fontSize: `${100 * 100/titleZoom}%` }}
       >
         <img
           className="block w-full h-auto"
@@ -195,6 +198,7 @@ Card.defaultProps =
   classNameCaption: 'bg-white p-2 absolute w-full',
   classNameTitle: 'text-l bold text-line-m mobile:text-m',
   classNameSubTitle: 'pt-1/2 light text-line-l',
+  titleZoom: 100,
   createMarkers,
   onClick: () =>
   {},
@@ -203,6 +207,7 @@ Card.defaultProps =
 Card.propTypes =
 {
   onDragMarker: PropTypes.func,
+  titleZoom: PropTypes.number,
 }
 
 Card.contextTypes =
