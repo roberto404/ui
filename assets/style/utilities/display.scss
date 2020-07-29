@@ -15,7 +15,7 @@
 
 .grow
 {
-  display: flex;
+  // display: flex;
   flex-grow: 1;
 }
 
@@ -46,6 +46,12 @@
 {
   display: flex;
   align-items: center;
+}
+
+.h-bottom
+{
+  display: flex;
+  align-items: flex-end;
 }
 
 .v-center
@@ -137,6 +143,22 @@ table
 .pointer
 {
   cursor: pointer;
+}
+
+.no-events
+{
+  pointer-events: none;
+}
+
+.no-child-events *
+{
+  pointer-events: none;
+}
+
+g.no-child-events > *:first-child,
+g.no-child-events g > *:first-child
+{
+  pointer-events: auto;
 }
 
 .ratio

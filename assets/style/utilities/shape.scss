@@ -105,6 +105,11 @@ hr
   border-color: $blue;
 }
 
+.border-blue-dark
+{
+  border-color: $blue-dark;
+}
+
 .border-green
 {
   border-color: $green;
@@ -138,6 +143,16 @@ hr
 .border-black
 {
   border-color: $black;
+}
+
+.border-dashed
+{
+  border-style: dashed;
+}
+
+.border-dotted
+{
+  border-style: dotted;
 }
 
 .bg-black,
@@ -288,6 +303,11 @@ hr
 .fill-blue *
 {
   fill: $blue;
+}
+
+.fill-blue-dark *
+{
+  fill: $blue-dark;
 }
 
 .fill-red *
