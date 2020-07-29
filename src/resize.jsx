@@ -27,7 +27,7 @@ class Resize extends Component
 
     return (
       <div
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: this.props.height ? `${this.props.height}px` : '100%' }}
         ref={(ref) =>
         {
           this.element = ref;
