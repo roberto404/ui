@@ -1,10 +1,12 @@
 
     import React from 'react';
 import SrcIconLaBars from '../../../src/icon/la/bars';
+import SrcIconLaComment from '../../../src/icon/la/comment';
 import SrcIconLaLifebuoy from '../../../src/icon/la/life-buoy';
 import SrcIconLaThlarge from '../../../src/icon/la/th-large';
 import SrcIconLaLightbulbo from '../../../src/icon/la/lightbulb-o';
 import SrcIconLaBell from '../../../src/icon/la/bell';
+import SrcIconLaBugsolid from '../../../src/icon/la/bug-solid';
 import SrcIconLaEnvelope from '../../../src/icon/la/envelope';
 import SrcIconLaGithub from '../../../src/icon/la/github';
 import SrcIconLaThlist from '../../../src/icon/la/th-list';
@@ -18,6 +20,12 @@ import SrcIconLaColumns from '../../../src/icon/la/columns';
         <div className="col-1-5">
         <SrcIconLaBars className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">la/bars</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconLaComment className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">la/comment</div>
         </div>
       
 
@@ -42,6 +50,12 @@ import SrcIconLaColumns from '../../../src/icon/la/columns';
         <div className="col-1-5">
         <SrcIconLaBell className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">la/bell</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconLaBugsolid className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">la/bug-solid</div>
         </div>
       
 

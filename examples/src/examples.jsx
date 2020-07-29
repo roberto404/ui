@@ -101,6 +101,10 @@ import ViewBasic from './view/basic';
 import ViewTab from './view/tab';
 
 
+/* !- Example: Stepper */
+
+import Stepper from './stepper/stepper';
+
 /* !- Example: Utils */
 
 import Print from './print';
@@ -168,6 +172,9 @@ export default {
   },
   sticky: {
     sticky: Sticky,
+  },
+  stepper: {
+    stepper: Stepper,
   },
   dragAndDrop: {
     basic: DndBasic,

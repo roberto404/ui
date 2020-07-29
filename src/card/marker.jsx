@@ -36,6 +36,11 @@ export const MarkerInfoBox = ({ children }, { store }) =>
 {
   const onMouseHandler = (event) =>
   {
+    store.dispatch(tooltip(children, event));
+  };
+
+  const onClickHandler = (event) =>
+  {
     event.preventDefault();
     event.stopPropagation();
 
@@ -60,7 +65,7 @@ export const MarkerInfoBox = ({ children }, { store }) =>
       className="pointer overflow bg-black fill-yellow circle hover:bg-yellow hover:fill-black hover:rotate-45 transition mobile:text-xxs"
       style={{ width: '2.5em', height: '2.5em', padding: '0.3em' }}
       onMouseEnter={onMouseHandler}
-      onClick={onMouseHandler}
+      onClick={onClickHandler}
     >
       <IconPlus />
     </div>

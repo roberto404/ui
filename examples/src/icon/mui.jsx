@@ -16,8 +16,10 @@ import SrcIconMuiNavigationMorehoriz from '../../../src/icon/mui/navigation/more
 import SrcIconMuiNavigationExpandmore from '../../../src/icon/mui/navigation/expand_more';
 import SrcIconMuiNavigationSubdirectoryarrow_left from '../../../src/icon/mui/navigation/subdirectory_arrow_left';
 import SrcIconMuiNavigationCheck from '../../../src/icon/mui/navigation/check';
+import SrcIconMuiNavigationNorth from '../../../src/icon/mui/navigation/north';
 import SrcIconMuiNavigationApps from '../../../src/icon/mui/navigation/apps';
 import SrcIconMuiNavigationArrowback from '../../../src/icon/mui/navigation/arrow_back';
+import SrcIconMuiNavigationArrowdownward from '../../../src/icon/mui/navigation/arrow_downward';
 import SrcIconMuiNavigationCancel from '../../../src/icon/mui/navigation/cancel';
 import SrcIconMuiNavigationArrowdrop_up from '../../../src/icon/mui/navigation/arrow_drop_up';
 import SrcIconMuiContentRemovecircle from '../../../src/icon/mui/content/remove_circle';
@@ -47,6 +49,7 @@ import SrcIconMuiActionPrint from '../../../src/icon/mui/action/print';
 import SrcIconMuiActionOpenwith from '../../../src/icon/mui/action/open_with';
 import SrcIconMuiActionCached from '../../../src/icon/mui/action/cached';
 import SrcIconMuiActionZoomout from '../../../src/icon/mui/action/zoom_out';
+import SrcIconMuiActionAnnouncement from '../../../src/icon/mui/action/announcement';
 import SrcIconMuiActionDelete from '../../../src/icon/mui/action/delete';
 import SrcIconMuiActionDeleteforever from '../../../src/icon/mui/action/delete_forever';
 import SrcIconMuiActionTimeline from '../../../src/icon/mui/action/timeline';
@@ -56,6 +59,7 @@ import SrcIconMuiActionFavorite from '../../../src/icon/mui/action/favorite';
 import SrcIconMuiActionSwapvert from '../../../src/icon/mui/action/swap_vert';
 import SrcIconMuiActionCheckcircle from '../../../src/icon/mui/action/check_circle';
 import SrcIconMuiActionExplore from '../../../src/icon/mui/action/explore';
+import SrcIconMuiActionBugreport from '../../../src/icon/mui/action/bug_report';
 import SrcIconMuiActionSettingsethernet from '../../../src/icon/mui/action/settings_ethernet';
 import SrcIconMuiActionShoppingcart_outlined from '../../../src/icon/mui/action/shopping_cart_outlined';
 import SrcIconMuiActionCode from '../../../src/icon/mui/action/code';
@@ -72,6 +76,7 @@ import SrcIconMuiActionTextrotate_vertical from '../../../src/icon/mui/action/te
 import SrcIconMuiActionVisibility from '../../../src/icon/mui/action/visibility';
 import SrcIconMuiActionSavealt from '../../../src/icon/mui/action/save_alt';
 import SrcIconMuiActionZoomin from '../../../src/icon/mui/action/zoom_in';
+import SrcIconMuiActionAssignmentturned_in-black from '../../../src/icon/mui/action/assignment_turned_in-black';
 import SrcIconMuiActionBackup from '../../../src/icon/mui/action/backup';
 import SrcIconMuiActionSearch from '../../../src/icon/mui/action/search';
 import SrcIconMuiActionFace from '../../../src/icon/mui/action/face';
@@ -185,6 +190,12 @@ import SrcIconMuiEditorFormatindent_increase from '../../../src/icon/mui/editor/
       
 
         <div className="col-1-5">
+        <SrcIconMuiNavigationNorth className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/navigation/north</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiNavigationApps className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/navigation/apps</div>
         </div>
@@ -193,6 +204,12 @@ import SrcIconMuiEditorFormatindent_increase from '../../../src/icon/mui/editor/
         <div className="col-1-5">
         <SrcIconMuiNavigationArrowback className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/navigation/arrow_back</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiNavigationArrowdownward className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/navigation/arrow_downward</div>
         </div>
       
 
@@ -371,6 +388,12 @@ import SrcIconMuiEditorFormatindent_increase from '../../../src/icon/mui/editor/
       
 
         <div className="col-1-5">
+        <SrcIconMuiActionAnnouncement className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/announcement</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiActionDelete className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/delete</div>
         </div>
@@ -421,6 +444,12 @@ import SrcIconMuiEditorFormatindent_increase from '../../../src/icon/mui/editor/
         <div className="col-1-5">
         <SrcIconMuiActionExplore className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/explore</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiActionBugreport className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/bug_report</div>
         </div>
       
 
@@ -517,6 +546,12 @@ import SrcIconMuiEditorFormatindent_increase from '../../../src/icon/mui/editor/
         <div className="col-1-5">
         <SrcIconMuiActionZoomin className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/zoom_in</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiActionAssignmentturned_in-black className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/assignment_turned_in-black</div>
         </div>
       
 

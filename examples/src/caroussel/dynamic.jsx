@@ -69,6 +69,45 @@ const Example = ({ setData }) =>
         return items;
       }}
     />
+
+  <h2>Dynamic only two slide</h2>
+    <DynamicCaroussel
+      id="sample3"
+      // data={[
+      //   { id: 1, slide: <div>1</div> },
+      //   { id: 2, slide: <div>2</div> },
+      // ]}
+      fetchData={(page) =>
+      {
+        const items = [];
+        const length = 2;
+
+        for (let i = 0; i < 3; i += 1)
+        {
+          /**
+          * infinite loop determine current loop position
+          */
+          const index = (page - 1 + i) % (length);
+
+          /**
+          * negative position
+          * @example
+          * index === -1
+          * => data[length + index] // data last element.
+          */
+          if (index < 0)
+          {
+            items.push({ id: index, slide: <div>{length + index}</div> });
+          }
+          else
+          {
+            items.push({ id: index, slide: <div>{index}</div> });
+          }
+        }
+
+        return items;
+      }}
+    />
   </div>
 );
 
