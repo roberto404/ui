@@ -155,7 +155,7 @@ export const sidebar = (element: React.Element) =>
  * @param {object} event
  * @param {object} options { className: 'no-close' }
  */
-export const popover = (element: React.Element, event: {} = {}, options = {}) =>
+export const popover = (element: React.Element | string, event: {} = {}, options = {}) =>
 {
   let containerStyle = options.containerStyle || {};
 
@@ -166,13 +166,23 @@ export const popover = (element: React.Element, event: {} = {}, options = {}) =>
     containerStyle = { ...getDynamicPopoverStyle(target), ...containerStyle };
   }
 
+  // console.log(target);
+  //
+  // if (!options.style)
+  // {
+  //   options.style = {};
+  // }
+  //
+  // options.style.pointerEvents = 'none';
+  // containerStyle.pointerEvents = 'auto';
+
   return ({
     type: 'SET_LAYER',
     active: true,
     method: 'popover',
     closeable: true,
     containerStyle,
-    element,
+    element: React.isValidElement(element) ? element : <div style={{ whiteSpace: 'nowrap' }}>{element}</div>,
     options,
   });
 };
@@ -185,7 +195,7 @@ export const popover = (element: React.Element, event: {} = {}, options = {}) =>
  * @param {ReactElement} element Layer (tooltip) content
  * @param {object} event
  */
-export const tooltip = (element: React.Element, event: {} = {}, options = {}) =>
+export const tooltip = (element: React.Element | string, event: {} = {}, options = {}) =>
 {
   return ({
     ...popover(element, event, options),

@@ -2,7 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 
+/* !- Actions */
+
 import { flush, tooltip } from './actions';
+
 
 const Tooltip = ({ className, children, title, onClick }, { store }) =>
 {
