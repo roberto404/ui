@@ -71,12 +71,12 @@ import SrcIconMuiActionComparearrows from '../../../src/icon/mui/action/compare_
 import SrcIconMuiActionLockopen from '../../../src/icon/mui/action/lock_open';
 import SrcIconMuiActionCalendartoday from '../../../src/icon/mui/action/calendar_today';
 import SrcIconMuiActionLock from '../../../src/icon/mui/action/lock';
+import SrcIconMuiActionAssignmentturned_in from '../../../src/icon/mui/action/assignment_turned_in';
 import SrcIconMuiActionSwaphoriz from '../../../src/icon/mui/action/swap_horiz';
 import SrcIconMuiActionTextrotate_vertical from '../../../src/icon/mui/action/text_rotate_vertical';
 import SrcIconMuiActionVisibility from '../../../src/icon/mui/action/visibility';
 import SrcIconMuiActionSavealt from '../../../src/icon/mui/action/save_alt';
 import SrcIconMuiActionZoomin from '../../../src/icon/mui/action/zoom_in';
-import SrcIconMuiActionAssignmentturned_in-black from '../../../src/icon/mui/action/assignment_turned_in-black';
 import SrcIconMuiActionBackup from '../../../src/icon/mui/action/backup';
 import SrcIconMuiActionSearch from '../../../src/icon/mui/action/search';
 import SrcIconMuiActionFace from '../../../src/icon/mui/action/face';
@@ -520,6 +520,12 @@ import SrcIconMuiEditorFormatindent_increase from '../../../src/icon/mui/editor/
       
 
         <div className="col-1-5">
+        <SrcIconMuiActionAssignmentturned_in className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/assignment_turned_in</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiActionSwaphoriz className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/swap_horiz</div>
         </div>
@@ -546,12 +552,6 @@ import SrcIconMuiEditorFormatindent_increase from '../../../src/icon/mui/editor/
         <div className="col-1-5">
         <SrcIconMuiActionZoomin className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/zoom_in</div>
-        </div>
-      
-
-        <div className="col-1-5">
-        <SrcIconMuiActionAssignmentturned_in-black className="w-6 h-6" />
-          <div className="mt-1 text-gray text-xs">mui/action/assignment_turned_in-black</div>
         </div>
       
 
