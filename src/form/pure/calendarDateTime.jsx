@@ -12,7 +12,17 @@ import DateTime from './datetime';
  * DateTime + CalendarMonth Component Combo
  * @type {[type]}
  */
-const CalendarDateTime = ({ id, form, className, onClickCalendar, value, dateFormat }) =>
+const CalendarDateTime = ({
+  id,
+  form,
+  className,
+  onClickCalendar,
+  value,
+  dateFormat,
+  min,
+  max,
+  validator,
+}) =>
 (
   <div className={className}>
     <DateTime
@@ -33,6 +43,9 @@ const CalendarDateTime = ({ id, form, className, onClickCalendar, value, dateFor
         onClick={onClickCalendar}
         value={value}
         dateFormat={dateFormat}
+        min={min}
+        max={max}
+        validator={validator}
       />
     </div>
   </div>

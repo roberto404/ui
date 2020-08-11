@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import produceNumericArray from '@1studio/utils/array/produceNumericArray';
 
 
 /* !- React Elements */
@@ -90,6 +91,12 @@ class CalendarMonthForm extends Field
 
     this.state.width = props.width;
     this.state.height = props.height;
+
+    const minMoment = moment(this.props.min, this.props.dateFormat);
+    this.state.minUnix = minMoment.isValid() ? minMoment.valueOf() : false;
+
+    const maxMoment = moment(this.props.max, this.props.dateFormat);
+    this.state.maxUnix = maxMoment.isValid() ? maxMoment.valueOf() : false;
   }
 
   /* !- Handlers */
@@ -107,14 +114,17 @@ class CalendarMonthForm extends Field
     const valueDate = moment(this.getValue());
     const selectedDate = moment(date);
 
-    selectedDate.hour(parseInt(valueDate.format('H')));
-    selectedDate.minute(parseInt(valueDate.format('m')));
-
-    const value = selectedDate.format(this.props.dateFormat);
-
-    if (this.props.onClick({ value }))
+    if (this.isValid(selectedDate.valueOf()))
     {
-      this.onChangeHandler(value);
+      selectedDate.hour(parseInt(valueDate.format('H')));
+      selectedDate.minute(parseInt(valueDate.format('m')));
+
+      const value = selectedDate.format(this.props.dateFormat);
+
+      if (this.props.onClick({ value }))
+      {
+        this.onChangeHandler(value);
+      }
     }
   }
 
@@ -146,22 +156,73 @@ class CalendarMonthForm extends Field
     }
   }
 
+  isValid = (dateUnix) =>
+  {
+    if (this.state.minUnix)
+    {
+      if (dateUnix < this.state.minUnix)
+      {
+        return false;
+      }
+    }
+
+    if (this.state.maxUnix)
+    {
+      if (dateUnix > this.state.maxUnix)
+      {
+        return false;
+      }
+    }
+
+    if (this.props.validator.toString() !== CalendarMonthForm.defaultProps.validator.toString())
+    {
+      if (!this.props.validator(dateUnix))
+      {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   render()
   {
     const startDate = new Date(this.props.year, this.props.month - 1, 1);
+
+    /**
+     * Value of calendar field in moment format
+     */
     const valueMoment = moment(this.getValue(this.props), this.props.dateFormat);
-
-    const className = (typeof this.props.className === 'function') ?
-      this.props.className(startDate) : this.props.className;
-
-    const active = this.props.freezeMonth === false || valueMoment.format('YYYYMM') === moment(startDate).format('YYYYMM') ?
-      [parseInt(valueMoment.format('D'))] : [];
 
     const year = (this.props.freezeMonth) ?
       startDate.getFullYear() : valueMoment.toDate().getFullYear();
 
     const month = (this.props.freezeMonth) ?
       startDate.getMonth() : valueMoment.toDate().getMonth();
+
+
+    const className = (typeof this.props.className === 'function') ?
+      this.props.className(startDate) : this.props.className;
+
+    /**
+     * Selected dates
+     * @type {array}
+     */
+    const active = this.props.freezeMonth === false || valueMoment.format('YYYYMM') === moment(startDate).format('YYYYMM') ?
+      [parseInt(valueMoment.format('D'))] : [];
+
+
+    /**
+     * Month of days
+     */
+    const days = new Date(year, month + 1, 0).getDate();
+
+    /**
+    * Inactive dates
+    * @return {array}
+    */
+    const inactive = produceNumericArray(1, days)
+      .filter(day => !this.isValid(new Date(year, month, day).getTime()));
 
     return super.render() || (
       <div
@@ -180,6 +241,7 @@ class CalendarMonthForm extends Field
           year={year}
           className={{
             active,
+            inactive,
             ...className,
           }}
           onClick={this.onChangeDateHandler}
@@ -224,6 +286,9 @@ CalendarMonthForm.propTypes =
    */
   freezeMonth: PropTypes.bool,
   onClick: PropTypes.func,
+  min: PropTypes.string,
+  max: PropTypes.string,
+  validator: PropTypes.func,
 };
 
 /**
@@ -242,6 +307,9 @@ CalendarMonthForm.defaultProps =
   month: new Date().getMonth() + 1,
   freezeMonth: false,
   onClick: () => true,
+  min: '',
+  max: '',
+  validator: () => {},
 };
 
 export default CalendarMonthForm;

@@ -21,6 +21,7 @@ import FormPlain from './form/plain';
 import FormCollection from './form/collection';
 import FormSlider from './form/slider';
 import FormDropzone from './form/dropzone';
+import FormCalendar from './form/calendar';
 
 
 /* !- Example: Grid */
@@ -122,6 +123,7 @@ export default {
     slider: FormSlider,
     dropzone: FormDropzone,
     format: FormFormat,
+    calendar: FormCalendar,
   },
   grid: {
     static: GridStatic,

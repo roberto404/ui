@@ -47,6 +47,9 @@ class CalendarMonthButton extends Component
 
           return true;
         }}
+        min={props.min}
+        max={props.max}
+        validator={props.validator}
       />
     );
 
