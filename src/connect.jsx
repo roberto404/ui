@@ -94,7 +94,12 @@ class Connect extends Component
 
   getState(props = this.props, context = this.context)
   {
-    return clone(context.store.getState()[this.store][props.id || context[this.store]]) || {};
+    const storeId = props.id || context[this.store];
+    const storeState = context.store.getState()[this.store];
+
+    const observedState = storeId ? storeState[storeId] : storeState
+
+    return clone(observedState) || {};
   }
 
   render()
