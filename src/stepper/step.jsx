@@ -36,20 +36,33 @@ export const Step = (props, { store }) =>
     icon,
     data,
     index,
-    classesText,
+    className,
+    classNameText,
+    classNameLine,
     onClick,
+
+    iconWidth,
+    iconHeight,
+    iconPadding,
+    iconAbsWidth,
+    lineWidth,
+    canvasPaddingX,
+    textPaddingBottom,
+    textBottom,
   } = props;
 
   const isFirst = index === 0;
   const isLast = data.length === (index + 1);
 
-  const tranformX = ((index + 1) * ICON_PADDING) + (index * (ICON_WIDTH + ICON_PADDING + LINE_WIDTH)) + (CANVAS_PADDING_X * +isLabel);
+
+  const tranformX = Math.floor(((index + 1) * ICON_PADDING) + (index * (ICON_WIDTH + ICON_PADDING + lineWidth)) + (CANVAS_PADDING_X * +isLabel));
 
   const element = icon || Icon;
 
-  const className = classNames({
+  const classNameGroup = classNames({
     pointer: onClick,
     'no-child-events': tooltip,
+    [className]: className,
   });
 
   const onMouseHandler = (event) =>
@@ -74,7 +87,7 @@ export const Step = (props, { store }) =>
     <g
       transform={`translate(${tranformX}, 0)`}
       onClick={onClick}
-      className={className}
+      className={classNameGroup}
       onMouseEnter={onMouseHandler}
       onMouseOut={onMouseOutHandler}
     >
@@ -88,18 +101,30 @@ export const Step = (props, { store }) =>
 
       {/* label */}
 
-      <text className={classesText}>
+      <text className={classNameText}>
         <tspan x={ICON_WIDTH / 2} y={TEXT_BOTTOM} textAnchor="middle">{label}</tspan>
       </text>
 
       {/* line */}
 
-      { !isLast &&
-      <path d={`M${ICON_WIDTH + ICON_PADDING},${ICON_HEIGHT / 2} L${ICON_WIDTH + ICON_PADDING + LINE_WIDTH},${ICON_HEIGHT / 2}`} stroke="#F6F6F6" strokeWidth="2" />
+      { !isFirst &&
+      <path className={classNameLine} d={`M${ - lineWidth - ICON_PADDING},${ICON_HEIGHT / 2} L${-ICON_PADDING},${ICON_HEIGHT / 2}`} stroke="#F6F6F6" strokeWidth="2" />
       }
     </g>
   );
 }
+
+Step.defaultProps =
+{
+  iconWidth: ICON_WIDTH,
+  iconHeight: ICON_HEIGHT,
+  iconPadding: ICON_PADDING,
+  iconAbsWidth: ICON_ABS_WIDTH,
+  lineWidth: LINE_WIDTH,
+  canvasPaddingX: CANVAS_PADDING_X,
+  textPaddingBottom: TEXT_PADDING_BOTTOM,
+  textBottom: TEXT_BOTTOM,
+};
 
 Step.contextTypes =
 {

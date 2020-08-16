@@ -63,10 +63,10 @@ const Example = () =>
         ]}
       />
 
-      <h2>Numberic stepper with events</h2>
+      <h2>numeric stepper with events</h2>
 
       <Stepper
-        type="numberic"
+        type="numeric"
         data={[
           {
             status: 'complete',
@@ -90,7 +90,7 @@ const Example = () =>
           {
             label: '2',
             status: 'error',
-            classesText: 'fill-red'
+            classNameText: 'fill-red'
           },
           {
             label: '3',
@@ -107,10 +107,10 @@ const Example = () =>
       />
 
 
-      <h2>stepper with too`ltip</h2>
+      <h2>stepper with tooltip</h2>
 
       <Stepper
-        type="numberic"
+        type="numeric"
         data={[
           {
             tooltip: '1'
@@ -127,9 +127,9 @@ const Example = () =>
 
       <h2>Custom stepper with dynamic size</h2>
 
-      <div style={{ width: '500px', }}>
+      <div style={{ width: '200px', }}>
         <Resize
-          height={50}
+          height={45}
         >
           <Stepper
             data={[
@@ -155,6 +155,64 @@ const Example = () =>
         </Resize>
       </div>
 
+
+      <h2>X-Scale</h2>
+
+      <Stepper
+        width="1000"
+        data={[
+          {
+            label: '1',
+          },
+          {
+            label: '2',
+          },
+          {
+            label: '3',
+          },
+        ]}
+      />
+
+
+      <h2>Scale</h2>
+
+      <Stepper
+        width="1000"
+        height="100"
+        data={[
+          {
+            label: '1',
+          },
+          {
+            label: '2',
+          },
+          {
+            label: '3',
+          },
+        ]}
+      />
+
+      <h2>Classes</h2>
+
+      <Stepper
+        data={[
+          {
+            label: '1',
+          },
+          {
+            label: '2',
+            // className: 'red',
+            classNameText: 'yellow',
+            classNameLine: 'stroke-1 stroke-yellow',
+          },
+          {
+            label: '2',
+            // className: 'red',
+            classNameText: 'blue',
+            classNameLine: 'dashed gray-light',
+          },
+        ]}
+      />
 
 
 

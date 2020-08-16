@@ -35,26 +35,64 @@ const Stepper = ({
   data,
   width,
   height,
-  classesText,
+  className,
+  classNameText,
   step,
   type,
   onClick,
+  canvasPaddingX,
 }) =>
 {
   const isLabel = data.find(({ label }) => !!label) !== undefined;
 
-  const canvasWidth = width || Math.max(0, (data.length * (ICON_ABS_WIDTH + LINE_WIDTH)) - LINE_WIDTH + (CANVAS_PADDING_X * 2 * +isLabel));
-  const canvasHeight = height || (TEXT_BOTTOM + TEXT_PADDING_BOTTOM) * +isLabel || ICON_HEIGHT;
+  const viewBoxWidth = Math.max(0, (data.length * (ICON_ABS_WIDTH + LINE_WIDTH)) - LINE_WIDTH + (CANVAS_PADDING_X * 2 * +isLabel));
+  const viewBoxHeight = (TEXT_BOTTOM + TEXT_PADDING_BOTTOM) * +isLabel || ICON_HEIGHT;
+  const canvasWidth = width || viewBoxWidth;
+  const canvasHeight = height || viewBoxHeight;
 
   const element = step || STEP_TYPES[type] || Step;
 
-  const className = classNames({
+  const classNameExtends = classNames({
     pointer: onClick,
+    [className]: true,
   });
 
+  const ratio = (canvasWidth / canvasHeight) / (viewBoxWidth / viewBoxHeight);
+  const ratioY = canvasHeight / viewBoxHeight ;
+
+  const iconPadding = ICON_PADDING * ratioY;
+  const iconWidth = ICON_WIDTH * ratioY;
+  canvasPaddingX = canvasPaddingX * 2 * ratioY; // eslint-disable-line
+
+  const lineWidth = Math.floor((canvasWidth - (((iconPadding + iconWidth + iconPadding) * data.length) + canvasPaddingX)) / (data.length - 1)) * (1 / ratioY);
+
+
   return (
-    <svg onClick={onClick} className={className} version="1.0" viewBox={`0 0 ${canvasWidth} ${canvasHeight}`} preserveAspectRatio="xMidYMid meet" width={`${canvasWidth}px`} height={`${canvasHeight}px`} >
-      { data.map((item, index) => React.createElement(element, { classesText, ...item, index, data, isLabel, key: index, canvasWidth, canvasHeight }))}
+    <svg
+      onClick={onClick}
+      className={classNameExtends}
+      version="1.0"
+      viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
+      preserveAspectRatio="xMinYMin meet"
+      width={`${canvasWidth}px`}
+      height={`${canvasHeight}px`}
+    >
+      { data.map((item, index) => React.createElement(
+        element,
+        {
+          classNameText,
+          ...item,
+          index,
+          data,
+          isLabel,
+          key: index,
+          canvasWidth,
+          canvasHeight,
+          lineWidth,
+          canvasPaddingX,
+        },
+        ))
+      }
     </svg>
   )
 }
@@ -77,17 +115,20 @@ Stepper.propTypes = {
       ),
     }),
   ),
-  classesText: PropTypes.string,
+  classNameText: PropTypes.string,
   type: PropTypes.string,
   onClick: PropTypes.func,
+  canvasPaddingX: PropTypes.number,
 };
 
 Stepper.defaultProps = {
   width: 0,
   height: 0,
   data: [],
-  classesText: "text-s text-gray",
+  className: 'no-select',
+  classNameText: "text-s text-gray",
   type: PropTypes.oneOf(Object.keys(STEP_TYPES)),
+  canvasPaddingX: CANVAS_PADDING_X,
 };
 
 export default Stepper;

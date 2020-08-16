@@ -32,14 +32,14 @@ export const StepNumeric = (props) =>
     status,
     data,
     index,
-    classesText,
+    classNameText,
     isLabel,
   } = props;
 
   const IconNumber = (
     <g>
       <circle fill="#F6F6F6" cx={ICON_WIDTH / 2} cy="12" r={ICON_WIDTH / 2} />
-      <text className={classesText}>
+      <text className={classNameText}>
         <tspan className="no-select" x={ICON_WIDTH / 2} y={ICON_HEIGHT / 2} alignmentBaseline="central" textAnchor="middle">{index + 1}</tspan>
       </text>
     </g>

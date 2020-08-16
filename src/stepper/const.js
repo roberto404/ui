@@ -14,6 +14,6 @@ export const TEXT_BOTTOM = 40;
 
 
 export const STEP_TYPES = {
-  'numberic': StepNumeric,
+  'numeric': StepNumeric,
   'timeline': StepTimeline,
 };
