@@ -270,11 +270,17 @@ class View extends Component
         }
       }
 
-
       this.forceUpdate();
     }
   }
 
+  /**
+   * Returns active view group items
+   * @param  {object} [context=this.context]
+   * @return {array} views of group
+   * @example
+   * [{ id, pos, title, children, status }]
+   */
   getActiveGroupViews(context = this.context)
   {
     const viewState = context.store.getState().view;
@@ -302,18 +308,26 @@ class View extends Component
           this.views.reduce(
             (result, item) =>
             {
-              const itemChild = children.find(
-                (child, index) => item.status && (
+              const itemChildren = children.filter(
+                (child, index) => (item.status || !this.props.lazyload) && (
                   (typeof child.props['data-view'] === 'undefined' && index === parseInt(item.id))
                   || (typeof child.props['data-view'] === 'object' && child.props['data-view'].id === item.id)
                   || child.props['data-view'] === item.id
                 ),
               );
 
-              if (itemChild)
+              if (itemChildren.length)
               {
-                result.push(itemChild);
+                if (this.props.lazyload === false)
+                {
+                  result.push(itemChildren.map((child, n) => <div key={n} className={item.status ? '' : 'hidden'}>{child}</div>))
+                }
+                else
+                {
+                  result.push(itemChildren[0]);
+                }
               }
+
               return result;
             },
             [],
@@ -354,6 +368,7 @@ View.propTypes =
    * });
    */
   onChange: PropTypes.func,
+  lazyload: PropTypes.bool,
 };
 
 /**
@@ -365,6 +380,7 @@ View.defaultProps =
   defaultView: '',
   settings: {},
   className: '',
+  lazyload: true,
 };
 
 /**

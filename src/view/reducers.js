@@ -3,13 +3,18 @@
 import { checkPropTypes } from '@1studio/utils/propType';
 import { SCHEME } from './constans';
 
+const DEFAULT_STATE = {
+  active: undefined,
+  groups: [],
+};
+
 /**
  * View Redux Reducers
  * @param  {Object} state
  * @param  {Object} action
  * @return {Object}            state
  */
-const reducers = (state = {}, action = {}) =>
+const reducers = (state = DEFAULT_STATE, action = {}) =>
 {
   switch (action.type)
   {
