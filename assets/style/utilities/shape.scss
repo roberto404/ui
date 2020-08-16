@@ -4,7 +4,6 @@ hr
   margin: 2rem 0;
 }
 
-
 .rounded
 {
   border-radius: .5rem;
@@ -324,6 +323,57 @@ hr
 {
   fill: $black;
 }
+
+text.blue
+{
+  fill: $blue;
+}
+
+text.gray
+{
+  fill: $gray;
+}
+
+text.gray-light
+{
+  fill: $gray-light;
+}
+
+text.gray-dark
+{
+  fill: $gray-dark;
+}
+
+text.yellow
+{
+  fill: $yellow;
+}
+
+path.dashed
+{
+  stroke-dasharray: 1;
+}
+
+path.dashed-2
+{
+  stroke-dasharray: 2;
+}
+
+path.dashed-3
+{
+  stroke-dasharray: 3;
+}
+
+path.stroke-1
+{
+  stroke-width: 1;
+}
+
+path.stroke-yellow
+{
+  stroke: $yellow;
+}
+
 
 .rotate-45
 {
