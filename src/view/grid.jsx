@@ -153,8 +153,12 @@ class GridView extends Component
     if (this.props.flushFiltersUnmount)
     {
       const grid = this.context.store.getState().grid[this.id];
-      const values = grid.filters.reduce((ids, { id }) => ({ ...ids, [id]: undefined }), {});
-      this.props.unsetValues(values);
+
+      if (grid !== undefined)
+      {
+        const values = grid.filters.reduce((ids, { id }) => ({ ...ids, [id]: undefined }), {});
+        this.props.unsetValues(values);
+      }
     }
 
     this.props.flush(this.id);

@@ -54,9 +54,9 @@ const Card = ({
   const classes = classNames({
     relative: true,
     'no-select': true,
-    [className]: true,
     border: border === true,
     pointer: onClick.toString() !== Card.defaultProps.onClick.toString(),
+    [className]: true,
   });
 
   const captionPadding = parseInt((/p-([0-9]{1})/.exec(classNameCaption) || [])[1] || 0) * 2 / 1.6;
@@ -201,7 +201,9 @@ Card.defaultProps =
   titleZoom: 100,
   createMarkers,
   onClick: () =>
-  {},
+  {
+    return false;
+  },
 };
 
 Card.propTypes =

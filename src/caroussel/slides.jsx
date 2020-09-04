@@ -168,7 +168,7 @@ class Slides extends Component
   {
     if (!this.hammerDragManager)
     {
-      this.hammerDragManager = new Hammer.Manager(this.mask, { domEvents: true });
+      this.hammerDragManager = new Hammer.Manager(this.mask, { domEvents: true, touchAction: "pan-y" });
       this.hammerDragManager.add(new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL }));
       this.hammerDragManager.on('panstart panmove pancancel panend', this.dragListener);
     }
@@ -176,6 +176,7 @@ class Slides extends Component
 
   dragListener = (event) =>
   {
+    console.log(event.type);
     if (!this.slides || !this.mask || !this.slides.offsetWidth || !this.mask.offsetWidth)
     {
       return;
@@ -222,6 +223,7 @@ class Slides extends Component
           break;
         }
 
+      case 'pancancel':
       case 'panend':
         {
           this.startCoord = null;
