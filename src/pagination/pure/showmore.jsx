@@ -10,6 +10,8 @@ import { modifyLimit } from '../../grid/actions';
 import IconMore from '../../icon/mui/navigation/expand_more';
 
 
+let scrollTop;
+
 export const ShowMore = (
 {
   model,
@@ -42,7 +44,18 @@ export const ShowMore = (
 
     const limit = model.paginate.limit + (multiplier * addLimit);
     store.dispatch(modifyLimit(limit, grid));
+
+    /**
+     * Google Chrome 85 hack
+     */
+    scrollTop = window.pageYOffset || document.documentElement.scrollTop;
   };
+
+  if (scrollTop)
+  {
+    window.scrollTo(0, scrollTop);
+    scrollTop = 0;
+  }
 
   const current = data.length;
   const limit = model.results.length;
