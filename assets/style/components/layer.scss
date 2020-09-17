@@ -306,11 +306,17 @@ body[class*=" layer-"]
       max-height: 80vh;
       height: fit-content;
       // left: 0px;
+
     }
   }
 
   &.tooltip
   {
+    .container .content
+    {
+      width: max-content;
+    }
+    
     .close
     {
       display: none;
