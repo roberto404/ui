@@ -90,7 +90,7 @@ class Marker extends Component
         this.props.children,
         target,
         {
-          className: 'no-padding tooltip',
+          className: 'no-padding tooltip closeable',
         },
       ));
     }
@@ -110,7 +110,7 @@ class Marker extends Component
       this.props.children,
       marker.ub,
       {
-        className: 'no-padding tooltip',
+        className: 'no-padding tooltip closeable',
       },
     ));
   };
