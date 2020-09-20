@@ -316,8 +316,8 @@ body[class*=" layer-"]
     {
       width: max-content;
     }
-    
-    .close
+
+    &:not(.closeable) .close
     {
       display: none;
     }
