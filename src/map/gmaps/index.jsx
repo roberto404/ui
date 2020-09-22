@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import importJs from '/Users/roberto/Sites/utils/src/window/importJs';
-import underscroreToCamelCase from '/Users/roberto/Sites/utils/src/string/underscroreToCamelCase';
+import importJs from '@1studio/utils/window/importJs';
+import underscroreToCamelCase from '@1studio/utils/string/underscroreToCamelCase';
 
 
 import {
@@ -172,12 +172,15 @@ class Map extends Component
 
   panTo = (coords) =>
   {
-    if (!(coords instanceof window.google.maps.LatLng))
+    if (typeof coords === 'object' && coords.lat && coords.lng)
     {
-      coords = new window.google.maps.LatLng(coords.lat, coords.lng); // eslint-disable-line
-    }
+      if (!(coords instanceof window.google.maps.LatLng))
+      {
+        coords = new window.google.maps.LatLng(coords.lat, coords.lng); // eslint-disable-line
+      }
 
-    this.map.panTo(coords);
+      this.map.panTo(coords);
+    }
   }
 
   render()
