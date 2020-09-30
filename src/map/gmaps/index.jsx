@@ -172,7 +172,7 @@ class Map extends Component
 
   panTo = (coords) =>
   {
-    if (typeof coords === 'object' && coords.lat && coords.lng)
+    if (typeof coords === 'object' && coords.lat && coords.lng && this.map)
     {
       if (!(coords instanceof window.google.maps.LatLng))
       {
