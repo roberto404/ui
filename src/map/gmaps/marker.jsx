@@ -11,8 +11,8 @@ class Marker extends Component
     {
       const marker = new window.google.maps.Marker({
         position: {
-          lat: this.props.lat,
-          lng: this.props.lng,
+          lat: parseFloat(this.props.lat),
+          lng: parseFloat(this.props.lng),
         },
         icon: this.props.icon,
       });
@@ -39,12 +39,12 @@ class Marker extends Component
       this.marker.setIcon(this.props.icon);
     }
 
-    if (prevProps.lat !== this.props.lat || prevProps.lng == this.props.lng)
+    const lat = parseFloat(this.props.lat);
+    const lng = parseFloat(this.props.lng);
+
+    if (prevProps.lat !== lat || prevProps.lng !== lng)
     {
-      this.marker.setPosition({
-        lat: this.props.lat,
-        lng: this.props.lng,
-      });
+      this.marker.setPosition({ lat, lng });
     }
 
     if (this.props.showPopover)
@@ -122,8 +122,14 @@ class Marker extends Component
 };
 
 Marker.propTypes = {
-  lat: PropTypes.number.isRequired,
-  lng: PropTypes.number.isRequired,
+  lat: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]).isRequired,
+  lng: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]).isRequired,
   icon: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.shape({
