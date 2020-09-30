@@ -1,7 +1,8 @@
 
 
 // default
-[class="preloader"]
+[class^="preloader"],
+[class*=" preloader"]
 {
   height: 2em;
   width: 2em;

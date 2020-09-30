@@ -8,9 +8,6 @@
 // --> add default style
 @import "normalize.scss";
 
-// --> setup responsive function
-// @import "responsive.scss";
-
 // --> usefull animations
 @import "animation.scss";
 
@@ -30,6 +27,14 @@
 html
 {
   scroll-behavior: smooth;
+
+
+  font-size: $baseFontSizeDesktop;
+
+  @include respond-to(mobile)
+  {
+    font-size: $baseFontSizeMobile;
+  }
 }
 
 body

@@ -31,28 +31,6 @@
   }
 }
 
-// body setup
-
-html
-{
-  font-size: $baseFontSizeDesktop;
-
-  @include respond-to(mobile)
-  {
-    font-size: $baseFontSizeMobile;
-  }
-
-  // @include respond-to(tablet)
-  // {
-  //     font-size: $baseFontSizeTablet;
-  // }
-
-  // @include respond-to(desktop)
-  // {
-  //   font-size: $baseFontSizeDesktop;
-  // }
-}
-
 
 /*
   JS detect display size.
