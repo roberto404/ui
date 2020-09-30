@@ -199,6 +199,7 @@ export const tooltip = (element: React.Element | string, event: {} = {}, options
 {
   return ({
     ...popover(element, event, options),
+    closeable: false,
     options: {
       ...options,
       className: 'tooltip',
