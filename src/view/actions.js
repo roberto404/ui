@@ -43,7 +43,7 @@ export const toggleView = (id: string | number, status?: 0 | 1) =>
  * Change visibility of selected view all components
  * @param  {string} id [description]
  */
-export const switchView = (id: string | number, status?: 0 | 1) =>
+export const switchView = (id: string | number) =>
 ({
   type: 'VIEW_SWITCH_VIEW',
   id,

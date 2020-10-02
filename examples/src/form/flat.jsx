@@ -152,6 +152,21 @@ const ExampleForm = () =>
       label="Calendar"
     />
 
+    <div className="grid">
+      <div className="col-1-2">
+        <Plain
+          id="calendar"
+          label="Calendar"
+        />
+      </div>
+      <div className="col-1-2">
+        <Plain
+          id="calendar"
+          label="Calendar"
+        />
+      </div>
+    </div>
+
   </Form>
 );
 

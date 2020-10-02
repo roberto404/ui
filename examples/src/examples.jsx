@@ -81,7 +81,7 @@ import ChartBar from './chart/barChart';
 
 /* !- Example: Map */
 
-// import Example from './map/gmaps';
+import MapGoogle from './map/gmaps';
 // import Example from './map/mapbox/static';
 // import Example from './map/mapbox/dynamic';
 
@@ -180,6 +180,9 @@ export default {
   },
   dragAndDrop: {
     basic: DndBasic,
+  },
+  map: {
+    google: MapGoogle,
   },
   style: {
     avatar: StyleAvatar,
