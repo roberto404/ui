@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 /* !- Actions */
 
-import { switchView } from './actions';
+import { switchView, toggleView } from './actions';
 
 
 /* !- Elements */
@@ -27,9 +27,11 @@ const ViewTabButtonsComponent = ({
   active,
   views,
   switchView,
+  toggleView,
   className,
   classNameButton,
   classNameButtonActive,
+  showAllLabel,
 }) =>
 {
   const onClickTabHandler = (event, id) =>
@@ -38,21 +40,36 @@ const ViewTabButtonsComponent = ({
     switchView(id);
   }
 
+  const onClickShowAllHandler = (event) =>
+  {
+    event.preventDefault();
+    views.forEach(({ id }) => {
+      toggleView(id, 1);
+    });
+  }
+
+  const isOnlyOneActive = views.filter(({ status }) => !!status).length === 1;
+
   const items = views.map(({ id, status, title }) => (
     <button
       key={id}
       data-id={id}
       onClick={event => onClickTabHandler(event, id)}
-      className={status ? classNameButtonActive : classNameButton}
+      className={status && isOnlyOneActive ? classNameButtonActive : classNameButton}
     >
       {title || id}
     </button>
   ));
 
+  const isAllActive = views.every(({ status }) => !!status);
+
   return (
     <div
       className={className}
     >
+      { showAllLabel &&
+      <button className={isAllActive ? classNameButtonActive : classNameButton} onClick={onClickShowAllHandler}>{showAllLabel}</button>
+      }
       {items}
     </div>
   );
@@ -79,6 +96,7 @@ const ViewTabButtons = connect(
   },
   {
     switchView,
+    toggleView,
   },
 )(ViewTabButtonsComponent);
 
@@ -91,6 +109,7 @@ const ViewTab = ({
   classNameButton,
   classNameButtonActive,
   classNameChildren,
+  showAllLabel,
 }) =>
 (
     <div className={className}>
@@ -99,6 +118,7 @@ const ViewTab = ({
         className={classNameButtons}
         classNameButton={classNameButton}
         classNameButtonActive={classNameButtonActive}
+        showAllLabel={showAllLabel}
       />
 
       <View
