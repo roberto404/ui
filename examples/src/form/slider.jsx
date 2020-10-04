@@ -23,7 +23,7 @@ const Example = ({ setValues, unsetValues }) =>
       <Slider
         id="slider"
         label="Slider"
-        value={[0, 30]}
+        value={[0, 70]}
         steps={10}
       />
       <div className="button value" onClick={() => setValues({ slider: [0, 50] }, 'example')}>
@@ -32,6 +32,7 @@ const Example = ({ setValues, unsetValues }) =>
       <div className="button value" onClick={() => unsetValues({ slider: undefined }, 'example')}>
         reset
       </div>
+
 
       <Slider
         id="slider2"
@@ -49,6 +50,18 @@ const Example = ({ setValues, unsetValues }) =>
       <div className="button value" onClick={() => unsetValues({ slider2: undefined }, 'example')}>
         reset
       </div>
+
+
+      <Slider
+        id="slider2"
+        label="Full lock slide not on the fly"
+        from={1000}
+        to={2200}
+        value={[1220, 1650]}
+        stateFormat={state => state.map(v => `${Math.round(v)} Ft`)}
+        enableStartHandler
+        enableFullLock
+      />
 
     </Form>
   );

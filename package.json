@@ -78,12 +78,14 @@
     "react-addons-test-utils": "15.6.2",
     "react-test-renderer": "15.6.1",
     "rimraf": "^2.6.1",
+    "selenium-webdriver": "4.0.0-alpha.7",
     "semantic-release": "15.13.12",
     "semantic-release-cli": "3.6.3",
     "sinon": "4.1.2"
   },
   "dependencies": {
     "@tinymce/tinymce-react": "2.5.0",
+    "browserstack-local": "1.4.8",
     "classnames": "2.2.5",
     "draft-js": "0.10.5",
     "draftjs-to-html": "0.8.4",

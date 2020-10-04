@@ -135,10 +135,22 @@ class Slider extends Field
 
     const index = parseInt(event.target.dataset.index);
 
+    /**
+     * Differences without Full Lock
+     */
+    const minDiff = this.props.enableFullLock === false && this.handleStart ?
+      this.handleStart.offsetWidth : 0;
+
+    const maxDiff = this.props.enableFullLock === false ?
+      this.handleEnd.offsetWidth : 0;
+
     const x = clamp(
+      // cursor relative x-position on the bar
       event.center.x - this.field.getBoundingClientRect().x,
-      index === 0 ? 0 : this.percentToPixel(this.state.percent[0]) + this.handleStart.offsetWidth,
-      index === 0 ? this.percentToPixel(this.state.percent[1]) - this.handleEnd.offsetWidth : this.field.offsetWidth,
+      // first handler's minimum is zero, first position of second
+      index === 0 ? 0 : this.percentToPixel(this.state.percent[0]) + minDiff,
+      // first second position, second slider bar witdh
+      index === 0 ? this.percentToPixel(this.state.percent[1]) - maxDiff : this.field.offsetWidth,
     );
 
     switch (event.type)
@@ -245,7 +257,7 @@ class Slider extends Field
             className="active-line"
             style={{
               width: `${Math.round((percent[1] - percent[0]) * 100)}%`,
-              left: `${Math.round(this.percentToPixel(percent[0]))}px`,
+              left: `${Math.round(percent[0] * 100)}%`,
             }}
           />
 
@@ -308,6 +320,10 @@ Slider.propTypes =
    * Enable to set start value. Visible two handler
    */
   enableStartHandler: PropTypes.bool,
+  /**
+   * Enable to close two handler
+   */
+  enableFullLock: PropTypes.bool,
 };
 
 /**
@@ -326,6 +342,7 @@ Slider.defaultProps =
   to: 100,
   onTheFly: false,
   enableStartHandler: false,
+  enableFullLock: false,
 };
 
 export default Slider;
