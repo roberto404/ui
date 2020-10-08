@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import isEqual from 'lodash/isEqual';
 import sum from 'lodash/sum';
 import ReactList from 'react-list';
+import findLastIndex from 'lodash/findLastIndex';
 
 
 /* !- React Actions */
@@ -247,8 +248,11 @@ class Grid extends Component
     return true;
   };
 
-  onKeySelectAllHandler = () =>
+  onKeySelectAllHandler = (event) =>
   {
+    event.preventDefault();
+    event.stopPropagation();
+    
     const grid = this.context.store.getState().grid[this.context.grid];
 
     if (grid)
@@ -604,8 +608,9 @@ class Grid extends Component
      */
     const onClickTableRowHandler = (!selectable) ? false : (event) =>
     {
-      const form = store.getState().form[this.formId] || [];
-      let value = [record.id];
+      const prevSelection = store.getState().form[this.formId] || [];
+
+      let nextSelection = [record.id];
 
       /**
       * IF multipleSelect = expand or reduce width new value (reduce if it is exist yet)
@@ -616,73 +621,90 @@ class Grid extends Component
 
       if (isExpandable)
       {
-        const isNewItem = form.indexOf(record.id) === -1;
+        const isNewItem = prevSelection.indexOf(record.id) === -1;
 
         if (event.shiftKey)
         {
           const grid = store.getState().grid[this.gridId];
-          const data = grid ? grid.rawData : this.props.data;
+          const data = grid ? grid.data : this.props.data;
+          const index = data.findIndex(({ id }) => id === record.id);
 
-          if (isNewItem)
-          {
-            data.some(({ id }) =>
-            {
-              // this item selected yet
-              if (form.indexOf(id) !== -1)
-              {
-                value = [];
-              }
-              else
-              {
-                value.push(id);
-              }
+          const min = Math.min(
+            data.findIndex(({ id }) => prevSelection.indexOf(id) !== -1),
+            index,
+          );
 
-              return (record.id === id);
-            });
+          const max = isNewItem ?
+          Math.max(
+            findLastIndex(data, ({ id }) => prevSelection.indexOf(id) !== -1),
+            index,
+          )
+          : index;
 
-            value = form.concat(value);
-          }
-          else
-          {
-            // if the selected item found
-            let found = false;
+          nextSelection = data.slice(min, max + 1).map(({ id }) => id)
 
-            data.some(({ id }) =>
-            {
-              // end of iterate, current item selected yet
-              if (found && form.indexOf(id) === -1)
-              {
-                return true;
-              }
-              // current item selected yet.
-              else if (found && form.indexOf(id) !== -1)
-              {
-                value.push(id);
-              }
-              // found clicked item
-              else if (!found && record.id === id)
-              {
-                value = [];
-                found = true;
-              }
 
-              return false;
-            });
 
-            value = form.filter(x => value.indexOf(x) === -1);
-          }
+          // if (isNewItem)
+          // {
+          //   data.some(({ id }) =>
+          //   {
+          //     // this item selected yet
+          //     if (prevSelection.indexOf(id) !== -1)
+          //     {
+          //       nextSelection = [];
+          //     }
+          //     else
+          //     {
+          //       nextSelection.push(id);
+          //     }
+          //
+          //     return (record.id === id);
+          //   });
+          //
+          //   nextSelection = prevSelection.concat(nextSelection);
+          // }
+          // else
+          // {
+          //   // if the selected item found
+          //   let found = false;
+          //
+          //   data.some(({ id }) =>
+          //   {
+          //     // end of iterate, current item selected yet
+          //     if (found && prevSelection.indexOf(id) === -1)
+          //     {
+          //       return true;
+          //     }
+          //     // current item selected yet.
+          //     else if (found && prevSelection.indexOf(id) !== -1)
+          //     {
+          //       nextSelection.push(id);
+          //     }
+          //     // found clicked item
+          //     else if (!found && record.id === id)
+          //     {
+          //       nextSelection = [];
+          //       found = true;
+          //     }
+          //
+          //     return false;
+          //   });
+          //
+          //   nextSelection = prevSelection.filter(x => nextSelection.indexOf(x) === -1);
+          // }
         }
         else
         {
-          value = isNewItem ? form.concat(value) : form.filter(i => i !== record.id);
+          nextSelection = isNewItem ? prevSelection.concat(nextSelection) : prevSelection.filter(i => i !== record.id);
         }
       }
 
-      if (!isEqual(form, value))
+      if (!isEqual(prevSelection, nextSelection))
       {
         store.dispatch(setValues({
           id: this.formId,
-          value,
+          value: nextSelection,
         }));
       }
     };
