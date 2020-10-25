@@ -28,6 +28,10 @@ import Marker from '../../card/marker';
 import IconPlus from '../../icon/mui/content/add';
 import IconArrow from '../../icon/mui/navigation/arrow_forward';
 
+import Preview from './dropzoneFileListPreview';
+
+
+/* !- Constants */
 
 const FILE_PATTERN = /^(([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})[a-f0-9]{24})/;
 
@@ -280,7 +284,12 @@ class DropzoneComponent extends Field
         value[index] = response.records;
 
         this.onChangeHandler(value);
-        // this.context.store.dispatch(close());
+
+        if (this.props.onComplete)
+        {
+          this.props.onComplete(value);
+        }
+
         return;
       };
     }
@@ -330,46 +339,6 @@ class DropzoneComponent extends Field
     super.componentDidMount();
   }
 
-
-  // renderItems()
-  // {
-  //   const items = this.state.value;
-  //   const children = [];
-  //
-  //   return renderInCaroussel(items);
-  //
-  //   items.map((item) =>
-  //   {
-  //     let img = '';
-  //
-  //     switch (typeof item)
-  //     {
-  //       case 'string':
-  //       case 'number':
-  //         img = new File({ id: item }).getThumbnail();
-  //         break;
-  //
-  //       case 'object':
-  //         img = new File(item).getThumbnail();
-  //     }
-  //
-  //     children.push(
-  //       <div
-  //         key={item.id}
-  //         className="file"
-  //       >
-  //         <div style={{ backgroundImage: `url(${img})` }} />
-  //         {/* <div
-  //           className="progress"
-  //           data-value={items.percent}
-  //         /> */}
-  //       </div>
-  //     );
-  //   });
-  //
-  //   return children;
-  // }
-
   render()
   {
     const buttonsClass = classNames({
@@ -393,14 +362,14 @@ class DropzoneComponent extends Field
             React.cloneElement(
               this.props.children,
               {
-                id: this.props.id,
+                ...this.props,
                 items: this.state.value,
                 onChange: this.onChangeHandler,
               },
             )
           }
 
-          { this.state.value.length > 0 && this.props.maxFiles > this.state.value.length &&
+          { 1===2 && this.state.value.length > 0 && this.props.maxFiles > this.state.value.length &&
           <div className="h-1" />
           }
 
@@ -410,7 +379,7 @@ class DropzoneComponent extends Field
               { this.props.onClickBrowse &&
               <button
                 onClick={event => this.props.onClickBrowse(event, file => this.onChangeHandler([...this.state.value, file]))}
-                className="w-auto border shadow gray fill-white"
+                className={this.props.classNameButtonBrowse}
               >
                 <IconAdd />
                 <span>Tallózás</span>
@@ -444,6 +413,8 @@ DropzoneComponent.propTypes =
    */
   acceptedFiles: PropTypes.string,
   UI: PropTypes.func,
+  onComplete: PropTypes.func,
+  classNameButtonBrowse: PropTypes.string,
 };
 
 /**
@@ -460,15 +431,17 @@ DropzoneComponent.defaultProps =
   maxFilesSize: 5,
   acceptedFiles: 'image/jpg,image/jpeg,image/png,application/pdf',
   children: <FileList />,
-  UI: ({ onClick, placeholder }) => (
+  UI: ({ onClick, placeholder, classNameButtonUpload }) => (
     <div
-      className="button inline-block w-auto border shadow white fill-red"
+      className={classNameButtonUpload}
       onClick={onClick}
       >
       <IconArrow className="rotate-270" />
       <span>{placeholder}</span>
     </div>
   ),
+  classNameButtonUpload: 'button inline-block w-auto border shadow white fill-red',
+  classNameButtonBrowse: 'w-auto border shadow gray fill-white',
 };
 
 

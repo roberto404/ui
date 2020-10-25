@@ -49,7 +49,7 @@ class CardPreview extends Component
           <Card
             // image={'https://picsum.photos/300/200'}
             image={new File(item).getUrl('1140x570')}
-            createMarkers={createMarkers}
+            createMarkers={this.props.createMarkers}
             markers={item.markers}
             title={item.title}
             subTitle={item.subTitle}
@@ -80,6 +80,7 @@ class CardPreview extends Component
 
 CardPreview.defaultProps =
 {
+  createMarkers,
 };
 
 CardPreview.contextTypes =

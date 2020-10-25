@@ -93,7 +93,7 @@ export default (state = {}, action = {}) =>
         {
           let values = action.items[id];
 
-          instance = (!action.form) ? newState[id] : newState[action.form][id];
+          instance = (!action.form) ? newState[id] : (newState[action.form] || {})[id];
 
           if (typeof instance !== 'undefined')
           {

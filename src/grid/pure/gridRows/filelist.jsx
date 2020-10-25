@@ -5,7 +5,12 @@ import { File } from '../../../form/pure/dropzone';
 /**
  * [FileListGridRow description]
  */
-const FileListGridRow = ({ data, onClick, className, dispatch }) =>
+const FileListGridRow = ({
+  data,
+  onClick,
+  className,
+  dispatch
+}) =>
 {
   const active = className === 'active';
 
@@ -22,7 +27,6 @@ const FileListGridRow = ({ data, onClick, className, dispatch }) =>
   const imageSrc = new File(data).getUrl('250x250');
 
   const percent = parseInt(data.percent) === 100 ? 'resizing' : `${data.percent}%`;
-
 
   return (
     <div style={{ width: 'calc(6rem + 6px + 100px)' }} onClick={onClick}>

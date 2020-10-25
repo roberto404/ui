@@ -33,14 +33,17 @@ const Example = (props, { store }) =>
   store.dispatch(setValues({
     images: [{
       ext: "jpg",
-      id: "4417",
-      lead: null,
-      mimeMajor: "image",
-      mimeMinor: "jpeg",
-      name: "446c343e0b367cb93bb7708dadc490e9",
-      path: "44/6c/34/3e/",
-      size: 1211227,
-      title: "1889x980_1562763951.655_5d25e24f68dac.jpg",
+      id: "879",
+      // markers: [
+      //   {
+      //     category: 'heading',
+      //     position: [50, 50],
+      //     settings: 'Második',
+      //   },
+      // ],
+    },{
+      ext: "jpg",
+      id: "8800",
       // markers: [
       //   {
       //     category: 'heading',
@@ -60,21 +63,7 @@ const Example = (props, { store }) =>
       // ],
     },{
       ext: "jpg",
-      id: "4418",
-      lead: null,
-      mimeMajor: "image",
-      mimeMinor: "jpeg",
-      name: "5210f707ea17395605956cb6cf231054",
-      path: "52/10/f7/07/",
-      size: 589829,
-      title: "1199x592_1562834870.7695_5d26f744de1ea.jpg",
-      // markers: [
-      //   {
-      //     category: 'heading',
-      //     position: [50, 50],
-      //     settings: 'Második',
-      //   },
-      // ],
+      id: "8802",
     }],
   }, 'example'));
 
@@ -82,8 +71,16 @@ const Example = (props, { store }) =>
     <Form
       id="example"
     >
+      <h2>Default file preview/editor</h2>
       <Dropzone
-        url={`http://kontakt2.rs.loc/api/v3/file/upload?resize=${JSON.stringify(imageSizes)}`}
+        url={`http://localhost/api/v3/file/upload?resize=${JSON.stringify(imageSizes)}`}
+        maxFilesSize={10}
+        id="images"
+      />
+
+      <h2>Custom file preview/editor</h2>
+      <Dropzone
+        url={`http://localhost/api/v3/file/upload?resize=${JSON.stringify(imageSizes)}`}
         maxFilesSize={10}
         id="images"
       >

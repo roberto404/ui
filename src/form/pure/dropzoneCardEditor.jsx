@@ -1,40 +1,44 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
-import { File } from './dropzone';
 
 /* !- Redux Actions */
 
 import { setData } from '../../grid/actions';
+import { unsetValues } from '../../form/actions';
+import { dialog, flush } from '../../layer/actions';
 
 
 /* !- React Elements */
 
-import Caroussel from '../../caroussel/caroussel';
-import Card from '../../card/card';
-import Marker from '../../card/marker';
-import IconPlus from '../../icon/mui/content/add';
-import IconCreate from '../../icon/mui/content/create';
+import Dropzone, { File } from './dropzone';
+import DropZoneFileList from './dropzoneFileList';
+
+import Input from './input';
+
+import IconSettings from '../../icon/mui/navigation/more_horiz';
 import IconDelete from '../../icon/mui/action/delete_forever';
+import IconSave from '../../icon/mui/navigation/check';
+import IconBack from '../../icon/mui/navigation/arrow_back';
+import IconNext from '../../icon/mui/navigation/arrow_forward';
+import IconPrev from '../../icon/mui/navigation/arrow_back';
+
 
 
 // TODO
 import { createMarkers } from '../../card/marker';
 
+const ID = 'DropzoneCardEditor';
 
 const DEFAULT_STATE =
 {
-  // page: 0,
-  // // editAble: false,
   markers: [],
+  marker: {},
   title: '',
   subTitle: '',
-  url: ''
+  url: '',
+  tag: '',
 };
 
-const Preload = ({ title, id, percent }) =>
-(
-  <div>{title} {percent}%</div>
-)
 
 
 class CardEditor extends Component
@@ -42,8 +46,97 @@ class CardEditor extends Component
   constructor(props)
   {
     super(props);
-    this.state = { markers: [], ...props.item };
+
+    this.state = {
+      ...DEFAULT_STATE,
+      ...props.item,
+      visibleSettings: true,
+    };
+
+    this.initialItems = [...props.items];
   }
+
+  componentDidMount()
+  {
+    if (this.context.addShortcuts)
+    {
+      this.context.addShortcuts(
+        [
+          {
+            keyCode: 'Escape',
+            handler: this.onClickCancelHandler,
+            description: 'Cancel',
+          },
+        ],
+        'dropzoneCardEditorCollection',
+      );
+    }
+  }
+
+  componentWillReceiveProps(nextProps)
+  {
+    this.setState({
+      ...DEFAULT_STATE,
+      ...nextProps.item,
+    });
+  }
+
+  shouldComponentUpdate(nextProps, nextState)
+  {
+    return (JSON.stringify(nextState) !== JSON.stringify(this.state));
+  }
+
+  componentDidUpdate()
+  {
+    this.props.onChange(this.state, false);
+  }
+
+  componentWillUnmount()
+  {
+    this.context.store.dispatch(unsetValues({ id: ID }, this.context.form));
+
+    if (this.context.removeShortcuts)
+    {
+      this.context.removeShortcuts('dropzoneCardEditorCollection');
+    }
+  }
+
+  /* !- Listener */
+
+  onClickSettingsHandler = (event) =>
+  {
+    event.preventDefault();
+    this.setState({ visibleSettings: !this.state.visibleSettings });
+  }
+
+  onDragMarkerListener = ({ index, x, y }) =>
+  {
+    let markers = [];
+
+    if (Math.min(x, y) < 0 || Math.max(x, y) > 100)
+    {
+      markers = [
+        ...this.state.markers.slice(0, parseInt(index)),
+        ...this.state.markers.slice(parseInt(index) + 1),
+      ];
+    }
+    else
+    {
+      markers = [...this.state.markers];
+
+      markers[index] =
+      {
+        ...this.state.markers[index],
+        position: [x, y],
+      };
+    }
+
+
+    this.setState({ markers });
+    this.context.store.dispatch(flush());
+  }
+
+
 
   /* !- Handlers */
 
@@ -51,13 +144,28 @@ class CardEditor extends Component
   {
     event.preventDefault();
 
-    const id = event.currentTarget.dataset.id;
-    const marker = this.props.defaultMarkers[id];
+    const category = event.currentTarget.dataset.id;
 
-    if (marker)
+    const onClickHandler = () =>
     {
-      this.setState({ markers: [...this.state.markers || [], marker] });
-    }
+      const settings = this.context.store.getState().form.markerSetting;
+
+      const marker = {
+        category,
+        settings,
+        position: [50, 50],
+      };
+
+      this.setState({ markers: [...(this.state.markers || []), marker] });
+      this.context.store.dispatch(flush());
+    };
+
+    this.context.store.dispatch(dialog(
+      <div>
+        <Input id="markerSetting" />
+        <div className="button primary" onClick={onClickHandler}>Létrehozom</div>
+      </div>,
+    ));
   }
 
   onClickSaveHandler = (event) =>
@@ -69,7 +177,7 @@ class CardEditor extends Component
   onClickCancelHandler = (event) =>
   {
     event.preventDefault();
-    this.props.onChange(this.props.item)
+    this.props.onChange(this.initialItems);
   }
 
   onClickDeleteHandler = (event) =>
@@ -78,60 +186,162 @@ class CardEditor extends Component
     this.props.onChange();
   }
 
+  onUploadCompleteHandler = (files) =>
+  {
+    const { id, ext } = files[files.length - 1];
+
+    this.setState({
+      id,
+      ext,
+    });
+  }
+
   onChangeInputHandler = (event) =>
   {
-    this.setState({ [event.target.id]: event.target.value });
+    const { id, value } = event.target || event;
+
+    this.setState({ [id]: value });
   }
+
+
+  renderMarkerButtons = () =>
+    Object.keys(this.props.defaultMarkers).map(marker => (
+      <button
+        key={marker}
+        className={this.state.marker.category === marker ? 'green' : ''}
+        data-id={marker}
+        onClick={this.onClickMarkerHandler}
+      >
+        {marker}
+      </button>
+    ));
+
 
   render()
   {
     return (
-      <div style={{ width: '500px' }}>
+      <div className="pin column bg-white" style={{ zIndex: 999 }}>
 
-        <div className="v-justify bg-gray-white shadow-outer-2 mb-1 rounded border border-gray-light">
+        {/* Toolbar */}
+
+        <div className="v-justify text-m pb-1">
           <div className="flex">
-            <button data-id="heading" onClick={this.onClickMarkerHandler}>heading</button>
-            <button data-id="tooltip" onClick={this.onClickMarkerHandler}>tooltip</button>
-            <button data-id="product" onClick={this.onClickMarkerHandler}>product</button>
-          </div>
-          <div className="flex">
-            <button className="bg-white" onClick={this.onClickSaveHandler}>Mentés</button>
-            <button className="bg-white" onClick={this.onClickCancelHandler}>Mégse</button>
-            <button className="bg-white" onClick={this.onClickDeleteHandler}>
-              <IconDelete className="fill-red-light" />
-              <span>Törlés</span>
+            <button className="fill-blue-dark text-blue-dark" onClick={this.onClickCancelHandler}>
+              <IconBack className="" />
+              {/*<span>Vissza</span>*/}
             </button>
+
+            <button className="fill-blue-dark" onClick={this.onClickDeleteHandler}>
+              <IconDelete />
+              {/*<span>Törlés</span>*/}
+            </button>
+
+          </div>
+          <div className="flex">
+
+            <Dropzone
+              url={this.props.url}
+              maxFilesSize={1}
+              id={ID}
+              // placeholder="Kép feltöltés"
+              placeholder=""
+              onComplete={this.onUploadCompleteHandler}
+              className="m-0"
+              classNameButtonUpload="button fill-blue-dark text-blue-dark"
+            >
+              <DropZoneFileList preview={() => <div />} />
+            </Dropzone>
+
+
+            <button className="fill-blue-dark text-blue-dark" onClick={this.onClickSettingsHandler}>
+              <IconSettings />
+            </button>
+
+            <button className="fill-blue-dark text-blue-dark" onClick={this.onClickSaveHandler}>
+              <IconSave />
+            </button>
+
           </div>
         </div>
 
-        <Card
-          // image={'https://picsum.photos/250/250'}
-          image={new File(this.props.item).getUrl('1140x570')}
-          createMarkers={createMarkers}
-          markers={this.state.markers}>
-        </Card>
+        {/* Image */}
 
-        <div>
-          <input
-            value={this.state.title}
-            id="title"
-            onChange={this.onChangeInputHandler}
-            placeholder="title"
-          />
-          <textarea
-            value={this.state.subTitle}
-            id="subTitle"
-            onChange={this.onChangeInputHandler}
-            placeholder="subTitle"
-          />
-          <input
-            value={this.state.url}
-            id="url"
-            onChange={this.onChangeInputHandler}
-            placeholder="url"
-          />
+        <div className="grow flex">
+          <div className="grow">
+            <div
+              className="v-center h-center relative"
+              style={{
+                maxWidth: 'calc(100% - 4rem)',
+                maxHeight: 'calc(100vh - 4rem)',
+                marginLeft: '2rem',
+              }}
+            >
+              <div
+                className="pointer absolute pin-l bg-white-light p-1 m-1 circle w-4 h-4 opacity-50 hover:opacity-100 transition"
+                onClick={(e) => this.props.onNavigation(-1)}
+              >
+                <IconPrev className="w-full h-full" />
+              </div>
+
+              <img
+                src={new File(this.state).getUrl('1140x570')}
+                width="auto"
+                style={{
+                  maxHeight: 'inherit',
+                  maxWidth: '100%',
+                }}
+              />
+
+              <div
+                className="pointer absolute pin-r bg-white-light p-1 m-1 circle w-4 h-4 opacity-50 hover:opacity-100 transition"
+                onClick={(e) => this.props.onNavigation(1)}
+              >
+                <IconNext className="w-full h-full" />
+              </div>
+
+            </div>
+          </div>
+
+          {/* Slidebar */}
+
+          <div
+            className={`m-${+this.state.visibleSettings} mt-0 p-${+this.state.visibleSettings} rounded shadow-outer-3 bg-white-light transition ease-in-out`}
+            style={{
+              width: `${300 * +this.state.visibleSettings}px`,
+              opacity: `${100 * +this.state.visibleSettings}`,
+              height: 'fit-content',
+            }}
+          >
+            <input
+              value={this.state.title}
+              id="title"
+              onChange={this.onChangeInputHandler}
+              placeholder="Kép címe"
+              className="mb-1"
+            />
+            <textarea
+              value={this.state.subTitle}
+              id="subTitle"
+              onChange={this.onChangeInputHandler}
+              placeholder="Kép alcíme"
+              className="mb-1"
+            />
+            <input
+              value={this.state.url}
+              id="url"
+              onChange={this.onChangeInputHandler}
+              placeholder="Hivatkozott weboldal"
+              className="mb-1"
+            />
+            <input
+              value={this.state.tag}
+              id="tag"
+              onChange={this.onChangeInputHandler}
+              placeholder="Címkék"
+            />
+          </div>
+
         </div>
-
       </div>
     );
   }
@@ -140,24 +350,27 @@ class CardEditor extends Component
 CardEditor.defaultProps =
 {
   defaultMarkers: {
-    heading: {
-      category: 'heading',
-      position: [50,50],
-      settings: 'Szöveg helye',
-    },
-    tooltip: {
-      category: 'tooltip',
-      position: [50, 50],
-      settings: 'Szöveg helye',
-    },
-    product: {
-      category: 'product',
-      position: [50, 50],
-      settings: '',
-    },
+    // heading: {
+    //   category: 'heading',
+    //   position: [50,50],
+    //   settings: 'Szöveg helye',
+    // },
+    // tooltip: {
+    //   category: 'tooltip',
+    //   position: [50, 50],
+    //   settings: 'Szöveg helye',
+    // },
   },
   store: PropTypes.object,
 };
+
+CardEditor.contextTypes =
+{
+  store: PropTypes.object,
+  form: PropTypes.string,
+  addShortcuts: PropTypes.func,
+  removeShortcuts: PropTypes.func,
+}
 
 
 export default CardEditor;

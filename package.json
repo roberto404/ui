@@ -85,6 +85,7 @@
   },
   "dependencies": {
     "@tinymce/tinymce-react": "2.5.0",
+    "array-move": "3.0.1",
     "browserstack-local": "1.4.8",
     "classnames": "2.2.5",
     "draft-js": "0.10.5",
@@ -110,6 +111,7 @@
     "react-redux": "5.0.5",
     "react-router-dom": "4.2.2",
     "react-router-redux": "5.0.0-alpha.9",
+    "react-sortable-hoc": "1.11.0",
     "react-tap-event-plugin": "2.0.1",
     "redux": "3.7.2",
     "redux-logger": "3.0.6",

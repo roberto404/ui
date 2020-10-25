@@ -91,7 +91,7 @@ CollectionItem.defaultProps =
   fields: [],
 }
 
-export const NestedCollectionItem = ({ record, index, id, onChange, fields }) =>
+export const NestedCollectionItem = ({ record, index, id, onChange, fields, draggable }) =>
 {
   const onChangePropsFiltersHandler = ({ value }) =>
   {
@@ -108,6 +108,7 @@ export const NestedCollectionItem = ({ record, index, id, onChange, fields }) =>
       uiProps={{
         fields,
       }}
+      draggable={draggable}
       value={record}
       onChange={onChangePropsFiltersHandler}
       className="border shadow-outer-3 p-2 rounded w-full"
@@ -120,7 +121,7 @@ export const NestedCollectionItem = ({ record, index, id, onChange, fields }) =>
 /**
  * Advance Search Dialog
  */
-const GridSearchDialog = ({ fields, prefix }, { store }) =>
+const GridSearchDialog = ({ fields, prefix, draggable }, { store }) =>
 {
   const onClickApplyHandler = (event) =>
   {
@@ -153,6 +154,7 @@ const GridSearchDialog = ({ fields, prefix }, { store }) =>
         uiProps={{
           fields,
         }}
+        draggable={draggable}
         value={[{ field: fields[0].id, operator: OPERATOR_KEYS[0], value: '' }]}
       />
       <button className="primary w-auto mx-auto mb-1" onClick={onClickApplyHandler}>

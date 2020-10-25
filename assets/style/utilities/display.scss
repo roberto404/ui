@@ -291,6 +291,26 @@ g.no-child-events g > *:first-child
   font-size: 250%;
 }
 
+.opacity-20
+{
+  opacity: 0.2;
+}
+
+.opacity-50
+{
+  opacity: 0.5;
+}
+
+.opacity-100
+{
+  opacity: 1;
+}
+
+.hover\:opacity-100:hover
+{
+  opacity: 1;
+}
+
 @include respond-to(mobile)
 {
   .mobile\:hidden,

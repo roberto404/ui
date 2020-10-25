@@ -86,9 +86,9 @@ export const setValues = (items: ItemsType, form?: string): ActionType =>
  * @param {object} items state items { status: 1 } or [{ status: 1 }, ...]
  * @param {string} [form] state group
  * @example
- * unsetValue({ id: 'status' })
+ * unsetValues({ id: 'status' })
  * or
- * unsetValue({ status: 1, options: [2,1] }, 'sampleForm');
+ * unsetValues({ status: 1, options: [2,1] }, 'sampleForm');
  * // before:
  * {
  * form: {

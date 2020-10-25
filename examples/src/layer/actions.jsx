@@ -42,6 +42,7 @@ const Example = ({
   modal,
   preload,
   menu,
+  contextMenu,
 }) =>
 {
   const onClickPreloadHandler = (element) =>
@@ -125,6 +126,7 @@ const Example = ({
 
       <h2>Menu</h2>
       <button className="outline gray w-auto" onClick={event => menu(menuProps, event)}>Menu</button>
+      <div className="mt-2 inline-block text-gray no-select border-bottom border-dashed" onContextMenu={event => contextMenu(menuProps, event)}>ContextMenu</div>
 
 
       <h2>Overwrite Popover</h2>

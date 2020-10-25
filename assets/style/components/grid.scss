@@ -85,7 +85,8 @@
 
   .tbody .active
   {
-    background: rgba(0, 94, 212, 1);
+    // background: rgba(0, 94, 212, 1);
+    background: $blue-dark;
     color: white;
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;

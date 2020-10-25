@@ -181,13 +181,15 @@ const Example = (props, { store }) =>
         value={[{ id: 1, title: 'foo' }]}
       />
 
-    <h2>Custom UI items</h2>
+      <h2>Default draggable collection</h2>
       <Collection
         id="collection"
         label="Collection"
         value={[{ id: 1, title: 'foo' }]}
+        draggable
       />
 
+    <h2>Custom draggable UI items</h2>
       <Collection
         label={(
           <div className="grid-2 pr-4">
@@ -199,6 +201,7 @@ const Example = (props, { store }) =>
         id="docs"
         value={[{ title: '', url: '' }]}
         UI={CustomCollectionItem}
+        draggable
       />
 
       <h2>Custom UI items (GridSearch)</h2>
@@ -209,9 +212,10 @@ const Example = (props, { store }) =>
         uiProps={{
           fields: [{ id: 1, title: 'foo' }, { id: 2, title: 'bar' }],
         }}
+        draggable
       />
 
-    <h2>Custom UI Nested items (GridSearch)</h2>
+    <h2>Custom UI Nested items (GridSearch) Dragable parents and children</h2>
       <Collection
         id="collection3"
         value={[[{ field: '1', operator: '=', value: '' }]]}
@@ -221,7 +225,9 @@ const Example = (props, { store }) =>
             { id: 1, title: 'foo' },
             { id: 2, title: 'bar' },
           ],
+          draggable: true,
         }}
+        draggable
       />
 
       <h2>Complex Nested Collection</h2>

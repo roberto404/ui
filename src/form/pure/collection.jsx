@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { sortableContainer, sortableElement } from 'react-sortable-hoc';
+import arrayMove from 'array-move';
 
 
 /* !- React Elements */
@@ -33,6 +35,11 @@ const CollectionItem = ({
   );
 };
 
+const SortableItem = sortableElement(({ element }) => element);
+
+const SortableContainer = sortableContainer(({children}) => {
+  return <div>{children}</div>;
+});
 
 /**
 * Extended Field component.
@@ -102,6 +109,29 @@ class Collection extends Field
     this.onChangeHandler([...this.state.value, item]);
   }
 
+  onDragEndHandler = ({ collection, newIndex, oldIndex, isKeySorting, node }) =>
+  {
+    this.onChangeHandler(arrayMove(this.state.value, oldIndex, newIndex));
+  }
+
+  renderElement = (record, index) =>
+  {
+    const UI = this.props.UI;
+
+    return (
+      <div className="v-center">
+        <UI
+          {...this.props.uiProps}
+          record={record}
+          index={index}
+          id={this.props.id}
+          onChange={record => this.onChangeItemListener(record, index)}
+        />
+        <button className="action" onClick={e => this.onClickRemoveHandler(e, index)}><IconRemove /></button>
+      </div>
+    )
+  }
+
   /**
    * This method is called when render the Component instance.
    * @override
@@ -109,27 +139,22 @@ class Collection extends Field
    */
   render()
   {
-    const UI = this.props.UI;
-
     return super.render() || (
       <div className={this.getClasses('collection')}>
 
         { this.label }
 
-        { Array.isArray(this.state.value) && this.state.value.map((record, index) =>
-          (
-            <div key={index} className="v-center">
-              <UI
-                {...this.props.uiProps}
-                record={record}
-                index={index}
-                id={this.props.id}
-                onChange={record => this.onChangeItemListener(record, index)}
-              />
-              <button className="action" onClick={e => this.onClickRemoveHandler(e, index)}><IconRemove /></button>
-            </div>
-          ))
-         }
+        { Array.isArray(this.state.value) && this.props.draggable && this.state.value.length > 1 &&
+          <SortableContainer onSortEnd={this.onDragEndHandler}>
+            { this.state.value.map((record, index) =>
+              <SortableItem key={`item-${index}`} index={index} element={this.renderElement(record, index)} />
+            )}
+          </SortableContainer>
+        }
+
+        { Array.isArray(this.state.value) && (!this.props.draggable || this.state.value.length < 2) && this.state.value.map((record, index) =>
+          this.renderElement(record, index)
+        )}
 
         { (this.state.value.length > 0 || this.props.value) &&
           <button className="action" onClick={this.onClickAddHandler}><IconAdd /></button>
@@ -151,6 +176,7 @@ class Collection extends Field
 Collection.propTypes =
 {
   ...Collection.propTypes,
+  draggable: PropTypes.bool,
   UI: PropTypes.func,
 };
 
@@ -161,6 +187,7 @@ Collection.propTypes =
 Collection.defaultProps =
 {
   ...Collection.defaultProps,
+  draggable: false,
   UI: CollectionItem,
 };
 
