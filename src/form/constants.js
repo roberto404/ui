@@ -238,7 +238,7 @@ export const DEFAULT_SCHEME = {
       message: '^validator.presence',
     },
     format: {
-      pattern: '^[A-zÀ-ÿőűŐŰ]{2,}$',
+      pattern: '^[A-zÀ-ÿőűŐŰ -]{2,}$',
       message: '^validator.format',
     },
   },
@@ -247,7 +247,7 @@ export const DEFAULT_SCHEME = {
       message: '^validator.presence',
     },
     format: {
-      pattern: '^[A-zÀ-ÿőűŐŰ]{2,}$',
+      pattern: '^[A-zÀ-ÿőűŐŰ -]{2,}$',
       message: '^validator.format',
     },
   },

@@ -156,7 +156,8 @@ class FormField extends Component
   shouldComponentUpdate(nextProps, nextState)
   {
     this.data = this.getData(nextProps);
-    nextState.label = nextProps.label;
+    nextState.label = (typeof nextProps.label === 'string' && nextProps.intl) ?
+      nextProps.intl.formatMessage({ id: nextProps.label }) : nextProps.label;
 
     return true;
   }
