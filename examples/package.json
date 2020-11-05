@@ -12,7 +12,7 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "@1studio/ui": "^1.0.0",
-    "@1studio/utils": "3.13.1",
+    "@1studio/utils": "4.11.1",
     "moment": "2.24.0",
     "prop-types": "15.7.2",
     "react": "15.6.1",

@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import Tree from '@1studio/utils/models/tree';
 import getParam from '@1studio/utils/location/getParam';
+import PropTypes from 'prop-types';
 
 
 /* !- React Elements */
@@ -71,6 +72,21 @@ class Content extends Component
     };
   }
 
+
+  getChildContext()
+  {
+    return {
+      // api: this.injectedApi,
+      // media: this.state.media,
+      register: this.props.app.register,
+      // config: this.props.app.getProjectConfig(),
+      addListener: this.props.app.addListener,
+      removeListener: this.props.app.removeListener,
+      addShortcuts: this.props.app.addShortcuts,
+      removeShortcuts: this.props.app.removeShortcuts,
+    };
+  }
+
   onClickItemHandler = ({ pid, title }) =>
   {
     const parent = Menu.getItem(pid);
@@ -91,6 +107,14 @@ class Content extends Component
 
   render()
   {
+    if (
+      this.state.path[0] === 'sticky'
+    )
+    {
+      return React.createElement(this.state.component)
+    }
+
+
     return (
       <div className="column h-screen">
         <div className="px-4 py-2 grow overflow grid">
@@ -117,11 +141,26 @@ class Content extends Component
   }
 }
 
+/**
+ * childContextTypes
+ * @type {Object}
+ */
+Content.childContextTypes = {
+  // api: PropTypes.func,
+  // media: PropTypes.string,
+  register: PropTypes.object,
+  config: PropTypes.object,
+  addListener: PropTypes.func,
+  removeListener: PropTypes.func,
+  addShortcuts: PropTypes.func,
+  removeShortcuts: PropTypes.func,
+};
 
-export default () =>
+
+export default (props) =>
 (
   <div className="application">
-    <Content />
+    <Content {...props} />
     <Layer />
   </div>
 );

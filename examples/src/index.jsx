@@ -23,7 +23,8 @@ locale('hu');
 
 /* !- Application */
 
-import App from './app'; // eslint-disable-line
+import Application from '@1studio/utils/models/application';
+import Example from './app'; // eslint-disable-line
 
 
 /* !- Assets */
@@ -31,11 +32,34 @@ import App from './app'; // eslint-disable-line
 require('../../assets/style/index.scss');
 
 
-render(
-  <ReduxProvider store={store()}>
-    <IntlProvider locale="en">
-      <App />
-    </IntlProvider>
-  </ReduxProvider>,
-  document.getElementById('Application'),
-);
+/* !- Init */
+
+new Application({
+  store: store(),
+  config: {
+    application: {
+      id: 'example',
+      password: false,
+    },
+  },
+  actions: {
+    '.*': [
+      (App) =>
+      {
+        // const config = App.getProjectConfig();
+        // 
+        render(
+          <ReduxProvider store={store()}>
+            <IntlProvider locale="en">
+              <Example
+                // config={config}
+                app={App}
+              />
+            </IntlProvider>
+          </ReduxProvider>,
+          document.getElementById('Application'),
+        );
+      },
+    ],
+  },
+});
