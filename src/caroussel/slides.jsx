@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Hammer from 'hammerjs';
 import isEqual from 'lodash/isEqual';
 import clamp from '@1studio/utils/math/clamp';
+import classNames from 'classnames';
 
 /* !- Redux Actions */
 
@@ -107,11 +108,13 @@ class Slides extends Component
 
   componentDidMount()
   {
-    this.initHammerDrag();
-    this.initPaginationListener();
-    this.startAutoPlay();
+    if (this.props.disableDrag === false)
+    {
+      this.initHammerDrag();
+    }
+    // this.initPaginationListener();
+    // this.startAutoPlay();
   }
-
 
   componentWillReceiveProps(nextProps)
   {
@@ -309,9 +312,14 @@ class Slides extends Component
 
   render()
   {
-    const { rawData, page, transition, visibleSlides, Slide } = this.props;
+    const { rawData, page, transition, visibleSlides, Slide, disableDrag } = this.props;
 
     const width = `${100 / visibleSlides}%`;
+
+    const classNameSlides = classNames({
+      'slides': true,
+      'scroll': disableDrag,
+    })
 
     return (
       <div
@@ -324,7 +332,7 @@ class Slides extends Component
         }}
       >
         <div
-          className="slides"
+          className={classNameSlides}
           ref={(ref) =>
           {
             this.slides = ref;
@@ -338,7 +346,6 @@ class Slides extends Component
           (
             <div
               key={i.id}
-              // className="px-1/2"
               style={{ width }}
             >
               {i.slide || <Slide {...i} active={this.state.active} />}
@@ -432,6 +439,7 @@ Slides.propTypes =
    * @private
    */
   setSettings: PropTypes.func.isRequired,
+  disableDrag: PropTypes.bool,
 };
 
 /**
@@ -449,6 +457,7 @@ Slides.defaultProps =
   Slide: SlideHelperComponent,
   autoplay: 0,
   forceStart: true,
+  disableDrag: false,
 };
 
 

@@ -13,6 +13,8 @@ export const PHOTO_SLIDES = [
   { id: 1, href: 'https://picsum.photos/', url: 'https://picsum.photos/300/200' },
   { id: 2, href: 'https://picsum.photos/', url: 'https://picsum.photos/300/200' },
   { id: 3, href: 'https://picsum.photos/', url: 'https://picsum.photos/300/200' },
+  { id: 4, href: 'https://picsum.photos/', url: 'https://picsum.photos/300/200' },
+  { id: 5, href: 'https://picsum.photos/', url: 'https://picsum.photos/300/200' },
 ];
 
 export const CUSTOM_SLIDES = [

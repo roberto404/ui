@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 /* !- React Elements */
 
 import Slides from '../../../src/caroussel/slides';
+import Card from '../../../src/card';
 
 
 /* !- Actions */
@@ -16,6 +17,24 @@ import { setData } from '@1studio/ui/grid/actions';
 /* !- Constants */
 
 import { SLIDES, PHOTO_SLIDES, CUSTOM_SLIDES } from './constants';
+
+
+const Slide = ({ id, url }) =>
+{
+  return (
+    <Card
+      image="https://picsum.photos/700/500"
+      title="Lorem ipsum dolor"
+      border
+    />
+  );
+
+  return (
+    <div className="px-1/2">
+      <img src={url} width="100%" alt={id} />
+    </div>
+  );
+};
 
 
 /**
@@ -32,8 +51,8 @@ const Example = ({ setData }) =>
 
   return (
     <div>
-      <h1>Slides</h1>
-      
+      {/*<h1>Slides</h1>
+
       <h2>Draggable slides</h2>
       <Slides id="sample" />
 
@@ -69,7 +88,17 @@ const Example = ({ setData }) =>
         id="sample2"
         transition="0.5s cubic-bezier(0.60,1,0.70,0) 0s"
         onPaginate={() => console.log('end')}
-      />
+      />*/}
+
+      <h2>Classic browser scroll</h2>
+      <div style={{ width: '300px', height: '200px' }}>
+        <Slides
+          id="sample_photo"
+          visibleSlides={2.5}
+          disableDrag
+          Slide={Slide}
+        />
+      </div>
     </div>
   );
 };
