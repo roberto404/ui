@@ -10,6 +10,16 @@
     position: relative;
     left: 0;
 
+    &.scroll
+    {
+      -ms-overflow-style: none;  /* Internet Explorer 10+ */
+      scrollbar-width: none;  /* Firefox */
+
+      &::-webkit-scrollbar {
+        display: none;  /* Safari and Chrome */
+      }
+    }
+
     > *
     {
       display: inline-block;
@@ -18,6 +28,7 @@
 
       *
       {
+        white-space: normal;
         -moz-user-select: none;
         -webkit-user-select: none;
         -ms-user-select: none;
