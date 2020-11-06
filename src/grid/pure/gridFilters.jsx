@@ -52,7 +52,7 @@ class GridFilters extends Component
    */
   onChangeListener = () =>
   {
-    const grid = this.context.store.getState().grid[this.context.grid];
+    const grid = this.context.store.getState().grid[this.props.id || this.context.grid];
 
     if (grid)
     {
@@ -180,23 +180,26 @@ class GridFilters extends Component
     }
 
     return (
-      <div className={this.props.className}>
-        {
-          tags.map(({ id, value }) => (
-            <div
-              key={`${id}-${value}`}
-              className={this.props.tagClassName}
-              onClick={this.onClickFilterHandler}
-              data-id={id}
-              data-value={value}
-            >
-              <div>
-                {this.props.format({ id, value })}
+      <div>
+        { this.props.label }
+        <div className={this.props.className}>
+          {
+            tags.map(({ id, value }) => (
+              <div
+                key={`${id}-${value}`}
+                className={this.props.tagClassName}
+                onClick={this.onClickFilterHandler}
+                data-id={id}
+                data-value={value}
+              >
+                <div>
+                  {this.props.format({ id, value })}
+                </div>
+                <IconClose style={{ margin: '-2px 0px -1px 0' }} />
               </div>
-              <IconClose style={{ margin: '-2px 0px -1px 0' }} />
-            </div>
-          ))
-        }
+            ))
+          }
+        </div>
       </div>
     );
   }
@@ -215,6 +218,7 @@ GridFilters.propTypes =
   format: PropTypes.func,
   className: PropTypes.string,
   tagClassName: PropTypes.string,
+  label: PropTypes.element,
 };
 
 /**

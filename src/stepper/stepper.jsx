@@ -103,16 +103,16 @@ Stepper.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string,
-      status: PropTypes.oneOfType(
+      status: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string,
-      ),
+      ]),
       icon: PropTypes.element,
       onClick: PropTypes.func,
-      tooltip: PropTypes.oneOfType(
+      tooltip: PropTypes.oneOfType([
         PropTypes.element,
         PropTypes.string,
-      ),
+      ]),
     }),
   ),
   classNameText: PropTypes.string,
