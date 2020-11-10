@@ -19,10 +19,10 @@ import { unsetValues, setValues } from '../../form/actions';
 */
 class GridFilters extends Component
 {
-  constructor(props)
+  constructor(props, context)
   {
     super(props);
-    this.filters = [];
+    this.filters = this.getFilters(props, context);
   }
 
   /* !- React Lifecycle */
@@ -52,19 +52,12 @@ class GridFilters extends Component
    */
   onChangeListener = () =>
   {
-    const grid = this.context.store.getState().grid[this.props.id || this.context.grid];
+    const filters = this.getFilters();
 
-    if (grid)
+    if (!isEqual(filters, this.filters))
     {
-      const filters = grid.filters
-        .filter(({ status }) => status)
-        .map(filter => ({ id: filter.id, values: filter.arguments }));
-
-      if (!isEqual(filters, this.filters))
-      {
-        this.filters = filters;
-        this.forceUpdate();
-      }
+      this.filters = filters;
+      this.forceUpdate();
     }
   }
 
@@ -143,6 +136,15 @@ class GridFilters extends Component
 
 
   /* !- Privates */
+
+  getFilters = (props = this.props, context = this.context) =>
+  {
+    const grid = context.store.getState().grid[props.id || context.grid] || { filters: [] };
+
+    return grid.filters
+      .filter(({ status }) => status)
+      .map(filter => ({ id: filter.id, values: filter.arguments }));
+  }
 
   /**
    * This method is called when render the Component instance.
