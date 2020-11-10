@@ -32,6 +32,7 @@ const DialogComponent = () =>
 const Example = ({
   dialog,
   fullscreen,
+  modal,
   sidebar,
   popover,
   tooltip,
@@ -39,7 +40,6 @@ const Example = ({
   hide,
   toggle,
   flush,
-  modal,
   preload,
   menu,
   contextMenu,
@@ -83,11 +83,15 @@ const Example = ({
     },
   };
 
+  const sidebarProps = {
+    position: 'right'
+  };
+
   return (
     <div className="p-2">
       <h1>Layer actions</h1>
 
-      <h2>Preload</h2>
+      {/*<h2>Preload</h2>
       <button className="outline gray w-auto" onClick={() => onClickPreloadHandler()}>Preload</button>
       <br />
       <button className="outline gray w-auto" onClick={() => onClickPreloadHandler(<div className="preloader two-balls" />)}>Custom preload</button>
@@ -99,6 +103,10 @@ const Example = ({
 
       <h2>Modal</h2>
       <button className="outline gray w-auto" onClick={() => modal(modalProps)}>Modal</button>
+      <br />*/}
+
+      <h2>Sidebar</h2>
+      <button className="outline gray w-auto" onClick={() => sidebar(<div className="bg-red" style={{ width: '200px' }}>right</div>, sidebarProps)}>Sidebar</button>
       <br />
 
       <h2>Fullscreen</h2>

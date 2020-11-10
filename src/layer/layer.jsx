@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
@@ -26,142 +26,169 @@ import {
  * Layer Component
  * Connect to layer state via Redux.
  */
-const Layer = (
-  {
-    active,
-    method,
-    element,
-    closeable,
-    close,
-    containerStyle,
-    className,
-    options,
-    flush,
-  },
-  {
-    store
-  },
-) =>
+class Layer extends Component
 {
-  /* !- Listeners */
-
-  /**
-   * Invoke press ESC. Close layer.
-   * @param  {SytheticEvent} event
-   * @type {Function}
-   * @return {void}
-   */
-  const onKeyUpListener = (event) =>
+  constructor(props, context)
   {
-    if (event.keyCode === 27)
-    {
-      close();
-    }
-  };
+    super(props);
 
-  const onClickLayerCurtain = (event) =>
-  {
-    if (closeable && event.currentTarget.isEqualNode(event.target))
-    {
-      close();
-    }
-  };
-
-  /**
-   * Invoke when press close button.
-   * @type {Function}
-   * @return {void}
-   */
-  const onClickCloseHandler = () =>
-  {
-    close();
-  };
-
-  const layerClasses = classNames({
-    layer: true,
-    active,
-    [method]: true,
-    closeable,
-    [className]: true,
-  });
-
-  if (options.autoClose)
-  {
-    setTimeout(() => flush(), parseInt(options.autoClose) * 1000);
+    this.state = {
+      show: false,
+    };
   }
 
-
-  $(document).off('.layer');
-
-  if (active)
+  shouldComponentUpdate(nextProps, nextState)
   {
-    if (method === 'popover')
+    if (nextProps.active === false)
     {
-      $('body').addClass('layer-popover');
+      nextState.show = false;
+    }
+
+    return true;
+  }
+
+  componentDidUpdate(prevProps, prevState)
+  {
+    if (this.props.active === true && this.state.show === false)
+    {
+      this.setState({ show: true });
+    }
+  }
+
+  render()
+  {
+    const {
+      active,
+      method,
+      element,
+      closeable,
+      close,
+      containerStyle,
+      className,
+      options,
+      flush,
+    } = this.props
+
+    /* !- Listeners */
+
+    /**
+     * Invoke press ESC. Close layer.
+     * @param  {SytheticEvent} event
+     * @type {Function}
+     * @return {void}
+     */
+    const onKeyUpListener = (event) =>
+    {
+      if (event.keyCode === 27)
+      {
+        close();
+      }
+    };
+
+    const onClickLayerCurtain = (event) =>
+    {
+      if (closeable && event.currentTarget.isEqualNode(event.target))
+      {
+        close();
+      }
+    };
+
+    /**
+     * Invoke when press close button.
+     * @type {Function}
+     * @return {void}
+     */
+    const onClickCloseHandler = () =>
+    {
+      close();
+    };
+
+    const layerClasses = classNames({
+      layer: true,
+      active,
+      show: this.state.show,
+      [method]: true,
+      closeable,
+      [className]: true,
+    });
+
+    if (options.autoClose)
+    {
+      setTimeout(() => flush(), parseInt(options.autoClose) * 1000);
+    }
+
+    $(document).off('.layer');
+
+    if (active)
+    {
+      if (method === 'popover')
+      {
+        $('body').addClass('layer-popover');
+      }
+      else
+      {
+        $('body').addClass(`overflow h-screen layer-${method}`);
+      }
+
+      $('body').data('scrollTop', $('body').scrollTop());
+
+      if (closeable)
+      {
+        $(document).on('keyup.layer', onKeyUpListener);
+      }
+
+      if (method === "fullscreen")
+      {
+        window.scrollTo(0, 0);
+      }
     }
     else
     {
-      $('body').addClass(`overflow h-screen layer-${method}`);
+      $('body').removeClass();
+      $('body').scrollTop($('body').data('scrollTop'));
     }
 
-    $('body').data('scrollTop', $('body').scrollTop());
+    // const documentOnClickListener = (event) =>
+    // {
+    //   document.onclick = null;
+    //   const layer = store.getState().layer;
+    //
+    //
+    //   // if (layer.active && layer.method === 'popover' && JSON.stringify(layer.containerStyle()) === layer.element.toString())
+    //   // {
+    //   //   close();
+    //   // }
+    // }
+    //
+    // if (method === 'popover')
+    // {
+    //   document.onclick = documentOnClickListener;
+    // }
 
-    if (closeable)
-    {
-      $(document).on('keyup.layer', onKeyUpListener);
-    }
-
-    if (method === "fullscreen")
-    {
-      window.scrollTo(0, 0);
-    }
-  }
-  else
-  {
-    $('body').removeClass();
-    $('body').scrollTop($('body').data('scrollTop'));
-  }
-
-  // const documentOnClickListener = (event) =>
-  // {
-  //   document.onclick = null;
-  //   const layer = store.getState().layer;
-  //
-  //
-  //   // if (layer.active && layer.method === 'popover' && JSON.stringify(layer.containerStyle()) === layer.element.toString())
-  //   // {
-  //   //   close();
-  //   // }
-  // }
-  //
-  // if (method === 'popover')
-  // {
-  //   document.onclick = documentOnClickListener;
-  // }
-
-  return (
-    <div
-      className={layerClasses}
-      style={options.style || {}}
-      onClick={onClickLayerCurtain}
-    >
+    return (
       <div
-        className="container"
-        style={containerStyle}
+        className={layerClasses}
+        style={options.style || {}}
+        onClick={onClickLayerCurtain}
       >
-        <div className="close" onClick={onClickCloseHandler}>
-          <IconClose />
-        </div>
+        <div
+          className="container"
+          style={containerStyle}
+        >
+          <div className="close" onClick={onClickCloseHandler}>
+            <IconClose />
+          </div>
 
-        <div className="content">
-          { React.isValidElement(element) && element }
-          { typeof element === 'function' && element() }
-        </div>
+          <div className="content">
+            { React.isValidElement(element) && element }
+            { typeof element === 'function' && element() }
+          </div>
 
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 Layer.propTypes =
 {

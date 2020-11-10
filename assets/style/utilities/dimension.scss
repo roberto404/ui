@@ -45,6 +45,9 @@
 .h-6 {
   height: 6rem;
 }
+.h-8 {
+  height: 8rem;
+}
 .h-10 {
   height: 10rem;
 }
@@ -69,11 +72,19 @@
 }
 .h-screen {
   height: 100vh;
+
+  ///
+  // CSS3 100vh not constant in mobile browser
+  // @example
+  // .column.h-screen > .grow ~ .h-4
+  // => not working on mobile
+  @include respond-to(mobile) {
+    height: -webkit-fill-available;
+  }
 }
 .h-full {
   height: 100%;
 }
-
 .w-1\/2 {
   width: 50%;
 }

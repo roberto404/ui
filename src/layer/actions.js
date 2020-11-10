@@ -137,12 +137,17 @@ export const fullscreen = (element: React.Element, options = {}) =>
  * @example
  * sidebar(<div>This is a sidebar content</div>);
  */
-export const sidebar = (element: React.Element) =>
+export const sidebar = (element: React.Element, options = {}) =>
 ({
   type: 'SET_LAYER',
   active: true,
   method: 'sidebar',
   element,
+  containerStyle: options.containerStyle,
+  options: {
+    // ...options,
+    className: options.position || 'left',
+  },
 });
 
 
