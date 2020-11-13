@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import clamp from '@1studio/utils/math/clamp';
@@ -8,80 +8,237 @@ import clamp from '@1studio/utils/math/clamp';
 import { modifyLimit } from '../../grid/actions';
 
 import IconMore from '../../icon/mui/navigation/expand_more';
+import IconPreload from '../../../src/icon/preload';
 
+
+const AUTO_PAGINATION_DELAY = 500;
 
 let scrollTop;
 
-export const ShowMore = (
+export class ShowMore extends Component
 {
-  model,
-  data,
-  label,
-  addLimit,
-  format,
-  className,
-  buttonClassName,
-  exponentialLimit,
-  disableLimitExponential,
-},
-{
-  store,
-  grid,
-},
-) =>
-{
-  if (!Array.isArray(data))
+  constructor(props, context)
   {
-    return <div />;
+    super(props);
+
+    this.scroll = 0;
   }
 
-  const onClickButtonHandler = (event) =>
+  componentDidMount = () =>
   {
-    event.preventDefault();
+    if (this.props.autoPaginate === true)
+    {
+      this.context.addListener('wheel', this.onScrollListener);
+    }
+  }
+
+  componentDidUpdate = () =>
+  {
+    if (this.props.autoPaginate === true)
+    {
+      const { data, model } = this.props;
+
+      const current = data.length;
+      const limit = model.results.length;
+
+      if (current === limit)
+      {
+        this.flushDelayPagination();
+        this.context.removeListener(this.onScrollListener);
+      }
+    }
+  }
+
+  componentWillUnmount = () =>
+  {
+    if (this.props.autoPaginate === true)
+    {
+      this.context.removeListener(this.onScrollListener);
+
+      if (this.delayPagination)
+      {
+        this.flushDelayPagination();
+      }
+    }
+  }
+
+
+  /* !- Listeners */
+
+  onScrollListener = (event) =>
+  {
+    const isScrollDown = event.deltaY > 0;
+
+    if (!this.delayPagination && this.isOnScreen() && isScrollDown)
+    {
+      this.delayPagination = setTimeout(
+        this.autoPaginateHandler,
+        AUTO_PAGINATION_DELAY
+      );
+
+      this.forceUpdate();
+    }
+    else if (this.delayPagination && (!this.isOnScreen() || !isScrollDown ))
+    {
+      this.flushDelayPagination();
+      this.forceUpdate();
+    }
+  }
+
+  onPaginateListener = () =>
+  {
+    const {
+      model,
+      disableLimitExponential,
+      exponentialLimit,
+      addLimit,
+    } = this.props;
 
     const multiplier = disableLimitExponential ?
-      1 : Math.min(Math.ceil(model.paginate.limit / addLimit), exponentialLimit);
+      1
+      :
+      Math.min(
+        Math.ceil(model.paginate.limit / addLimit),
+        exponentialLimit,
+      );
 
     const limit = model.paginate.limit + (multiplier * addLimit);
-    store.dispatch(modifyLimit(limit, grid));
+    this.context.store.dispatch(modifyLimit(limit, this.context.grid));
+  }
+
+
+  /* !- Handlers */
+
+
+  /**
+   * kill setTimeOut?
+   * call pagination
+   * stop onScroll if is last page
+   */
+  autoPaginateHandler = () =>
+  {
+    if (this.delayPagination)
+    {
+      this.flushDelayPagination();
+    }
+
+    this.onPaginateListener();
+  }
+
+  onClickButtonHandler = (event) =>
+  {
+    event.preventDefault();
 
     /**
      * Google Chrome 85 hack
      */
-    scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    this.scrollTop = this.getScrollTop();
+
+    this.autoPaginateHandler();
   };
 
-  if (scrollTop)
+
+  /* !- Helpers */
+
+
+  flushDelayPagination = () =>
   {
-    window.scrollTo(0, scrollTop);
-    scrollTop = 0;
+    this.delayPagination = undefined;
+    clearTimeout(this.delayPagination);
   }
 
-  const current = data.length;
-  const limit = model.results.length;
-  const percent = (current / limit) * 100;
-
-  if (current === limit)
+  /**
+   * determine is absolute position of element on screen
+   * @return boolean
+   */
+  isOnScreen = () =>
   {
-    return <div />;
+    if (!this.element)
+    {
+      return false;
+    }
+
+    const rect = this.element.getBoundingClientRect();
+    const scrollTop = this.getScrollTop();
+    const screenHeight = document.documentElement.clientHeight;
+
+    // return rect.top > scrollTop && rect.top < scrollTop + screenHeight;
+    return rect.top > 0 && rect.top < screenHeight;
   }
 
-  return (
-    <div className={className}>
-      <div className="grid" style={{ height: '4px' }}>
-        <div className="bg-yellow rounded" style={{ width: `${percent}%` }} />
-        <div className="bg-gray-light" style={{ width: `${100 - percent}%` }} />
-      </div>
-      <div className="text-center py-2">{format({ current, limit })}</div>
-      <button
-        className={buttonClassName}
-        onClick={onClickButtonHandler}
+  getScrollTop = () =>
+    window.pageYOffset || document.documentElement.scrollTop
+
+
+  render()
+  {
+    const {
+      model,
+      data,
+      label,
+      addLimit,
+      format,
+      className,
+      buttonClassName,
+      exponentialLimit,
+      disableLimitExponential,
+      autoPaginate,
+    } = this.props;
+
+    const {
+      store,
+      grid,
+    } = this.context;
+
+    if (!Array.isArray(data))
+    {
+      return <div />;
+    }
+
+    if (this.scrollTop)
+    {
+      window.scrollTo(0, this.scrollTop);
+      this.scrollTop = 0;
+    }
+
+    const current = data.length;
+    const limit = model.results.length;
+    const percent = (current / limit) * 100;
+
+    if (current === limit)
+    {
+      return <div />;
+    }
+
+    return (
+      <div
+        className={className}
       >
-        <IconMore />
-        <span>{label}</span>
-      </button>
-    </div>
-  );
+        <div className="grid" style={{ height: '4px' }}>
+          <div className="bg-yellow rounded" style={{ width: `${percent}%` }} />
+          <div className="bg-gray-light" style={{ width: `${100 - percent}%` }} />
+        </div>
+        <div className="text-center py-2">{format({ current, limit })}</div>
+        <button
+          className={classNames({ [buttonClassName]: true, 'outline': this.delayPagination !== undefined })}
+          onClick={this.onClickButtonHandler}
+          ref={(ref) =>
+          {
+            this.element = ref;
+          }}
+        >
+          { this.delayPagination !== undefined &&
+            <IconPreload className="spinning" />
+          }
+          { this.delayPagination === undefined &&
+          <IconMore />
+          }
+          <span>{label}</span>
+        </button>
+      </div>
+    );
+
+  }
 };
 
 
@@ -91,9 +248,13 @@ ShowMore.propTypes =
   className: PropTypes.string,
   buttonClassName: PropTypes.string,
   addLimit: PropTypes.number,
+  /**
+   * Maximum page limit
+   */
   exponentialLimit: PropTypes.number,
   disableLimitExponential: PropTypes.bool,
   format: PropTypes.func,
+  autoPaginate: PropTypes.bool,
 };
 
 ShowMore.defaultProps =
@@ -105,12 +266,15 @@ ShowMore.defaultProps =
   className: 'desktop:col-1-4 mobile:px-4 m-auto mt-4',
   buttonClassName: 'primary w-auto m-auto',
   format: ({ current, limit }) => `${current} of ${limit} items`,
+  autoPaginate: false,
 };
 
 ShowMore.contextTypes =
 {
   store: PropTypes.object,
   grid: PropTypes.string,
+  addListener: PropTypes.func,
+  removeListener: PropTypes.func,
 };
 
 export default ShowMore;

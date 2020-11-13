@@ -252,7 +252,7 @@ class Grid extends Component
   {
     event.preventDefault();
     event.stopPropagation();
-    
+
     const grid = this.context.store.getState().grid[this.context.grid];
 
     if (grid)
@@ -1043,7 +1043,7 @@ Grid.defaultProps =
   {},
   onChangeOrder()
   {},
-  className: 'grid',
+  className: 'grid column',
   headClassName: 'thead',
   bodyClassName: 'tbody',
   style: {},

@@ -28,10 +28,12 @@ class Sticky extends Component
      */
     if (this.props.disable === false)
     {
-      this.context.addListener('wheel', this.onScrollListener);
-      // this.scrollableParent = this.findScrollableParent();
-      // this.scrollableParent.addEventListener('scroll', this.onScrollListener);
-      this.forceUpdate();
+      this.forceUpdate(() =>
+      {
+        this.context.addListener('wheel', this.onScrollListener);
+        // this.scrollableParent = this.findScrollableParent();
+        // this.scrollableParent.addEventListener('scroll', this.onScrollListener);
+      });
     }
   }
 
@@ -64,6 +66,11 @@ class Sticky extends Component
 
   onScrollListener = (event) =>
   {
+    if (!this.element)
+    {
+      return;
+    }
+    
     if (this.element.scrollHeight >= this.element.parentElement.parentElement.scrollHeight)
     {
       if (this.state.style && this.state.style.position)

@@ -29,6 +29,7 @@ import FormCalendar from './form/calendar';
 import GridStatic from './grid/static';
 import GridConnect from './grid/connect';
 import GridDynamic from './grid/dynamic';
+import GridPaginate from './grid/paginate';
 import GridFilters from './grid/filters';
 import GridSearch from './grid/search';
 import GridExtra from './grid/extra';
@@ -129,6 +130,7 @@ export default {
     static: GridStatic,
     connect: GridConnect,
     dynamic: GridDynamic,
+    paginate: GridPaginate,
     filters: GridFilters,
     search: GridSearch,
     extra: GridExtra,
