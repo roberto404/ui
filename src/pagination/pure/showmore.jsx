@@ -11,7 +11,7 @@ import IconMore from '../../icon/mui/navigation/expand_more';
 import IconPreload from '../../../src/icon/preload';
 
 
-const AUTO_PAGINATION_DELAY = 500;
+const AUTO_PAGINATION_DELAY = 1000;
 
 let scrollTop;
 
@@ -28,7 +28,7 @@ export class ShowMore extends Component
   {
     if (this.props.autoPaginate === true)
     {
-      this.context.addListener('wheel', this.onScrollListener);
+      this.context.addListener('scroll', this.onScrollListener);
     }
   }
 
@@ -67,7 +67,10 @@ export class ShowMore extends Component
 
   onScrollListener = (event) =>
   {
-    const isScrollDown = event.deltaY > 0;
+    const scrollTop = this.getScrollTop();
+
+    const isScrollDown = scrollTop != 0 && scrollTop > this.scrollTop;
+    this.scrollTop = scrollTop;
 
     if (!this.delayPagination && this.isOnScreen() && isScrollDown)
     {
@@ -78,7 +81,7 @@ export class ShowMore extends Component
 
       this.forceUpdate();
     }
-    else if (this.delayPagination && (!this.isOnScreen() || !isScrollDown ))
+    else if (this.delayPagination && !this.isOnScreen())
     {
       this.flushDelayPagination();
       this.forceUpdate();
@@ -122,6 +125,7 @@ export class ShowMore extends Component
       this.flushDelayPagination();
     }
 
+    this.scrollTop = 0;
     this.onPaginateListener();
   }
 
@@ -143,8 +147,8 @@ export class ShowMore extends Component
 
   flushDelayPagination = () =>
   {
-    this.delayPagination = undefined;
     clearTimeout(this.delayPagination);
+    this.delayPagination = undefined;
   }
 
   /**
@@ -168,7 +172,6 @@ export class ShowMore extends Component
 
   getScrollTop = () =>
     window.pageYOffset || document.documentElement.scrollTop
-
 
   render()
   {
