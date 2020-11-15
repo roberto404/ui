@@ -8,7 +8,7 @@ import clamp from '@1studio/utils/math/clamp';
 import { modifyLimit } from '../../grid/actions';
 
 import IconMore from '../../icon/mui/navigation/expand_more';
-import IconPreload from '../../../src/icon/preload';
+import IconPreload from '../../icon/preload';
 
 
 const AUTO_PAGINATION_DELAY = 1000;
