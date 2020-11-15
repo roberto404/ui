@@ -281,6 +281,10 @@ class FormField extends Component
       value: this.props.format(value, reduce),
     };
 
+    const options = {
+      reduce,
+    }
+
     const form = this.props.form || this.context.form;
 
     if (form)
@@ -293,11 +297,11 @@ class FormField extends Component
       && this.props.onChange.toString() !== FormField.defaultProps.onChange.toString()
     )
     {
-      this.props.onChange(payload);
+      this.props.onChange(payload, options);
     }
     else if (this.context.onChange)
     {
-      this.context.onChange(payload);
+      this.context.onChange(payload, options);
     }
     else
     {
