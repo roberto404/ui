@@ -41,6 +41,37 @@ class Slider extends Field
 
   /* !- Handlers */
 
+  onClickSliderHandler = (event) =>
+  {
+    const value = this.getValue();
+    const rect = this.field.getBoundingClientRect();
+
+    const x = event.clientX - rect.x;
+    // const nextValue = this.percentToValue(x / rect.width);
+    const nextValue = this.percentToValue(this.pixelToPercent(x));
+
+    // min handler effected
+    if (
+      this.props.enableStartHandler === true
+      &&
+      (
+        nextValue < value[0]
+        ||
+        (
+          nextValue < value[1]
+          && nextValue - value[0] < value[1] - nextValue
+        )
+      )
+    )
+    {
+      this.onChangeHandler([nextValue, value[1]]);
+    }
+    // max handler effected
+    else
+    {
+      this.onChangeHandler([value[0], nextValue]);
+    }
+  }
 
   /**
    * Convert current slider x,y position to real value
@@ -73,6 +104,9 @@ class Slider extends Field
     return (parseFloat(value) - parseFloat(from)) / (parseFloat(to) - parseFloat(from));
   }
 
+  /**
+   * Convert X value to percent considering step rounded value
+   */
   pixelToPercent(x)
   {
     if (!this.field || !this.field.offsetWidth)
@@ -221,6 +255,10 @@ class Slider extends Field
       active: this.state.active,
     });
 
+    const endHandlerWidthPercent = (this.handleEnd && this.field) ?
+      this.handleEnd.offsetWidth / this.field.offsetWidth : 1;
+    const isEndOnMax = (this.getValue()[1] / this.props.to) >= (1 - endHandlerWidthPercent);
+
     return (
       <div
         className={`field slider-field ${this.props.className}`}
@@ -252,9 +290,9 @@ class Slider extends Field
             this.field = ref;
           }}
         >
-          <div className="inactive-line" />
+          <div className="inactive-line" onClick={this.onClickSliderHandler} />
           <div
-            className="active-line"
+            className="active-line no-events"
             style={{
               width: `${Math.round((percent[1] - percent[0]) * 100)}%`,
               left: `${Math.round(percent[0] * 100)}%`,
@@ -268,7 +306,10 @@ class Slider extends Field
             {
               this.handleStart = ref;
             }}
-            style={{ left: `${Math.round(percent[0] * 100)}%` }}
+            style={{
+              left: `${Math.round(percent[0] * 100)}%`,
+              zIndex: +isEndOnMax,
+            }}
             data-index="0"
           />
           }
