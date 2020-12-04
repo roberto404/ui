@@ -50,6 +50,10 @@ class CalendarMonthButton extends Component
         min={props.min}
         max={props.max}
         validator={props.validator}
+        yearData={props.yearData}
+        mounthData={props.mounthData}
+        hourData={props.hourData}
+        minuteData={props.minuteData}
       />
     );
 

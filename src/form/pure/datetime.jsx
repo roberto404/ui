@@ -18,7 +18,7 @@ const NOW = new Date();
 
 const SELECT_DATA_HELPER = i => ({ id: i, title: i.toString() });
 
-const YEARS_DATA = produceNumericArray(
+const YEAR_DATA = produceNumericArray(
   1900,
   NOW.getFullYear(),
   i => ({ id: i, title: i.toString() }),
@@ -29,9 +29,9 @@ const MONTH_DATA = produceNumericArray(
   12,
   i => ({ id: i, title: moment().month(i - 1).format('MMM') }),
 );
-const HOURS_DATA = produceNumericArray(0, 24, SELECT_DATA_HELPER);
+const HOUR_DATA = produceNumericArray(0, 24, SELECT_DATA_HELPER);
 
-const MINUTES_DATA = produceNumericArray(0, 3, i => ({ id: i * 15, title: (i * 15).toString() }));
+const MINUTE_DATA = produceNumericArray(0, 3, i => ({ id: i * 15, title: (i * 15).toString() }));
 
 
 /**
@@ -111,7 +111,7 @@ class DateTime extends Field
 
           <Select
             id={this.props.id}
-            data={YEARS_DATA}
+            data={this.props.yearData}
             stateFormat={this.stateFormat('YYYY')}
             onChange={this.onChangeDateHandler('year')}
             form={this.props.form}
@@ -120,7 +120,7 @@ class DateTime extends Field
 
           <Select
             id={this.props.id}
-            data={MONTH_DATA}
+            data={this.props.monthData}
             stateFormat={this.stateFormat('MM')}
             onChange={this.onChangeDateHandler('month')}
             form={this.props.form}
@@ -152,7 +152,7 @@ class DateTime extends Field
 
           <Select
             id={this.props.id}
-            data={HOURS_DATA}
+            data={this.props.hourData}
             stateFormat={this.stateFormat('HH')}
             onChange={this.onChangeDateHandler('hour')}
             form={this.props.form}
@@ -162,7 +162,7 @@ class DateTime extends Field
 
           <Select
             id={this.props.id}
-            data={MINUTES_DATA}
+            data={this.props.minuteData}
             stateFormat={this.stateFormat('mm')}
             onChange={this.onChangeDateHandler('minute')}
             form={this.props.form}
@@ -212,6 +212,10 @@ DateTime.defaultProps =
   disableDate: false,
   disableTime: false,
   disableDay: false,
+  yearData: YEAR_DATA,
+  monthData: MONTH_DATA,
+  hourData: HOUR_DATA,
+  minuteData: MINUTE_DATA,
 };
 
 export default DateTime;

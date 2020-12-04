@@ -22,6 +22,10 @@ const CalendarDateTime = ({
   min,
   max,
   validator,
+  yearData,
+  mounthData,
+  hourData,
+  minuteData,
 }) =>
 (
   <div className={className}>
@@ -33,6 +37,10 @@ const CalendarDateTime = ({
       className="m-0"
       value={value}
       dateFormat={dateFormat}
+      yearData={yearData}
+      mounthData={mounthData}
+      hourData={hourData}
+      minuteData={minuteData}
     />
   <div className="overflow" style={{ marginTop: '-1rem', marginBottom: '-2rem' }}>
     <div style={{ marginTop: '-3.5rem' }}>
