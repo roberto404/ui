@@ -59,7 +59,6 @@ class CardEditor extends Component
 
         <Card
           image={new File(this.props.item).getUrl('640x480')}
-          // image="https://picsum.photos/250/250"
         />
 
       </div>
