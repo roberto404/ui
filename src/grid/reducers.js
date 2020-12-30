@@ -160,9 +160,35 @@ const reducers = (state = {}, action = {}) =>
           model.data = data;
         }
 
-
         return createNextState(state, model, action.grid);
       }
+
+      case 'MODIFY_GRID_RECORDS':
+        {
+          // @todo record.id;
+          const model = getModel(state, action);
+
+          const data = action.records.reduce(
+            (result, record) =>
+            {
+              const index = findIndex(result, { id: record.id });
+
+              const nextRecord = {
+                ...result[index],
+                ...record,
+              };
+
+              result[index] = record;
+
+              return result;
+            },
+            [...model.data],
+          );
+
+          model.data = data;
+
+          return createNextState(state, model, action.grid);
+        }
 
     case 'REMOVE_GRID_RECORD':
       {

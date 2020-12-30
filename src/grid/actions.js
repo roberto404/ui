@@ -73,6 +73,19 @@ export const modifyRecord = (record: {}, grid?: string) =>
 });
 
 /**
+ * Change records props is database
+ *
+ * @memberof Actions/Grid
+ * @param {Array} records
+ */
+export const modifyRecords = (records: [], grid?: string) =>
+({
+  type: 'MODIFY_GRID_RECORDS',
+  records,
+  grid,
+});
+
+/**
  * Change record props is database
  *
  * @since 1.0.0
