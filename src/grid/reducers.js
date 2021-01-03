@@ -5,6 +5,7 @@ import findIndex from 'lodash/findIndex';
 import omit from 'lodash/omit';
 import PropTypes, { checkPropTypes } from '@1studio/utils/propType';
 
+import { addRecord } from './actions';
 
 /* !- React Elements */
 
@@ -158,6 +159,10 @@ const reducers = (state = {}, action = {}) =>
           data[index] = record;
 
           model.data = data;
+        }
+        else if (action.options.enableAddReacord)
+        {
+          return reducers(state, addRecord(action.record, action.grid));
         }
 
         return createNextState(state, model, action.grid);

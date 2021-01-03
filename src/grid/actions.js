@@ -65,12 +65,16 @@ export const addRecord = (record: {}, grid?: string, index?: number) =>
  * @memberof Actions/Grid
  * @param {Object} record
  */
-export const modifyRecord = (record: {}, grid?: string) =>
+export const modifyRecord = (record: {}, grid?: string, options = {}) =>
 ({
   type: 'MODIFY_GRID_RECORD',
   record,
   grid,
+  options,
 });
+
+export const modifyOrAddRecord = (record: {}, grid?: string) =>
+  modifyRecord(record, grid, { enableAddReacord: true });
 
 /**
  * Change records props is database
