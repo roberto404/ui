@@ -197,7 +197,9 @@ class FormField extends Component
       this.context.removeListener(this.onKeyDown);
     }
 
-    this.props.onFocus({ id: this.props.name, value: event.target.value }, event);
+    const form = this.props.form || this.context.form;
+
+    this.props.onFocus({ id: this.props.id, value: event.target.value, form }, event);
   }
 
   /**
@@ -208,7 +210,9 @@ class FormField extends Component
    */
   onBlurHandler = (event) =>
   {
-    this.props.onBlur({ id: this.props.name, value: event.target.value }, event);
+    const form = this.props.form || this.context.form;
+
+    this.props.onBlur({ id: this.props.id, value: event.target.value, form }, event);
 
     if (this.props.forceFocus && this.context.addListener)
     {
