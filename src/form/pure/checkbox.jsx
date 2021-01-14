@@ -99,7 +99,7 @@ class Checkbox extends Field
     }
     else
     {
-      this.onChangeHandler(createNextValue(value));
+      this.onChangeHandler(createNextValue(Array.isArray(value) ? value : []));
     }
   }
 

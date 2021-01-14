@@ -34,6 +34,9 @@ import { OPERATOR_REGEX, LOGICAL_REGEX, OPERATOR_KEYS, OPERATOR_UNIQUE } from '.
  */
 export const CollectionItem = ({ onChange, record, fields }) =>
 {
+  /**
+   * onChange => { field, operator, value }
+   */
   const onChangeHandler = ({ id, value }) =>
   {
     const collectionId = id.substring(id.indexOf('#') + 1);
