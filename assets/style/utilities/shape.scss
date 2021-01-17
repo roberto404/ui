@@ -19,6 +19,29 @@ hr
   border-radius: 2rem;
 }
 
+.rounded-top
+{
+  border-top-left-radius: .5rem;
+  border-top-right-radius: .5rem;
+}
+
+.rounded-bottom
+{
+  border-bottom-left-radius: .5rem;
+  border-bottom-right-radius: .5rem;
+}
+
+.rounded-left
+{
+  border-top-left-radius: .5rem;
+  border-bottom-left-radius: .5rem;
+}
+.rounded-right
+{
+  border-top-right-radius: .5rem;
+  border-bottom-right-radius: .5rem;
+}
+
 .circle
 {
   border-radius: 100%;
@@ -214,6 +237,12 @@ hr
   background-color: $green-light;
 }
 
+.bg-green-dark,
+.hover\:bg-green-dark:hover
+{
+  background-color: $green-dark;
+}
+
 .bg-red,
 .hover\:bg-red:hover
 {
@@ -322,6 +351,11 @@ hr
 .hover\:fill-black:hover *
 {
   fill: $black;
+}
+
+.hover\:fill-white:hover *
+{
+  fill: $white;
 }
 
 text.blue

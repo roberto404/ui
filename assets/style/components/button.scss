@@ -237,9 +237,13 @@ button,
 
   &.outline
   {
-    background-color: transparent;
     border: 2px solid $white-dark;
+    background-color: transparent;
 
+    &.bg-white
+    {
+      background-color: white;
+    }
 
     &::not(.wide)
     {
@@ -372,6 +376,14 @@ button,
     height: 4em;
     overflow: hidden;
 
+    padding: 0.75em;
+
+    svg
+    {
+      width: 2em;
+      height: 2em;
+    }
+
     svg
     {
       top: 0;
@@ -420,9 +432,14 @@ button,
       &:last-child
       {
         @extend .mt-1\/2;
-        @extend .button.red;
         @extend .button.large;
-        @extend .button.shadow;
+
+        &:not([class])
+        {
+          @extend .button.red;
+          @extend .button.shadow;
+        }
+
       }
     }
 
