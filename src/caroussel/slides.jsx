@@ -113,7 +113,7 @@ class Slides extends Component
       this.initHammerDrag();
     }
     // this.initPaginationListener();
-    // this.startAutoPlay();
+    this.startAutoPlay();
   }
 
   componentWillReceiveProps(nextProps)
@@ -273,7 +273,7 @@ class Slides extends Component
 
   goToSlide = (page) =>
   {
-    const nextPage = clamp(page, 1, this.props.totalPage - this.props.visibleSlides + 1);
+    const nextPage = (((page < this.props.totalPage ? page : 1) - 1) * this.props.stepSlides) + 1;
 
     if (nextPage !== this.props.page)
     {
