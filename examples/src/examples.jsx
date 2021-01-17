@@ -101,6 +101,7 @@ import Sticky from './sticky/sticky';
 
 import ViewBasic from './view/basic';
 import ViewTab from './view/tab';
+import ViewNested from './view/nested';
 
 
 /* !- Example: Stepper */
@@ -173,6 +174,7 @@ export default {
   view: {
     basic: ViewBasic,
     tab: ViewTab,
+    nested: ViewNested,
   },
   sticky: {
     sticky: Sticky,

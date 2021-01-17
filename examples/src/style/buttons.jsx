@@ -175,10 +175,31 @@ const ExampleForm = () =>
         <a className="button action outline black"><Icon /></a>
       </div>
       <div className="col-1-4">
-        <button className="action primary shadow"><Icon /></button>
+        <button className="action primary shadow large"><Icon /></button>
       </div>
       <div className="col-1-4">
-        <button className="action blue"><Icon /></button>
+        <button className="action blue large"><Icon /></button>
+      </div>
+    </div>
+
+    <h2>Large Buttons</h2>
+    <div className="grid-2 card">
+      <div className="col-1-4">
+        <button className="blue w-auto large"><Icon /></button>
+      </div>
+      <div className="col-1-4">
+        <a className="button action outline black large"><Icon /></a>
+      </div>
+      <div className="col-1-4">
+        <button className="w-full outline shadow large">
+          <div className="w-full">
+            <Icon />
+            <span>Action</span>
+          </div>
+          <div>
+            <IconArrow />
+          </div>
+        </button>
       </div>
     </div>
 
