@@ -12,76 +12,18 @@ import isEqual from 'lodash/isEqual';
 /* !- Actions */
 
 import { switchGroup, switchView, setSettings, toggleView } from './actions';
-import { menu, close } from '../layer/actions';
+
 
 
 /* !- Elements */
 
-import IconView from '../icon/mui/av/web';
+// ...
 
 /* !- Constants */
 
 import { SCHEME } from './constans';
 
 
-const ViewMenuComponent = ({ children, views, toggleView, menu, close, className }) =>
-{
-  const items = views.map(({ id, status, title, icon }) => ({
-    id,
-    title: title || id,
-    className: parseInt(status) === 1 ? 'active' : '',
-    icon,
-    handler: (item) =>
-    {
-      toggleView(item.id);
-      close();
-    },
-  }));
-
-
-  return (
-    <div
-      role="button"
-      tabIndex="-1"
-      onClick={event => menu({ items }, event)}
-      className={className}
-    >
-      {children}
-    </div>
-  );
-};
-
-ViewMenuComponent.defaultProps =
-{
-  children: (
-    <div
-      className="button w-auto outline shadow embed-angle-down-gray"
-    >
-      <IconView />
-      <span>Nézet</span>
-    </div>
-  ),
-};
-
-export const ViewMenu = connect(
-  (state) =>
-  {
-    if (state.view.active !== undefined)
-    {
-      return {
-        views: state.view.groups[state.view.active],
-      };
-    }
-    return {
-      views: [],
-    };
-  },
-  {
-    close,
-    menu,
-    toggleView,
-  },
-)(ViewMenuComponent);
 
 
 
@@ -115,7 +57,7 @@ export const ViewMenu = connect(
  */
 export const initSettings = (props) =>
 {
-  let settings = props.settings;
+  let settings = { ...props.settings };
 
   if (!settings.groups && typeof props.children === 'object')
   {
@@ -151,18 +93,19 @@ export const initSettings = (props) =>
   }
   else if (typeof settings.groups === 'object')
   {
-    forEach(settings.groups, (items, groupId) =>
-    {
-      settings.groups[groupId] = remove(items, item =>
-        (isNaN(item.id) && find(props.children, child => child.props['data-view'] === item.id)) ||
-        (!isNaN(item.id) && props.children.length > parseInt(item.id)),
-      );
-
-      if (!settings.groups[groupId].length)
-      {
-        delete settings.groups[groupId];
-      }
-    });
+    // forEach(settings.groups, (items, groupId) =>
+    // {
+      // nested miatt ertelmetlen
+      // settings.groups[groupId] = remove(items, item =>
+      //   (isNaN(item.id) && find(props.children, child => child.props['data-view'] === item.id)) ||
+      //   (!isNaN(item.id) && props.children.length > parseInt(item.id)),
+      // );
+      //
+      // if (!settings.groups[groupId].length)
+      // {
+      //   delete settings.groups[groupId];
+      // }
+    // });
   }
 
   if (!isEmpty(settings))
@@ -230,7 +173,7 @@ class View extends Component
       this.props.switchGroup(this.props.defaultView);
     }
 
-    this.views = this.getActiveGroupViews(context);
+    this.views = this.getActiveViews(context);
   }
 
   componentDidMount = () =>
@@ -252,7 +195,7 @@ class View extends Component
 
   onChangeListener()
   {
-    const views = this.getActiveGroupViews();
+    const views = this.getActiveViews();
 
     if (!isEqual(views, this.views))
     {
@@ -264,7 +207,7 @@ class View extends Component
         this.props.onChange(views, prev);
 
         // if props.OnChange modify views
-        if (!isEqual(views, this.getActiveGroupViews()))
+        if (!isEqual(views, this.getActiveViews()))
         {
           return;
         }
@@ -281,10 +224,91 @@ class View extends Component
    * @example
    * [{ id, pos, title, children, status }]
    */
-  getActiveGroupViews(context = this.context)
+  getActiveViews(context = this.context)
   {
     const viewState = context.store.getState().view;
-    return viewState.active === undefined ? [] : viewState.groups[viewState.active];
+
+    if (this.props.nested)
+    {
+      return viewState.groups;
+    }
+
+    return viewState.active === undefined ? [] : viewState.groups[viewState.active] || [];
+  }
+
+  getGroupViews(group)
+  {
+    const viewState = this.context.store.getState().view;
+    return viewState.groups[group];
+  }
+
+  getFilteredChildren = (view = [], children = []) =>
+  {
+    if (!Array.isArray(children) && typeof children === 'object')
+    {
+      children = [children];
+    }
+
+    if (!Array.isArray(view) || !Array.isArray(children))
+    {
+      return [];
+    }
+
+    return view.reduce(
+      (result, item) =>
+      {
+        /**
+         * Filter all dom child by status and data-view
+         * @type {array} child elements
+         */
+        const itemChildren = children.filter(
+          (child, index) => (item.status || !this.props.lazyload) && (
+            (typeof child.props['data-view'] === 'undefined' && index === parseInt(item.id))
+            || (typeof child.props['data-view'] === 'object' && child.props['data-view'].id === item.id)
+            || child.props['data-view'] === item.id
+          ),
+        );
+
+        if (itemChildren.length)
+        {
+          let newResult = [];
+
+          // not lazyload
+          if (this.props.lazyload === false)
+          {
+            newResult.push(itemChildren.map((child, n) => <div key={n} className={item.status ? '' : 'hidden'}>{child}</div>))
+          }
+          // lazyload
+          else
+          {
+            newResult.push(itemChildren[0]);
+          }
+
+          // nested
+          if (this.props.nested && this.getGroupViews(item.id))
+          {
+            newResult = newResult.map(child =>
+            {
+              const filteredChildren =
+                this.getFilteredChildren(this.getGroupViews(item.id), child.props.children);
+
+              return ({
+                ...child,
+                props: {
+                  ...child.props,
+                  children: filteredChildren,
+                },
+              });
+            })
+          }
+
+          result.push(...newResult);
+        }
+
+        return result;
+      },
+      [],
+    )
   }
 
 
@@ -301,37 +325,12 @@ class View extends Component
       this.props.children :
       [this.props.children];
 
+    const views = this.props.nested ? this.views[Object.keys(this.views)[0]] : this.views;
 
     return (
       <div className={this.props.className}>
         {
-          this.views.reduce(
-            (result, item) =>
-            {
-              const itemChildren = children.filter(
-                (child, index) => (item.status || !this.props.lazyload) && (
-                  (typeof child.props['data-view'] === 'undefined' && index === parseInt(item.id))
-                  || (typeof child.props['data-view'] === 'object' && child.props['data-view'].id === item.id)
-                  || child.props['data-view'] === item.id
-                ),
-              );
-
-              if (itemChildren.length)
-              {
-                if (this.props.lazyload === false)
-                {
-                  result.push(itemChildren.map((child, n) => <div key={n} className={item.status ? '' : 'hidden'}>{child}</div>))
-                }
-                else
-                {
-                  result.push(itemChildren[0]);
-                }
-              }
-
-              return result;
-            },
-            [],
-          )
+          this.getFilteredChildren(views, children)
         }
       </div>
     );
@@ -369,6 +368,7 @@ View.propTypes =
    */
   onChange: PropTypes.func,
   lazyload: PropTypes.bool,
+  nested: PropTypes.bool,
 };
 
 /**
@@ -381,6 +381,7 @@ View.defaultProps =
   settings: {},
   className: '',
   lazyload: true,
+  nested: false,
 };
 
 /**
@@ -394,18 +395,6 @@ View.contextTypes =
 
 export default connect(
   null,
-  // (state) =>
-  // {
-  //   if (state.view.active !== undefined)
-  //   {
-  //     return {
-  //       views: state.view.groups[state.view.active],
-  //     };
-  //   }
-  //   return {
-  //     views: [],
-  //   };
-  // },
   {
     switchGroup,
     setSettings,

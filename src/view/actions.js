@@ -32,19 +32,21 @@ export const switchGroup = (id: string) =>
  * @param  {string} id [description]
  * @param  {status} [status]  [description]
  */
-export const toggleView = (id: string | number, status?: 0 | 1) =>
+export const toggleView = (id: string | number, status?: 0 | 1, group?: string) =>
 ({
   type: 'VIEW_TOGGLE_VIEW',
   id,
   status,
+  group,
 });
 
 /**
  * Change visibility of selected view all components
  * @param  {string} id [description]
  */
-export const switchView = (id: string | number) =>
+export const switchView = (id: string | number, group?: string) =>
 ({
   type: 'VIEW_SWITCH_VIEW',
   id,
+  group,
 });

@@ -5,7 +5,7 @@ import { SCHEME } from './constans';
 
 const DEFAULT_STATE = {
   active: undefined,
-  groups: [],
+  groups: {},
 };
 
 /**
@@ -83,7 +83,9 @@ const reducers = (state = DEFAULT_STATE, action = {}) =>
           action.status = undefined;
         }
 
-        const activeGroup = state.groups[state.active].map((group) =>
+        const group = action.group || state.active;
+
+        const activeGroup = state.groups[group].map((group) =>
         {
           if (group.id !== action.id)
           {
@@ -100,21 +102,23 @@ const reducers = (state = DEFAULT_STATE, action = {}) =>
           ...state,
           groups: {
             ...state.groups,
-            [state.active]: activeGroup,
+            [group]: activeGroup,
           },
         };
       }
 
     case 'VIEW_SWITCH_VIEW':
       {
-        const activeGroup = state.groups[state.active].map((view) =>
+        const group = action.group || state.active;
+
+        const activeGroup = state.groups[group].map((view) =>
           ({ ...view, status: view.id === action.id }));
 
         return {
           ...state,
           groups: {
             ...state.groups,
-            [state.active]: activeGroup,
+            [group]: activeGroup,
           },
         };
       }
