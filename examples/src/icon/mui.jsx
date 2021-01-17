@@ -86,8 +86,10 @@ import SrcIconMuiCommunicationMessage from '../../../src/icon/mui/communication/
 import SrcIconMuiCommunicationListalt from '../../../src/icon/mui/communication/list_alt';
 import SrcIconMuiCommunicationEmail from '../../../src/icon/mui/communication/email';
 import SrcIconMuiCommunicationMailoutline from '../../../src/icon/mui/communication/mail_outline';
+import SrcIconMuiEditorFormatcolor_fill from '../../../src/icon/mui/editor/format_color_fill';
 import SrcIconMuiEditorFormatindent_decrease from '../../../src/icon/mui/editor/format_indent_decrease';
 import SrcIconMuiEditorFormatindent_increase from '../../../src/icon/mui/editor/format_indent_increase';
+import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/format_color_reset';
 
     const Example = () =>
     (
@@ -610,6 +612,12 @@ import SrcIconMuiEditorFormatindent_increase from '../../../src/icon/mui/editor/
       
 
         <div className="col-1-5">
+        <SrcIconMuiEditorFormatcolor_fill className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/editor/format_color_fill</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiEditorFormatindent_decrease className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/editor/format_indent_decrease</div>
         </div>
@@ -618,6 +626,12 @@ import SrcIconMuiEditorFormatindent_increase from '../../../src/icon/mui/editor/
         <div className="col-1-5">
         <SrcIconMuiEditorFormatindent_increase className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/editor/format_indent_increase</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiEditorFormatcolor_reset className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/editor/format_color_reset</div>
         </div>
       
       </div>
