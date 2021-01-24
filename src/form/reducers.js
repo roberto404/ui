@@ -83,6 +83,31 @@ export default (state = {}, action = {}) =>
         return newState;
       }
 
+    case 'FORM_SET_FORM':
+      {
+        const newState = {
+          ...action.items,
+        };
+
+        const scheme = newState[FORM_SCHEME_KEY];
+
+        if (scheme)
+        {
+          newState[FORM_ERRORS_KEY] = validate(newState, scheme);
+        };
+
+
+        if (!action.form)
+        {
+          return newState;
+        }
+
+        return ({
+          ...state,
+          [action.form]: newState,
+        });
+      }
+
     case 'FORM_UNSET_VALUES':
       {
         const newState = { ...state };

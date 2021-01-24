@@ -78,6 +78,17 @@ export const setValues = (items: ItemsType, form?: string): ActionType =>
 };
 
 /**
+ * Similar like setValues, but prev values will be destroy
+ */
+export const setForm = (items: ItemsType, form?: string): ActionType =>
+{
+  return ({
+    ...setValues(items, form),
+    type: 'FORM_SET_FORM',
+  });
+}
+
+/**
  * Remove form (or sub form) key/value store.
  * UNSET_VALUES reducer payload.
  *
