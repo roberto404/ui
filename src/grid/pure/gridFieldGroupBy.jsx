@@ -90,7 +90,10 @@ GridFieldGroupBy.propTypes =
   /**
    * Change dropdown id to title from helper object
    */
-  helper: PropTypes.arrayOf(PropTypes.object),
+  helper: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.arrayOf(PropTypes.object),
+  ]),
   reducer: PropTypes.func,
 };
 
