@@ -284,9 +284,16 @@ class GridView extends Component
     // find selected items records
     const gridSelectedRecords = gridData.filter(({ id }) => gridSelectedItemIds.indexOf(id) !== -1);
 
-    //   this.props.flushForm(this.id);
-    //
-    this.props.setValues(
+
+    if (this.props.onSelect)
+    {
+      if (!this.props.onSelect(gridSelectedItemIds, gridSelectedRecords))
+      {
+        return;
+      }
+    }
+
+    this.props.setForm(
       concatMultipleFormRecords(gridSelectedRecords),
       this.id,
     );
@@ -446,6 +453,13 @@ GridView.propTypes =
     PropTypes.oneOf(['selectFirst']),
   ]),
   /**
+   * Invoke when data loaded
+   */
+  onChange: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.bool,
+  ]),
+  /**
    * Wrappper dom class name
    */
   className: PropTypes.string,
@@ -505,6 +519,7 @@ GridView.defaultProps =
   settings: {},
   onLayer: false,
   onLoad: false,
+  onChange: false,
   className: 'grid',
   flushFiltersUnmount: true,
   style: {},
@@ -545,6 +560,7 @@ export default connect(
     flush,
     setValues: FormActions.setValues,
     unsetValues: FormActions.unsetValues,
+    setForm: FormActions.setForm,
     flushForm: FormActions.flush,
   },
 )(GridView);
