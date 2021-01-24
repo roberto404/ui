@@ -37,6 +37,7 @@ import SrcIconMuiContentRemovecircle_outline from '../../../src/icon/mui/content
 import SrcIconMuiHardverKeyboardreturn from '../../../src/icon/mui/hardver/keyboard_return';
 import SrcIconMuiHardverKeyboardbackspace from '../../../src/icon/mui/hardver/keyboard_backspace';
 import SrcIconMuiImageAddphoto_alternate from '../../../src/icon/mui/image/add_photo_alternate';
+import SrcIconMuiImageTune from '../../../src/icon/mui/image/tune';
 import SrcIconMuiImageLens from '../../../src/icon/mui/image/lens';
 import SrcIconMuiToggleStar from '../../../src/icon/mui/toggle/star';
 import SrcIconMuiSocialPersonadd from '../../../src/icon/mui/social/person_add';
@@ -47,6 +48,7 @@ import SrcIconMuiActionFavoriteborder from '../../../src/icon/mui/action/favorit
 import SrcIconMuiActionDone from '../../../src/icon/mui/action/done';
 import SrcIconMuiActionPrint from '../../../src/icon/mui/action/print';
 import SrcIconMuiActionOpenwith from '../../../src/icon/mui/action/open_with';
+import SrcIconMuiActionHistory from '../../../src/icon/mui/action/history';
 import SrcIconMuiActionCached from '../../../src/icon/mui/action/cached';
 import SrcIconMuiActionZoomout from '../../../src/icon/mui/action/zoom_out';
 import SrcIconMuiActionAnnouncement from '../../../src/icon/mui/action/announcement';
@@ -63,6 +65,7 @@ import SrcIconMuiActionBugreport from '../../../src/icon/mui/action/bug_report';
 import SrcIconMuiActionSettingsethernet from '../../../src/icon/mui/action/settings_ethernet';
 import SrcIconMuiActionShoppingcart_outlined from '../../../src/icon/mui/action/shopping_cart_outlined';
 import SrcIconMuiActionCode from '../../../src/icon/mui/action/code';
+import SrcIconMuiActionUpdate from '../../../src/icon/mui/action/update';
 import SrcIconMuiActionBook from '../../../src/icon/mui/action/book';
 import SrcIconMuiActionToday from '../../../src/icon/mui/action/today';
 import SrcIconMuiActionShoppingcart from '../../../src/icon/mui/action/shopping_cart';
@@ -318,6 +321,12 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
       
 
         <div className="col-1-5">
+        <SrcIconMuiImageTune className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/image/tune</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiImageLens className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/image/lens</div>
         </div>
@@ -374,6 +383,12 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
         <div className="col-1-5">
         <SrcIconMuiActionOpenwith className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/open_with</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiActionHistory className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/history</div>
         </div>
       
 
@@ -470,6 +485,12 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
         <div className="col-1-5">
         <SrcIconMuiActionCode className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/code</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiActionUpdate className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/update</div>
         </div>
       
 
