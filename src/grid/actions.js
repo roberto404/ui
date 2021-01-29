@@ -59,6 +59,20 @@ export const addRecord = (record: {}, grid?: string, index?: number) =>
 });
 
 /**
+ * Expand database a new record
+ *
+ * @since
+ * @memberof Actions/Grid
+ * @param {Object} record
+ */
+export const addRecords = (records: [], grid?: string) =>
+({
+  type: 'ADD_GRID_RECORDS',
+  records,
+  grid,
+});
+
+/**
  * Change record props is database
  *
  * @since 1.0.0

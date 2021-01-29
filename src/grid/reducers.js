@@ -142,6 +142,27 @@ const reducers = (state = {}, action = {}) =>
         return createNextState(state, model, action.grid);
       }
 
+    case 'ADD_GRID_RECORDS':
+      {
+        const model = getModel(state, action);
+
+        if (!model)
+        {
+          return reducers(state, { type: 'SET_GRID_DATA', data: [action.record], grid: action.grid });
+        }
+
+        // if (typeof action.record !== 'object' || Array.isArray(action.record))
+        // {
+        //   // @todo exception
+        // }
+
+        const index = (typeof action.index !== 'undefined') ? action.index : model.data.length;
+
+        model.data = model.data.concat(action.records);
+
+        return createNextState(state, model, action.grid);
+      }
+
     case 'MODIFY_GRID_RECORD':
       {
         // @todo record.id;
@@ -168,32 +189,32 @@ const reducers = (state = {}, action = {}) =>
         return createNextState(state, model, action.grid);
       }
 
-      case 'MODIFY_GRID_RECORDS':
-        {
-          // @todo record.id;
-          const model = getModel(state, action);
+    case 'MODIFY_GRID_RECORDS':
+      {
+        // @todo record.id;
+        const model = getModel(state, action);
 
-          const data = action.records.reduce(
-            (result, record) =>
-            {
-              const index = findIndex(result, { id: record.id });
+        const data = action.records.reduce(
+          (result, record) =>
+          {
+            const index = findIndex(result, { id: record.id });
 
-              const nextRecord = {
-                ...result[index],
-                ...record,
-              };
+            const nextRecord = {
+              ...result[index],
+              ...record,
+            };
 
-              result[index] = record;
+            result[index] = record;
 
-              return result;
-            },
-            [...model.data],
-          );
+            return result;
+          },
+          [...model.data],
+        );
 
-          model.data = data;
+        model.data = data;
 
-          return createNextState(state, model, action.grid);
-        }
+        return createNextState(state, model, action.grid);
+      }
 
     case 'REMOVE_GRID_RECORD':
       {
