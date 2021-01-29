@@ -80,10 +80,11 @@ class Dropdown extends Field
    */
   onChangeDropdownHandler = ({ id }) =>
   {
+    this.context.store.dispatch(close());
+    
     this.onChangeHandler(
       this.props.multiple ? this.createMultipleValueHelper(this.state.value, id) : id,
     );
-    this.context.store.dispatch(close());
   }
 
   onClickButtonHandler = (event) =>
