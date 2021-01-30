@@ -151,14 +151,24 @@ const reducers = (state = {}, action = {}) =>
           return reducers(state, { type: 'SET_GRID_DATA', data: [action.record], grid: action.grid });
         }
 
-        // if (typeof action.record !== 'object' || Array.isArray(action.record))
-        // {
-        //   // @todo exception
-        // }
+        const data = [...model.data];
+        const ids = data.map(({ id }) => id);
 
-        const index = (typeof action.index !== 'undefined') ? action.index : model.data.length;
+        action.records.forEach((record) =>
+        {
+          const index = ids.indexOf(record.id);
 
-        model.data = model.data.concat(action.records);
+          if (index === -1)
+          {
+            data.push(record);
+          }
+          else
+          {
+            data[index] = record;
+          }
+        });
+
+        model.data = data;
 
         return createNextState(state, model, action.grid);
       }
