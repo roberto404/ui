@@ -76,6 +76,8 @@ const getModel = (state, action) =>
   // van ilyen eset h applyFilter lefut de meg nincs model, ures {} nem lehet
   // console.warn('not found grid Model');
   // return {};
+
+  return new Data([]);
 }
 
 
@@ -91,7 +93,7 @@ const reducers = (state = {}, action = {}) =>
   {
     case 'SET_GRID_DATA':
       {
-        const model = getModel(state, action) || new Data([]);
+        const model = getModel(state, action);
 
         if (!model.data)
         {

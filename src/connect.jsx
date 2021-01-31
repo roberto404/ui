@@ -2,8 +2,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
+import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
 import clone from 'lodash/clone';
+import produceNumericArray from '@1studio/utils/array/produceNumericArray';
 
 
 /* !- Actions */
@@ -47,6 +49,9 @@ class Connect extends Component
 
     // state = redux store
     this.data = this.getState(props, context);
+
+    this.isEmpty = this.store === 'grid' ?
+      !this.data.rawData || !this.data.rawData.length : isEmpty(this.data);
   }
 
 
@@ -81,6 +86,7 @@ class Connect extends Component
     if (state && listens.some(listen => !isEqual(state[listen], this.data[listen])))
     {
       this.data = state;
+      this.isEmpty = false;
       this.forceUpdate();
 
       if (typeof this.props.onChange === 'function')
@@ -112,6 +118,16 @@ class Connect extends Component
       ...this.data,
       ...uiProps,
     };
+
+    if (this.isEmpty && this.props.skeleton)
+    {
+      return (
+        <div>
+          { produceNumericArray(1, this.props.skeletonRepeat).map(i => React.cloneElement(this.props.skeleton, { key: i }) ) }
+        </div>
+      )
+      return this.props.skeleton;
+    }
 
     return children ? React.cloneElement(children, props) : React.createElement(UI, props);
   }
@@ -174,6 +190,7 @@ Connect.defaultProps =
   uiProps: {},
   // listen: 'data',
   children: undefined,
+  skeletonRepeat: 1,
 };
 
 /**

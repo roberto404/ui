@@ -1,0 +1,34 @@
+
+
+
+  [class^="skeleton-line"],
+  [class*=" skeleton-line"]
+  {
+    background: rgba(0, 0, 0, 0.1);
+    height: 0.85em;
+    margin-bottom: .65em;
+    border-radius: 6px;
+    animation: skeleton-animation 1s infinite ease-out;
+  }
+
+  .skeleton-line-s
+  {
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+
+  @keyframes skeleton-animation
+  {
+    0%
+    {
+      opacity: 1;
+    }
+    50%
+    {
+      opacity: 0.5;
+    }
+    100%
+    {
+      opacity: 1;
+    }
+  }

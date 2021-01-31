@@ -167,7 +167,7 @@ class GridView extends Component
 
   /* !- Handlers */
 
-  onLoad = () =>
+  onLoad = (isPreloaded = false) => () =>
   {
     if (!this.props.onLayer)
     {
@@ -176,6 +176,7 @@ class GridView extends Component
 
     return this.api({
       method: this.id,
+      query: isPreloaded ? 'preload' : undefined,
     })
       .then((response) =>
       {
@@ -352,19 +353,25 @@ class GridView extends Component
   }
 
 
-  fetchDataViaApi()
+  /**
+   * Invoke Grid fetchData action via api
+   */
+  fetchDataViaApi(isPreloaded = this.props.fetchPreload)
   {
-    // fetch data via api
     if (this.api)
     {
       this.props
-        .fetchData(this.onLoad, this.id, this.settings, this.id)
+        .fetchData(this.onLoad(isPreloaded), this.id, this.settings, this.id)
         .then((action) =>
         {
-          const grid = this.context.store.getState().grid[this.id];
-
-          if (this.props.onLoad)
+          if (isPreloaded)
           {
+            this.fetchDataViaApi(false);
+          }
+          else if (this.props.onLoad)
+          {
+            const grid = this.context.store.getState().grid[this.id];
+
             if (typeof this.props.onLoad === 'function')
             {
               this.props.onLoad({ action, grid });
