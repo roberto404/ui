@@ -165,10 +165,14 @@ const Card = ({
         style={{ fontSize: `${100 * 100/titleZoom}%` }}
       >
         <img
-          className="block w-full h-auto"
+          className="block m-auto w-auto h-auto"
           src={image}
-          width="100%"
+          width="auto"
           height="auto"
+          style={{
+            maxWidth: '100%',
+            maxHeight: '100%',
+          }}
           alt={title}
           // onError={this.onErrorImageListener}
         />
