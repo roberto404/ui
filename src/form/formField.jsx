@@ -128,6 +128,12 @@ class FormField extends Component
     if (this.props.autoFocus || this.props.forceFocus)
     {
       this.element.focus();
+
+      if (this.state.value && this.state.value.length && this.element.setSelectionRange)
+      {
+        const length = this.state.value.length;
+        this.element.setSelectionRange(length, length);
+      }
     }
 
     // TODO App listener and remove
