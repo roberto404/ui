@@ -111,7 +111,14 @@ const reducers = (state = DEFAULT_STATE, action = {}) =>
       {
         const group = action.group || state.active;
 
-        const activeGroup = state.groups[group].map((view) =>
+        const groupItems = state.groups[group];
+
+        if (groupItems === undefined)
+        {
+          return state;
+        }
+
+        const activeGroup = groupItems.map((view) =>
           ({ ...view, status: view.id === action.id }));
 
         return {
