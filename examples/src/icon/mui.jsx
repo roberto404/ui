@@ -77,6 +77,7 @@ import SrcIconMuiActionLock from '../../../src/icon/mui/action/lock';
 import SrcIconMuiActionAssignmentturned_in from '../../../src/icon/mui/action/assignment_turned_in';
 import SrcIconMuiActionSwaphoriz from '../../../src/icon/mui/action/swap_horiz';
 import SrcIconMuiActionTextrotate_vertical from '../../../src/icon/mui/action/text_rotate_vertical';
+import SrcIconMuiActionCreditcard from '../../../src/icon/mui/action/credit_card';
 import SrcIconMuiActionVisibility from '../../../src/icon/mui/action/visibility';
 import SrcIconMuiActionSavealt from '../../../src/icon/mui/action/save_alt';
 import SrcIconMuiActionZoomin from '../../../src/icon/mui/action/zoom_in';
@@ -557,6 +558,12 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
         <div className="col-1-5">
         <SrcIconMuiActionTextrotate_vertical className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/text_rotate_vertical</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiActionCreditcard className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/credit_card</div>
         </div>
       
 

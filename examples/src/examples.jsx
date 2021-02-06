@@ -13,6 +13,7 @@ import StyleGrid from './style/grid';
 
 import FormBasic from './form/basic';
 import FormFields from './form/fields';
+import FormFieldsStyle from './form/fieldsStyle';
 import FormFormat from './form/format';
 import FormSubmit from './form/submit';
 import FormConnect from './form/connect';
@@ -117,6 +118,7 @@ export default {
   form: {
     basic: FormBasic,
     fields: FormFields,
+    fieldsStyle: FormFieldsStyle,
     submit: FormSubmit,
     connect: FormConnect,
     flat: FormFlat,

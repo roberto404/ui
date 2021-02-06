@@ -163,13 +163,17 @@ const Example = (props, { store }) =>
     store.dispatch(setValues(state, form));
   }
 
+  const dimensionKeys = ['w', 'h', 'd'];
+
   return (
     <div>
       <Form
         id="example"
         className="card p-2"
       >
-        {/*<Input
+        <h2>Connect</h2>
+
+        <Input
           label="Classic Field"
           id="input"
           placeholder="..."
@@ -178,8 +182,56 @@ const Example = (props, { store }) =>
           UI={({ input }) => <div className="text-blue text-xl">{input}</div>}
         />
 
-      <h1>Price cross link + vip extra calculator </h1>
-  */}
+        <h2>onChangeHandler => parse string to custom JSON</h2>
+
+        <Input
+          id="input2"
+          label="string"
+          value="12/12x121*22"
+          onChange={({ form, id, value }) => {
+
+            const regex = /^([0-9\/]+)[*x]([0-9\/]+)[*x]?([0-9\/]+)?$/;
+
+            const output2 = {};
+
+            (regex.exec(value) || [])
+              .slice(1)
+              .forEach((v, n) =>
+                (v || '')
+                  .split('/')
+                  .forEach((v0, i) => output2[`${dimensionKeys[n]}${(i ? i + 1 : '')}`] = v0))
+
+            store.dispatch(setValues({
+              [id]: value,
+              output2: JSON.stringify(output2)
+            }, form))
+          }}
+        />
+
+        <Input
+          label="parsed json"
+          id="output2"
+          onChange={({ form, id, value }) =>
+          {
+            const jsonValue = JSON.parse(value);
+
+            const input2 = dimensionKeys.map(dimensionKey =>
+              [jsonValue[dimensionKey],jsonValue[dimensionKey + 2]]
+                .filter(v => v)
+                .join('/')
+              || 0
+            )
+              .join('x');
+
+            store.dispatch(setValues({
+              [id]: value,
+              input2,
+            }, form))
+          }}
+        />
+
+        <h2>onChangeHandler</h2>
+
 
 
         <div className="grid-2">

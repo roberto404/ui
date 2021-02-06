@@ -35,8 +35,11 @@ class Input extends Field
    */
   render()
   {
-    const { intl, multipleData } = this.props;
+    const { intl, multipleData, complete, preload } = this.props;
     const multipleDataText = () => intl ? intl.formatMessage({ id: multipleData }) : multipleData;
+
+
+
 
     return super.render() || (
       <div className={this.getClasses('input')}>
@@ -73,7 +76,7 @@ class Input extends Field
             data-name={this.props.name}
           />
 
-          { this.props.postfix &&
+          { this.state.postfix &&
           <div className="postfix">{this.state.postfix}</div>
           }
 

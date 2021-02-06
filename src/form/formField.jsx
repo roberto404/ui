@@ -15,6 +15,8 @@ import { setValues } from './actions';
 
 import IconFalse from '../icon/mui/content/remove';
 import IconTrue from '../icon/mui/action/done';
+import IconComplete from '../icon/mui/navigation/check';
+import IconPreload from '../icon/preload';
 
 
 /* !- Constants */
@@ -39,10 +41,23 @@ class FormField extends Component
 
     super(props);
 
+    let postfix;
+
+    if (props.complete)
+    {
+      postfix = <IconComplete />;
+    }
+
+    if (props.preload)
+    {
+      postfix = <IconPreload />;
+    }
+
     this.state = {
       value: props.stateFormat(fields.value || this.getValue(props, context)),
       error: fields.error || this.getError(props, context),
       mandatory: fields.mandatory || this.props.mandatory,
+      postfix,
       ...['label', 'prefix', 'postfix', 'placeholder'].reduce((result, item) =>
       {
         const value = fields[item] || props[item];
@@ -391,9 +406,14 @@ class FormField extends Component
    */
   getError(props = this.props, context = this.context)
   {
-    if (typeof context === 'undefined' || !context.store)
+    if (typeof props.error === 'string')
     {
       return props.error;
+    }
+
+    if (typeof context === 'undefined' || !context.store)
+    {
+      return '';
     }
 
     const state = context.store.getState().form;
@@ -445,6 +465,9 @@ class FormField extends Component
       // active: typeof this.state.value === 'boolean' ? this.state.value : !!parseInt(this.state.value),
       active: typeof this.state.value === 'boolean' ? this.state.value : !isEmpty(this.state.value),
       [this.props.className]: true,
+      'postfix-inside': this.props.complete || this.props.preload,
+      'complete fill-black': this.props.complete,
+      'preload fill-gray': this.props.preload,
     });
   }
 
@@ -568,7 +591,7 @@ class FormField extends Component
             <div>{value || placeholder}</div>
           }
 
-          { this.props.postfix &&
+          { this.state.postfix &&
           <div className="postfix">{this.state.postfix}</div>
           }
 
@@ -754,6 +777,8 @@ FormField.propTypes =
    */
   multipleData: PropTypes.string,
   disableLabel: PropTypes.bool,
+  complete: PropTypes.bool,
+  preload: PropTypes.bool,
 };
 
 /**
@@ -788,6 +813,8 @@ FormField.defaultProps =
   data: [],
   multipleData: 'placeholder.multipledata',
   disableLabel: false,
+  complete: false,
+  preload: false,
 };
 
 FormField.contextTypes =

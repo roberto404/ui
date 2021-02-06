@@ -720,6 +720,23 @@
 
 
 
+  &.complete
+  {
+    input:not([type="radio"]):not([type="checkbox"])
+    {
+      border-color: $green-dark;
+    }
+  }
+
+  &.transparent
+  {
+    input:not([type="radio"]):not([type="checkbox"])
+    {
+      background-color: transparent;
+    }
+  }
+
+
 
   /* !- Slider */
 
