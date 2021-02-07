@@ -58,6 +58,8 @@ class FormField extends Component
       error: fields.error || this.getError(props, context),
       mandatory: fields.mandatory || this.props.mandatory,
       postfix,
+      preload: props.preload,
+      complete: props.complete,
       ...['label', 'prefix', 'postfix', 'placeholder'].reduce((result, item) =>
       {
         const value = fields[item] || props[item];
@@ -176,6 +178,22 @@ class FormField extends Component
     if (nextProps.error !== this.state.error)
     {
       this.setState({ error: nextProps.error });
+    }
+
+    if (nextProps.complete !== this.props.complete)
+    {
+      this.setState({
+        complete: nextProps.complete,
+        postfix: nextProps.complete ? <IconComplete /> : '',
+      });
+    }
+
+    if (nextProps.preload !== this.props.preload)
+    {
+      this.setState({
+        preload: nextProps.preload,
+        postfix: nextProps.preload ? <IconPreload /> : '',
+      });
     }
   }
 
@@ -470,9 +488,9 @@ class FormField extends Component
       // active: typeof this.state.value === 'boolean' ? this.state.value : !!parseInt(this.state.value),
       active: typeof this.state.value === 'boolean' ? this.state.value : !isEmpty(this.state.value),
       [this.props.className]: true,
-      'postfix-inside': this.props.complete || this.props.preload,
-      'complete fill-black': this.props.complete,
-      'preload fill-gray': this.props.preload,
+      'postfix-inside': this.state.complete || this.state.preload,
+      'complete fill-black': this.state.complete,
+      'preload fill-gray': this.state.preload,
     });
   }
 
