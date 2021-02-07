@@ -184,7 +184,7 @@ class FormField extends Component
     {
       this.setState({
         complete: nextProps.complete,
-        postfix: nextProps.complete ? <IconComplete /> : '',
+        postfix: nextProps.complete ? <IconComplete /> : this.props.postfix,
       });
     }
 
@@ -192,7 +192,7 @@ class FormField extends Component
     {
       this.setState({
         preload: nextProps.preload,
-        postfix: nextProps.preload ? <IconPreload /> : '',
+        postfix: nextProps.preload ? <IconPreload /> : this.props.postfix,
       });
     }
   }
