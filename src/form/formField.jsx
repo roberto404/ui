@@ -172,6 +172,11 @@ class FormField extends Component
     {
       this.onChangeListener(nextProps);
     }
+
+    if (nextProps.error !== this.state.error)
+    {
+      this.setState({ error: nextProps.error });
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState)
