@@ -81,7 +81,7 @@ class Dropdown extends Field
   onChangeDropdownHandler = ({ id }) =>
   {
     this.context.store.dispatch(close());
-    
+
     this.onChangeHandler(
       this.props.multiple ? this.createMultipleValueHelper(this.state.value, id) : id,
     );
@@ -108,6 +108,9 @@ class Dropdown extends Field
         items: data.map(item =>
           ({
             ...item,
+            title: this.props.intl && this.props.dataTranslate ?
+              this.props.intl.formatMessage({ id: item.title, default: item.title })
+              : item.title,
             className: item.className + (isActive(item.id) ? ' active' : ''),
             handler: item.handler ?
               item.handler(this.onChangeDropdownHandler) : this.onChangeDropdownHandler,

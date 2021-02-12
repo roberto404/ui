@@ -250,9 +250,13 @@ class DropzoneComponent extends Field
     const id = parseInt(file.lastModified + '' + file.size);
     const index = findIndex(value, { id: id });
 
-    value[index]['percent'] = parseInt(percent);
 
-    this.onChangeHandler(value);
+    if (index !== -1)
+    {
+      value[index]['percent'] = parseInt(percent);
+      this.onChangeHandler(value);
+    }
+
   }
 
   /**
