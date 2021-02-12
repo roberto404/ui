@@ -27,8 +27,12 @@ import SrcIconMuiContentBlock from '../../../src/icon/mui/content/block';
 import SrcIconMuiContentAddcircle from '../../../src/icon/mui/content/add_circle';
 import SrcIconMuiContentUndo from '../../../src/icon/mui/content/undo';
 import SrcIconMuiContentRemove from '../../../src/icon/mui/content/remove';
+import SrcIconMuiContentContentpaste from '../../../src/icon/mui/content/content_paste';
+import SrcIconMuiContentContentcut from '../../../src/icon/mui/content/content_cut';
 import SrcIconMuiContentSend from '../../../src/icon/mui/content/send';
 import SrcIconMuiContentReport from '../../../src/icon/mui/content/report';
+import SrcIconMuiContentCopyall from '../../../src/icon/mui/content/copy_all';
+import SrcIconMuiContentContentcopy from '../../../src/icon/mui/content/content_copy';
 import SrcIconMuiContentAdd from '../../../src/icon/mui/content/add';
 import SrcIconMuiContentAddcircle_outline from '../../../src/icon/mui/content/add_circle_outline';
 import SrcIconMuiContentClear from '../../../src/icon/mui/content/clear';
@@ -37,7 +41,11 @@ import SrcIconMuiContentRemovecircle_outline from '../../../src/icon/mui/content
 import SrcIconMuiHardverKeyboardreturn from '../../../src/icon/mui/hardver/keyboard_return';
 import SrcIconMuiHardverKeyboardbackspace from '../../../src/icon/mui/hardver/keyboard_backspace';
 import SrcIconMuiImageAddphoto_alternate from '../../../src/icon/mui/image/add_photo_alternate';
+import SrcIconMuiImagePhotolibrary from '../../../src/icon/mui/image/photo_library';
 import SrcIconMuiImageTune from '../../../src/icon/mui/image/tune';
+import SrcIconMuiImageHideimage from '../../../src/icon/mui/image/hide_image';
+import SrcIconMuiImageImagesearch from '../../../src/icon/mui/image/image_search';
+import SrcIconMuiImageImage from '../../../src/icon/mui/image/image';
 import SrcIconMuiImageLens from '../../../src/icon/mui/image/lens';
 import SrcIconMuiToggleStar from '../../../src/icon/mui/toggle/star';
 import SrcIconMuiSocialPersonadd from '../../../src/icon/mui/social/person_add';
@@ -262,6 +270,18 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
       
 
         <div className="col-1-5">
+        <SrcIconMuiContentContentpaste className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/content/content_paste</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiContentContentcut className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/content/content_cut</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiContentSend className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/content/send</div>
         </div>
@@ -270,6 +290,18 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
         <div className="col-1-5">
         <SrcIconMuiContentReport className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/content/report</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiContentCopyall className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/content/copy_all</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiContentContentcopy className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/content/content_copy</div>
         </div>
       
 
@@ -322,8 +354,32 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
       
 
         <div className="col-1-5">
+        <SrcIconMuiImagePhotolibrary className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/image/photo_library</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiImageTune className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/image/tune</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiImageHideimage className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/image/hide_image</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiImageImagesearch className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/image/image_search</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiImageImage className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/image/image</div>
         </div>
       
 
