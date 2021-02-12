@@ -73,7 +73,7 @@ export const addRecords = (records: [], grid?: string) =>
 });
 
 /**
- * Change record props is database
+ * Change and extends exist record
  *
  * @since 1.0.0
  * @memberof Actions/Grid
@@ -91,7 +91,7 @@ export const modifyOrAddRecord = (record: {}, grid?: string) =>
   modifyRecord(record, grid, { enableAddReacord: true });
 
 /**
- * Change records props is database
+ * Replace records new value
  *
  * @memberof Actions/Grid
  * @param {Array} records
