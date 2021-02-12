@@ -513,6 +513,7 @@ GridView.propTypes =
    * @private
    */
   close: PropTypes.func.isRequired,
+  responseParser: PropTypes.func,
 };
 
 /**
