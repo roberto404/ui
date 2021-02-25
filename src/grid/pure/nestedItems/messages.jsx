@@ -38,6 +38,11 @@ const MessageGroup = ({ title , level, children }) =>
 };
 
 /**
+ * When one person send more than on message
+ */
+let prevMessageSender;
+
+/**
  * [Messages description]
  * @param {[type]}  index    [description]
  * @param {[type]}  children [description]
@@ -70,15 +75,19 @@ const Messages = ({ index, children, level, items, isFirst, isLast, userId }) =>
     deliveredDateTime,
   } = items;
 
-  // Response
+  const isFirstFromSender = prevMessageSender !== items.sender;
 
+  prevMessageSender = items.sender;
+
+
+  // to me
   if (items.sender && items.sender.toString() !== userId.toString())
   {
     return (
       <div className="flex" style={{ width: '450px' }}>
 
         <div className="mr-1 w-4">
-          { isFirst === true &&
+          { isFirstFromSender === true &&
           <div className="avatar">
             <span>{name[0]}</span>
           </div>
@@ -105,6 +114,7 @@ const Messages = ({ index, children, level, items, isFirst, isLast, userId }) =>
       </div>
     );
   }
+  // from me
   else
   {
     return (
