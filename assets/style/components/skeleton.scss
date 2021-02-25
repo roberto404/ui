@@ -1,14 +1,19 @@
 
 
 
+  [class^="skeleton"],
+  [class*=" skeleton"]
+  {
+    background: rgba(0, 0, 0, 0.1);
+    animation: skeleton-animation 1s infinite ease-out;
+  }
+
   [class^="skeleton-line"],
   [class*=" skeleton-line"]
   {
-    background: rgba(0, 0, 0, 0.1);
     height: 0.85em;
     margin-bottom: .65em;
     border-radius: 6px;
-    animation: skeleton-animation 1s infinite ease-out;
   }
 
   .skeleton-line-s

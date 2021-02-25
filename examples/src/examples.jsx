@@ -49,6 +49,7 @@ import GridNestedListAccordion from './grid/nestedListAccordion';
 /* !- Example: Layer */
 
 import LayerActions from './layer/actions';
+import LayerModals from './layer/modals';
 
 
 /* !- Example: Caroussel */
@@ -150,6 +151,7 @@ export default {
   },
   layer: {
     actions: LayerActions,
+    modals: LayerModals,
   },
   caroussel: {
     slides: CarousselSlides,

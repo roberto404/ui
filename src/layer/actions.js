@@ -290,6 +290,7 @@ export const modal = (props = {}, options = {}) =>
   method: 'dialog',
   element: <Modal {...props} />,
   options,
+  containerStyle: options.containerStyle,
 });
 
 /**

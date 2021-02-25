@@ -8,23 +8,23 @@
     width: 4em;
     height: 4em;
     padding: 0;
-    margin: 8rem auto 0;
+    margin: 1rem auto 0;
     background: $gray-dark;
     border-radius: 100%;
     border: 3px solid white;
 
-    &::before
-    {
-      content: '';
-      display: block;
-      width: 100%;
-      height: 15rem;
-      background: $gray-light;
-      position: absolute;
-      right: 0;
-      top: 0;
-      z-index: -1;
-    }
+    // &::before
+    // {
+    //   content: '';
+    //   display: block;
+    //   width: 100%;
+    //   height: 15rem;
+    //   background: $gray-light;
+    //   position: absolute;
+    //   right: 0;
+    //   top: 0;
+    //   z-index: -1;
+    // }
 
     svg
     {
@@ -45,10 +45,10 @@
     {
       background: $red-dark;
 
-      &::before
-      {
-        background: $red-light;
-      }
+      // &::before
+      // {
+      //   background: $red-light;
+      // }
     }
   }
 
@@ -58,10 +58,10 @@
     {
       background: $blue-dark;
 
-      &::before
-      {
-        background: $blue-light;
-      }
+      // &::before
+      // {
+      //   background: $blue-light;
+      // }
     }
   }
 
@@ -71,10 +71,10 @@
     {
       background: $yellow-dark;
 
-      &::before
-      {
-        background: $yellow-light;
-      }
+      // &::before
+      // {
+      //   background: $yellow-light;
+      // }
     }
   }
 
@@ -84,10 +84,10 @@
     {
       background: $green-dark;
 
-      &::before
-      {
-        background: $green-light;
-      }
+      // &::before
+      // {
+      //   background: $green-light;
+      // }
     }
   }
 

@@ -1,23 +1,18 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 
-/* !- React Elements */
-
-// import GridUI from './grid';
-
-
 /* !- Actions */
 
-// import * as GridActions from './actions';
+import { flush } from './actions';
 
 
-/* !- Actions */
+/* !- Constants */
 
-// import { DEFAULT_METHOD } from './constants';
+// ...
+
 
 /**
  * Layer Redux Stateless Component
@@ -34,12 +29,34 @@ const Modal = (
     buttonSecondary,
     className,
   },
+  {
+    store,
+  }
 ) =>
 {
-  const onClickButtonHandler = () =>
+  const onClickButtonHandler = (event) =>
   {
-    console.log('onClickButtonHandler');
+    event.preventDefault();
+    
+    if (button.handler(store.getState().form.modal) !== false)
+    {
+      store.dispatch(flush());
+    }
   };
+
+  const onClickSecondaryButtonHandler = (event) =>
+  {
+    event.preventDefault();
+
+    if (buttonSecondary.handler)
+    {
+      buttonSecondary.handler();
+    }
+    else
+    {
+      store.dispatch(flush());
+    }
+  }
 
   const modalClasses = classNames({
     modal: true,
@@ -74,7 +91,7 @@ const Modal = (
         { button &&
           <button
             className="button secondary"
-            onClick={button.handler}
+            onClick={onClickButtonHandler}
           >
             {button.title}
           </button>
@@ -83,7 +100,7 @@ const Modal = (
         { buttonSecondary &&
           <button
             className="button"
-            onClick={buttonSecondary.handler}
+            onClick={onClickSecondaryButtonHandler}
           >
             {buttonSecondary.title}
           </button>
@@ -95,28 +112,17 @@ const Modal = (
   );
 };
 
-// Grid.propTypes =
+// Modal.propTypes =
 // {
-//   ...GridUI.propTypes,
-//   onClick: PropTypes.oneOfType([
-//     PropTypes.func,
-//     PropTypes.bool,
-//   ]),
-// };
-//
-// Grid.defaultProps =
-// {
-//   ...GridUI.defaultProps,
-//   /**
-//    * Invoke when user click to grid cell
-//    * (rowIndex, colIndex) => console.log(rowIndex, colIndex)
-//    *
-//    * @param  {integer} rowIndex
-//    * @param  {integer} colIndex
-//    */
-//   onClick: false,
 // };
 
+// Modal.defaultProps =
+// {
+// };
 
+Modal.contextTypes =
+{
+  store: PropTypes.object,
+}
 
 export default Modal;
