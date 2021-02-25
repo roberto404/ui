@@ -155,10 +155,6 @@ Select.propTypes =
     })),
   ]),
   /**
-   * Disable select options i18n translatations
-   */
-  dataTranslate: PropTypes.bool,
-  /**
    * Callback function that is fired when the textfield's focus lost.
    *
    * @param {string} newValue The new value of the text field.
@@ -183,7 +179,6 @@ Select.defaultProps =
   ...Select.defaultProps,
   placeholder: '',
   data: [],
-  dataTranslate: true,
   onBlur()
   {},
   onFocus()

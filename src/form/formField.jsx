@@ -154,7 +154,7 @@ class FormField extends Component
     }
 
     // TODO App listener and remove
-    if (typeof this.element !== 'undefined' && this.props.onPaste)
+    if (this.element && this.props.onPaste)
     {
       this.element.addEventListener('paste', this.onPasteHandler);
     }
@@ -802,6 +802,11 @@ FormField.propTypes =
   disableLabel: PropTypes.bool,
   complete: PropTypes.bool,
   preload: PropTypes.bool,
+  /**
+   * Disable data options i18n translatations
+   * like select options
+   */
+  dataTranslate: PropTypes.bool,
 };
 
 /**
@@ -838,6 +843,7 @@ FormField.defaultProps =
   disableLabel: false,
   complete: false,
   preload: false,
+  dataTranslate: true,
 };
 
 FormField.contextTypes =

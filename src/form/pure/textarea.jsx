@@ -81,6 +81,7 @@ class Textarea extends Field
           disabled={this.props.disabled}
           maxLength={this.props.length}
           rows={this.props.rows}
+          style={this.props.resizeAble === false ? { resize: 'none' } : undefined}
 
           onChange={this.onChangeTextareaHandler}
           onBlur={this.onBlurHandler}
@@ -144,6 +145,10 @@ Textarea.propTypes =
    * Special placeholder, when state.value type is array
    */
   multipleData: PropTypes.string,
+  /**
+   * Resizeable textarea input
+   */
+  resizeAble: PropTypes.bool,
 };
 
 /**
@@ -162,6 +167,7 @@ Textarea.defaultProps =
   onFocus()
   {},
   regexp: '',
+  resizeAble: true,
 };
 
 export default Textarea;

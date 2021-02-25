@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import capitalizeFirstLetter from '@1studio/utils/string/capitalizeFirstLetter';
 
 
 /* !- Redux Action */
@@ -82,9 +83,16 @@ class Dropdown extends Field
   {
     this.context.store.dispatch(close());
 
-    this.onChangeHandler(
-      this.props.multiple ? this.createMultipleValueHelper(this.state.value, id) : id,
-    );
+    if (this.props.multiple &&!id && this.props.placeholder && !find(this.data, i => i.id === 0))
+    {
+      this.onChangeHandler([]);
+    }
+    else
+    {
+      this.onChangeHandler(
+        this.props.multiple ? this.createMultipleValueHelper(this.state.value, id) : id,
+      );
+    }
   }
 
   onClickButtonHandler = (event) =>
@@ -100,7 +108,12 @@ class Dropdown extends Field
 
     if (this.props.placeholder && !find(this.data, i => i.id === 0))
     {
-      data.unshift({ id: 0, title: this.props.placeholder });
+      data.unshift({
+        id: 0,
+        title: this.props.intl ?
+          this.props.intl.formatMessage({ id: this.props.placeholder, default: this.props.placeholder })
+          : this.props.placeholder,
+      });
     }
 
     this.context.store.dispatch(menu(
@@ -109,7 +122,7 @@ class Dropdown extends Field
           ({
             ...item,
             title: this.props.intl && this.props.dataTranslate ?
-              this.props.intl.formatMessage({ id: item.title, default: item.title })
+              capitalizeFirstLetter(this.props.intl.formatMessage({ id: item.title, default: item.title }))
               : item.title,
             className: item.className + (isActive(item.id) ? ' active' : ''),
             handler: item.handler ?
@@ -136,8 +149,24 @@ class Dropdown extends Field
     let value = this.state.value || [];
     value = Array.isArray(value) ? value : [value];
 
+    const placeholder = this.props.intl && this.props.dataTranslate ?
+      this.props.intl.formatMessage({ id: this.props.placeholder, default: this.props.placeholder })
+      : this.props.placeholder;
+
     const valueText = value
-      .map(id => (this.data.find(item => item.id.toString() === id.toString()) || {}).title || '?')
+      .map(id =>
+      {
+        const title = (this.data.find(item => item.id.toString() === id.toString()) || {}).title;
+
+        if (title)
+        {
+          return this.props.intl && this.props.dataTranslate ?
+            capitalizeFirstLetter(this.props.intl.formatMessage({ id: title, default: title }))
+            : title;
+        }
+
+        return '?';
+      })
       .join(', ');
 
     return super.render() || (
@@ -156,7 +185,7 @@ class Dropdown extends Field
             this.element = ref;
           }}
         >
-          { valueText || this.props.placeholder }
+          { valueText || placeholder }
         </button>
 
         { this.state.error &&
