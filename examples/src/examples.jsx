@@ -50,6 +50,7 @@ import GridNestedListAccordion from './grid/nestedListAccordion';
 
 import LayerActions from './layer/actions';
 import LayerModals from './layer/modals';
+import LayerPopover from './layer/popover';
 
 
 /* !- Example: Caroussel */
@@ -152,6 +153,7 @@ export default {
   layer: {
     actions: LayerActions,
     modals: LayerModals,
+    popover: LayerPopover,
   },
   caroussel: {
     slides: CarousselSlides,

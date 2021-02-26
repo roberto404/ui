@@ -17,6 +17,20 @@ import Menu from './menu';
 
 /* !- Constants */
 
+const extendPositions = ({ left, top, width, height }) =>
+{
+  const positions = { width, height, center: {}, screen: {} };
+
+  positions.left = left + window.pageXOffset;
+  positions.top = top + window.pageYOffset;
+  positions.center.x = positions.left + (positions.width / 2);
+  positions.center.y = positions.top + (positions.height / 2);
+  positions.screen.x = (positions.left - window.pageXOffset) / window.innerWidth;
+  positions.screen.y = (positions.top - window.pageYOffset) / window.innerHeight;
+
+  return positions;
+}
+
 const getPositionsElement = (target) =>
 {
   if (!target)
@@ -25,33 +39,13 @@ const getPositionsElement = (target) =>
   }
 
   const rect = target.getBoundingClientRect();
-  const positions = {
-    bottom: rect.bottom,
-    height: rect.height,
-    left: rect.left,
-    right: rect.right,
-    top: rect.top,
-    width: rect.width,
-    x: rect.x,
-    y: rect.y,
-    center: {},
-    screen: {},
-  };
-
-  positions.left += window.pageXOffset;
-  positions.top += window.pageYOffset;
-  positions.center.x = positions.left + (positions.width / 2);
-  positions.center.y = positions.top + (positions.height / 2);
-  positions.screen.x = (positions.left - window.pageXOffset) / window.innerWidth;
-  positions.screen.y = (positions.top - window.pageYOffset) / window.innerHeight;
-
-  return positions;
+  return extendPositions(rect)
 };
 
-const getDynamicPopoverStyle = (target) =>
+const getDynamicPopoverStyle = (position) =>
 {
   const style = {};
-  const { screen, left, top, center, width, height } = getPositionsElement(target);
+  const { screen, left, top, center, width, height } = position;
 
   if (screen.x < 0.3)
   {
@@ -158,7 +152,17 @@ export const sidebar = (element: React.Element, options = {}) =>
  * @memberof Actions/Layer
  * @param {ReactElement} element Layer (popover) content
  * @param {object} event
- * @param {object} options { className: 'no-close' }
+ * @param {object} options { className, containerStyle, useMousePosition }
+ * @example
+ * popover(
+ *  <span>Hello</span>,
+ *  event,
+ *  {
+ *    className: 'no-close',
+ *    containerStyle: { width: '400px' },
+ *    useMousePosition: true,
+ *  },
+ * );
  */
 export const popover = (element: React.Element | string, event: {} = {}, options = {}) =>
 {
@@ -168,7 +172,16 @@ export const popover = (element: React.Element | string, event: {} = {}, options
 
   if (target)
   {
-    containerStyle = { ...getDynamicPopoverStyle(target), ...containerStyle };
+    const position = options.useMousePosition ? 
+      extendPositions({
+        left: event.clientX + window.pageXOffset,
+        top: event.clientY + window.pageYOffset,
+        width: 0,
+        height: 0,
+      })
+      : getPositionsElement(target);
+
+    containerStyle = { ...getDynamicPopoverStyle(position), ...containerStyle };
   }
 
   // console.log(target);
