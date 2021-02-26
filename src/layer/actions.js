@@ -346,14 +346,14 @@ export const preload = (element: React.Element, event: SyntheticEvent<>) =>
  * @param  {Object} [props={}] { id, title, handler, icon }
  * @param  {Event} event
  */
-export const menu = (props = {}, event: SyntheticEvent<> | {} = {}) =>
-  popover(<Menu {...props} />, event, { className: 'no-padding no-close' });
+export const menu = (props = {}, event: SyntheticEvent<> | {} = {}, options = {}) =>
+  popover(<Menu {...props} />, event, { ...options, className: 'no-padding no-close' });
 
 
-export const contextMenu = (props = {}, event: SyntheticEvent<> | {} = {}) =>
+export const contextMenu = (props = {}, event: SyntheticEvent<> | {} = {}, options = {}) =>
 {
   event.preventDefault();
-  return menu(props, event);
+  return menu(props, event, options);
 }
 
 /* !- Alias actions */
