@@ -20,7 +20,7 @@ export const MODAL_PROPS = {
     title: 'Are you sure you want to submit?',
     // content: '',
     icon: IconSubmit,
-    className: 'green',
+    className: 'green w-full',
     button: {
       title: 'Submit',
       handler: callback,
@@ -38,7 +38,7 @@ export const MODAL_PROPS = {
       </Form>
     ),
     icon: IconSubmit,
-    className: 'green',
+    className: 'green w-full',
     button: {
       title: 'Submit',
       handler: callback,
@@ -52,7 +52,7 @@ export const MODAL_PROPS = {
     title: 'Are you sure you want to delete?',
     content: 'This item will be deleted immediately. You can\'t undo this action.',
     icon: IconDelete,
-    className: 'red',
+    className: 'red w-full',
     button: {
       title: 'Delete',
       handler: callback,
@@ -70,7 +70,7 @@ export const MODAL_PROPS = {
       </Form>
     ),
     icon: IconDelete,
-    className: 'red',
+    className: 'red w-full',
     button: {
       title: 'Delete',
       handler: callback,

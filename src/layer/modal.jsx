@@ -38,7 +38,7 @@ const Modal = (
   {
     event.preventDefault();
     
-    if (button.handler(store.getState().form.modal) !== false)
+    if (button.handler(store.getState().form.modal || {}) !== false)
     {
       store.dispatch(flush());
     }
