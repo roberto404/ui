@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 // import { connect } from 'react-redux';
 import { saveAs } from 'file-saver';
 import clone from 'lodash/clone';
+import isEmpty from 'lodash/isEmpty';
 import toCSV from '@1studio/utils/array/toCSV';
 
 
@@ -15,7 +16,7 @@ import toCSV from '@1studio/utils/array/toCSV';
 * @example
 * <GridDownload />
 */
-const GridDownload = ({ id, label, className }, context) =>
+const GridDownload = ({ id, label, className, hook }, context) =>
 {
   const onClickDownloadHandler = () =>
   {
@@ -28,7 +29,7 @@ const GridDownload = ({ id, label, className }, context) =>
 
       model.paginate = { limit: 0 };
 
-      const csv = toCSV(model.results, grid.hook);
+      const csv = toCSV(model.results, isEmpty(hook) ? grid.hook : hook);
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
       saveAs(blob, `${filename}.csv`);
@@ -57,6 +58,7 @@ GridDownload.propTypes =
     PropTypes.object,
   ]),
   className: PropTypes.string,
+  hook: PropTypes.object,
 };
 
 /**
@@ -68,6 +70,7 @@ GridDownload.defaultProps =
   id: '',
   label: 'Download',
   className: '',
+  hook: {},
 };
 
 /**
