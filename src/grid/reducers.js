@@ -216,7 +216,7 @@ const reducers = (state = {}, action = {}) =>
               ...record,
             };
 
-            result[index] = record;
+            result[index] = nextRecord;
 
             return result;
           },
