@@ -112,7 +112,7 @@ class Slides extends Component
     {
       this.initHammerDrag();
     }
-    // this.initPaginationListener();
+    this.initPaginationListener();
     this.startAutoPlay();
   }
 
