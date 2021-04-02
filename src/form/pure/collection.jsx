@@ -119,7 +119,7 @@ class Collection extends Field
     const UI = this.props.UI;
 
     return (
-      <div className="v-center">
+      <div className="v-center" key={index}>
         <UI
           {...this.props.uiProps}
           record={record}
@@ -178,6 +178,7 @@ Collection.propTypes =
   ...Collection.propTypes,
   draggable: PropTypes.bool,
   UI: PropTypes.func,
+  value: PropTypes.array,
 };
 
 /**

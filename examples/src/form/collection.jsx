@@ -169,6 +169,8 @@ const Example = (props, { store }) =>
     ],
   }, 'example'));
 
+
+
   return (
     <Form
       id="example"
@@ -226,6 +228,40 @@ const Example = (props, { store }) =>
             { id: 2, title: 'bar' },
           ],
           draggable: true,
+        }}
+        draggable
+        />
+
+
+      <h2>Custom UI Nested items (GridSearch) Extra</h2>
+      <Collection
+        id="collection3"
+        value={[[{ field: '1', operator: '=', value: '' }]]}
+        UI={NestedCollectionItem}
+        uiProps={{
+          fields: [
+            { id: 1, title: 'foo' },
+            { id: 2, title: 'bar' },
+            {
+              id: '3',
+              title: 'baz',
+              field: (
+                <Select
+                  data={[
+                    { id: 1, title: 'foo'},
+                    { id: 2, title: 'bar'},
+                    { id: 3, title: 'baz'},
+                  ]}
+                  dataTranslate={false}
+                />
+              ),
+              operators: ['='],
+            },
+          ],
+          operators: ['=', '!=', '>', '<'],
+          draggable: true,
+          dataTranslateFields: false,
+          dataTranslateOperators: false,
         }}
         draggable
       />

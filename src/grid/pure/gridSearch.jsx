@@ -32,7 +32,14 @@ import { OPERATOR_REGEX, LOGICAL_REGEX, OPERATOR_KEYS, OPERATOR_UNIQUE } from '.
  * Form Collection Item:
  * Render term of search rows on Advance Dialog
  */
-export const CollectionItem = ({ onChange, record, fields }) =>
+export const CollectionItem = ({
+  onChange,
+  record,
+  fields,
+  operators,
+  dataTranslateOperators,
+  dataTranslateFields,
+}) =>
 {
   /**
    * onChange => { field, operator, value }
@@ -43,7 +50,7 @@ export const CollectionItem = ({ onChange, record, fields }) =>
     onChange({ ...record, [collectionId]: value });
   };
 
-  const field = (fields.find(field => field.id === record.field) || {}).field;
+  const item = (fields.find(field => field.id === record.field) || {});
 
   /**
    * form collection pass onChange method
@@ -54,21 +61,21 @@ export const CollectionItem = ({ onChange, record, fields }) =>
         id="search#field"
         onChange={onChangeHandler}
         data={fields}
-        dataTranslate={false}
+        dataTranslate={dataTranslateFields}
         className="col-4-12"
         value={record.field}
       />
       <Select
         id="search#operator"
         onChange={onChangeHandler}
-        data={OPERATOR_KEYS.map(id => ({ id, title: id }))}
-        dataTranslate={false}
+        data={(item.operators || operators).map(id => ({ id, title: id }))}
+        dataTranslate={dataTranslateOperators}
         className="col-3-12"
         value={record.operator}
       />
-      { field !== undefined &&
+      { item.field !== undefined &&
           React.cloneElement(
-            field,
+            item.field,
             {
               className: 'col-5-12',
               id: 'search#value',
@@ -77,7 +84,7 @@ export const CollectionItem = ({ onChange, record, fields }) =>
             },
           )
       }
-      { field === undefined &&
+      { item.field === undefined &&
       <Input
         id="search#value"
         className="col-5-12"
@@ -92,9 +99,23 @@ export const CollectionItem = ({ onChange, record, fields }) =>
 CollectionItem.defaultProps =
 {
   fields: [],
+  operators: OPERATOR_KEYS,
+  dataTranslateFields: false,
+  dataTranslateOperators: true,
+
 }
 
-export const NestedCollectionItem = ({ record, index, id, onChange, fields, draggable }) =>
+export const NestedCollectionItem = ({
+  record,
+  index,
+  id,
+  onChange,
+  fields,
+  operators,
+  dataTranslateFields,
+  dataTranslateOperators,
+  draggable,
+}) =>
 {
   const onChangePropsFiltersHandler = ({ value }) =>
   {
@@ -110,6 +131,9 @@ export const NestedCollectionItem = ({ record, index, id, onChange, fields, drag
       UI={CollectionItem}
       uiProps={{
         fields,
+        operators,
+        dataTranslateFields,
+        dataTranslateOperators,
       }}
       draggable={draggable}
       value={record}
