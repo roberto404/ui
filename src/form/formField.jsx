@@ -310,7 +310,7 @@ class FormField extends Component
    * @param  {string} value Current value of the field
    * @return {void}
    */
-  onChangeHandler = (value) =>
+  onChangeHandler = (value, event) =>
   {
     if (!this.validate(value))
     {
@@ -331,6 +331,7 @@ class FormField extends Component
 
     const options = {
       reduce,
+      event,
     }
 
     const form = this.props.form || this.context.form;

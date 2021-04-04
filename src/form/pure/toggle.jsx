@@ -34,7 +34,7 @@ class Toggle extends Field
   onChangeToggleHandler = (event) =>
   {
     event.preventDefault();
-    this.onChangeHandler(typeof this.state.value === 'boolean' ? !this.state.value : !parseInt(this.state.value));
+    this.onChangeHandler(typeof this.state.value === 'boolean' ? !this.state.value : !parseInt(this.state.value), event);
   }
 
   /* !- Renders */
