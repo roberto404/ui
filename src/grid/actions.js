@@ -88,7 +88,8 @@ export const modifyRecord = (record: {}, grid?: string, options = {}) =>
 });
 
 export const modifyOrAddRecord = (record: {}, grid?: string) =>
-  modifyRecord(record, grid, { enableAddReacord: true });
+  modifyRecord(record, grid, { enableAddRecord: true });
+
 
 /**
  * Replace records new value
@@ -96,12 +97,16 @@ export const modifyOrAddRecord = (record: {}, grid?: string) =>
  * @memberof Actions/Grid
  * @param {Array} records
  */
-export const modifyRecords = (records: [], grid?: string) =>
+export const modifyRecords = (records: [], grid?: string, options = {}) =>
 ({
   type: 'MODIFY_GRID_RECORDS',
   records,
   grid,
+  options,
 });
+
+export const modifyOrAddRecords = (records: [], grid?: string) =>
+  modifyRecords(records, grid, { enableAddRecord: true });
 
 /**
  * Change record props is database

@@ -193,7 +193,7 @@ const reducers = (state = {}, action = {}) =>
 
           model.data = data;
         }
-        else if (action.options.enableAddReacord)
+        else if (action.options.enableAddRecord)
         {
           return reducers(state, addRecord(action.record, action.grid));
         }
@@ -216,7 +216,17 @@ const reducers = (state = {}, action = {}) =>
               ...record,
             };
 
-            result[index] = nextRecord;
+            if (index === -1)
+            {
+              if (action.options.enableAddRecord)
+              {
+                result.push(nextRecord);
+              }
+            }
+            else
+            {
+              result[index] = nextRecord;
+            }
 
             return result;
           },
