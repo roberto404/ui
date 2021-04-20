@@ -514,6 +514,7 @@ GridView.propTypes =
    */
   close: PropTypes.func.isRequired,
   responseParser: PropTypes.func,
+  fetchPreload: PropTypes.bool,
 };
 
 /**
@@ -531,6 +532,7 @@ GridView.defaultProps =
   className: 'grid',
   flushFiltersUnmount: true,
   style: {},
+  fetchPreload: false,
 };
 
 /**
