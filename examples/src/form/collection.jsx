@@ -15,6 +15,7 @@ import Form,
   Checkbox,
   Input,
   Select,
+  Toggle,
   Collection,
 }
 from '../../../src/form/pure/intl';
@@ -151,6 +152,32 @@ const CustomNestedCollectionItem = ({ record, index, id, onChange }) =>
   );
 };
 
+const Example1 = ({ record, index, id, fields, onChange }) =>
+{
+  const onChangeHandler = ({ id, value }) =>
+  {
+    const collectionId = id.substring(id.indexOf('#') + 1);
+    onChange({ ...record, [collectionId]: value });
+  };
+
+  return (
+    <div className="h-center w-full">
+      <Input
+        id="search#id"
+        className="grow m-0"
+        value={record.id}
+        onChange={onChangeHandler}
+      />
+      <Toggle
+        id="search#status"
+        className="m-0 w-6 mx-2"
+        value={record.status}
+        onChange={onChangeHandler}
+      />
+    </div>
+  );
+}
+
 
 /**
  * [Example description]
@@ -176,7 +203,7 @@ const Example = (props, { store }) =>
       id="example"
       className="p-2"
     >
-      <h2>Default collection UI items</h2>
+      {/* <h2>Default collection UI items</h2>
       <Collection
         id="collection"
         label="Collection"
@@ -283,7 +310,21 @@ const Example = (props, { store }) =>
             },
           },
         ]}
+      /> */}
+
+
+      <h2>Use Case #1</h2>
+      <div className="h-center w-full pb-1" style={{ paddingRight: '5rem' }}>
+        <div className="grow light text-s">id</div>
+        <div className="w-6 mx-2 light text-s">status</div>
+      </div>
+      <Collection
+        id="example1"
+        UI={Example1}
+        value={[{ id: 'AAA', status: true }]}
+        draggable
       />
+      
     </Form>
   );
 };
