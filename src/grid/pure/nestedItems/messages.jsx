@@ -89,7 +89,7 @@ const Messages = ({ index, children, level, items, isFirst, isLast, userId }) =>
         <div className="mr-1 w-4">
           { isFirstFromSender === true &&
           <div className="avatar">
-            <span>{name[0]}</span>
+            <span>{name ? name[0] : ''}</span>
           </div>
           }
         </div>
@@ -101,7 +101,7 @@ const Messages = ({ index, children, level, items, isFirst, isLast, userId }) =>
             borderTopLeftRadius: isFirst ? '0' : '1rem',
           }}
         >
-          { isFirst === true &&
+          { isFirstFromSender === true &&
           <div className="text-blue-dark text-xs light pb-1">
             {name}
           </div>
