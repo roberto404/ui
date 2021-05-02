@@ -116,11 +116,12 @@ class DropZoneFileList extends Component
       id,
       item,
       items,
-      preview,
-      editor,
     } = this.props;
 
-    const element = this.state.activeItemIndex === null ? preview : editor;
+    const state = this.state.activeItemIndex === null ? 'preview' : 'editor'
+    const element = this.props[state];
+
+    const stateProps = this.props[`${state}Props`] || {};
 
     const props = {
       ...this.props,
@@ -128,6 +129,7 @@ class DropZoneFileList extends Component
       onChange: this.state.activeItemIndex === null ? this.onChangeItemsHandler : this.onChangeItemHandler,
       onEdit: this.onEditListener,
       onNavigation: this.onNavigationListener,
+      ...stateProps,
     };
 
     return React.createElement(element, props);
