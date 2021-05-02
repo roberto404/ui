@@ -220,7 +220,7 @@ class CardEditor extends Component
   render()
   {
     return (
-      <div className="pin column bg-white" style={{ zIndex: 999 }}>
+      <div className={this.props.className} style={{ zIndex: 999 }}>
 
         {/* Toolbar */}
 
@@ -361,7 +361,7 @@ CardEditor.defaultProps =
     //   settings: 'Szöveg helye',
     // },
   },
-  store: PropTypes.object,
+  className: 'pin column bg-white',
 };
 
 CardEditor.contextTypes =
