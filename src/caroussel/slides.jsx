@@ -178,7 +178,6 @@ class Slides extends Component
 
   dragListener = (event) =>
   {
-    console.log(event.type);
     if (!this.slides || !this.mask || !this.slides.offsetWidth || !this.mask.offsetWidth)
     {
       return;
@@ -233,6 +232,7 @@ class Slides extends Component
           if (Math.abs(this.state.x) / this.mask.offsetWidth > 0.1)
           {
             const direction = this.state.x < 0 ? 1 : -1;
+            
             const steps = Math.ceil(
               Math.abs(this.state.x) / (this.mask.offsetWidth / this.props.visibleSlides),
             );
@@ -273,7 +273,7 @@ class Slides extends Component
 
   goToSlide = (page) =>
   {
-    const nextPage = (((page < this.props.totalPage ? page : 1) - 1) * this.props.stepSlides) + 1;
+    const nextPage = (((page <= this.props.totalPage ? page : 1) - 1) * this.props.stepSlides) + 1;
 
     if (nextPage !== this.props.page)
     {
