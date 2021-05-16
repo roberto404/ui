@@ -325,21 +325,21 @@ class Grid extends Component
             handler: this.onKeyArrowHandler(-1),
             description: 'Grid Arrow Up',
           },
-          {
-            keyCode: 'ArrowLeft',
-            handler: this.onKeyArrowHandler(-1),
-            description: 'Grid Arrow Left',
-          },
+          // {
+          //   keyCode: 'ArrowLeft',
+          //   handler: this.onKeyArrowHandler(-1),
+          //   description: 'Grid Arrow Left',
+          // },
           {
             keyCode: 'ArrowDown',
             handler: this.onKeyArrowHandler(+1),
             description: 'Grid Arrow Down',
           },
-          {
-            keyCode: 'ArrowRight',
-            handler: this.onKeyArrowHandler(+1),
-            description: 'Grid Arrow Right',
-          },
+          // {
+          //   keyCode: 'ArrowRight',
+          //   handler: this.onKeyArrowHandler(+1),
+          //   description: 'Grid Arrow Right',
+          // },
           {
             keyCode: 'CTRL+A',
             handler: this.onKeySelectAllHandler,
