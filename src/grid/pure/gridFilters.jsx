@@ -167,8 +167,11 @@ class GridFilters extends Component
         {
           Object.keys(filter.values[0]).forEach((id) =>
           {
-            filter.values[0][id].forEach(value =>
-              result.push({ id: filter.id, value: [id, value] }));
+            if (Array.isArray(filter.values[0][id]))
+            {
+              filter.values[0][id].forEach(value =>
+                result.push({ id: filter.id, value: [id, value] }));
+            }
           });
         }
         return result;
