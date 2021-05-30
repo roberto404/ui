@@ -12,14 +12,44 @@ import IconFavorite from '../../../src/icon/mui/action/favorite';
 
 import { setValues } from '../../../src/form/actions';
 import FileList from '../../../src/form/pure/dropzoneFileList';
+
+import DefaultPreview from '../../../src/form/pure/dropzoneFileListPreview';
+import DefaultPreviewItem from '../../../src/grid/pure/gridRows/filelist';
+import DefaultEditor from '../../../src/form/pure/dropzoneCardEditor';
+
 import Editor from '../../../src/form/pure/dropzoneImageEditor';
 import Preview from '../../../src/form/pure/dropzoneImagePreview';
-// import Editor from '../../../src/form/pure/dropzoneCardEditor';
-// import Preview from '../../../src/form/pure/dropzoneCardPreview';
-
 
 
 /* !- Constants */
+
+const Sidebar = ({
+  id,
+  status,
+  onChange,
+}) =>
+{
+  return (
+    <div style={{ minWidth: 600 }}>
+      <input
+        value={title}
+        id="title"
+        onChange={onChange}
+        placeholder="Title"
+        className="mb-1"
+      />
+      <select
+        value={title}
+        id="status"
+        onChange={onChange}
+        className="mb-1"
+      >
+        <option value="0">inactive</option>
+        <option value="1">active</option>
+      </select>
+    </div>
+  )
+}
 
 const imageSizes = [
   { size: '36x36' },
@@ -41,6 +71,8 @@ const Example = (props, { store }) =>
       //     settings: 'Második',
       //   },
       // ],
+      title: 'A',
+      status: 0,
     },{
       ext: "jpg",
       id: "8800",
@@ -64,6 +96,8 @@ const Example = (props, { store }) =>
     },{
       ext: "jpg",
       id: "8802",
+      title: 'B',
+      status: 1,
     }],
   }, 'example'));
 
@@ -78,6 +112,30 @@ const Example = (props, { store }) =>
         id="images"
       />
 
+      <h2>Custom: Default</h2>
+      <Dropzone
+        url={`http://localhost/api/v3/file/upload?resize=${JSON.stringify(imageSizes)}`}
+        maxFilesSize={10}
+        id="images"
+      >
+        <FileList
+          draggable={false}
+          preview={DefaultPreview}
+          previewProps={{ element: (props) => (
+            <div className="relative">
+              { props.data.status !== undefined && parseInt(props.data.status) === 0 &&
+              <div className="absolute bg-black p-1/2 no-events" style={{ zIndex: 1, bottom: '4rem', right: '2rem' }}>
+                <IconFavorite className="w-2 h-2 fill-white" />
+              </div>
+              }
+              <DefaultPreviewItem {...props} />
+            </div>
+          )}}
+          editor={DefaultEditor}
+          editorProps={{ Sidebar }}
+        />
+      </Dropzone>
+
       <h2>Custom file preview/editor</h2>
       <Dropzone
         url={`http://localhost/api/v3/file/upload?resize=${JSON.stringify(imageSizes)}`}
@@ -89,6 +147,7 @@ const Example = (props, { store }) =>
           editor={Editor}
         />
       </Dropzone>
+
     </Form>
   )
 };

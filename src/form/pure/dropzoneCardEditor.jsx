@@ -39,6 +39,49 @@ const DEFAULT_STATE =
   tag: '',
 };
 
+const Sidebar = ({
+  title,
+  subTitle,
+  url,
+  tag,
+  onChange,
+}) =>
+{
+  const onChangeInputHandler = onChange;
+
+  return (
+    <div>
+      <input
+        value={title}
+        id="title"
+        onChange={onChangeInputHandler}
+        placeholder="Kép címe"
+        className="mb-1"
+      />
+      <textarea
+        value={subTitle}
+        id="subTitle"
+        onChange={onChangeInputHandler}
+        placeholder="Kép alcíme"
+        className="mb-1"
+      />
+      <input
+        value={url}
+        id="url"
+        onChange={onChangeInputHandler}
+        placeholder="Hivatkozott weboldal"
+        className="mb-1"
+      />
+      <input
+        value={tag}
+        id="tag"
+        onChange={onChangeInputHandler}
+        placeholder="Címkék"
+      />
+  </div>
+);
+}
+
 
 
 class CardEditor extends Component
@@ -219,6 +262,8 @@ class CardEditor extends Component
 
   render()
   {
+    const Sidebar = this.props.Sidebar;
+
     return (
       <div className={this.props.className} style={{ zIndex: 999 }}>
 
@@ -303,7 +348,6 @@ class CardEditor extends Component
           </div>
 
           {/* Slidebar */}
-
           <div
             className={`m-${+this.state.visibleSettings} mt-0 p-${+this.state.visibleSettings} rounded shadow-outer-3 bg-white-light transition ease-in-out`}
             style={{
@@ -312,33 +356,7 @@ class CardEditor extends Component
               height: 'fit-content',
             }}
           >
-            <input
-              value={this.state.title}
-              id="title"
-              onChange={this.onChangeInputHandler}
-              placeholder="Kép címe"
-              className="mb-1"
-            />
-            <textarea
-              value={this.state.subTitle}
-              id="subTitle"
-              onChange={this.onChangeInputHandler}
-              placeholder="Kép alcíme"
-              className="mb-1"
-            />
-            <input
-              value={this.state.url}
-              id="url"
-              onChange={this.onChangeInputHandler}
-              placeholder="Hivatkozott weboldal"
-              className="mb-1"
-            />
-            <input
-              value={this.state.tag}
-              id="tag"
-              onChange={this.onChangeInputHandler}
-              placeholder="Címkék"
-            />
+            <Sidebar {...this.state} onChange={this.onChangeInputHandler} />
           </div>
 
         </div>
@@ -361,6 +379,7 @@ CardEditor.defaultProps =
     //   settings: 'Szöveg helye',
     // },
   },
+  Sidebar,
   className: 'pin column bg-white',
 };
 

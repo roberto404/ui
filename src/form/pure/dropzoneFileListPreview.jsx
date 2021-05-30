@@ -28,7 +28,7 @@ const SortableContainer = sortableContainer(({ children }) => {
 /**
  * [DropzoneFileListPreview description]
  */
-const DropzoneFileListPreview = ({ items, onEdit, onChange }) =>
+const DropzoneFileListPreview = ({ items, onEdit, onChange, element, draggable }) =>
 {
   const onDragEndHandler = (({ oldIndex, newIndex }) =>
   {
@@ -42,25 +42,39 @@ const DropzoneFileListPreview = ({ items, onEdit, onChange }) =>
     }
   });
 
-  return (
-    <SortableContainer onSortEnd={onDragEndHandler} axis="xy">
-      { items.map((item, index) =>
-        <SortableItem
-          key={`item-${index}`}
-          index={index}
-          element={<FileListGridRow data={item} />}
-        />
-      )}
-    </SortableContainer>
-  )
+  if (draggable)
+  {
+    return (
+      <SortableContainer onSortEnd={onDragEndHandler} axis="xy">
+        { items.map((item, index) =>
+          <SortableItem
+            key={`item-${index}`}
+            index={index}
+            element={React.createElement(element, { data: item })}
+          />
+        )}
+      </SortableContainer>
+    );
+  }
 
   // const files = items.map((item, index) =>
   // (
   //   <FileListGridRow key={`${item.id}|${index}`} data={item} onClick={() => onEdit(index)} />
   // ));
   //
-  // return <div className="grid-2-2">{files}</div>
+  return (
+    <div className="grid-2-2">
+      { items.map((item, index) => React.createElement(element, { data: item, key: index, onClick: () => onEdit(index) }))}
+    </div>
+  )
 };
+
+
+DropzoneFileListPreview.defaultProps =
+{
+  draggable: true,
+  element: FileListGridRow,
+}
 
 
 export default DropzoneFileListPreview;
