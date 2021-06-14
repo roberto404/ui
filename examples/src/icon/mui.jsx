@@ -1,9 +1,12 @@
 
     import React from 'react';
 import SrcIconMuiMapsMenubook from '../../../src/icon/mui/maps/menu_book';
+import SrcIconMuiAvPlayarrow from '../../../src/icon/mui/av/play_arrow';
 import SrcIconMuiAvPause from '../../../src/icon/mui/av/pause';
 import SrcIconMuiAvWeb from '../../../src/icon/mui/av/web';
+import SrcIconMuiAvVideocam from '../../../src/icon/mui/av/videocam';
 import SrcIconMuiAvPlaylistplay from '../../../src/icon/mui/av/playlist_play';
+import SrcIconMuiAvMovie from '../../../src/icon/mui/av/movie';
 import SrcIconMuiNotificationPriorityhigh from '../../../src/icon/mui/notification/priority_high';
 import SrcIconMuiNavigationExpandless from '../../../src/icon/mui/navigation/expand_less';
 import SrcIconMuiNavigationMenu from '../../../src/icon/mui/navigation/menu';
@@ -54,6 +57,7 @@ import SrcIconMuiSocialNotificationsnone from '../../../src/icon/mui/social/noti
 import SrcIconMuiSocialPerson from '../../../src/icon/mui/social/person';
 import SrcIconMuiActionFavoriteborder from '../../../src/icon/mui/action/favorite_border';
 import SrcIconMuiActionDone from '../../../src/icon/mui/action/done';
+import SrcIconMuiActionDoneall_black from '../../../src/icon/mui/action/done_all_black';
 import SrcIconMuiActionPrint from '../../../src/icon/mui/action/print';
 import SrcIconMuiActionOpenwith from '../../../src/icon/mui/action/open_with';
 import SrcIconMuiActionHistory from '../../../src/icon/mui/action/history';
@@ -65,8 +69,10 @@ import SrcIconMuiActionDeleteforever from '../../../src/icon/mui/action/delete_f
 import SrcIconMuiActionTimeline from '../../../src/icon/mui/action/timeline';
 import SrcIconMuiActionSchedule from '../../../src/icon/mui/action/schedule';
 import SrcIconMuiActionAutorenew from '../../../src/icon/mui/action/autorenew';
+import SrcIconMuiActionVisibilityoff from '../../../src/icon/mui/action/visibility_off';
 import SrcIconMuiActionFavorite from '../../../src/icon/mui/action/favorite';
 import SrcIconMuiActionSwapvert from '../../../src/icon/mui/action/swap_vert';
+import SrcIconMuiActionSearchoff from '../../../src/icon/mui/action/search_off';
 import SrcIconMuiActionCheckcircle from '../../../src/icon/mui/action/check_circle';
 import SrcIconMuiActionExplore from '../../../src/icon/mui/action/explore';
 import SrcIconMuiActionBugreport from '../../../src/icon/mui/action/bug_report';
@@ -114,6 +120,12 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
       
 
         <div className="col-1-5">
+        <SrcIconMuiAvPlayarrow className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/av/play_arrow</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiAvPause className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/av/pause</div>
         </div>
@@ -126,8 +138,20 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
       
 
         <div className="col-1-5">
+        <SrcIconMuiAvVideocam className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/av/videocam</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiAvPlaylistplay className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/av/playlist_play</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiAvMovie className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/av/movie</div>
         </div>
       
 
@@ -432,6 +456,12 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
       
 
         <div className="col-1-5">
+        <SrcIconMuiActionDoneall_black className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/done_all_black</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiActionPrint className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/print</div>
         </div>
@@ -498,6 +528,12 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
       
 
         <div className="col-1-5">
+        <SrcIconMuiActionVisibilityoff className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/visibility_off</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiActionFavorite className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/favorite</div>
         </div>
@@ -506,6 +542,12 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
         <div className="col-1-5">
         <SrcIconMuiActionSwapvert className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/swap_vert</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiActionSearchoff className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/search_off</div>
         </div>
       
 
