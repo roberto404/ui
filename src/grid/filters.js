@@ -59,7 +59,7 @@ export const compare = {
   '~=': (subject, term) => (isNaN(subject) ?
     weakTextCompare(subject, term) : parseFloat(subject) === parseFloat(term)),
   '!=': (subject, term) => new RegExp(`^${term}$`, 'i').exec(subject) === null,
-  '*=': (subject, term) => new RegExp(term, 'i').exec(subject) !== null,
+  '*=': (subject, term) => new RegExp(term).exec(subject) !== null,
   '^=': (subject, term) => new RegExp(`^${term}`, 'i').exec(subject) !== null,
   '$=': (subject, term) => new RegExp(`${term}$`, 'i').exec(subject) !== null,
   '>': (subject, term) => parseFloat(subject) > parseFloat(term),
