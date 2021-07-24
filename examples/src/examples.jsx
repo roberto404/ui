@@ -23,6 +23,7 @@ import FormCollection from './form/collection';
 import FormSlider from './form/slider';
 import FormDropzone from './form/dropzone';
 import FormCalendar from './form/calendar';
+import FormToggle from './form/toggle';
 
 
 /* !- Example: Grid */
@@ -85,7 +86,7 @@ import ChartBar from './chart/barChart';
 
 /* !- Example: Map */
 
-import MapGoogle from './map/gmaps';
+// import MapGoogle from './map/gmaps';
 // import Example from './map/mapbox/static';
 // import Example from './map/mapbox/dynamic';
 
@@ -130,6 +131,7 @@ export default {
     dropzone: FormDropzone,
     format: FormFormat,
     calendar: FormCalendar,
+    toggle: FormToggle,
   },
   grid: {
     static: GridStatic,
@@ -191,9 +193,9 @@ export default {
   dragAndDrop: {
     basic: DndBasic,
   },
-  map: {
-    google: MapGoogle,
-  },
+  // map: {
+  //   google: MapGoogle,
+  // },
   style: {
     avatar: StyleAvatar,
     buttons: StyleButtons,
