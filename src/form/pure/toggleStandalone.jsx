@@ -28,7 +28,7 @@ class Toggle extends Component
   {
     const className = classNames({
       'text-xs' : true,
-      'field toggle-field': this.state.status !== -1,
+      'field toggle-field m-0': this.state.status !== -1,
       'active': this.state.status === 1,
     });
 
