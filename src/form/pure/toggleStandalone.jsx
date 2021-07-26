@@ -9,8 +9,16 @@ class Toggle extends Component
     super(props);
 
     this.state = {
-      status: props.status || 0,
+      status: parseInt(props.status) || 0,
     };
+  }
+
+  componentWillReceiveProps(nextProps)
+  {
+    if (nextProps.status !== undefined)
+    {
+      this.setState({ status: parseInt(nextProps.status )});
+    }
   }
 
   onClickToggleHandler = (event) =>
@@ -19,8 +27,30 @@ class Toggle extends Component
     
     if (this.props.api)
     {
+      const status = this.state.status;
+
       this.setState({ status: -1 });
-      this.props.api(this.props.id).then(({ status }) => this.setState({ status: parseInt(status) }))
+
+      const api = this.props.api(this.props.id, event);
+       
+      if (api !== null && typeof api === 'object' && typeof api.then === 'function')
+      {
+        api.then((response) =>
+        {
+          if (response !== null && typeof response === 'object' && !isNaN(response.status))
+          {
+            this.setState({ status: parseInt(response.status) });
+          }
+          else
+          {
+            this.setState({ status });
+          }
+        })
+      }
+      else
+      {
+        this.setState({ status });
+      }
     }
   }
 
