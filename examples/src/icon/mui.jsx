@@ -25,22 +25,32 @@ import SrcIconMuiNavigationArrowback from '../../../src/icon/mui/navigation/arro
 import SrcIconMuiNavigationArrowdownward from '../../../src/icon/mui/navigation/arrow_downward';
 import SrcIconMuiNavigationCancel from '../../../src/icon/mui/navigation/cancel';
 import SrcIconMuiNavigationArrowdrop_up from '../../../src/icon/mui/navigation/arrow_drop_up';
+import SrcIconMuiContentInsights from '../../../src/icon/mui/content/insights';
 import SrcIconMuiContentRemovecircle from '../../../src/icon/mui/content/remove_circle';
 import SrcIconMuiContentBlock from '../../../src/icon/mui/content/block';
 import SrcIconMuiContentAddcircle from '../../../src/icon/mui/content/add_circle';
 import SrcIconMuiContentUndo from '../../../src/icon/mui/content/undo';
+import SrcIconMuiContentSort from '../../../src/icon/mui/content/sort';
 import SrcIconMuiContentRemove from '../../../src/icon/mui/content/remove';
+import SrcIconMuiContentFilterlist from '../../../src/icon/mui/content/filter_list';
 import SrcIconMuiContentContentpaste from '../../../src/icon/mui/content/content_paste';
 import SrcIconMuiContentContentcut from '../../../src/icon/mui/content/content_cut';
 import SrcIconMuiContentSend from '../../../src/icon/mui/content/send';
 import SrcIconMuiContentReport from '../../../src/icon/mui/content/report';
 import SrcIconMuiContentCopyall from '../../../src/icon/mui/content/copy_all';
 import SrcIconMuiContentContentcopy from '../../../src/icon/mui/content/content_copy';
+import SrcIconMuiContentFlag from '../../../src/icon/mui/content/flag';
 import SrcIconMuiContentAdd from '../../../src/icon/mui/content/add';
+import SrcIconMuiContentInventory from '../../../src/icon/mui/content/inventory';
+import SrcIconMuiContentLink from '../../../src/icon/mui/content/link';
+import SrcIconMuiContentBolt from '../../../src/icon/mui/content/bolt';
 import SrcIconMuiContentAddcircle_outline from '../../../src/icon/mui/content/add_circle_outline';
+import SrcIconMuiContentMail from '../../../src/icon/mui/content/mail';
 import SrcIconMuiContentClear from '../../../src/icon/mui/content/clear';
 import SrcIconMuiContentCreate from '../../../src/icon/mui/content/create';
+import SrcIconMuiContentInventory2 from '../../../src/icon/mui/content/inventory_2';
 import SrcIconMuiContentRemovecircle_outline from '../../../src/icon/mui/content/remove_circle_outline';
+import SrcIconMuiContentReply from '../../../src/icon/mui/content/reply';
 import SrcIconMuiHardverKeyboardreturn from '../../../src/icon/mui/hardver/keyboard_return';
 import SrcIconMuiHardverKeyboardbackspace from '../../../src/icon/mui/hardver/keyboard_backspace';
 import SrcIconMuiImageAddphoto_alternate from '../../../src/icon/mui/image/add_photo_alternate';
@@ -264,6 +274,12 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
       
 
         <div className="col-1-5">
+        <SrcIconMuiContentInsights className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/content/insights</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiContentRemovecircle className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/content/remove_circle</div>
         </div>
@@ -288,8 +304,20 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
       
 
         <div className="col-1-5">
+        <SrcIconMuiContentSort className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/content/sort</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiContentRemove className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/content/remove</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiContentFilterlist className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/content/filter_list</div>
         </div>
       
 
@@ -330,14 +358,44 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
       
 
         <div className="col-1-5">
+        <SrcIconMuiContentFlag className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/content/flag</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiContentAdd className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/content/add</div>
         </div>
       
 
         <div className="col-1-5">
+        <SrcIconMuiContentInventory className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/content/inventory</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiContentLink className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/content/link</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiContentBolt className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/content/bolt</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiContentAddcircle_outline className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/content/add_circle_outline</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiContentMail className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/content/mail</div>
         </div>
       
 
@@ -354,8 +412,20 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
       
 
         <div className="col-1-5">
+        <SrcIconMuiContentInventory2 className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/content/inventory_2</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiContentRemovecircle_outline className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/content/remove_circle_outline</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiContentReply className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/content/reply</div>
         </div>
       
 
