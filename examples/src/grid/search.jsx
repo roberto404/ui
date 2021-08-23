@@ -1,14 +1,19 @@
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { search } from '../../../src/grid/filters';
 
+
+/* !- React Elements */
+
+import { dialog } from '../../../src/layer/actions';
 
 /* !- React Elements */
 
 import { Grid as GridView } from '../../../src/view';
 import Connect from '../../../src/grid/connect';
 import Grid from '../../../src/grid/pure/grid';
-import GridSearch, { FilterTerm } from '../../../src/grid/pure/gridSearch';
+import GridSearch, { FilterTerm, GridSearchDialog } from '../../../src/grid/pure/gridSearch';
 
 
 /* !- Constants */
@@ -76,29 +81,48 @@ const fieldData = [
 /**
  * Connect
  */
-const Example = () =>
+const Example = ({}, { store }) =>
 (
-  <GridView
-    id="sample"
-    api={fakeApi}
-    settings={SETTINGS}
-    className="p-4"
-  >
-    <h1>Grid Search component</h1>
-    <h2>Query search</h2>
+  <div>
+    <GridView
+      id="sample"
+      api={fakeApi}
+      settings={SETTINGS}
+      className="p-4"
+    >
+      <h1>Grid Search component</h1>
+      <h2>Query search</h2>
 
-    <div className="filters">
-      <GridSearch
-        fields={fieldData}
-        prefix="?"
+      <div className="filters">
+        <GridSearch
+          fields={fieldData}
+          prefix="?"
+        />
+      </div>
+
+      <Connect
+        UI={Grid}
       />
+
+    </GridView>
+
+
+    <h2>Standalone</h2>
+
+    <div
+      className="button outline inline-block w-auto"
+      onClick={() => store.dispatch(dialog(<GridSearchDialog id="standalone-search" fields={fieldData} />))}
+    >
+      Open
     </div>
 
-    <Connect
-      UI={Grid}
-    />
-
-  </GridView>
+    
+  </div>
 );
+
+Example.contextTypes =
+{
+  store: PropTypes.object,
+}
 
 export default Example;

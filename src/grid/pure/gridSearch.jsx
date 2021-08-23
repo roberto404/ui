@@ -148,13 +148,13 @@ export const NestedCollectionItem = ({
 /**
  * Advance Search Dialog
  */
-const GridSearchDialog = ({ fields, prefix, draggable }, { store }) =>
+export const GridSearchDialog = ({ id, fields, prefix, draggable }, { store }) =>
 {
   const onClickApplyHandler = (event) =>
   {
     event.preventDefault();
 
-    const collection = store.getState().form.searchCollection;
+    const collection = store.getState().form[`${id}-collection`];
     const search = prefix +
       collection
         .map(i => i.field + i.operator + i.value)
@@ -162,11 +162,11 @@ const GridSearchDialog = ({ fields, prefix, draggable }, { store }) =>
 
     if (search === prefix)
     {
-      store.dispatch(unsetValues({ search: undefined }));
+      store.dispatch(unsetValues({ [id]: undefined }));
     }
     else
     {
-      store.dispatch(setValues({ search }));
+      store.dispatch(setValues({ [id]: search }));
     }
 
     store.dispatch(flush());
@@ -176,7 +176,7 @@ const GridSearchDialog = ({ fields, prefix, draggable }, { store }) =>
     <div className="w-640">
       <div className="mb-4 bold">Keresési feltételek:</div>
       <Collection
-        id="searchCollection"
+        id={`${id}-collection`}
         UI={CollectionItem}
         uiProps={{
           fields,
@@ -192,6 +192,11 @@ const GridSearchDialog = ({ fields, prefix, draggable }, { store }) =>
   );
 };
 
+GridSearchDialog.defaultProps = {
+  id: 'search',
+  prefix: '',
+}
+
 GridSearchDialog.contextTypes = {
   store: PropTypes.object,
 };
@@ -199,7 +204,7 @@ GridSearchDialog.contextTypes = {
 /**
  * Search Filter width advance button
  */
-const GridSearch = ({ fields, prefix, placeholder }, { store, grid }) =>
+const GridSearch = ({ id, fields, prefix, placeholder }, { store, grid }) =>
 {
   if (typeof fields === 'undefined' && grid)
   {
@@ -229,7 +234,7 @@ const GridSearch = ({ fields, prefix, placeholder }, { store, grid }) =>
    */
   const onClickSearchAdvanceHandler = () =>
   {
-    const term = store.getState().form.search || '';
+    const term = store.getState().form[id] || '';
     let value = [];
 
     if (prefix && term && term.substring(0, prefix.length) === prefix)
@@ -258,13 +263,13 @@ const GridSearch = ({ fields, prefix, placeholder }, { store, grid }) =>
       value = [{ field: fields[0].id, operator: '=', value: term }];
     }
 
-    store.dispatch(setValues({ id: 'searchCollection', value }));
-    store.dispatch(dialog(<GridSearchDialog fields={fields} prefix={prefix} />));
+    store.dispatch(setValues({ id: `${id}-collection`, value }));
+    store.dispatch(dialog(<GridSearchDialog id={id} fields={fields} prefix={prefix} />));
   };
 
   return (
     <Input
-      id="search"
+      id={id}
       label={<div className="icon embed-search-gray">Keresés</div>}
       placeholder={placeholder}
       postfix={(
@@ -278,12 +283,14 @@ const GridSearch = ({ fields, prefix, placeholder }, { store, grid }) =>
 
 GridSearch.propTypes =
 {
+  id: PropTypes.string,
   placeholder: PropTypes.string,
   prefix: PropTypes.string,
 };
 
 GridSearch.defaultProps =
 {
+  id: 'search',
   placeholder: 'Search term',
   prefix: '',
 };
