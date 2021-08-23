@@ -148,28 +148,39 @@ export const NestedCollectionItem = ({
 /**
  * Advance Search Dialog
  */
-export const GridSearchDialog = ({ id, fields, prefix, draggable }, { store }) =>
+export const GridSearchDialog = ({ id, fields, prefix, draggable, onClick }, { store }) =>
 {
   const onClickApplyHandler = (event) =>
   {
     event.preventDefault();
 
     const collection = store.getState().form[`${id}-collection`];
-    const search = prefix +
+    const value = prefix +
       collection
         .map(i => i.field + i.operator + i.value)
         .join('&');
 
-    if (search === prefix)
+
+    if (typeof onClick === 'function')
+    {
+      if (onClick({ collection, value}) === false)
+      {
+        return;
+      };
+    }
+
+    if (value === prefix)
     {
       store.dispatch(unsetValues({ [id]: undefined }));
     }
     else
     {
-      store.dispatch(setValues({ [id]: search }));
+      store.dispatch(setValues({ [id]: value }));
     }
 
     store.dispatch(flush());
+
+    
   };
 
   return (
