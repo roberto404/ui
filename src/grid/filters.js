@@ -4,6 +4,9 @@ import slugify from '@1studio/utils/string/slugify';
 const DEFAULT_COMPARE = '_default';
 
 
+export const latinTextCompare = (subject, term) =>
+  slugify(subject) === slugify(term);
+
 export const weakTextCompare = (subject, term) =>
   slugify(subject).indexOf(slugify(term)) !== -1;
 
@@ -56,6 +59,7 @@ export const compare = {
   '=': (subject, term) => (isNaN(subject) ?
     compare[DEFAULT_COMPARE](subject, term) : parseFloat(subject) === parseFloat(term)),
   '==': (subject, term) => new RegExp(`^${term}$`, 'i').exec(subject) !== null,
+  '~==': (subject, term) => latinTextCompare(subject, term),
   '~=': (subject, term) => (isNaN(subject) ?
     weakTextCompare(subject, term) : parseFloat(subject) === parseFloat(term)),
   '!=': (subject, term) => new RegExp(`^${term}$`, 'i').exec(subject) === null,
