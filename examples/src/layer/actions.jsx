@@ -13,7 +13,7 @@ import * as LayerActions from '../../../src/layer/actions';
 import CalendarMonthInterval from '../../../src/form/pure/calendarMonthInterval';
 import IconLogout from '../../../src/icon/mui/action/lock';
 import Tooltip from '../../../src/layer/tooltip';
-
+import IconInfo from '../../../src/icon/mui/action/info';
 
 const PopoverComponent = () =>
 (
@@ -131,6 +131,11 @@ const Example = ({
       <Tooltip title={<div>Hello tooltip</div>}>
         <div className="button outline gray w-auto inline-block">Tooltip component</div>
       </Tooltip>
+
+      <Tooltip title={<div>Hello tooltip</div>}>
+        <IconInfo className="w-2 h-2 bg-gray-dark circle fill-white no-events" />
+      </Tooltip>
+
 
       <h2>Menu</h2>
       <button className="outline gray w-auto" onClick={event => menu(menuProps, event)}>Menu</button>
