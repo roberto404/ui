@@ -77,6 +77,11 @@ hr
   border: 1px solid $black-light;
 }
 
+.border-none
+{
+  border-style: none;
+}
+
 .border-bottom
 {
   border-bottom: 1px solid $black-light;
@@ -95,11 +100,6 @@ hr
 .border-left
 {
   border-left: 1px solid $black-light;
-}
-
-.border-none
-{
-  border-style: none;
 }
 
 .border-0
