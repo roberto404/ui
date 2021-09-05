@@ -162,6 +162,11 @@ class GridView extends Component
     }
 
     this.props.flush(this.id);
+
+    if (typeof this.props.onWillUnmount === 'function')
+    {
+      this.props.onWillUnmount();
+    }
   }
 
 
