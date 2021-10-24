@@ -249,6 +249,12 @@ hr
   background-color: $red;
 }
 
+.bg-red-dark,
+.hover\:bg-red-dark:hover
+{
+  background-color: $red-dark;
+}
+
 
 .bg-red-light,
 .hover\:bg-red-light:hover
