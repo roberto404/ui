@@ -31,7 +31,7 @@ const StepTimeLine = (
       {/* label */}
 
       <text className="text-s">
-        <tspan x={iconWidth / 2} y={1} textAnchor="middle" alignmentBaseline="hanging">{label}</tspan>
+        <tspan x={iconWidth / 2} y={4} textAnchor="middle" alignmentBaseline="hanging">{label}</tspan>
       </text>
 
       {/* line */}
