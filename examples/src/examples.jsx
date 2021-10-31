@@ -82,6 +82,7 @@ import CardResponsible from './card/responsible';
 import ChartCoordinate from './chart/coordinate';
 import ChartComplex from './chart/complex';
 import ChartBar from './chart/barChart';
+import ChartDonut from './chart/donut';
 
 
 /* !- Example: Map */
@@ -178,6 +179,7 @@ export default {
     coordinate: ChartCoordinate,
     complex: ChartComplex,
     bar: ChartBar,
+    donut: ChartDonut,
   },
   view: {
     basic: ViewBasic,
