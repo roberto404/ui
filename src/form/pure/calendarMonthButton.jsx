@@ -84,10 +84,10 @@ class CalendarMonthButton extends Component
         <Button
           id={this.props.id}
           placeholder="placeholder.select"
-          className="w-content"
-          buttonClassName="shadow outline fill-gray"
+          className={this.props.className}
+          buttonClassName={this.props.buttonClassName}
           onClick={this.onChangeHandler}
-          stateFormat={value => value ? moment(value).format('LL') : ''} // eslint-disable-line
+          stateFormat={this.props.stateFormat} // eslint-disable-line
           icon={IconCalendar}
           {...this.props}
         />
@@ -116,6 +116,9 @@ CalendarMonthButton.propTypes =
 CalendarMonthButton.defaultProps =
 {
   id: 'calendarDateTimeButton',
+  className: 'w-content',
+  buttonClassName: 'shadow outline fill-gray',
+  stateFormat: value => value ? moment(value).format('LL') : '',
 };
 
 CalendarMonthButton.contextTypes = {
