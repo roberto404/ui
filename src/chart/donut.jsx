@@ -10,7 +10,7 @@ import { keyframes } from 'styled-components';
  */
 const Donut = ({
   ringColor,
-  segmentColor,
+  color,
   strokeWidth,
   percent,
   caption,
@@ -30,7 +30,7 @@ const Donut = ({
       <circle cx="20" cy="20" r="15.91549430918954" fill="#fff" />
       <circle stroke={ringColor} cx="20" cy="20" r="15.91549430918954" fill="transparent" strokeWidth={strokeWidth}/>
       <circle
-        stroke={segmentColor}
+        stroke={color}
         style={{
           transformOrigin: 'center',
           animation: `${pulse} 1.2s ease-in-out`,
@@ -59,7 +59,7 @@ const Donut = ({
 
 Donut.defaultProps = {
   ringColor: '#EBEBEB',
-  segmentColor: '#00ffff',
+  color: '#00ffff',
   percent: 69,
   caption: '',
   strokeWidth: 3.5
