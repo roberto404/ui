@@ -69,7 +69,7 @@ export const initSettings = (props) =>
     {
       let item = {
         id: child.props['data-view'] || index.toString(),
-        status: 1,
+        status: parseInt(child.props['data-view-status'] || 1),
         pos: index,
       };
 
