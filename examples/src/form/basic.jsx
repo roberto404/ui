@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import formatThousand from '@1studio/utils/string/formatThousand';
 
 
 import Form,
@@ -37,6 +38,14 @@ const ExampleForm = ({ setValues }) =>
         label="Disabled Field, you can modify only outside via Redux. See change classic field *same redux id"
         stateFormat={value => value + ' <- formated state value'}
         disabled
+      />
+      <Input
+        label="HUF currency"
+        id="huf"
+        value="123456"
+        stateFormat={value => formatThousand(value)}
+        format={value => value.replaceAll(/[^0-9]/g, '')}
+        postfix="HUF"
       />
       <Input
         form="Use_Other_Form_state"

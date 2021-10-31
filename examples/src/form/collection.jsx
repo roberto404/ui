@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
-
+import formatThousand from '@1studio/utils/string/formatThousand';
+import moment from 'moment';
 
 /* !- Redux Actions */
 
@@ -17,6 +18,7 @@ import Form,
   Select,
   Toggle,
   Collection,
+  CalendarMonthButton,
 }
 from '../../../src/form/pure/intl';
 
@@ -24,6 +26,8 @@ import { CollectionItem, NestedCollectionItem } from '../../../src/grid/pure/gri
 
 
 /* !- Constants */
+
+import { DATE_FORMAT } from '../../../src/calendar/constants';
 
 
 const CustomCollectionItem = ({ onChange, record, fields }) =>
@@ -177,6 +181,68 @@ const Example1 = ({ record, index, id, fields, onChange }) =>
     </div>
   );
 }
+const Example2 = ({ record, index, id, fields, onChange }) =>
+{
+  const onChangeHandler = ({ id, value }) =>
+  {
+    const collectionId = id.substring(id.indexOf('#') + 1);
+    onChange({ ...record, [collectionId]: value });
+  };
+
+  return (
+    <div className="grid-2">
+      <Input
+        id="search#id"
+        className="col-1-6"
+        value={record.id}
+        onChange={onChangeHandler}
+      />
+      <Input
+        id="search#invoiceNumber"
+        className="col-1-6"
+        value={record.invoiceNumber}
+        onChange={onChangeHandler}
+      />
+      <div className="col-1-6">
+        <CalendarMonthButton
+          id="search#invoicingDate"
+          value={record.invoicingDate}
+          dateFormat={DATE_FORMAT}
+          stateFormat={value => value ? moment(value).format('l') : ''}
+          className="w-full"
+          buttonClassName="border border-gray-light text-black shadow"
+          onChange={onChangeHandler}
+        />
+      </div>
+      <div className="col-1-6">
+        <CalendarMonthButton
+          id="search#paymentDate"
+          value={record.paymentDate}
+          dateFormat={DATE_FORMAT}
+          stateFormat={value => value ? moment(value).format('l') : ''}
+          className="w-full"
+          buttonClassName="border border-gray-light text-black shadow"
+          onChange={onChangeHandler}
+        />
+      </div>
+      <Input
+        id="search#priceGross"
+        className="col-1-6"
+        value={record.priceGross}
+        onChange={onChangeHandler}
+        stateFormat={value => formatThousand(value)}
+        format={value => value.replaceAll(/[^0-9]/g, '')}
+      />
+      <Input
+        id="search#payment"
+        className="col-1-6 col-br"
+        value={record.payment}
+        onChange={onChangeHandler}
+      />
+      
+    </div>
+  );
+}
 
 
 /**
@@ -203,7 +269,7 @@ const Example = (props, { store }) =>
       id="example"
       className="p-2"
     >
-      {/* <h2>Default collection UI items</h2>
+      <h2>Default collection UI items</h2>
       <Collection
         id="collection"
         label="Collection"
@@ -310,7 +376,7 @@ const Example = (props, { store }) =>
             },
           },
         ]}
-      /> */}
+      />
 
 
       <h2>Use Case #1</h2>
@@ -323,6 +389,25 @@ const Example = (props, { store }) =>
         UI={Example1}
         value={[{ id: 'AAA', status: true }]}
         draggable
+      />
+
+
+
+      <h2>Use Case #2</h2>
+      <div className="text-xs h-center w-full pb-1" style={{ paddingRight: '5rem' }}>
+        <div className="col-1-6">Azonosító</div>
+        <div className="col-1-6">Száma száma</div>
+        <div className="col-1-6">Számla kelte</div>
+        <div className="col-1-6">Fizetés ideje</div>
+        <div className="col-1-6">Bruttó összeg</div>
+        <div className="col-1-6 col-br">Fizetés módja</div>
+      </div>
+      <Collection
+        id="example2"
+        UI={Example2}
+        value={
+          [{"id":"141171","invoiceNumber":"T007725\/21","invoicingDate":"2021-10-19","paymentDate":"2021-10-17","priceGross":"15000"},{"id":"141851","invoiceNumber":"T007956\/21","invoicingDate":"2021-10-27","paymentDate":"2021-10-26","priceGross":"18850"}]
+        }
       />
       
     </Form>
