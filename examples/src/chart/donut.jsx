@@ -25,6 +25,7 @@ const Example = () =>
           color="red"
           percent={75}
           strokeWidth={4}
+          caption="hello world"
         />
       </div>
 

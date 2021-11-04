@@ -14,6 +14,7 @@ const Donut = ({
   strokeWidth,
   percent,
   caption,
+  className,
 }) =>
 {
   const pulse = keyframes`
@@ -26,7 +27,7 @@ const Donut = ({
   `;
 
   return (
-    <svg width="100%" height="100%" viewBox="0 0 40 40">
+    <svg width="100%" height="100%" viewBox="0 0 40 40" className={className}>
       <circle cx="20" cy="20" r="15.91549430918954" fill="#fff" />
       <circle stroke={ringColor} cx="20" cy="20" r="15.91549430918954" fill="transparent" strokeWidth={strokeWidth}/>
       <circle
@@ -62,7 +63,8 @@ Donut.defaultProps = {
   color: '#00ffff',
   percent: 69,
   caption: '',
-  strokeWidth: 3.5
+  strokeWidth: 3.5,
+  className: '',
 };
 
 
