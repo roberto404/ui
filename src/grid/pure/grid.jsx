@@ -151,8 +151,8 @@ class Grid extends Component
       {
         this.lastSelectedItemId = lastSelectedItemId;
 
-        const lastSelectedItemIndex =
-          store.grid[this.context.grid].data.findIndex(({ id }) => id === lastSelectedItemId);
+        const lastSelectedItemIndex = (this.context.grid ? store.grid[this.context.grid].data : (this.props.data || []))
+          .findIndex(({ id }) => id === lastSelectedItemId);
 
         const itemHeight = this.props.infinity ?
           this.elementBody.children[0].children[0].children[0].children[0].offsetHeight :
