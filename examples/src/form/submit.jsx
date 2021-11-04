@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 /* !- React Elements */
 
@@ -8,12 +8,13 @@ import Form,
   Submit,
 }
 from '../../../src/form/pure';
+import StandaloneInput from '../../../src/form/pure/standaloneInput';
 
 import Icon from '@1studio/ui/icon/mui/action/open_with';
 
 /* !- Constants */
 
-const fakeApi = () => new Promise(resolve => resolve({ status: 'SUCCESS', records: ['foo'] }));
+const fakeApi = () => new Promise(resolve => setTimeout(() => resolve({ status: 'SUCCESS', records: ['foo'] }), 1000));
 
 
 
@@ -26,6 +27,9 @@ const CustomSubmit = ({ onClick }) =>
 
 const CustomSubmit2 = ({ onClick }) =>
   <button className="blue" onClick={onClick}><Icon /></button>
+
+
+
 
 
 /**
@@ -82,19 +86,33 @@ const Example = () =>
 
     <Form
       id="example"
-      className="_card p-2"
-      onSuccess={(respond => console.log(response))}
-      onFailed={(respond => console.log(response))}
+      scheme={{
+        input: {
+          presence: {
+            message: '^validator.presence',
+          },
+        },
+      }}
+      className="h-center"
+      onSuccess={(response => console.log(response))}
+      onFailed={(response => console.log(response))}
     >
       <Input
         id="input"
-        label="Input"
+        prefix="Input"
+        className="m-0 mr-2"
       />
 
       <Submit
+        className="m-0"
         api={fakeApi}
       />
     </Form>
+
+    <StandaloneInput
+      onSubmit={({ value }) => fakeApi()}
+      onSuccess={response => console.log(response)}
+    />
   </div>
 );
 

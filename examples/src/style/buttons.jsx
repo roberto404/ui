@@ -203,6 +203,30 @@ const ExampleForm = () =>
       </div>
     </div>
 
+    <h2>Preload Button</h2>
+    <div className="grid-2 card">
+      <div className="col-1-4">
+        <button className="shadow outline black w-auto"><div className="preloader" /></button>
+      </div>
+      <div className="col-1-4">
+        <a className="button primary">
+          <div className="preloader inline-block" />
+          <span className="pl-4">Action</span>
+        </a>
+      </div>
+      <div className="col-1-4">
+        <button className="w-full outline shadow">
+          <div className="w-full h-center">
+            <div className="preloader absolute" />
+            <span className="pl-4">Action</span>
+          </div>
+          <div>
+            <IconArrow />
+          </div>
+        </button>
+      </div>
+    </div>
+
   </div>
 );
 

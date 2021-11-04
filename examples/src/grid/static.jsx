@@ -20,13 +20,12 @@ export default () => (
     <h1>Static Grid</h1>
     <h2>Basic compontent</h2>
     <Grid
-      className="card grid"
       data={DATA.slice(0, 5)}
     />
 
     <h2>Customized Grid compontent (hook, helper, order, row and header click => console.log)</h2>
     <Grid
-      className="card grid"
+      className="card grid column"
       data={DATA.slice(0, 5)}
       hook={SETTINGS.hook}
       helper={SETTINGS.helper}
@@ -38,7 +37,6 @@ export default () => (
 
     <h2>Grid with Freeze Header compontent</h2>
     <Grid
-      className="card grid"
       height="300px"
       freezeHeader
       data={DATA}
@@ -49,7 +47,6 @@ export default () => (
     <h2>Infinity Grid compontent</h2>
     <Grid
       freezeHeader
-      className="card grid"
       height="300px"
       data={produceNumericArray(0, 1000, i => ({ id: i, name: `${i} name` }))}
       infinity
@@ -66,7 +63,7 @@ export default () => (
     <h2>Selectable (multipleSelect = true) Grid compontent (shift+click, ctrl+click)</h2>
     <Grid
       id="example_grid_selectable"
-      className="card grid"
+      className="no-select"
       data={DATA.slice(0, 5)}
       selectable
     />
@@ -74,7 +71,6 @@ export default () => (
     <h2>ExpandSelect Grid compontent</h2>
     <Grid
       id="example_grid_expandSelect"
-      className="card grid"
       data={DATA.slice(0, 5)}
       selectable
       expandSelect
@@ -83,7 +79,6 @@ export default () => (
     <h2>CheckboxSelect Grid compontent</h2>
     <Grid
       id="example_grid_checkboxSelect"
-      className="card grid"
       data={DATA.slice(0, 5)}
       selectable
       expandSelect

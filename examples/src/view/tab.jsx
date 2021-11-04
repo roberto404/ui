@@ -21,7 +21,7 @@ import IconPrev from '../../../src/icon/mui/navigation/arrow_back';
 
 /* !- Constants */
 
-const TABS = [
+export const TABS = [
   {
     title: 'foo',
     children: <div>foo</div>,

@@ -24,10 +24,18 @@ from '../../../src/form/pure/intl';
 
 import { CollectionItem, NestedCollectionItem } from '../../../src/grid/pure/gridSearch';
 
+import Grid from '../../../src/grid/pure/grid';
+
+import Connect from '../../../src/form/connect';
+
+
 
 /* !- Constants */
 
 import { DATE_FORMAT } from '../../../src/calendar/constants';
+
+const example2GridValue = 
+  [{"id":"141171","invoiceNumber":"T007725\/21","invoicingDate":"2021-10-19","paymentDate":"2021-10-17","priceGross":"15000"},{"id":"141851","invoiceNumber":"T007956\/21","invoicingDate":"2021-10-27","paymentDate":"2021-10-26","priceGross":"18850"}];
 
 
 const CustomCollectionItem = ({ onChange, record, fields }) =>
@@ -81,6 +89,8 @@ const CustomNestedCollectionItem = ({ record, index, id, onChange }) =>
   {
     onChange({ ...record, [id]: value });
   };
+
+  
 
   return (
     <div className="w-full border shadow rounded p-2 mb-4">
@@ -181,7 +191,7 @@ const Example1 = ({ record, index, id, fields, onChange }) =>
     </div>
   );
 }
-const Example2 = ({ record, index, id, fields, onChange }) =>
+export const Example2 = ({ record, index, id, fields, onChange }) =>
 {
   const onChangeHandler = ({ id, value }) =>
   {
@@ -390,11 +400,31 @@ const Example = (props, { store }) =>
         value={[{ id: 'AAA', status: true }]}
         draggable
       />
+      
 
 
 
       <h2>Use Case #2</h2>
-      <div className="text-xs h-center w-full pb-1" style={{ paddingRight: '5rem' }}>
+
+      <Connect 
+        id="example2"
+        listen="grid"
+        UI={({ grid }) => (
+          <Grid
+            data={grid || example2GridValue}
+            className="text-s mb-6"
+            hook={{
+              invoiceNumber: 'Invoice Number',
+              priceGross: {
+                title: 'Gross',
+                format: ({ value }) => `${value} HUF`, 
+              },
+            }}
+          />
+        )}
+      />
+
+      <div className="mt-2 text-xs h-center w-full pb-1" style={{ paddingRight: '5rem' }}>
         <div className="col-1-6">Azonosító</div>
         <div className="col-1-6">Száma száma</div>
         <div className="col-1-6">Számla kelte</div>
@@ -403,11 +433,10 @@ const Example = (props, { store }) =>
         <div className="col-1-6 col-br">Fizetés módja</div>
       </div>
       <Collection
-        id="example2"
+        form="example2"
+        id="grid"
         UI={Example2}
-        value={
-          [{"id":"141171","invoiceNumber":"T007725\/21","invoicingDate":"2021-10-19","paymentDate":"2021-10-17","priceGross":"15000"},{"id":"141851","invoiceNumber":"T007956\/21","invoicingDate":"2021-10-27","paymentDate":"2021-10-26","priceGross":"18850"}]
-        }
+        value={example2GridValue}
       />
       
     </Form>
