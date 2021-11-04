@@ -77,6 +77,7 @@ const ViewTabButtonsComponent = ({
 
 ViewTabButtonsComponent.defaultProps =
 {
+  views: [],
   classNameButton: 'w-auto',
   classNameButtonActive: 'w-auto active',
 };

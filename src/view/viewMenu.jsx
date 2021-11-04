@@ -47,6 +47,7 @@ const ViewMenuComponent = ({ children, views, toggleView, menu, close, className
 
 ViewMenuComponent.defaultProps =
 {
+  views: [],
   children: (
     <div
       className="button w-auto outline shadow embed-angle-down-gray"

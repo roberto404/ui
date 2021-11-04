@@ -6,6 +6,18 @@ export const setSettings = (settings: {}) =>
   settings,
 });
 
+export const addSettings = (settings: {}) =>
+({
+  type: 'VIEW_ADD_SETTINGS',
+  settings,
+});
+
+export const removeSettings = (settings: {}) =>
+({
+  type: 'VIEW_REMOVE_SETTINGS',
+  settings,
+});
+
 /**
  * Add new view group
  */
@@ -48,5 +60,14 @@ export const switchView = (id: string | number, group?: string) =>
 ({
   type: 'VIEW_SWITCH_VIEW',
   id,
+  group,
+});
+
+/**
+ * Show next
+ */
+export const swapView = (group?: string) =>
+({
+  type: 'VIEW_SWAP_VIEW',
   group,
 });

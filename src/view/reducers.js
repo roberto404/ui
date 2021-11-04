@@ -1,12 +1,16 @@
 // @flow
 
 import { checkPropTypes } from '@1studio/utils/propType';
+import findLastIndex from 'lodash/findLastIndex';
 import { SCHEME } from './constans';
 
 const DEFAULT_STATE = {
   active: undefined,
   groups: {},
 };
+
+import { switchView } from './actions';
+
 
 /**
  * View Redux Reducers
@@ -35,6 +39,54 @@ const reducers = (state = DEFAULT_STATE, action = {}) =>
             view: action.settings.active,
           },
         );
+      }
+    
+    case 'VIEW_ADD_SETTINGS':
+      {
+        if (checkPropTypes(action.settings, SCHEME.settings))
+        {
+          return state;
+        }
+
+        return reducers(
+          {
+            ...state,
+            ...action.settings,
+            groups: {
+              ...state.groups,
+              ...(action.settings.groups || {})
+            }
+          },
+          {
+            type: 'VIEW_SWITCH_GROUP',
+            view: action.settings.active,
+          },
+        );
+      }
+
+    case 'VIEW_REMOVE_SETTINGS':
+      {
+        if (checkPropTypes(action.settings, SCHEME.settings))
+        {
+          return state;
+        }
+
+        const restGroups = Object.keys(state.groups)
+          .filter(groupId => Object.keys(action.settings.groups).indexOf(groupId) === -1);
+
+        if (!restGroups.length)
+        {
+          return DEFAULT_STATE;
+        }
+
+        return {
+          ...state,
+          groups: restGroups.reduce(
+            (result, groupId) => ({ ...result, [groupId]: state.groups[groupId] }),
+            {},
+          ),
+        };
+          
       }
 
     case 'VIEW_SET_VIEWS':
@@ -128,6 +180,28 @@ const reducers = (state = DEFAULT_STATE, action = {}) =>
             [group]: activeGroup,
           },
         };
+      }
+    case 'VIEW_SWAP_VIEW':
+      {
+        const group = action.group || state.active;
+
+        const groupItems = state.groups[group];
+
+        if (groupItems === undefined)
+        {
+          return state;
+        }
+
+        const groupItemsLength = groupItems.length;
+
+        const nextIndex = findLastIndex(
+          groupItems,
+          ({ status }) => +status === 1 
+        ) + 1;
+
+        const index = (nextIndex >= groupItemsLength) ? 0 : nextIndex;
+
+        return reducers(state, switchView(groupItems[index].id, group));
       }
 
     default:

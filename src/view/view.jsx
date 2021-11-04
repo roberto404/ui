@@ -11,7 +11,7 @@ import isEqual from 'lodash/isEqual';
 
 /* !- Actions */
 
-import { switchGroup, switchView, setSettings, toggleView } from './actions';
+import { switchGroup, switchView, addSettings, removeSettings, toggleView } from './actions';
 
 
 
@@ -166,7 +166,7 @@ class View extends Component
       children: this.props.children,
     });
 
-    this.props.setSettings(settings);
+    this.props.addSettings(settings);
 
     if (this.props.defaultView)
     {
@@ -191,6 +191,11 @@ class View extends Component
     {
       this.unsubscribe();
     }
+
+    this.props.removeSettings(initSettings({
+      settings: this.props.settings,
+      children: this.props.children,
+    }));
   }
 
   onChangeListener()
@@ -262,11 +267,15 @@ class View extends Component
          * @type {array} child elements
          */
         const itemChildren = children.filter(
-          (child, index) => (item.status || !this.props.lazyload) && (
-            (typeof child.props['data-view'] === 'undefined' && index === parseInt(item.id))
-            || (typeof child.props['data-view'] === 'object' && child.props['data-view'].id === item.id)
-            || child.props['data-view'] === item.id
-          ),
+          (child, index) =>
+            (item.status || !this.props.lazyload)
+            && typeof child !== 'string'
+            && 
+            (
+              (typeof child.props['data-view'] === 'undefined' && index === parseInt(item.id))
+              || (typeof child.props['data-view'] === 'object' && child.props['data-view'].id === item.id)
+              || child.props['data-view'] === item.id
+            ),
         );
 
         if (itemChildren.length)
@@ -397,7 +406,8 @@ export default connect(
   null,
   {
     switchGroup,
-    setSettings,
+    addSettings,
+    removeSettings,
     toggleView,
   },
 )(View);
