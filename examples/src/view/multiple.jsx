@@ -21,8 +21,8 @@ const ViewMultiple = ({}, { store }) =>
   <div>
 
     <div className="grid-2-2">
-      <div onClick={() => store.dispatch(toggleView('dataTab', 1, 'data'))}>aaa</div>
-{/*       <div className="col-1-4">
+      {/* <div onClick={() => store.dispatch(toggleView('dataTab', 1, 'data'))}>aaa</div> */}
+      <div className="col-1-4">
         <ViewMenu
           group="layout"
         />
@@ -31,7 +31,7 @@ const ViewMultiple = ({}, { store }) =>
         <ViewMenu
           group="data"
         />
-      </div> */}
+      </div>
     </div>
 
     <View
@@ -46,7 +46,7 @@ const ViewMultiple = ({}, { store }) =>
           ],
           data: [
             { id: 'dataList', status: 1 },
-            { id: 'dataTab', status: 0 },
+            { id: 'dataTab', status: 1 },
           ],
         },
       }}
@@ -72,7 +72,30 @@ const ViewMultiple = ({}, { store }) =>
               classNameButtons="flex"
               classNameButton="w-auto yellow"
               classNameButtonActive="w-auto green"
-              items={TABS}
+              items={[
+                ...TABS.slice(1),
+                {
+                  title: 'foo',
+                  children:
+                    <div>
+                      <View
+                        settings={{
+                          groups: {
+                            insideTab: [
+                              { id: 'insideTab1', status: 1 },
+                              { id: 'insideTab2', status: 0 },
+                            ],
+                          },
+                        }}
+                        nested
+                      >
+                        <div data-view="insideTab1">insideTab1</div>
+                        <div data-view="insideTab2">insideTab2</div>
+                      </View>
+                    </div>,
+                  status: 1,
+                },
+              ]}
             />
 
           </div>

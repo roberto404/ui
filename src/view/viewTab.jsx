@@ -24,6 +24,7 @@ import View from './view';
  * Tabs of View
  */
 const ViewTabButtonsComponent = ({
+  id,
   active,
   views,
   switchView,
@@ -34,10 +35,10 @@ const ViewTabButtonsComponent = ({
   showAllLabel,
 }) =>
 {
-  const onClickTabHandler = (event, id) =>
+  const onClickTabHandler = (event, buttonId) =>
   {
     event.preventDefault();
-    switchView(id);
+    switchView(buttonId, id);
   }
 
   const onClickShowAllHandler = (event) =>
@@ -83,16 +84,10 @@ ViewTabButtonsComponent.defaultProps =
 };
 
 const ViewTabButtons = connect(
-  (state) =>
+  ({ view }, { id }) =>
   {
-    if (state.view.active !== undefined)
-    {
-      return {
-        views: state.view.groups[state.view.active],
-      };
-    }
     return {
-      views: [],
+      views: view.groups[id] || [],
     };
   },
   {
@@ -104,6 +99,7 @@ const ViewTabButtons = connect(
 
 
 const ViewTab = ({
+  id,
   items,
   className,
   classNameButtons,
@@ -120,21 +116,28 @@ const ViewTab = ({
         classNameButton={classNameButton}
         classNameButtonActive={classNameButtonActive}
         showAllLabel={showAllLabel}
+        id={id}
       />
 
       <View
         className={classNameChildren}
-        id="tab"
-        defaultView="tab"
+        id={id}
+        defaultView={id}
         settings={{
           groups: {
-            tab: items.map((item, n) => ({ id: `tab-${n}`, pos: n, ...item }))
+            [id]: items.map((item, n) => ({ id: `${id}-${n}`, pos: n, ...item }))
           }
         }}
+        nested
       >
-        { items.map((item, n) => <div key={n} data-view={`tab-${n}`}>{item.children}</div>) }
+        { items.map((item, n) => <div key={n} data-view={`${id}-${n}`}>{item.children}</div>) }
       </View>
     </div>
 );
+
+ViewTab.defaultProps = 
+{
+  id: 'tab',
+};
 
 export default ViewTab;

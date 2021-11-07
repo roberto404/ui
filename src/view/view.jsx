@@ -161,12 +161,12 @@ class View extends Component
   {
     super(props);
 
-    const settings = initSettings({
+    this.settings = initSettings({
       settings: this.props.settings,
       children: this.props.children,
-    });
+    });;
 
-    this.props.addSettings(settings);
+    this.props.addSettings(this.settings);
 
     if (this.props.defaultView)
     {
@@ -334,7 +334,7 @@ class View extends Component
       this.props.children :
       [this.props.children];
 
-    const views = this.props.nested ? this.views[Object.keys(this.views)[0]] : this.views;
+    const views = this.props.nested ? this.views[Object.keys(this.settings.groups)[0]] : this.views;
 
     return (
       <div className={this.props.className}>
