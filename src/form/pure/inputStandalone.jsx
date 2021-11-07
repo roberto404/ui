@@ -61,12 +61,11 @@ class StandaloneInput extends Component
     return (
       <div className="form h-top active">
         <Input
-          id='input'
+          {...this.props}
           className="m-0 mr-2"
           onChange={this.onChangeInputHandler}
           error={this.state.error}
-          value={this.state.value}  
-          prefix="Input"
+          value={this.state.value}
           disabled={this.state.active}
           />
         <div
@@ -74,11 +73,17 @@ class StandaloneInput extends Component
           onClick={this.onClickSubmitHandler}
           disabled={this.state.active}
         >
-          {this.state.active ? <div className="preloader text-xs" /> : <span>Submit</span>}
+          {this.state.active ? <div className="preloader text-xs" /> : <span>{this.props.buttonLabel}</span>}
         </div>
       </div>
     )
   }
 }
+
+StandaloneInput.defaultProps =
+{
+  buttonLabel: 'Submit',
+}
+
 
 export default StandaloneInput;

@@ -110,6 +110,8 @@ const Example = () =>
     </Form>
 
     <InputStandalone
+      prefix="Input"
+      buttonLabel="Submit"
       onSubmit={({ value }) => fakeApi()}
       onSuccess={response => console.log(response)}
     />
