@@ -8,7 +8,7 @@ import Form,
   Submit,
 }
 from '../../../src/form/pure';
-import StandaloneInput from '../../../src/form/pure/standaloneInput';
+import InputStandalone from '../../../src/form/pure/inputStandalone';
 
 import Icon from '@1studio/ui/icon/mui/action/open_with';
 
@@ -109,7 +109,7 @@ const Example = () =>
       />
     </Form>
 
-    <StandaloneInput
+    <InputStandalone
       onSubmit={({ value }) => fakeApi()}
       onSuccess={response => console.log(response)}
     />
