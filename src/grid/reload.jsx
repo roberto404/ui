@@ -50,7 +50,7 @@ class GridReload extends Component
         if (this.state.modified !== response.modified)
         {
           this.context.store.dispatch(setData(response.records, {}, this.context.id));
-          this.setState({ modified: response.modified });
+          this.setState({ modified: response.modified }, () => this.props.onChange(response.modified));
         }
       });
   }
@@ -74,6 +74,7 @@ GridReload.propTypes =
   sec: PropTypes.number,
   format: PropTypes.string,
   className: PropTypes.string,
+  onChange: PropTypes.func,
 };
 
 GridReload.defaultProps =
@@ -82,6 +83,7 @@ GridReload.defaultProps =
   sec: 60,
   format: 'YYYY. MMMM Do, k:mm',
   className: '',
+  onChange: () => {},
 };
 
 /**
