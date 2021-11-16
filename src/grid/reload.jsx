@@ -9,6 +9,18 @@ import moment from 'moment';
 import { setData } from './actions';
 
 
+const ModifiedDateTime = ({ modifiedDateTime, className, format }) =>
+(
+  <div className={className}>
+  {
+    !modifiedDateTime ||
+    moment(modifiedDateTime * 1000).format(format)
+  }
+  </div>
+);
+
+
+
 /**
  * Connect static component to Grid Redux.
  * Update every affected changes.
@@ -57,13 +69,13 @@ class GridReload extends Component
 
   render()
   {
-    return (
-      <div className={this.props.className}>
-        {
-          !this.state.modified ||
-          moment(this.state.modified * 1000).format(this.props.format)
-        }
-      </div>
+    return React.createElement(
+      this.props.UI,
+      {
+        modifiedDateTime: this.state.modified,
+        className: this.props.className,
+        format: this.props.format,
+      },
     );
   }
 }
@@ -75,6 +87,7 @@ GridReload.propTypes =
   format: PropTypes.string,
   className: PropTypes.string,
   onChange: PropTypes.func,
+  UI: PropTypes.func,
 };
 
 GridReload.defaultProps =
@@ -84,6 +97,7 @@ GridReload.defaultProps =
   format: 'YYYY. MMMM Do, k:mm',
   className: '',
   onChange: () => {},
+  UI: ModifiedDateTime,
 };
 
 /**
