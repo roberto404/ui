@@ -75,7 +75,7 @@ const Messages = ({ index, children, level, items, isFirst, isLast, userId }) =>
     deliveredDateTime,
   } = items;
 
-  const isFirstFromSender = prevMessageSender !== items.sender;
+  const isFirstFromSender = prevMessageSender !== items.sender || isFirst;
 
   prevMessageSender = items.sender;
 
@@ -84,7 +84,7 @@ const Messages = ({ index, children, level, items, isFirst, isLast, userId }) =>
   if (items.sender && items.sender.toString() !== userId.toString())
   {
     return (
-      <div className="flex" style={{ width: '450px' }}>
+      <div className="flex">
 
         <div className="mr-1 w-4">
           { isFirstFromSender === true &&
@@ -99,6 +99,7 @@ const Messages = ({ index, children, level, items, isFirst, isLast, userId }) =>
           style={{
             marginBottom: isLast ? '1rem' : '0.2rem',
             borderTopLeftRadius: isFirst ? '0' : '1rem',
+            maxWidth: 'max(30rem, 65%)',
           }}
         >
           { isFirstFromSender === true &&
@@ -106,7 +107,7 @@ const Messages = ({ index, children, level, items, isFirst, isLast, userId }) =>
             {name}
           </div>
           }
-          <div className="text-s text-line-l" style={{ maxWidth: '30rem', wordBreak: 'break-word' }}>{content}</div>
+          <div className="text-s text-line-l" style={{ wordBreak: 'break-word' }}>{content}</div>
           <div className="pt-1/2 text-right text-xs light text-gray">{moment(createdDateTime, DATETIME_FORMAT).format('k:mm')}</div>
         </div>
 
@@ -118,11 +119,18 @@ const Messages = ({ index, children, level, items, isFirst, isLast, userId }) =>
   else
   {
     return (
-      <div className="flex" style={{ width: '450px' }}>
+      <div className="flex">
         <div className="grow" />
 
-        <div className="bg-blue-dark text-white rounded-m p-1" style={{ marginBottom: isLast ? '1rem' : '0.2rem', borderTopRightRadius: isFirst ? '0' : '1rem' }}>
-          <div className="text-s text-line-l" style={{ maxWidth: '30rem', wordBreak: 'break-word' }}>{content}</div>
+        <div
+          className="bg-blue-dark text-white rounded-m p-1"
+          style={{
+            marginBottom: isLast ? '1rem' : '0.2rem',
+            borderTopRightRadius: isFirst ? '0' : '1rem',
+            maxWidth: 'max(30rem, 65%)',
+          }}
+        >
+          <div className="text-s text-line-l" style={{ wordBreak: 'break-word' }}>{content}</div>
           <div className="pt-1/2 h-center v-right">
             <span className="text-right text-xs light ">{moment(createdDateTime, DATETIME_FORMAT).format('k:mm')}</span>
             { !!deliveredDateTime &&
