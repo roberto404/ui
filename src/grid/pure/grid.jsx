@@ -265,7 +265,6 @@ class Grid extends Component
   {
     const recordsArray = Array.isArray(records) ? records : [records];
 
-    console.log(recordsArray[0]);
     // previousElementSibling;
     // document.querySelector('div[data-view="list"] .scroll-y').scrollTop = 1000;
 

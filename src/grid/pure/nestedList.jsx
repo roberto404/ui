@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import map from 'lodash/map';
 import isEmpty from 'lodash/isEmpty';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
+
 
 /* !- React Elements */
 
@@ -174,6 +175,7 @@ const NestedList = (
     UiProps,
     className,
     NoResults,
+    intl,
   }
 ) =>
 {
@@ -212,6 +214,7 @@ const NestedList = (
             isFirst: Object.keys(nestedItems).indexOf(index.toString()) === 0,
             isLast:  Object.keys(nestedItems).indexOf(index.toString()) === Object.keys(nestedItems).length - 1,
             ...UiProps,
+            intl,
           },
           (
             ((groupBy === undefined || level < groupBy.length))
@@ -251,4 +254,4 @@ NestedList.defaultProps =
   NoResults: NoResultsComponent,
 };
 
-export default NestedList;
+export default injectIntl(NestedList);

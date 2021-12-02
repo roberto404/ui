@@ -9,16 +9,19 @@ import { Grid as GridView } from '../../../src/view';
 import Connect from '../../../src/connect';
 import NestedList from '../../../src/grid/pure/nestedList';
 import Messages from '../../../src/grid/pure/nestedItems/messages';
+import History from '../../../src/grid/pure/nestedItems/history';
+
 import IconArrow from '../../../src/icon/mui/navigation/expand_more';
 
 
 /* !- Constants */
 
 import { DATE_FORMAT, DATETIME_FORMAT } from '../../../src/calendar/constants';
-import { DATA, DATA_MESSAGES, SETTINGS } from './constants';
+import { DATA, DATA_MESSAGES, DATA_LOG, SETTINGS } from './constants';
 
 const fakeApi = () => new Promise(resolve => resolve({ status: 'SUCCESS', records: DATA }));
 const fakeApiMessages = () => new Promise(resolve => resolve({ status: 'SUCCESS', records: DATA_MESSAGES }));
+const fakeApiLog = () => new Promise(resolve => resolve({ status: 'SUCCESS', records: DATA_LOG }));
 
 
 
@@ -83,13 +86,78 @@ const NestedListItem = ({ index, children, level, items }) =>
 };
 
 
+const NestedListItemSimple = ({ index, children, level, items }) =>
+{
+  if (children)
+  {
+    return (
+      <div>
+        <div className="text-xs bold text-gray pt-2 pb-1">{index.substring(1)}</div>
+        <div>{children}</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="pl-1 h-center h-4">
+      <div className="ellipsis" style={{ height: '1.5em' }}>
+      {items.name}
+      </div>
+    </div>
+  );
+};
+
+
+const Example = () =>
+(
+  <GridView
+    id="sample-chat"
+    api={fakeApiLog}
+    settings={SETTINGS}
+    responseParser={({ records }) => records.map(record => ({
+      ...record,
+      // insertDateTime: moment(record.insertDateTime, DATETIME_FORMAT).unix(),
+      insertDay: moment(record.insertDateTime, DATETIME_FORMAT).format('MMM Do')
+    }))}
+  >
+    <div className="p-2">
+      <h2>Log</h2>
+      <Connect>
+        <NestedList
+          groupBy={['insertDay']}
+          UI={History}
+        />
+      </Connect>
+    </div>
+
+  </GridView>
+);
+
 /**
  * GridView + Filters + Connect + Paginate
  */
-const Example = () =>
+const Example2 = () =>
 (
   <div>
     <h1>NestedList</h1>
+
+    <GridView
+      id="sampleList"
+      api={fakeApi}
+      settings={SETTINGS}
+    >
+      <div className="p-2">
+        <h2>Classic grouped list</h2>
+        <Connect>
+          <NestedList
+            groupBy={['visits']}
+            UI={NestedListItemSimple}
+          />
+        </Connect>
+      </div>
+
+    </GridView>
+
 
     <GridView
       id="sample"
