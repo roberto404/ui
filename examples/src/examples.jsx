@@ -24,6 +24,7 @@ import FormSlider from './form/slider';
 import FormDropzone from './form/dropzone';
 import FormCalendar from './form/calendar';
 import FormToggle from './form/toggle';
+import FormConfig from './form/config';
 
 
 /* !- Example: Grid */
@@ -134,6 +135,7 @@ export default {
     format: FormFormat,
     calendar: FormCalendar,
     toggle: FormToggle,
+    config: FormConfig,
   },
   grid: {
     static: GridStatic,

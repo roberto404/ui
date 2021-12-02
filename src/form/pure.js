@@ -16,6 +16,7 @@ import CalendarMonthInterval from './pure/calendarMonthInterval';
 import CalendarMonthCaroussel from './pure/calendarMonthCaroussel';
 import DateTime from './pure/datetime';
 import Slider from './pure/slider';
+import Field from './pure/field';
 import Plain from './pure/plain';
 import Collection from './pure/collection';
 
@@ -39,6 +40,7 @@ export {
   Slider,
   DateTime,
   Plain,
+  Field,
   Collection,
 };
 

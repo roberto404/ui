@@ -86,7 +86,7 @@ class Radio extends Field
                 id={`${slugify(this.props.label)}-${item.id}-${uid}`}
                 name={slugify(this.props.label)}
                 value={item.id}
-                checked={this.state.value.indexOf(item.id.toString()) !== -1}
+                checked={(this.state.value || []).indexOf(item.id.toString()) !== -1}
                 onChange={this.onChangeRadioHandler}
               />
 
