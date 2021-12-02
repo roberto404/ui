@@ -12,6 +12,8 @@ import NestedList, { Menu as NestedListItem } from '../../src/grid/pure/nestedLi
 import Layer from '../../src/layer';
 import GitHubIcon from '../../src/icon/la/github';
 
+import IconForward from '../../src/icon/mui/navigation/arrow_forward';
+
 
 /* !- Constants */
 
@@ -105,6 +107,18 @@ class Content extends Component
     newTab.focus();
   }
 
+  onClickForwardHandler = () =>
+  {
+    const parent = Menu.getTree().find(({ title }) => title === this.state.path[0]);
+    const item = Menu.getTree().find(({ title, pid }) => pid === parent.id && title === this.state.path[1]);
+
+    const siblings = Menu.getChildren(parent.id);
+
+    const nextPos = item.pos + 1;
+
+    this.onClickItemHandler(siblings.find(({ pos }) => pos === (siblings.length > nextPos ? nextPos : 0)));
+  }
+
   render()
   {
     if (
@@ -133,6 +147,11 @@ class Content extends Component
               </button>
               <h2>{this.state.title}</h2>
               {React.createElement(this.state.component)}
+
+              <div className="button gray shadow my-4 inline-block w-auto" onClick={this.onClickForwardHandler}>
+                <IconForward />
+              </div>
+
             </div>
           </div>
         </div>
