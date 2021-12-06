@@ -1,0 +1,105 @@
+.gant
+{
+  @extend .no-select;
+
+  *
+  {
+    font-family: $font;
+  }
+
+  #pattern line
+  {
+    opacity: 0.05;
+    stroke-width: 2;
+    stroke: #000,
+  }
+
+  #coordinate-xgrid
+  {
+    display: none;
+  }
+
+  #coordinate-ygrid line
+  {
+    opacity: 0.1;
+  }
+
+  #coordinate-xaxis
+  {
+    line
+    {
+      stroke-width: 1;
+      stroke: $gray;
+    }
+
+    text
+    {
+      font-size: 1rem;
+
+      tspan:first-child
+      {
+        fill: $gray;
+      }      
+    }
+
+    g:nth-child(7n-1),
+    g:nth-child(7n),
+    {
+      text tspan:first-child
+      {
+        fill: $red;
+      }
+    }
+  }
+
+  #coordinate-yaxis
+  {
+    font-size: 1.25rem;
+    fill: $gray-dark;
+  }
+
+  #points
+  {
+    #today
+    {
+      pointer-events: none;
+
+      line
+      {
+        stroke: $blue-dark;
+        stroke-width: 2;
+      }
+
+      circle
+      {
+        fill: $blue-dark;
+      }
+
+      rect
+      {
+        fill: white;
+        opacity: 0.3;
+      }
+    }
+
+    #weekend
+    {
+      pointer-events: none;
+    }
+
+    #tasks
+    {
+      g[class=""] path
+      {
+        fill: #4EDFA5;
+      }
+
+      text
+      {
+        fill: $white-light;
+        font-size: 1rem;
+        pointer-events: none;
+      }
+    }
+  }
+}
