@@ -29,6 +29,7 @@ const ExampleForm = () =>
         // min="2020-08-5"
         // max="2020-08-25"
         validator={timestamp => [6, 0].indexOf(new Date(timestamp).getDay()) === -1}
+        resetLabel="reset"
       />
     </div>
 
@@ -43,6 +44,7 @@ const ExampleForm = () =>
       // min="2020-08-10"
       // max="2020-10-20"
       validator={timestamp => [1,3,5].indexOf(new Date(timestamp).getDay()) === -1}
+      resetLabel="reset"
     />
 
   </Form>

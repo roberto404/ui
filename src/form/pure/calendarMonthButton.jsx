@@ -58,6 +58,7 @@ class CalendarMonthButton extends Component
         stateFormat={props.stateFormat}
         format={props.format}
         dateFormat={props.dateFormat}
+        resetLabel={props.resetLabel}
       />
     );
 

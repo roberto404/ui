@@ -29,6 +29,7 @@ const CalendarDateTime = ({
   onChange,
   stateFormat,
   format,
+  resetLabel,
 }) =>
 (
   <div className={className}>
@@ -60,6 +61,7 @@ const CalendarDateTime = ({
         min={min}
         max={max}
         validator={validator}
+        resetLabel={resetLabel}
       />
     </div>
   </div>

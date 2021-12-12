@@ -4,6 +4,10 @@ import moment from 'moment';
 import produceNumericArray from '@1studio/utils/array/produceNumericArray';
 
 
+/* !- Redux Actions */
+
+import { unsetValues } from '../actions';
+
 /* !- React Elements */
 
 import Field from '../formField';
@@ -128,6 +132,13 @@ class CalendarMonthForm extends Field
     }
   }
 
+  onClickResetHandler = () =>
+  {
+    const form = this.props.form || this.context.form;
+
+    this.context.store.dispatch(unsetValues({ id: this.props.id }, form));
+  }
+
   componentDidMount()
   {
     super.componentDidMount();
@@ -247,6 +258,10 @@ class CalendarMonthForm extends Field
           onClick={this.onChangeDateHandler}
         />
 
+        { this.props.resetLabel &&
+        <div className="text-xs text-gray light underline text-center pointer mt-1" onClick={this.onClickResetHandler}>{this.props.resetLabel}</div>
+        }
+
         { this.state.error &&
           <div className="error">{this.state.error}</div>
         }
@@ -289,6 +304,7 @@ CalendarMonthForm.propTypes =
   min: PropTypes.string,
   max: PropTypes.string,
   validator: PropTypes.func,
+  resetLabel: PropTypes.string,
 };
 
 /**
@@ -311,5 +327,10 @@ CalendarMonthForm.defaultProps =
   max: '',
   validator: () => {},
 };
+
+CalendarMonthForm.contextTypes =
+{
+  store: PropTypes.func,
+}
 
 export default CalendarMonthForm;
