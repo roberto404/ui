@@ -54,6 +54,10 @@ class CalendarMonthButton extends Component
         mounthData={props.mounthData}
         hourData={props.hourData}
         minuteData={props.minuteData}
+        onChange={props.onChange}
+        stateFormat={props.stateFormat}
+        format={props.format}
+        dateFormat={props.dateFormat}
       />
     );
 

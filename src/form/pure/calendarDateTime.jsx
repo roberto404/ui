@@ -26,6 +26,9 @@ const CalendarDateTime = ({
   mounthData,
   hourData,
   minuteData,
+  onChange,
+  stateFormat,
+  format,
 }) =>
 (
   <div className={className}>
@@ -49,6 +52,9 @@ const CalendarDateTime = ({
         form={form}
         disableLabel
         onClick={onClickCalendar}
+        onChange={onChange}
+        format={format}
+        stateFormat={stateFormat}
         value={value}
         dateFormat={dateFormat}
         min={min}
