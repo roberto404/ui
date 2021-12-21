@@ -53,9 +53,18 @@ class Radio extends Field
    * @param  {SytheticEvent} event
    * @return {void}
    */
-  onChangeRadioHandler = (event) =>
+  onClickRadioHandler = (event) =>
   {
-    this.onChangeHandler(event.target.value);
+    const value = event.target.value;
+
+    if (value !== this.state.value)
+    {
+      this.onChangeHandler(event.target.value);
+    }
+    else
+    {
+      this.onChangeHandler(undefined);
+    }
   }
 
   /* !- Renders */
@@ -87,7 +96,7 @@ class Radio extends Field
                 name={slugify(this.props.label)}
                 value={item.id}
                 checked={(this.state.value || []).indexOf(item.id.toString()) !== -1}
-                onChange={this.onChangeRadioHandler}
+                onClick={this.onClickRadioHandler}
               />
 
               <label htmlFor={`${slugify(this.props.label)}-${item.id}-${uid}`}>{item.title}</label>

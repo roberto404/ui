@@ -8,7 +8,7 @@ import classNames from 'classnames';
 
 /* !- Redux Actions */
 
-import { setValues } from './actions';
+import { setValues, unsetValues } from './actions';
 
 
 /* !- React Elements */
@@ -321,7 +321,7 @@ class FormField extends Component
      * If the client erase from string
      * @type {boolean|null}
      */
-    const reduce = (this.state.value && typeof value.length === 'number') ?
+    const reduce = (value && this.state.value && typeof value.length === 'number') ?
       value.length < this.state.value.length : null;
 
     const payload = {
@@ -352,8 +352,11 @@ class FormField extends Component
     {
       this.context.onChange(payload, options);
     }
-    else
+    else if (payload.value === undefined)
     {
+      this.context.store.dispatch(unsetValues({ id: payload.id }, payload.form))
+    }
+    else {
       this.context.store.dispatch(setValues({ [payload.id]: payload.value }, payload.form));
     }
   }

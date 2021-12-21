@@ -185,10 +185,17 @@ class Form extends Component
    */
   onChangeHandler = ({ id, value, form }) =>
   {
-    this.context.store.dispatch(FormActions.setValues(
-      { [id]: value },
-      form || this.props.id,
-    ));
+    if (value === undefined)
+    {
+      this.context.store.dispatch(FormActions.unsetValues({ id }, form || this.props.id))
+    }
+    else
+    {
+      this.context.store.dispatch(FormActions.setValues(
+        { [id]: value },
+        form || this.props.id,
+      ));
+    }
   }
 
   /* !- Listeners */
