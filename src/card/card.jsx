@@ -114,7 +114,7 @@ const Card = ({
       )
     )
     {
-      if (event.relatedTarget.closest('.layer'))
+      if (event.relatedTarget.closest && event.relatedTarget.closest('.layer .container'))
       {
         event.relatedTarget
           .closest('.layer .container')

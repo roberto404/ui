@@ -38,8 +38,8 @@ export class ShowMore extends Component
     {
       const { data, model } = this.props;
 
-      const current = data.length;
-      const limit = model.results.length;
+      const current = data ? data.length : 0;
+      const limit = model ? model.results.length : 0;
 
       if (current === limit)
       {
