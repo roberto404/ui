@@ -71,7 +71,7 @@ export class File
   * @private
   * @param  {integer} hash
   */
-  constructor(file)
+  constructor(file = {})
   {
     // if ()
     // {
