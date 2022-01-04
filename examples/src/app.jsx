@@ -68,7 +68,7 @@ class Content extends Component
     }
 
     this.state = {
-      title: `${example[0]} / ${example[1]}`,
+      title: `${example[0]}/${example[1]}`,
       component: Examples[example[0]][example[1]],
       path: example,
     };

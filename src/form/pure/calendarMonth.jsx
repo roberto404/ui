@@ -328,9 +328,4 @@ CalendarMonthForm.defaultProps =
   validator: () => {},
 };
 
-CalendarMonthForm.contextTypes =
-{
-  store: PropTypes.func,
-}
-
 export default CalendarMonthForm;
