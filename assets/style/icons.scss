@@ -35,7 +35,8 @@
   @include icon('lock');
 }
 
-.embed-checkmark-black
+.embed-checkmark-black,
+.icon-checkmark-black
 {
   @include icon('checkmark', $black);
 }

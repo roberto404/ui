@@ -1,14 +1,75 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Editor, EditorState, ContentState, RichUtils, getDefaultKeyBinding, convertToRaw } from 'draft-js';
+
+import {
+  Editor,
+  EditorState,
+  ContentState,
+  RichUtils,
+  getDefaultKeyBinding,
+  convertToRaw,
+  Modifier,
+  CompositeDecorator,
+} from 'draft-js';
+
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
-import isEqual from 'lodash/isEqual';
+
+import classNames from 'classnames';
+
+
+/* !- Redux Actions */
+
+import { popover } from '../../layer/actions';
 
 
 /* !- React Elements */
 
 import Field from '../../form/formField';
+
+import IconBlockStyle from '../../icon/mui/action/text_rotate_vertical';
+import IconBullet from '../../icon/mui/editor/format_list_bulleted';
+import IconLink from '../../icon/mui/editor/insert_link';
+import IconBold from '../../icon/mui/editor/format_bold';
+import IconItalic from '../../icon/mui/editor/format_italic';
+import IconUnderline from '../../icon/mui/editor/format_underlined';
+import IconStrikestrow from '../../icon/mui/editor/strikethrough_s';
+import IconClear from '../../icon/mui/editor/format_clear';
+
+
+import BlockStyleControls from './editor/blockStyleControls';
+
+
+
+const styleMap = {
+  STRIKETHROUGH: {
+    textDecoration: 'line-through',
+  },
+};
+
+const Link = (props) =>
+{
+  const { url } = props.contentState.getEntity(props.entityKey).getData();
+
+  return (
+    <a href={url} style={{ color: '#3b5998', textDecoration: 'underline' }}>
+      {props.children}
+    </a>
+  );
+}
+
+function findLinkEntities(contentBlock, callback, contentState) {
+  contentBlock.findEntityRanges(
+    (character) => {
+      const entityKey = character.getEntity();
+      return (
+        entityKey !== null &&
+        contentState.getEntity(entityKey).getType() === 'LINK'
+      );
+    },
+    callback
+  );
+}
 
 
 class Wysiwyg extends Field
@@ -17,24 +78,137 @@ class Wysiwyg extends Field
   {
     super(props);
 
-    if (this.state.value)
-    {
-      const contentBlock = htmlToDraft(this.state.value);
-      const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-      this.state.editorState = EditorState.createWithContent(contentState);
-    }
-    else
-    {
-      this.state.editorState = EditorState.createEmpty();
-    }
+    const decorator = new CompositeDecorator([
+      {
+        strategy: findLinkEntities,
+        component: Link,
+      },
+    ]);
 
-    this.focus = () => this.refs.editor.focus();
-
-    this.handleKeyCommand = this._handleKeyCommand.bind(this);
-    this.mapKeyToEditorCommand = this._mapKeyToEditorCommand.bind(this);
-    this.toggleBlockType = this._toggleBlockType.bind(this);
-    this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
+    // if (this.state.value)
+    // {
+    //   const contentBlock = htmlToDraft(this.state.value);
+    //   const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+    //   this.state.editorState = EditorState.createWithContent(contentState, decorator);
+    // }
+    // else
+    // {
+      this.state.editorState = EditorState.createEmpty(decorator);
+    // }
   }
+
+  getChildContext()
+  {
+    return {
+      editorState: this.state.editorState,
+      toggleBlockType: this.toggleBlockType,
+      toggleInlineStyle: this.toggleInlineStyle,
+      focusEditor: this.focusEditor,
+    };
+  }
+
+  focusEditor = () =>
+  {
+    this.editorDom.focus();
+  }
+
+  removeInlineStyles = (editorState = this.state.editorState) =>
+  {
+    const contentState = editorState.getCurrentContent();
+
+    const styles = ['BOLD', 'ITALIC', 'UNDERLINE', ...Object.keys(styleMap)];
+
+    const contentWithoutStyles = styles.reduce(
+      (result, style) =>
+        Modifier.removeInlineStyle(result, editorState.getSelection(), style),
+      contentState
+    );
+  
+    const newEditorState = EditorState.push(
+      editorState,
+      contentWithoutStyles,
+      'change-inline-style'
+    );
+  
+    return newEditorState;
+  };
+
+  removeEntities = (editorState = this.state.editorState) =>
+  {
+    const contentState = editorState.getCurrentContent();
+
+    const contentWithoutEntities = Modifier.applyEntity(
+      contentState,
+      editorState.getSelection(),
+      null
+    );
+
+    const newEditorState = EditorState.push(
+      editorState,
+      contentWithoutEntities,
+      'apply-entity'
+    );  
+  
+    return newEditorState;
+  };
+
+  removeLists = (editorState) =>
+  {
+    const contentState = editorState.getCurrentContent();
+
+    let contentWithoutLists = contentState;
+    const blocksMap = contentState.getBlockMap();
+  
+    blocksMap.forEach((block) =>
+    {
+      const blockType = block.getType();
+      
+      if (
+        blockType === 'ordered-list-item' ||
+        blockType === 'unordered-list-item'
+      )
+      {
+        const selectionState = SelectionState.createEmpty(block.getKey());
+        const updatedSelection = selectionState.merge({
+          focusOffset: 0,
+          anchorOffset: block.getText().length
+        });
+  
+        contentWithoutLists = Modifier.setBlockType(
+          contentWithoutLists,
+          updatedSelection,
+          'unstyled'
+        );
+      }
+    });
+
+    const newEditorState = EditorState.push(
+      editorState,
+      contentWithoutLists,
+      'change-block-type'
+    );
+  
+    return newEditorState;
+  }
+
+  clearFormat = () =>
+  {
+    // const selection = this.state.editorState.getSelection();
+    // console.log(selection);
+
+    const newEditorState = [this.removeInlineStyles, this.removeEntities, this.removeLists].reduce(
+      (result, helper) => helper(result),
+      this.state.editorState,
+    );
+
+    this.onChangeEditorHandler(
+      RichUtils.toggleBlockType(
+        newEditorState,
+        'unstyled',
+      )
+    );
+  }
+
 
   /**
    * Invoke when editor change.
@@ -54,7 +228,13 @@ class Wysiwyg extends Field
     // {
       this.onChangeHandler(value);
       // this.setState({ editorState, value });
-      this.setState({ editorState });
+      
+      this.setState(
+        { editorState },
+        () => setTimeout(() => this.editorDom.focus(), 0),
+      );
+
+
     // }
   }
 
@@ -81,7 +261,6 @@ class Wysiwyg extends Field
       this.state.error !== error
     )
     {
-      console.log('111');
       const contentBlock = htmlToDraft(value);
       const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
       const editorState = EditorState.createWithContent(contentState);
@@ -90,33 +269,41 @@ class Wysiwyg extends Field
   }
 
 
-  _handleKeyCommand(command, editorState)
+  handleKeyCommand = (command, editorState) =>
   {
     const newState = RichUtils.handleKeyCommand(editorState, command);
-    if (newState) {
+    
+    if (newState)
+    {
       this.onChangeEditorHandler(newState);
       return true;
     }
+
     return false;
   }
 
-  _mapKeyToEditorCommand(e)
+  mapKeyToEditorCommand = (e) =>
   {
-    if (e.keyCode === 9 /* TAB */) {
+    if (e.keyCode === 9 /* TAB */)
+    {
       const newEditorState = RichUtils.onTab(
         e,
         this.state.editorState,
         4, /* maxDepth */
       );
-      if (newEditorState !== this.state.editorState) {
+
+      if (newEditorState !== this.state.editorState)
+      {
         this.onChangeEditorHandler(newEditorState);
       }
+
       return;
     }
+
     return getDefaultKeyBinding(e);
   }
 
-  _toggleBlockType(blockType)
+  toggleBlockType = (blockType) =>
   {
     this.onChangeEditorHandler(
       RichUtils.toggleBlockType(
@@ -126,7 +313,7 @@ class Wysiwyg extends Field
     );
   }
 
-  _toggleInlineStyle(inlineStyle)
+  toggleInlineStyle = (inlineStyle) =>
   {
     this.onChangeEditorHandler(
       RichUtils.toggleInlineStyle(
@@ -134,6 +321,165 @@ class Wysiwyg extends Field
         inlineStyle
       )
     );
+  }
+
+  onClickBlockStyleHandler = (event) =>
+  {
+    const className = ({ active }) => classNames({
+      'pl-3 mt-1 py-1/2 hover:bg-gray-light rounded pointer': true,
+      'icon-checkmark-black': active,
+    });
+
+    this.context.store.dispatch(popover(
+      (
+        (
+          <div className="" style={{ width: 200 }}>
+            <BlockStyleControls
+              controls={[
+                {
+                  type: 'BOLD',
+                  element: <IconBold />,
+                },
+                {
+                  type: 'ITALIC',
+                  element: <IconItalic />,
+                },
+                {
+                  type: 'UNDERLINE',
+                  element: <IconUnderline />,
+                },
+                {
+                  type: 'STRIKETHROUGH',
+                  element: <IconStrikestrow />,
+                },
+              ]}
+              editorState={this.state.editorState}
+              toggleInlineStyle={this.toggleInlineStyle}
+              focusEditor={this.focusEditor}
+              className="v-center mb-1"
+              inlineStyle
+            />
+            <BlockStyleControls
+              controls={[
+                {
+                  type: 'header-two',
+                  element: <h2 style={{ margin: 0 }}>Heading</h2>,
+                  className,
+                },
+                {
+                  type: 'header-three',
+                  element: <h3 style={{ margin: 0 }}>Subheading</h3>,
+                  className,
+                },
+                {
+                  type: 'blockquote',
+                  element: <blockquote style={{ margin: 0 }}>Blockquote</blockquote>,
+                  className,
+                },
+                {
+                  type: 'unordered-list-item',
+                  element: <ul style={{ margin: 0 }}><li>Unordered list item</li></ul>,
+                  className,
+                },
+                {
+                  type: 'ordered-list-item',
+                  element: <ol style={{ margin: 0 }}><li>Ordered list item</li></ol>,
+                  className,
+                },
+                {
+                  type: 'unstyle',
+                  element: <div>Body</div>,
+                  className,
+                },
+              ]}
+              editorState={this.state.editorState}
+              toggleBlockType={this.toggleBlockType}
+              focusEditor={this.focusEditor}
+              className=""
+            />
+          </div>
+        )
+      ),
+      event,
+      {
+        className: 'no-close',
+        // containerStyle: { width: '400px' },
+        // useMousePosition: true,
+      },
+    ));
+  }
+
+  promptForLink = (event) =>
+  {
+    event.preventDefault();
+
+    const { editorState } = this.state;
+    const selection = editorState.getSelection();
+
+    if (!selection.isCollapsed())
+    {
+      const contentState = editorState.getCurrentContent();
+      const startKey = editorState.getSelection().getStartKey();
+      const startOffset = editorState.getSelection().getStartOffset();
+      const blockWithLinkAtBeginning = contentState.getBlockForKey(startKey);
+      const linkKey = blockWithLinkAtBeginning.getEntityAt(startOffset);
+
+      let url = '';
+
+      if (linkKey)
+      {
+        const linkInstance = contentState.getEntity(linkKey);
+        url = linkInstance.getData().url;
+      }
+
+      this.setState({
+        showURLInput: true,
+        urlValue: url,
+      }, () => {
+        setTimeout(() => this.refs.url.focus(), 0);
+      });
+    }
+  }
+  
+  addLink = (event) =>
+  {
+    event.preventDefault();
+
+    const { editorState } = this.state;
+
+    const contentState = editorState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity(
+      'LINK',
+      'MUTABLE',
+      { url: 'valami_url_slug' }
+    );
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+
+    const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
+
+    this.onChangeEditorHandler(
+      RichUtils.toggleLink(
+        newEditorState,
+        newEditorState.getSelection(),
+        entityKey
+      ),
+    );
+  }
+
+  removeLink = (event) =>
+  {
+    event.preventDefault();
+
+    const { editorState } = this.state;
+
+    const selection = editorState.getSelection();
+
+    if (!selection.isCollapsed())
+    {
+      this.onChangeEditorHandler(
+        RichUtils.toggleLink(editorState, selection, null)
+      );
+    }
   }
 
   render()
@@ -146,47 +492,89 @@ class Wysiwyg extends Field
 
 
 
+    const selection = editorState.getSelection();
+
+    console.log(selection);
+
+
+    const blockType = editorState
+      .getCurrentContent()
+      .getBlockForKey(selection.getStartKey())
+      .getType();
+
+    console.log(blockType);
+
+
 
     // If the user changes block type before entering any text, we can
     // either style the placeholder or hide it. Let's just hide it now.
-    let className = 'RichEditor-editor';
+    // let className = 'RichEditor-editor';
 
-    var contentState = editorState.getCurrentContent();
+    // var contentState = editorState.getCurrentContent();
 
-    if (!contentState.hasText())
-    {
-      if (contentState.getBlockMap().first().getType() !== 'unstyled')
-      {
-        className += ' RichEditor-hidePlaceholder';
-      }
-    }
+    console.log(editorState.getCurrentContent());
+
+    // if (!contentState.hasText())
+    // {
+    //   if (contentState.getBlockMap().first().getType() !== 'unstyled')
+    //   {
+    //     className += ' RichEditor-hidePlaceholder';
+    //   }
+    // }
+
+
+
 
     return (
-      <div className="RichEditor-root">
+      <div className={this.props.className}>
 
-        <BlockStyleControls
-          editorState={editorState}
-          onToggle={this.toggleBlockType}
-        />
+        <div className="flex p-1/2 border-bottom border-gray-light mb-1">
 
-        <InlineStyleControls
-          editorState={editorState}
-          onToggle={this.toggleInlineStyle}
-        />
+          <div className="grow flex">
+            <div
+              className="w-3 h-3 p-1/2 hover:bg-gray-light rounded pointer mr-1/2"
+              onClick={this.onClickBlockStyleHandler}
+            >
+              <IconBlockStyle />
+            </div>
+            <div className="w-3 h-3 p-1/2 hover:bg-gray-light rounded pointer mb-1 mr-1/2">
+              <IconLink />
+            </div>
+          </div>
 
-        <div className={className} onClick={this.focus}>
+          <div className="flex">
+            <div className="w-3 h-3 p-1/2 hover:bg-gray-light rounded pointer mb-1 ml-1/2" onClick={this.clearFormat}>
+              <IconClear />
+            </div>
+          </div>
+        </div>
+
+        <div
+          // onMouseDown={this.promptForLink}
+          onMouseDown={this.addLink}
+        >
+          Add Link
+        </div>
+        <div onMouseDown={this.removeLink}>
+          Remove Link
+        </div>
+
+        <div
+          className="p-2"
+          onClick={this.focus}
+        >
           <Editor
             editorState={editorState}
             onChange={this.onChangeEditorHandler}
 
-
             blockStyleFn={getBlockStyle}
             customStyleMap={styleMap}
+
             handleKeyCommand={this.handleKeyCommand}
-            keyBindingFn={this.mapKeyToEditorCommand}
-            placeholder="Tell a story..."
-            ref="editor"
-            spellCheck
+            // keyBindingFn={this.mapKeyToEditorCommand}
+            // placeholder="Placeholder..."
+            ref={ref => this.editorDom = ref}
+            // spellCheck
           />
         </div>
 
@@ -195,17 +583,18 @@ class Wysiwyg extends Field
   }
 }
 
-
-
-// Custom overrides for "code" style.
-const styleMap = {
-  CODE: {
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
-    fontFamily: '"Inconsolata", "Menlo", "Consolas", monospace',
-    fontSize: 16,
-    padding: 2,
-  },
+/**
+ * childContextTypes
+ * @type {Object}
+ */
+ Wysiwyg.childContextTypes = {
+  editorState: PropTypes.object,
+  toggleBlockType: PropTypes.func,
+  toggleInlineStyle: PropTypes.func,
+  focusEditor: PropTypes.func,
 };
+
+
 
 function getBlockStyle(block)
 {
@@ -216,265 +605,13 @@ function getBlockStyle(block)
   }
 }
 
-class StyleButton extends React.Component
-{
-  constructor() {
-    super();
-    this.onToggle = (e) => {
-      e.preventDefault();
-      this.props.onToggle(this.props.style);
-    };
-  }
-  render() {
-    let className = 'RichEditor-styleButton';
-    if (this.props.active) {
-      className += ' RichEditor-activeButton';
-    }
-    return (
-      <span className={className} onMouseDown={this.onToggle}>
-        {this.props.label}
-      </span>
-    );
-  }
-}
-
-const BLOCK_TYPES = [
-  {label: 'H1', style: 'header-one'},
-  {label: 'H2', style: 'header-two'},
-  {label: 'H3', style: 'header-three'},
-  {label: 'H4', style: 'header-four'},
-  {label: 'H5', style: 'header-five'},
-  {label: 'H6', style: 'header-six'},
-  {label: 'Blockquote', style: 'blockquote'},
-  {label: 'UL', style: 'unordered-list-item'},
-  {label: 'OL', style: 'ordered-list-item'},
-  {label: 'Code Block', style: 'code-block'},
-];
-
-const BlockStyleControls = (props) => {
-  const {editorState} = props;
-  const selection = editorState.getSelection();
-  const blockType = editorState
-    .getCurrentContent()
-    .getBlockForKey(selection.getStartKey())
-    .getType();
-  return (
-    <div className="RichEditor-controls">
-      {BLOCK_TYPES.map((type) =>
-        <StyleButton
-          key={type.label}
-          active={type.style === blockType}
-          label={type.label}
-          onToggle={props.onToggle}
-          style={type.style}
-        />
-      )}
-    </div>
-  );
-};
-var INLINE_STYLES = [
-  {label: 'Bold', style: 'BOLD'},
-  {label: 'Italic', style: 'ITALIC'},
-  {label: 'Underline', style: 'UNDERLINE'},
-  {label: 'Monospace', style: 'CODE'},
-];
-
-const InlineStyleControls = (props) =>
-{
-  const currentStyle = props.editorState.getCurrentInlineStyle();
-
-  return (
-    <div className="RichEditor-controls">
-      {INLINE_STYLES.map((type) =>
-        <StyleButton
-          key={type.label}
-          active={currentStyle.has(type.style)}
-          label={type.label}
-          onToggle={props.onToggle}
-          style={type.style}
-        />
-      )}
-    </div>
-  );
-};
 
 
-// class Wysiwyg extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {editorState: EditorState.createEmpty()};
-//     this.onChange = (editorState) => this.setState({editorState});
-//   }
-//   render() {
-//     return <Editor editorState={this.state.editorState} onChange={this.onChange} />;
-//   }
+
+// Wysiwyg.defaultProps =
+// {
+//   ...Wysiwyg.defaultProps,
+
 // }
-
-/**
-* Input Component
-*
-* @extends Field
-*/
-// class Input extends Field
-// class Input extends React.Component
-// {
-//   constructor(props) {
-//     super(props);
-//     this.state = {editorState: EditorState.createEmpty()};
-//     this.onChange = (editorState) => this.setState({editorState});
-//   }
-//
-//   /* !- Handlers */
-//
-//   /**
-//    * @private
-//    * @override
-//    * @emits
-//    * @param  {SytheticEvent} event
-//    * @return {void}
-//    */
-//   onChangeEditorHandler = (editorState) =>
-//   {
-//     console.log(editorState);
-//     // this.onChangeHandler(event.target.value);
-//   }
-//
-//   handleKeyCommand(command, editorState) {
-//     const newState = RichUtils.handleKeyCommand(editorState, command);
-//     if (newState) {
-//       this.onChange(newState);
-//       return 'handled';
-//     }
-//     return 'not-handled';
-//   }
-//   /* !- Renders */
-//
-//   /**
-//    * This method is called when render the Component instance.
-//    * @override
-//    * @return {ReactElement}
-//    */
-//   render()
-//   {
-//     return (
-//       <div className={`field wysiwyg-field ${this.props.className}`}>
-//
-//         { this.label }
-//
-//         <div className="table">
-//
-//           { this.state.prefix &&
-//           <div className="prefix">{this.state.prefix}</div>
-//           }
-//
-//           <Editor
-//             editorState={this.state.editorState}
-//             onChange={this.onChangeEditorHandler}
-//             handleKeyCommand={this.handleKeyCommand}
-//           //   toolbarClassName="toolbarClassName"
-//           //   wrapperClassName="wrapperClassName"
-//           //   editorClassName="editorClassName"
-//           //   onEditorStateChange={this.onEditorStateChange}
-//           />
-//
-//           {/* <input
-//             id={this.props.id}
-//             name={this.props.name}
-//
-//             value={this.state.value}
-//             type={this.props.type}
-//             disabled={this.props.disabled}
-//             readOnly={this.props.disabled}
-//             maxLength={this.props.length}
-//             autoComplete="new-password"
-//
-//             onChange={this.onChangeInputHandler}
-//             onBlur={this.onBlurHandler}
-//             onFocus={this.onFocusHandler}
-//             placeholder={this.state.placeholder}
-//
-//             ref={(ref) =>
-//             {
-//               this.element = ref;
-//             }}
-//             data-name={this.props.name}
-//           /> */}
-//
-//           { this.props.postfix &&
-//           <div className="postfix">{this.state.postfix}</div>
-//           }
-//
-//         </div>
-//
-//         { this.state.error &&
-//           <div className="error">{this.state.error}</div>
-//         }
-//       </div>
-//     );
-//   }
-// }
-//
-// /**
-//  * propTypes
-//  * @override
-//  * @type {Object}
-//  */
-// Input.propTypes =
-// {
-//   ...Input.propTypes,
-//   /**
-//    * Specifies the type of input to display such as "password" or "email".
-//    */
-//   type: PropTypes.oneOf(['text', 'password', 'email', 'date', 'tel', 'number', 'datetime-local']),
-//   /**
-//    * Callback function that is fired when the textfield's focus lost.
-//    *
-//    * @param {string} newValue The new value of the text field.
-//    * @param {object} event Change event targeting the text field.
-//    */
-//   onBlur: PropTypes.func,
-//   /**
-//    * Callback function that is fired when the textfield is on focus.
-//    *
-//    * @param {string} newValue The new value of the text field.
-//    * @param {object} event Change event targeting the text field.
-//    */
-//   onFocus: PropTypes.func,
-//   /**
-//    * Regular expression to input validator
-//    */
-//   regexp: PropTypes.string,
-//   /**
-//    * Override the inline-styles of the TextField's underline element.
-//    */
-//   underlineStyle: PropTypes.objectOf(PropTypes.string),
-//   prefix: PropTypes.oneOfType([
-//     PropTypes.element,
-//     PropTypes.string,
-//   ]),
-//   postfix: PropTypes.oneOfType([
-//     PropTypes.element,
-//     PropTypes.string,
-//   ]),
-// };
-//
-// /**
-//  * defaultProps
-//  * @override
-//  * @type {Object}
-//  */
-// Input.defaultProps =
-// {
-//   ...Input.defaultProps,
-//   type: 'text',
-//   underlineStyle: {},
-//   onBlur()
-//   {},
-//   onFocus()
-//   {},
-//   regexp: '',
-//   prefix: '',
-//   postfix: '',
-// };
 
 export default Wysiwyg;
