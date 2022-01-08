@@ -8,6 +8,7 @@ import {
   RichUtils,
   getDefaultKeyBinding,
   convertToRaw,
+  convertFromRaw,
   Modifier,
   CompositeDecorator,
 } from 'draft-js';
@@ -58,7 +59,8 @@ const Link = (props) =>
   );
 }
 
-function findLinkEntities(contentBlock, callback, contentState) {
+function findLinkEntities(contentBlock, callback, contentState)
+{
   contentBlock.findEntityRanges(
     (character) => {
       const entityKey = character.getEntity();
@@ -222,20 +224,19 @@ class Wysiwyg extends Field
    */
   onChangeEditorHandler = (editorState) =>
   {
-    const value = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    // const value = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    // const value = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+    const value = editorState;
 
-    // if (this.state.value !== value && this.validate(value))
-    // {
+    if (this.state.value !== value && this.validate(value))
+    {
       this.onChangeHandler(value);
-      // this.setState({ editorState, value });
       
       this.setState(
         { editorState },
-        () => setTimeout(() => this.editorDom.focus(), 0),
+        // () => setTimeout(() => this.editorDom.focus(), 0),
       );
-
-
-    // }
+    }
   }
 
   // componentWillReceiveProps(nextProps)
@@ -261,9 +262,12 @@ class Wysiwyg extends Field
       this.state.error !== error
     )
     {
-      const contentBlock = htmlToDraft(value);
-      const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-      const editorState = EditorState.createWithContent(contentState);
+      const editorState = value;
+      // const editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(value)));
+
+      // let contentBlock = htmlToDraft(value);
+      // const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+      // const editorState = EditorState.createWithContent(contentState);
       this.setState({ /*editorState,*/ value, error });
     }
   }
@@ -600,7 +604,9 @@ function getBlockStyle(block)
 {
   switch (block.getType())
   {
-    case 'blockquote': return 'RichEditor-blockquote';
+    case 'header-two': return 'm-0 pb-1 heavy text-xxl mobile:text-m';
+    case 'header-three': return 'light pb-1 text-line-m mobile:text-s m-0';
+    case 'blockquote': return 'italic';
     default: return null;
   }
 }

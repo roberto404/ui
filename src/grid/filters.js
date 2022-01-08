@@ -91,7 +91,7 @@ export const OPERATOR_UNIQUE = "=~!\*^$><";
 
 export const LOGICAL_REGEX = '[|&]{1,2}';
 
-const FIELD_CHARS = '0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ_';
+export const FIELD_CHARS = '0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ_';
 
 /**
  * (field and operator)?value <=== JSON data, but we don't use ',' coma, because coma separated expression not working
@@ -103,7 +103,10 @@ const FIELD_CHARS = '0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ_';
  * [field = 1, field > 2]
  */
 // const REGEX_QUERY_LEVEL1 = new RegExp(`([${FIELD_CHARS}]+[ ]*[${OPERATOR_UNIQUE}]+[ ]*)?[${FIELD_CHARS}"{}[\\].-:^+()*\\]+[ ,]*`, 'g');
-const REGEX_QUERY_LEVEL1 = new RegExp(`([${FIELD_CHARS}]+[ ]*[${OPERATOR_UNIQUE}]+[ ]*)?[^ ,&=><]+`, 'g');
+export const REGEX_QUERY_LEVEL1 = new RegExp(`([${FIELD_CHARS}]+[ ]*[${OPERATOR_UNIQUE}]+[ ]*)?[^ ,&=><]+`, 'g');
+
+export const isQuery = term =>
+  term.match(REGEX_QUERY_LEVEL1) !== null;
 
 /**
  * @example
@@ -111,7 +114,7 @@ const REGEX_QUERY_LEVEL1 = new RegExp(`([${FIELD_CHARS}]+[ ]*[${OPERATOR_UNIQUE}
  * // =>
  * [field, >, 2]
  */
-const REGEX_QUERY_LEVEL2 = new RegExp(`^([${FIELD_CHARS}]+)([${OPERATOR_UNIQUE}]{1}[=]{0,1})(.+)$`);
+export const REGEX_QUERY_LEVEL2 = new RegExp(`^([${FIELD_CHARS}]+)([${OPERATOR_UNIQUE}]{1}[=]{0,1})(.+)$`);
 // const REGEX_QUERY_LEVEL2 = new RegExp(`^([0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ_]+)([${OPERATOR_UNIQUE}]{1}[=]{0,1})([a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ0-9]+)$`);
 
 let SEARCH_CACHE = [];
