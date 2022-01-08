@@ -106,7 +106,7 @@ export const FIELD_CHARS = '0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ_';
 export const REGEX_QUERY_LEVEL1 = new RegExp(`([${FIELD_CHARS}]+[ ]*[${OPERATOR_UNIQUE}]+[ ]*)?[^ ,&=><]+`, 'g');
 
 export const isQuery = term =>
-  term.match(REGEX_QUERY_LEVEL1) !== null;
+  term.match(new RegExp(`^[${FIELD_CHARS}]+[ ]*[${OPERATOR_UNIQUE}]+`, 'g') !== null);
 
 /**
  * @example
