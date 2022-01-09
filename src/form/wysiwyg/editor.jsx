@@ -37,9 +37,10 @@ import IconUnderline from '../../icon/mui/editor/format_underlined';
 import IconStrikestrow from '../../icon/mui/editor/strikethrough_s';
 import IconClear from '../../icon/mui/editor/format_clear';
 
-
 import BlockStyleControls from './editor/blockStyleControls';
 
+
+/* !- Constants */
 
 
 const styleMap = {
@@ -47,6 +48,18 @@ const styleMap = {
     textDecoration: 'line-through',
   },
 };
+
+const getBlockStyle = (block) =>
+{
+  switch (block.getType())
+  {
+    case 'header-two': return 'm-0 pb-1 heavy text-xxl mobile:text-m';
+    case 'header-three': return 'light pb-1 text-line-m mobile:text-s m-0';
+    case 'blockquote': return 'italic';
+    case 'unstyle': return 'text-line-l light';
+    default: return null;
+  }
+}
 
 const Link = (props) =>
 {
@@ -109,107 +122,20 @@ class Wysiwyg extends Field
     };
   }
 
-  focusEditor = () =>
-  {
-    this.editorDom.focus();
-  }
 
-  removeInlineStyles = (editorState = this.state.editorState) =>
-  {
-    const contentState = editorState.getCurrentContent();
 
-    const styles = ['BOLD', 'ITALIC', 'UNDERLINE', ...Object.keys(styleMap)];
-
-    const contentWithoutStyles = styles.reduce(
-      (result, style) =>
-        Modifier.removeInlineStyle(result, editorState.getSelection(), style),
-      contentState
-    );
-  
-    const newEditorState = EditorState.push(
-      editorState,
-      contentWithoutStyles,
-      'change-inline-style'
-    );
-  
-    return newEditorState;
-  };
-
-  removeEntities = (editorState = this.state.editorState) =>
-  {
-    const contentState = editorState.getCurrentContent();
-
-    const contentWithoutEntities = Modifier.applyEntity(
-      contentState,
-      editorState.getSelection(),
-      null
-    );
-
-    const newEditorState = EditorState.push(
-      editorState,
-      contentWithoutEntities,
-      'apply-entity'
-    );  
-  
-    return newEditorState;
-  };
-
-  removeLists = (editorState) =>
-  {
-    const contentState = editorState.getCurrentContent();
-
-    let contentWithoutLists = contentState;
-    const blocksMap = contentState.getBlockMap();
-  
-    blocksMap.forEach((block) =>
-    {
-      const blockType = block.getType();
-      
-      if (
-        blockType === 'ordered-list-item' ||
-        blockType === 'unordered-list-item'
-      )
-      {
-        const selectionState = SelectionState.createEmpty(block.getKey());
-        const updatedSelection = selectionState.merge({
-          focusOffset: 0,
-          anchorOffset: block.getText().length
-        });
-  
-        contentWithoutLists = Modifier.setBlockType(
-          contentWithoutLists,
-          updatedSelection,
-          'unstyled'
-        );
-      }
-    });
-
-    const newEditorState = EditorState.push(
-      editorState,
-      contentWithoutLists,
-      'change-block-type'
-    );
-  
-    return newEditorState;
-  }
-
-  clearFormat = () =>
-  {
-    // const selection = this.state.editorState.getSelection();
-    // console.log(selection);
-
-    const newEditorState = [this.removeInlineStyles, this.removeEntities, this.removeLists].reduce(
-      (result, helper) => helper(result),
-      this.state.editorState,
-    );
-
-    this.onChangeEditorHandler(
-      RichUtils.toggleBlockType(
-        newEditorState,
-        'unstyled',
-      )
-    );
-  }
+  // componentWillReceiveProps(nextProps)
+  // {
+  //   if (!isEqual(nextProps.value, this.getValue()))
+  //   {
+  //     const contentBlock = htmlToDraft(nextProps.value);
+  //     const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+  //     const editorState = EditorState.createWithContent(contentState);
+  //
+  //     this.setState({ editorState });
+  //     this.onChangeListener(nextProps);
+  //   }
+  // }
 
 
   /**
@@ -238,19 +164,6 @@ class Wysiwyg extends Field
       );
     }
   }
-
-  // componentWillReceiveProps(nextProps)
-  // {
-  //   if (!isEqual(nextProps.value, this.getValue()))
-  //   {
-  //     const contentBlock = htmlToDraft(nextProps.value);
-  //     const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-  //     const editorState = EditorState.createWithContent(contentState);
-  //
-  //     this.setState({ editorState });
-  //     this.onChangeListener(nextProps);
-  //   }
-  // }
 
   onChangeListener = (props = this.props) =>
   {
@@ -413,6 +326,112 @@ class Wysiwyg extends Field
     ));
   }
 
+
+
+  focusEditor = () =>
+  {
+    this.editorDom.focus();
+  }
+
+  removeInlineStyles = (editorState = this.state.editorState) =>
+  {
+    const contentState = editorState.getCurrentContent();
+
+    const styles = ['BOLD', 'ITALIC', 'UNDERLINE', ...Object.keys(styleMap)];
+
+    const contentWithoutStyles = styles.reduce(
+      (result, style) =>
+        Modifier.removeInlineStyle(result, editorState.getSelection(), style),
+      contentState
+    );
+  
+    const newEditorState = EditorState.push(
+      editorState,
+      contentWithoutStyles,
+      'change-inline-style'
+    );
+  
+    return newEditorState;
+  };
+
+  removeEntities = (editorState = this.state.editorState) =>
+  {
+    const contentState = editorState.getCurrentContent();
+
+    const contentWithoutEntities = Modifier.applyEntity(
+      contentState,
+      editorState.getSelection(),
+      null
+    );
+
+    const newEditorState = EditorState.push(
+      editorState,
+      contentWithoutEntities,
+      'apply-entity'
+    );  
+  
+    return newEditorState;
+  };
+
+  removeLists = (editorState) =>
+  {
+    const contentState = editorState.getCurrentContent();
+
+    let contentWithoutLists = contentState;
+    const blocksMap = contentState.getBlockMap();
+  
+    blocksMap.forEach((block) =>
+    {
+      const blockType = block.getType();
+      
+      if (
+        blockType === 'ordered-list-item' ||
+        blockType === 'unordered-list-item'
+      )
+      {
+        const selectionState = SelectionState.createEmpty(block.getKey());
+        const updatedSelection = selectionState.merge({
+          focusOffset: 0,
+          anchorOffset: block.getText().length
+        });
+  
+        contentWithoutLists = Modifier.setBlockType(
+          contentWithoutLists,
+          updatedSelection,
+          'unstyled'
+        );
+      }
+    });
+
+    const newEditorState = EditorState.push(
+      editorState,
+      contentWithoutLists,
+      'change-block-type'
+    );
+  
+    return newEditorState;
+  }
+
+  clearFormat = () =>
+  {
+    // const selection = this.state.editorState.getSelection();
+    // console.log(selection);
+
+    const newEditorState = [this.removeInlineStyles, this.removeEntities, this.removeLists].reduce(
+      (result, helper) => helper(result),
+      this.state.editorState,
+    );
+
+    this.onChangeEditorHandler(
+      RichUtils.toggleBlockType(
+        newEditorState,
+        'unstyled',
+      )
+    );
+  }
+
+
+
   promptForLink = (event) =>
   {
     event.preventDefault();
@@ -496,17 +515,17 @@ class Wysiwyg extends Field
 
 
 
-    const selection = editorState.getSelection();
+    // const selection = editorState.getSelection();
 
-    console.log(selection);
+    // console.log(selection);
 
 
-    const blockType = editorState
-      .getCurrentContent()
-      .getBlockForKey(selection.getStartKey())
-      .getType();
+    // const blockType = editorState
+    //   .getCurrentContent()
+    //   .getBlockForKey(selection.getStartKey())
+    //   .getType();
 
-    console.log(blockType);
+    // console.log(blockType);
 
 
 
@@ -516,7 +535,7 @@ class Wysiwyg extends Field
 
     // var contentState = editorState.getCurrentContent();
 
-    console.log(editorState.getCurrentContent());
+    // console.log(editorState.getCurrentContent());
 
     // if (!contentState.hasText())
     // {
@@ -534,34 +553,37 @@ class Wysiwyg extends Field
 
         <div className="flex p-1/2 border-bottom border-gray-light mb-1">
 
-          <div className="grow flex">
+          <div className="grow h-center">
             <div
               className="w-3 h-3 p-1/2 hover:bg-gray-light rounded pointer mr-1/2"
               onClick={this.onClickBlockStyleHandler}
             >
               <IconBlockStyle />
             </div>
-            <div className="w-3 h-3 p-1/2 hover:bg-gray-light rounded pointer mb-1 mr-1/2">
+            <div className="w-3 h-3 p-1/2 hover:bg-gray-light rounded pointer mr-1/2" onClick={this.clearFormat}>
+              <IconClear />
+            </div>
+            <div className="border-right mx-1 h-2" />
+            <div className="w-3 h-3 p-1/2 hover:bg-gray-light rounded pointer mr-1/2">
               <IconLink />
             </div>
           </div>
 
           <div className="flex">
-            <div className="w-3 h-3 p-1/2 hover:bg-gray-light rounded pointer mb-1 ml-1/2" onClick={this.clearFormat}>
-              <IconClear />
-            </div>
+           
           </div>
         </div>
 
-        <div
-          // onMouseDown={this.promptForLink}
+        <div onClick={() => this.toggleInlineStyle('BOLD')}>fdasdff</div>
+
+        {/* <div
           onMouseDown={this.addLink}
         >
           Add Link
         </div>
         <div onMouseDown={this.removeLink}>
           Remove Link
-        </div>
+        </div> */}
 
         <div
           className="p-2"
@@ -591,33 +613,24 @@ class Wysiwyg extends Field
  * childContextTypes
  * @type {Object}
  */
- Wysiwyg.childContextTypes = {
+Wysiwyg.childContextTypes = {
   editorState: PropTypes.object,
   toggleBlockType: PropTypes.func,
   toggleInlineStyle: PropTypes.func,
   focusEditor: PropTypes.func,
 };
 
-
-
-function getBlockStyle(block)
+Wysiwyg.defaultProps =
 {
-  switch (block.getType())
-  {
-    case 'header-two': return 'm-0 pb-1 heavy text-xxl mobile:text-m';
-    case 'header-three': return 'light pb-1 text-line-m mobile:text-s m-0';
-    case 'blockquote': return 'italic';
-    default: return null;
-  }
+  ...Wysiwyg.defaultProps,
+  // format: editorState => typeof editorState === 'object' && editorState.getCurrentContent !== undefined ?
+  //   JSON.stringify(convertToRaw(editorState.getCurrentContent()))
+  //   : '',
 }
 
-
-
-
-// Wysiwyg.defaultProps =
+// Wysiwyg.propTypes =
 // {
-//   ...Wysiwyg.defaultProps,
-
+//   ...Wysiwyg.propTypes,
 // }
 
 export default Wysiwyg;
