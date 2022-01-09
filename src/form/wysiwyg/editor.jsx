@@ -14,7 +14,7 @@ import {
 } from 'draft-js';
 
 import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
+// import htmlToDraft from 'html-to-draftjs';
 
 import classNames from 'classnames';
 
@@ -100,16 +100,24 @@ class Wysiwyg extends Field
       },
     ]);
 
-    // if (this.state.value)
-    // {
+    if (this.state.value)
+    {
+      try
+      {
+        this.state.editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(this.state.value)), decorator);
+
+      } catch (error)
+      {
+        this.state.editorState = EditorState.createEmpty(decorator);
+      }
     //   const contentBlock = htmlToDraft(this.state.value);
     //   const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
     //   this.state.editorState = EditorState.createWithContent(contentState, decorator);
-    // }
-    // else
-    // {
+    }
+    else
+    {
       this.state.editorState = EditorState.createEmpty(decorator);
-    // }
+    }
   }
 
   getChildContext()
@@ -154,13 +162,13 @@ class Wysiwyg extends Field
     // const value = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
     const value = editorState;
 
-    if (this.state.value !== value && this.validate(value))
+    if (this.state.value !== Wysiwyg.defaultProps.format(value) && this.validate(value))
     {
       this.onChangeHandler(value);
       
       this.setState(
         { editorState },
-        // () => setTimeout(() => this.editorDom.focus(), 0),
+        () => setTimeout(() => this.editorDom.focus(), 0),
       );
     }
   }
@@ -232,6 +240,15 @@ class Wysiwyg extends Field
 
   toggleInlineStyle = (inlineStyle) =>
   {
+
+    const editorState = RichUtils.toggleInlineStyle(
+      this.state.editorState,
+      inlineStyle
+    );
+
+    console.log(draftToHtml(convertToRaw(editorState.getCurrentContent())));
+
+
     this.onChangeEditorHandler(
       RichUtils.toggleInlineStyle(
         this.state.editorState,
@@ -545,6 +562,18 @@ class Wysiwyg extends Field
     //   }
     // }
 
+
+    if (this.props.disabled)
+    {
+      return (
+        <Editor
+          editorState={editorState}
+          // blockStyleFn={getBlockStyle}
+          customStyleMap={styleMap}
+          readOnly
+        />
+      )
+    }
 
 
 
