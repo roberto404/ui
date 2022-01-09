@@ -3,6 +3,7 @@ import moment from 'moment';
 
 import Form,
 {
+  Input,
   CalendarMonthButton,
   CalendarMonth,
 }
@@ -13,6 +14,8 @@ import IconFavorite from '../../../src/icon/mui/action/favorite';
 
 
 import { DATE_FORMAT, DATE_FORMAT_HTML5 } from '../../../src/calendar/constants';
+import { formatDate } from '../../../src/form/constants';
+
 
 const ExampleForm = () =>
 (
@@ -45,6 +48,14 @@ const ExampleForm = () =>
       // max="2020-10-20"
       validator={timestamp => [1,3,5].indexOf(new Date(timestamp).getDay()) === -1}
       resetLabel="reset"
+    />
+
+    <Input
+      id="dateOfBirth"
+      format={formatDate}
+      // regexp="^202[0-9]{1}-1?[0-9]{1}-[1-3]?[0-9]{1}"
+      regexp="^((2)|(20)|(202)|(202[0-9]{1})|(202[0-9]{1}-)|(202[0-9]{1}-1?[0-9]{1})|(202[0-9]{1}-1?[0-9]{1}-)|(202[0-9]{1}-1?[0-9]{1}-[1-3]?[0-9]{1}))$"
+      // 2021-12-12
     />
 
   </Form>

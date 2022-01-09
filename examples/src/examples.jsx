@@ -25,6 +25,7 @@ import FormDropzone from './form/dropzone';
 import FormCalendar from './form/calendar';
 import FormToggle from './form/toggle';
 import FormConfig from './form/config';
+import FormWysiwyg from './form/wysiwyg';
 
 
 /* !- Example: Grid */
@@ -136,6 +137,7 @@ export default {
     calendar: FormCalendar,
     toggle: FormToggle,
     config: FormConfig,
+    wysiwyg: FormWysiwyg,
   },
   grid: {
     static: GridStatic,

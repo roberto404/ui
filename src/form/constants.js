@@ -6,6 +6,39 @@ export const FORM_SCHEME_KEY = '_scheme';
 
 
 /**
+ * Automatically add dashes {4}-{2}-{2}.
+ * And handling the reduce (backspace)
+ * @param  {string} value date
+ * @return {string}       date extended with dash.
+ */
+export const formatDate = (value, reduce) =>
+{
+  // add dash after backspacing
+  // if (/^[0-9]{5}$/.exec(value) || /^[0-9]{4}-1?[0-9]{1}$/.exec(value))
+  // {
+  //   return `${value.substring(0, value.length - 1)}-${value.substring(value.length - 1, value.length)}`;
+  // }
+  // add dashes
+  // else 
+  if (!reduce && (/^[0-9]{4}$/.exec(value)))
+  {
+    return `${value}-`;
+  }
+  // elseif (!reduce &&  (/^[0-9]{4}-1?[0-9]{1}[0-9]{1}$/.exec(value)))
+  // {
+  //   return `${value.substring(0, value.length - 1)}-${value.substring(value.length - 1, value.length)}`;
+  // }
+  // remove dashes when backspacing
+  // else if (reduce && (/^[0-9]{4}-$/.exec(value) || /^[0-9]{4}-[1-5]{1}-$/.exec(value)))
+  // {
+  //   return value.substring(0, value.length - 1);
+  // }
+
+  return value;
+};
+
+
+/**
  * Automatically add dashes {8}-{1}-{2}.
  * And handling the reduce (backspace)
  * @param  {string} value taxcode
