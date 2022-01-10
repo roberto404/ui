@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import isEqual from 'lodash/isEqual';
 
 import {
   Editor,
@@ -13,7 +14,7 @@ import {
   CompositeDecorator,
 } from 'draft-js';
 
-import draftToHtml from 'draftjs-to-html';
+// import draftToHtml from 'draftjs-to-html';
 // import htmlToDraft from 'html-to-draftjs';
 
 import classNames from 'classnames';
@@ -49,17 +50,16 @@ const styleMap = {
   },
 };
 
-const getBlockStyle = (block) =>
-{
-  switch (block.getType())
-  {
-    case 'header-two': return 'm-0 pb-1 heavy text-xxl mobile:text-m';
-    case 'header-three': return 'light pb-1 text-line-m mobile:text-s m-0';
-    case 'blockquote': return 'italic';
-    case 'unstyle': return 'text-line-l light';
-    default: return null;
-  }
+const blockClassNames = {
+  'header-two': 'm-0 pb-1 heavy text-xxl mobile:text-m',
+  'header-three': 'light pb-1 text-line-m mobile:text-s m-0 text-black',
+  'blockquote': 'italic',
+  'unstyle': 'text-line-l light',
 }
+
+const getBlockStyle = block =>
+  blockClassNames[block.getType()] || blockClassNames.unstyle;
+
 
 const Link = (props) =>
 {
@@ -93,7 +93,7 @@ class Wysiwyg extends Field
   {
     super(props);
 
-    const decorator = new CompositeDecorator([
+    this.decorator = new CompositeDecorator([
       {
         strategy: findLinkEntities,
         component: Link,
@@ -104,11 +104,11 @@ class Wysiwyg extends Field
     {
       try
       {
-        this.state.editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(this.state.value)), decorator);
+        this.state.editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(this.state.value)), this.decorator);
 
       } catch (error)
       {
-        this.state.editorState = EditorState.createEmpty(decorator);
+        this.state.editorState = EditorState.createEmpty(this.decorator);
       }
     //   const contentBlock = htmlToDraft(this.state.value);
     //   const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
@@ -116,7 +116,7 @@ class Wysiwyg extends Field
     }
     else
     {
-      this.state.editorState = EditorState.createEmpty(decorator);
+      this.state.editorState = EditorState.createEmpty(this.decorator);
     }
   }
 
@@ -130,18 +130,20 @@ class Wysiwyg extends Field
     };
   }
 
-
-
-  // componentWillReceiveProps(nextProps)
+  // componentWillReceiveProps = (nextProps) =>
   // {
-  //   if (!isEqual(nextProps.value, this.getValue()))
+  //   console.log(nextProps);
+
+  //   if (nextProps.value !== this.getValue())
   //   {
-  //     const contentBlock = htmlToDraft(nextProps.value);
-  //     const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-  //     const editorState = EditorState.createWithContent(contentState);
-  //
-  //     this.setState({ editorState });
-  //     this.onChangeListener(nextProps);
+  //     try
+  //     {
+  //       this.onChangeEditorHandler(EditorState.createWithContent(convertFromRaw(JSON.parse(nextProps.value)), this.decorator));
+
+  //     } catch (error)
+  //     {
+  //       this.onChangeEditorHandler(EditorState.createEmpty(this.decorator));
+  //     }
   //   }
   // }
 
@@ -158,14 +160,12 @@ class Wysiwyg extends Field
    */
   onChangeEditorHandler = (editorState) =>
   {
-    // const value = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-    // const value = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
-    const value = editorState;
+    const value = Wysiwyg.defaultProps.format(editorState);
 
-    if (this.state.value !== Wysiwyg.defaultProps.format(value) && this.validate(value))
+    if (this.state.value !== value && this.validate(editorState))
     {
       this.onChangeHandler(value);
-      
+
       this.setState(
         { editorState },
         () => setTimeout(() => this.editorDom.focus(), 0),
@@ -173,25 +173,19 @@ class Wysiwyg extends Field
     }
   }
 
-  onChangeListener = (props = this.props) =>
-  {
-    const value = this.getValue(props);
-    const error = this.getError();
+  // onChangeListener = (props = this.props) =>
+  // {
+  //   const value = this.getValue(props);
+  //   const error = this.getError();
 
-    if (
-      (typeof value !== 'undefined' && this.state.value !== value) ||
-      this.state.error !== error
-    )
-    {
-      const editorState = value;
-      // const editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(value)));
-
-      // let contentBlock = htmlToDraft(value);
-      // const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-      // const editorState = EditorState.createWithContent(contentState);
-      this.setState({ /*editorState,*/ value, error });
-    }
-  }
+  //   if (
+  //     (typeof value !== 'undefined' && this.state.value !== value) ||
+  //     this.state.error !== error
+  //   )
+  //   {
+  //     this.setState({ value, error });
+  //   }
+  // }
 
 
   handleKeyCommand = (command, editorState) =>
@@ -240,15 +234,6 @@ class Wysiwyg extends Field
 
   toggleInlineStyle = (inlineStyle) =>
   {
-
-    const editorState = RichUtils.toggleInlineStyle(
-      this.state.editorState,
-      inlineStyle
-    );
-
-    console.log(draftToHtml(convertToRaw(editorState.getCurrentContent())));
-
-
     this.onChangeEditorHandler(
       RichUtils.toggleInlineStyle(
         this.state.editorState,
@@ -297,12 +282,12 @@ class Wysiwyg extends Field
               controls={[
                 {
                   type: 'header-two',
-                  element: <h2 style={{ margin: 0 }}>Heading</h2>,
+                  element: <h2 style={{ padding: '0'}} className={blockClassNames['header-two']}>Heading</h2>,
                   className,
                 },
                 {
                   type: 'header-three',
-                  element: <h3 style={{ margin: 0 }}>Subheading</h3>,
+                  element: <h3 style={{ padding: '0'}} className={blockClassNames['header-three']}>Subheading</h3>,
                   className,
                 },
                 {
@@ -322,7 +307,7 @@ class Wysiwyg extends Field
                 },
                 {
                   type: 'unstyle',
-                  element: <div>Body</div>,
+                  element: <div className={blockClassNames['unstyle']}>Body</div>,
                   className,
                 },
               ]}
@@ -568,7 +553,7 @@ class Wysiwyg extends Field
       return (
         <Editor
           editorState={editorState}
-          // blockStyleFn={getBlockStyle}
+          blockStyleFn={getBlockStyle}
           customStyleMap={styleMap}
           readOnly
         />
@@ -603,8 +588,6 @@ class Wysiwyg extends Field
           </div>
         </div>
 
-        <div onClick={() => this.toggleInlineStyle('BOLD')}>fdasdff</div>
-
         {/* <div
           onMouseDown={this.addLink}
         >
@@ -629,7 +612,7 @@ class Wysiwyg extends Field
             // keyBindingFn={this.mapKeyToEditorCommand}
             // placeholder="Placeholder..."
             ref={ref => this.editorDom = ref}
-            // spellCheck
+            spellCheck
           />
         </div>
 
@@ -652,9 +635,9 @@ Wysiwyg.childContextTypes = {
 Wysiwyg.defaultProps =
 {
   ...Wysiwyg.defaultProps,
-  // format: editorState => typeof editorState === 'object' && editorState.getCurrentContent !== undefined ?
-  //   JSON.stringify(convertToRaw(editorState.getCurrentContent()))
-  //   : '',
+  format: editorState => typeof editorState === 'object' && editorState.getCurrentContent !== undefined ?
+    JSON.stringify(convertToRaw(editorState.getCurrentContent()))
+    : '',
 }
 
 // Wysiwyg.propTypes =

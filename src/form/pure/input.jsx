@@ -38,9 +38,6 @@ class Input extends Field
     const { intl, multipleData, complete, preload } = this.props;
     const multipleDataText = () => intl ? intl.formatMessage({ id: multipleData }) : multipleData;
 
-
-
-
     return super.render() || (
       <div className={this.getClasses('input')}>
 
