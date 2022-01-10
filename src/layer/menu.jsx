@@ -45,7 +45,7 @@ export const Item = ({
   return (
     <div
       className={itemClasses}
-      onClick={() => handler({ id, title })}
+      onClick={(event) => handler({ id, title }, event)}
       data-index={id}
     >
       { icon &&
