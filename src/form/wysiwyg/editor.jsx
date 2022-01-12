@@ -53,7 +53,7 @@ const styleMap = {
 const blockClassNames = {
   'header-two': 'm-0 pb-1 heavy text-xxl mobile:text-m',
   'header-three': 'light pb-1 text-line-m mobile:text-s m-0 text-black',
-  'blockquote': 'italic',
+  'blockquote': 'embed-blockquote italic text-line-xl text-l my-2 pt-4 px-4',
   'unstyle': 'text-line-l light',
 }
 
@@ -86,12 +86,26 @@ function findLinkEntities(contentBlock, callback, contentState)
   );
 }
 
-
+/**
+ * Draft.js: https://draftjs.org/
+ * 
+ * Beginner’s Guide
+ * https://medium.com/@adrianmcli/a-beginner-s-guide-to-draft-js-d1823f58d8cc
+ * 
+ * Richtext represents:
+ * https://rajaraodv.medium.com/how-draft-js-represents-rich-text-data-eeabb5f25cf2
+ * 
+ * Saving data
+ * https://reactrocket.com/post/draft-js-persisting-content/
+ * 
+ */
 class Wysiwyg extends Field
 {
   constructor(props)
   {
     super(props);
+
+    this.ignoreReceiveProps = false;
 
     this.decorator = new CompositeDecorator([
       {
@@ -106,13 +120,11 @@ class Wysiwyg extends Field
       {
         this.state.editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(this.state.value)), this.decorator);
 
-      } catch (error)
+      }
+      catch (error)
       {
         this.state.editorState = EditorState.createEmpty(this.decorator);
       }
-    //   const contentBlock = htmlToDraft(this.state.value);
-    //   const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-    //   this.state.editorState = EditorState.createWithContent(contentState, decorator);
     }
     else
     {
@@ -130,22 +142,24 @@ class Wysiwyg extends Field
     };
   }
 
-  // componentWillReceiveProps = (nextProps) =>
-  // {
-  //   console.log(nextProps);
+  componentWillReceiveProps = (nextProps) =>
+  {
+    if (nextProps.value && nextProps.value !== this.value)
+    {
+      let editorState = {};
 
-  //   if (nextProps.value !== this.getValue())
-  //   {
-  //     try
-  //     {
-  //       this.onChangeEditorHandler(EditorState.createWithContent(convertFromRaw(JSON.parse(nextProps.value)), this.decorator));
+      try
+      {
+        editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(nextProps.value)), this.decorator);
 
-  //     } catch (error)
-  //     {
-  //       this.onChangeEditorHandler(EditorState.createEmpty(this.decorator));
-  //     }
-  //   }
-  // }
+      } catch (error)
+      {
+        editorState = EditorState.createEmpty(this.decorator);
+      }
+
+      this.onChangeEditorHandler(editorState);
+    }
+  }
 
 
   /**
@@ -162,30 +176,27 @@ class Wysiwyg extends Field
   {
     const value = Wysiwyg.defaultProps.format(editorState);
 
-    if (this.state.value !== value && this.validate(editorState))
+    if (this.value !== value && this.validate(editorState))
     {
-      this.onChangeHandler(value);
-
-      this.setState(
-        { editorState },
-        () => setTimeout(() => this.editorDom.focus(), 0),
-      );
+      this.value = value;
+      this.onChangeHandler(editorState);
     }
+
+    this.setState(
+      { editorState },
+      () => setTimeout(() =>
+      {
+        // this.editorDom.focus(); // csak ha value changed!!!!
+        
+      }, 0),
+    );
   }
 
-  // onChangeListener = (props = this.props) =>
-  // {
-  //   const value = this.getValue(props);
-  //   const error = this.getError();
-
-  //   if (
-  //     (typeof value !== 'undefined' && this.state.value !== value) ||
-  //     this.state.error !== error
-  //   )
-  //   {
-  //     this.setState({ value, error });
-  //   }
-  // }
+  onChangeListener = (props = this.props) =>
+  {
+    // overwrite field.onchange do not need state.value
+    return;
+  }
 
 
   handleKeyCommand = (command, editorState) =>
@@ -292,7 +303,7 @@ class Wysiwyg extends Field
                 },
                 {
                   type: 'blockquote',
-                  element: <blockquote style={{ margin: 0 }}>Blockquote</blockquote>,
+                  element: <div style={{ margin: 0 }} className="italic text-l">Blockquote</div>,
                   className,
                 },
                 {
@@ -511,42 +522,10 @@ class Wysiwyg extends Field
   {
     const { editorState } = this.state;
 
-    // const contentBlock = htmlToDraft(this.state.value);
-    // const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-    // const editorState = EditorState.createWithContent(contentState);
 
 
 
-    // const selection = editorState.getSelection();
-
-    // console.log(selection);
-
-
-    // const blockType = editorState
-    //   .getCurrentContent()
-    //   .getBlockForKey(selection.getStartKey())
-    //   .getType();
-
-    // console.log(blockType);
-
-
-
-    // If the user changes block type before entering any text, we can
-    // either style the placeholder or hide it. Let's just hide it now.
-    // let className = 'RichEditor-editor';
-
-    // var contentState = editorState.getCurrentContent();
-
-    // console.log(editorState.getCurrentContent());
-
-    // if (!contentState.hasText())
-    // {
-    //   if (contentState.getBlockMap().first().getType() !== 'unstyled')
-    //   {
-    //     className += ' RichEditor-hidePlaceholder';
-    //   }
-    // }
-
+    const className = 'wysiwyg';
 
     if (this.props.disabled)
     {
@@ -555,6 +534,7 @@ class Wysiwyg extends Field
           editorState={editorState}
           blockStyleFn={getBlockStyle}
           customStyleMap={styleMap}
+          className={className}
           readOnly
         />
       )
@@ -612,6 +592,7 @@ class Wysiwyg extends Field
             // keyBindingFn={this.mapKeyToEditorCommand}
             // placeholder="Placeholder..."
             ref={ref => this.editorDom = ref}
+            className={className}
             spellCheck
           />
         </div>

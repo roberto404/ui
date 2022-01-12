@@ -55,3 +55,13 @@
 {
   @include icon('search', $gray);
 }
+
+
+.embed-blockquote
+{
+  background: red;
+  @include icon('blockquote', $yellow);
+  background-position-x: 0rem;
+  background-position-y: 0rem;
+  background-size: 15rem;
+}
