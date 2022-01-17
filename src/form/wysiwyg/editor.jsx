@@ -39,6 +39,7 @@ import IconStrikestrow from '../../icon/mui/editor/strikethrough_s';
 import IconClear from '../../icon/mui/editor/format_clear';
 
 import BlockStyleControls from './editor/blockStyleControls';
+import LinkForm, { Link, findLinkEntities } from './editor/link';
 
 
 /* !- Constants */
@@ -61,31 +62,6 @@ const getBlockStyle = block =>
   blockClassNames[block.getType()] || blockClassNames.unstyle;
 
 
-const Link = (props) =>
-{
-  const { url } = props.contentState.getEntity(props.entityKey).getData();
-
-  return (
-    <a href={url} style={{ color: '#3b5998', textDecoration: 'underline' }}>
-      {props.children}
-    </a>
-  );
-}
-
-function findLinkEntities(contentBlock, callback, contentState)
-{
-  contentBlock.findEntityRanges(
-    (character) => {
-      const entityKey = character.getEntity();
-      return (
-        entityKey !== null &&
-        contentState.getEntity(entityKey).getType() === 'LINK'
-      );
-    },
-    callback
-  );
-}
-
 /**
  * Draft.js: https://draftjs.org/
  * 
@@ -98,6 +74,9 @@ function findLinkEntities(contentBlock, callback, contentState)
  * Saving data
  * https://reactrocket.com/post/draft-js-persisting-content/
  * 
+ * Search and replace
+ * https://reactrocket.com/post/draft-js-search-and-replace/
+ * 
  */
 class Wysiwyg extends Field
 {
@@ -107,12 +86,7 @@ class Wysiwyg extends Field
 
     this.ignoreReceiveProps = false;
 
-    this.decorator = new CompositeDecorator([
-      {
-        strategy: findLinkEntities,
-        component: Link,
-      },
-    ]);
+    this.decorator = new CompositeDecorator(props.decorator);
 
     if (this.state.value)
     {
@@ -174,21 +148,30 @@ class Wysiwyg extends Field
    */
   onChangeEditorHandler = (editorState) =>
   {
+    let contentChanged = false;
+
     const value = Wysiwyg.defaultProps.format(editorState);
 
     if (this.value !== value && this.validate(editorState))
     {
       this.value = value;
+      contentChanged = true;
+
       this.onChangeHandler(editorState);
     }
 
     this.setState(
       { editorState },
-      () => setTimeout(() =>
+      () =>
       {
-        // this.editorDom.focus(); // csak ha value changed!!!!
-        
-      }, 0),
+        if (contentChanged)
+        {
+          setTimeout(() =>
+          {
+            this.focusEditor();
+          }, 0)
+        }
+      }
     );
   }
 
@@ -442,88 +425,11 @@ class Wysiwyg extends Field
       )
     );
   }
-
-
-
-  promptForLink = (event) =>
-  {
-    event.preventDefault();
-
-    const { editorState } = this.state;
-    const selection = editorState.getSelection();
-
-    if (!selection.isCollapsed())
-    {
-      const contentState = editorState.getCurrentContent();
-      const startKey = editorState.getSelection().getStartKey();
-      const startOffset = editorState.getSelection().getStartOffset();
-      const blockWithLinkAtBeginning = contentState.getBlockForKey(startKey);
-      const linkKey = blockWithLinkAtBeginning.getEntityAt(startOffset);
-
-      let url = '';
-
-      if (linkKey)
-      {
-        const linkInstance = contentState.getEntity(linkKey);
-        url = linkInstance.getData().url;
-      }
-
-      this.setState({
-        showURLInput: true,
-        urlValue: url,
-      }, () => {
-        setTimeout(() => this.refs.url.focus(), 0);
-      });
-    }
-  }
   
-  addLink = (event) =>
-  {
-    event.preventDefault();
-
-    const { editorState } = this.state;
-
-    const contentState = editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.createEntity(
-      'LINK',
-      'MUTABLE',
-      { url: 'valami_url_slug' }
-    );
-    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-
-    const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
-
-    this.onChangeEditorHandler(
-      RichUtils.toggleLink(
-        newEditorState,
-        newEditorState.getSelection(),
-        entityKey
-      ),
-    );
-  }
-
-  removeLink = (event) =>
-  {
-    event.preventDefault();
-
-    const { editorState } = this.state;
-
-    const selection = editorState.getSelection();
-
-    if (!selection.isCollapsed())
-    {
-      this.onChangeEditorHandler(
-        RichUtils.toggleLink(editorState, selection, null)
-      );
-    }
-  }
 
   render()
   {
     const { editorState } = this.state;
-
-
-
 
     const className = 'wysiwyg';
 
@@ -531,7 +437,7 @@ class Wysiwyg extends Field
     {
       return (
         <Editor
-          editorState={editorState}
+          editorState={this.props.editorStateFormat(editorState)}
           blockStyleFn={getBlockStyle}
           customStyleMap={styleMap}
           className={className}
@@ -554,11 +460,20 @@ class Wysiwyg extends Field
             >
               <IconBlockStyle />
             </div>
+
+            <div
+              className="w-3 h-3 p-1/2 hover:bg-gray-light rounded pointer mr-1/2"
+              onClick={() => { this.toggleInlineStyle('BOLD'); }}
+            >
+              <IconBold />
+            </div>
+
+
             <div className="w-3 h-3 p-1/2 hover:bg-gray-light rounded pointer mr-1/2" onClick={this.clearFormat}>
               <IconClear />
             </div>
             <div className="border-right mx-1 h-2" />
-            <div className="w-3 h-3 p-1/2 hover:bg-gray-light rounded pointer mr-1/2">
+            <div className="w-3 h-3 p-1/2 hover:bg-gray-light rounded pointer mr-1/2" onClick={this.addLink}>
               <IconLink />
             </div>
           </div>
@@ -568,18 +483,10 @@ class Wysiwyg extends Field
           </div>
         </div>
 
-        {/* <div
-          onMouseDown={this.addLink}
-        >
-          Add Link
-        </div>
-        <div onMouseDown={this.removeLink}>
-          Remove Link
-        </div> */}
-
         <div
-          className="p-2"
-          onClick={this.focus}
+          className="p-2 scroll mb-2"
+          style={{ maxHeight: 'calc(100vh - 30rem)'}}
+          onClick={this.focusEditor}
         >
           <Editor
             editorState={editorState}
@@ -619,6 +526,13 @@ Wysiwyg.defaultProps =
   format: editorState => typeof editorState === 'object' && editorState.getCurrentContent !== undefined ?
     JSON.stringify(convertToRaw(editorState.getCurrentContent()))
     : '',
+  decorator: [
+    {
+      strategy: findLinkEntities,
+      component: Link,
+    },
+  ],
+  editorStateFormat: editorState => editorState,
 }
 
 // Wysiwyg.propTypes =

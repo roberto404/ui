@@ -7,6 +7,19 @@ import SrcIconMuiAvWeb from '../../../src/icon/mui/av/web';
 import SrcIconMuiAvVideocam from '../../../src/icon/mui/av/videocam';
 import SrcIconMuiAvPlaylistplay from '../../../src/icon/mui/av/playlist_play';
 import SrcIconMuiAvMovie from '../../../src/icon/mui/av/movie';
+import SrcIconMuiFileUpload from '../../../src/icon/mui/file/upload';
+import SrcIconMuiFileFolder from '../../../src/icon/mui/file/folder';
+import SrcIconMuiFileCloud from '../../../src/icon/mui/file/cloud';
+import SrcIconMuiFileRulefolder from '../../../src/icon/mui/file/rule_folder';
+import SrcIconMuiFileAttachment from '../../../src/icon/mui/file/attachment';
+import SrcIconMuiFileCloudcircle from '../../../src/icon/mui/file/cloud_circle';
+import SrcIconMuiFileGridview from '../../../src/icon/mui/file/grid_view';
+import SrcIconMuiFileCreatenew_folder from '../../../src/icon/mui/file/create_new_folder';
+import SrcIconMuiFileUploadfile from '../../../src/icon/mui/file/upload_file';
+import SrcIconMuiFileFiledownload_done from '../../../src/icon/mui/file/file_download_done';
+import SrcIconMuiFileDownload from '../../../src/icon/mui/file/download';
+import SrcIconMuiFileClouddownload from '../../../src/icon/mui/file/cloud_download';
+import SrcIconMuiFileAttachemail from '../../../src/icon/mui/file/attach_email';
 import SrcIconMuiNotificationPriorityhigh from '../../../src/icon/mui/notification/priority_high';
 import SrcIconMuiAlertError from '../../../src/icon/mui/alert/error';
 import SrcIconMuiAlertErroroutline from '../../../src/icon/mui/alert/error-outline';
@@ -104,6 +117,7 @@ import SrcIconMuiActionShoppingcart_outlined from '../../../src/icon/mui/action/
 import SrcIconMuiActionAccountcircle from '../../../src/icon/mui/action/account_circle';
 import SrcIconMuiActionCode from '../../../src/icon/mui/action/code';
 import SrcIconMuiActionUpdate from '../../../src/icon/mui/action/update';
+import SrcIconMuiActionFlaky from '../../../src/icon/mui/action/flaky';
 import SrcIconMuiActionDashboard from '../../../src/icon/mui/action/dashboard';
 import SrcIconMuiActionBook from '../../../src/icon/mui/action/book';
 import SrcIconMuiActionToday from '../../../src/icon/mui/action/today';
@@ -111,6 +125,7 @@ import SrcIconMuiActionShoppingcart from '../../../src/icon/mui/action/shopping_
 import SrcIconMuiActionInfo from '../../../src/icon/mui/action/info';
 import SrcIconMuiActionDragindicator from '../../../src/icon/mui/action/drag_indicator';
 import SrcIconMuiActionComparearrows from '../../../src/icon/mui/action/compare_arrows';
+import SrcIconMuiActionHomefilled from '../../../src/icon/mui/action/home_filled';
 import SrcIconMuiActionLockopen from '../../../src/icon/mui/action/lock_open';
 import SrcIconMuiActionCalendartoday from '../../../src/icon/mui/action/calendar_today';
 import SrcIconMuiActionRule from '../../../src/icon/mui/action/rule';
@@ -126,6 +141,7 @@ import SrcIconMuiActionPendingactions from '../../../src/icon/mui/action/pending
 import SrcIconMuiActionSavealt from '../../../src/icon/mui/action/save_alt';
 import SrcIconMuiActionAlarmon from '../../../src/icon/mui/action/alarm_on';
 import SrcIconMuiActionLogout from '../../../src/icon/mui/action/logout';
+import SrcIconMuiActionGeneratingtokens from '../../../src/icon/mui/action/generating_tokens';
 import SrcIconMuiActionZoomin from '../../../src/icon/mui/action/zoom_in';
 import SrcIconMuiActionVerified from '../../../src/icon/mui/action/verified';
 import SrcIconMuiActionBackup from '../../../src/icon/mui/action/backup';
@@ -139,9 +155,18 @@ import SrcIconMuiCommunicationListalt from '../../../src/icon/mui/communication/
 import SrcIconMuiCommunicationEmail from '../../../src/icon/mui/communication/email';
 import SrcIconMuiCommunicationMailoutline from '../../../src/icon/mui/communication/mail_outline';
 import SrcIconMuiEditorFormatcolor_fill from '../../../src/icon/mui/editor/format_color_fill';
+import SrcIconMuiEditorFormatclear from '../../../src/icon/mui/editor/format_clear';
+import SrcIconMuiEditorFormatbold from '../../../src/icon/mui/editor/format_bold';
+import SrcIconMuiEditorInsertlink from '../../../src/icon/mui/editor/insert_link';
+import SrcIconMuiEditorTextfields from '../../../src/icon/mui/editor/text_fields';
+import SrcIconMuiEditorFormatlist_bulleted from '../../../src/icon/mui/editor/format_list_bulleted';
 import SrcIconMuiEditorFormatindent_decrease from '../../../src/icon/mui/editor/format_indent_decrease';
 import SrcIconMuiEditorFormatindent_increase from '../../../src/icon/mui/editor/format_indent_increase';
+import SrcIconMuiEditorFormatunderlined from '../../../src/icon/mui/editor/format_underlined';
+import SrcIconMuiEditorFormatitalic from '../../../src/icon/mui/editor/format_italic';
 import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/format_color_reset';
+import SrcIconMuiEditorFormatquote from '../../../src/icon/mui/editor/format_quote';
+import SrcIconMuiEditorStrikethroughs from '../../../src/icon/mui/editor/strikethrough_s';
 
     const Example = () =>
     (
@@ -186,6 +211,84 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
         <div className="col-1-5">
         <SrcIconMuiAvMovie className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/av/movie</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiFileUpload className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/file/upload</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiFileFolder className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/file/folder</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiFileCloud className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/file/cloud</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiFileRulefolder className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/file/rule_folder</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiFileAttachment className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/file/attachment</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiFileCloudcircle className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/file/cloud_circle</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiFileGridview className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/file/grid_view</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiFileCreatenew_folder className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/file/create_new_folder</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiFileUploadfile className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/file/upload_file</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiFileFiledownload_done className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/file/file_download_done</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiFileDownload className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/file/download</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiFileClouddownload className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/file/cloud_download</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiFileAttachemail className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/file/attach_email</div>
         </div>
       
 
@@ -772,6 +875,12 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
       
 
         <div className="col-1-5">
+        <SrcIconMuiActionFlaky className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/flaky</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiActionDashboard className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/dashboard</div>
         </div>
@@ -810,6 +919,12 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
         <div className="col-1-5">
         <SrcIconMuiActionComparearrows className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/compare_arrows</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiActionHomefilled className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/home_filled</div>
         </div>
       
 
@@ -904,6 +1019,12 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
       
 
         <div className="col-1-5">
+        <SrcIconMuiActionGeneratingtokens className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/generating_tokens</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiActionZoomin className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/zoom_in</div>
         </div>
@@ -982,6 +1103,36 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
       
 
         <div className="col-1-5">
+        <SrcIconMuiEditorFormatclear className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/editor/format_clear</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiEditorFormatbold className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/editor/format_bold</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiEditorInsertlink className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/editor/insert_link</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiEditorTextfields className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/editor/text_fields</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiEditorFormatlist_bulleted className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/editor/format_list_bulleted</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiEditorFormatindent_decrease className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/editor/format_indent_decrease</div>
         </div>
@@ -994,8 +1145,32 @@ import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/form
       
 
         <div className="col-1-5">
+        <SrcIconMuiEditorFormatunderlined className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/editor/format_underlined</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiEditorFormatitalic className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/editor/format_italic</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiEditorFormatcolor_reset className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/editor/format_color_reset</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiEditorFormatquote className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/editor/format_quote</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiEditorStrikethroughs className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/editor/strikethrough_s</div>
         </div>
       
       </div>
