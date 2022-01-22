@@ -323,10 +323,12 @@ class Wysiwyg extends Field
   }
 
 
-
   focusEditor = () =>
   {
-    this.editorDom.focus();
+    if (this.editorDom && !this.props.disabled)
+    {
+      this.editorDom.focus();
+    }
   }
 
   removeInlineStyles = (editorState = this.state.editorState) =>
