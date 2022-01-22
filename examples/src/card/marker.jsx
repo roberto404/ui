@@ -9,7 +9,7 @@ const Example = () =>
   <div>
     <div className="heavy text-xxl pb-1">Markers</div>
     <Card
-      image="http://beta.rs.hu/img/uploads/5821x2890_1562579018.5589_5d230d4e5e765.jpg"
+      image="https://picsum.photos/1000/500"
       markers={[
         {
           category: 'heading',
@@ -31,7 +31,7 @@ const Example = () =>
 
     <div className="heavy text-xxl pb-1 pt-4">Custom Markers</div>
     <Card
-      image="http://beta.rs.hu/img/uploads/5821x2890_1562579018.5589_5d230d4e5e765.jpg"
+      image="https://picsum.photos/1000/500"
     >
       <Marker position={[50, 50]} align={[-50, -50]}>
         <div className="p-2 text-yellow shadow heavy" style={{ fontSize: '4em' }}>Nappali bútorok</div>
@@ -47,7 +47,7 @@ const Example = () =>
     <div className="grid-3">
       <div className="col-1-3">
         <Card
-          image="http://beta.rs.hu/img/uploads/700x510_1561547628.0117_5d1352b33f6cc.jpg"
+          image="https://picsum.photos/1000/500"
           title="Szilaj bútorcsalád"
           subTitle="Borovi fenyőből készült minimál stílusú nappali bútorcsalád."
           border
@@ -72,7 +72,7 @@ const Example = () =>
       </div>
       <div className="col-1-3">
         <Card
-          image="http://beta.rs.hu/img/uploads/700x510_1559809289.9133_5cf8cc0b23839.jpg"
+          image="https://picsum.photos/1000/500"
           title="DominoGo"
           subTitle="A bútorcsalád elemválasztékát nagyfokú variálhatóság jellemzi."
           border
@@ -84,7 +84,7 @@ const Example = () =>
       </div>
       <div className="col-1-3">
         <Card
-          image="http://beta.rs.hu/img/uploads/700x510_1559828400.4779_5cf9177c5e0e8.jpg"
+          image="https://picsum.photos/1000/500"
           title="Nepo"
           subTitle="Variálható elemes kisbútorcsalád, előszobába, nappali vagy ifjúsági szobába egyaránt ajánlott sonoma tölgy és sonoma tölgy-fehér színkombinációban."
           border
