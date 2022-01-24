@@ -88,7 +88,8 @@ class CalendarMonthButton extends Component
         { this.state.showCalendar === false &&
         <Button
           id={this.props.id}
-          placeholder="placeholder.select"
+          placeholder={this.props.placeholder}
+          disabled={this.props.disabled}
           className={this.props.className}
           buttonClassName={this.props.buttonClassName}
           onClick={this.onChangeHandler}
@@ -124,6 +125,8 @@ CalendarMonthButton.defaultProps =
   className: 'w-content',
   buttonClassName: 'shadow outline fill-gray',
   stateFormat: value => value ? moment(value).format('LL') : '',
+  placeholder: 'placeholder.select',
+  disabled: false,
 };
 
 CalendarMonthButton.contextTypes = {

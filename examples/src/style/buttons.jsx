@@ -68,6 +68,7 @@ const ExampleForm = () =>
       </div>
       <div className="col-1-4">
         <a className="button disabled">disabled</a>
+        <button disabled>disabled</button>
       </div>
     </div>
 

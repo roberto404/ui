@@ -219,6 +219,7 @@ button,
     @extend .red;
   }
 
+  &[disabled],
   &.disabled
   {
     cursor: no-drop !important;

@@ -38,6 +38,11 @@ class Button extends Field
   {
     event.preventDefault();
 
+    if (this.props.disabled)
+    {
+      return;
+    }
+
     if (this.props.popover)
     {
       const layerElement = React.isValidElement(this.props.popover) ?
@@ -88,6 +93,7 @@ class Button extends Field
 
           <button
             className={this.props.buttonClassName}
+            disabled={this.props.disabled}
           >
             { this.props.icon && React.createElement(this.props.icon)}
             <span>{ value && typeof value === 'string' ? value : placeholder }</span>
