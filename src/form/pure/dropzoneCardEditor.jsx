@@ -82,6 +82,14 @@ const Sidebar = ({
 );
 }
 
+Sidebar.defaultProps =
+{
+  title: '',
+  subTitle: '',
+  url: '',
+  tag: '',
+}
+
 
 
 class CardEditor extends Component

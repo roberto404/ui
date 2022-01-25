@@ -1,17 +1,15 @@
 
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types'
 import dropzone from 'dropzone';
-import request from 'superagent';
 import findIndex from 'lodash/findIndex';
-import find from 'lodash/find';
 import md5 from 'crypto-js/md5';
 import classNames from 'classnames';
 
 
 /* !- Redux Action */
 
-import { modal, preload, close } from '../../layer/actions';
+import { modal } from '../../layer/actions';
 
 
 /* !- React Elements */
@@ -19,16 +17,8 @@ import { modal, preload, close } from '../../layer/actions';
 import Field from '../../form/formField';
 import IconAdd from '../../icon/addCircleOutline';
 
-
-import DynamicCaroussel from '../../caroussel/dynamicCaroussel';
 import FileList from './dropzoneFileList';
-
-import Card from '../../card/card';
-import Marker from '../../card/marker';
-import IconPlus from '../../icon/mui/content/add';
 import IconArrow from '../../icon/mui/navigation/arrow_forward';
-
-import Preview from './dropzoneFileListPreview';
 
 
 /* !- Constants */
@@ -53,14 +43,38 @@ export const formatDropzoneFileId = (value) =>
   return value.slice(0, lastIndex).concat(value[lastIndex].id);
 };
 
+export const formatDropzoneFileIdAndExtHelper = ({ id, title, ext, percent }) =>
+  percent === undefined ? ({ id, ext }) : ({ id, title, percent });
+
 export const formatDropzoneFileIdAndExt = (value) =>
-  value.map(({ id, title, ext, percent }) =>
-    percent === undefined ? ({ id, ext }) : ({ id, title, percent }));
+  value.map(formatDropzoneFileIdAndExtHelper);
 
 export const formatDropzoneMarkers = value =>
-  value.map(({ id, title, ext, percent, markers, url, subTitle, tag }) =>
-    percent === undefined ? ({ id, title, ext, markers, url, subTitle, tag }) : ({ id, title, percent }));
+  value.map((values) =>
+  {
+    const { id, title, ext, percent, markers, url, subTitle, tag } = values;
 
+    if (percent)
+    {
+      return ({ id, title, percent });
+    }
+
+    return Object.entries({ id, title, ext, markers, url, subTitle, tag }).reduce((result, pair) =>
+    {
+      const [key, value] = pair;
+
+      if (
+        value !== undefined
+        && (!Array.isArray(value) || value.length > 0)
+        && value !== ''
+      )
+      {
+        result[key] = value;
+      }
+
+      return result;
+    }, {});
+  });
 
 export class File
 {
@@ -285,7 +299,7 @@ class DropzoneComponent extends Field
          * id, path, name, ext, title, mimeMajor, mimeMinor
          * @type {Array}
          */
-        value[index] = response.records;
+        value[index] = this.props.onUploadFormat(response.records);
 
         this.onChangeHandler(value);
 
@@ -435,6 +449,7 @@ DropzoneComponent.defaultProps =
   maxFilesSize: 5,
   acceptedFiles: 'image/jpg,image/jpeg,image/png,application/pdf',
   children: <FileList />,
+  onUploadFormat: v => v,
   UI: ({ onClick, placeholder, classNameButtonUpload }) => (
     <div
       className={classNameButtonUpload}
