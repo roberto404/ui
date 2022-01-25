@@ -100,19 +100,19 @@ export const Link = (props) =>
     url.match(/^http(s)?:/) === null
     || url.indexOf(`${location.protocol}//${location.origin}`) === 0;
 
-  const className = 'underline text-blue-dark';
+  const className = 'border-bottom';
 
   if (isInternalLink)
   {
     return (
-      <LinkRouter to={url} className={className}>
+      <LinkRouter to={url} className={className} title={props.decoratedText}>
         {props.children}
       </LinkRouter>
     );
   }
 
   return (
-    <a href={url} className={className} target="_blank">
+    <a href={url} className={className} target="_blank" title={props.decoratedText}>
       {props.children}
     </a>
   );

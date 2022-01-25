@@ -55,6 +55,7 @@ const blockClassNames = {
   'header-two': 'm-0 pb-1 heavy text-xxl mobile:text-m',
   'header-three': 'light pb-1 text-line-m mobile:text-s m-0 text-black',
   'blockquote': 'embed-blockquote italic text-line-xl text-l my-2 pt-4 px-4',
+  'caption': 'text-center light text-s',
   'unstyle': 'text-line-l light',
 }
 
@@ -287,6 +288,11 @@ class Wysiwyg extends Field
                 {
                   type: 'blockquote',
                   element: <div style={{ margin: 0 }} className="italic text-l">Blockquote</div>,
+                  className,
+                },
+                {
+                  type: 'caption',
+                  element: <div style={{ margin: 0 }} className="light text-s">Caption</div>,
                   className,
                 },
                 {
