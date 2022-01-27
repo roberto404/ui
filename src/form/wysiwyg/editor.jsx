@@ -57,6 +57,8 @@ const blockClassNames = {
   'blockquote': 'embed-blockquote italic text-line-xl text-l my-2 pt-4 px-4',
   'caption': 'text-center light text-s',
   'unstyle': 'text-line-l light',
+  'unordered-list-item': 'disc',
+  'ordered-list-item': 'decimal',
 }
 
 const getBlockStyle = block =>
@@ -297,12 +299,12 @@ class Wysiwyg extends Field
                 },
                 {
                   type: 'unordered-list-item',
-                  element: <ul style={{ margin: 0 }}><li>Unordered list item</li></ul>,
+                  element: <ul><li style={{ margin: 0 }} className="ml-1 disc">Unordered list item</li></ul>,
                   className,
                 },
                 {
                   type: 'ordered-list-item',
-                  element: <ol style={{ margin: 0 }}><li>Ordered list item</li></ol>,
+                  element: <ol><li style={{ margin: 0 }} className="ml-1 decimal">Ordered list item</li></ol>,
                   className,
                 },
                 {

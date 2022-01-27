@@ -290,6 +290,25 @@ h3,
 }
 
 
+li.disc,
+li.decimal
+{
+  padding-left: 0.5rem;
+  margin-left: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+li.disc
+{
+  list-style-type: disc;
+}
+
+li.decimal
+{
+  list-style-type: decimal;
+}
+
+
 @include respond-to(mobile)
 {
   .mobile\:text-left {
