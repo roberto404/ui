@@ -32,6 +32,7 @@ const SLIDES = [
 const Example = ({ setData }) =>
 (
   <div>
+
     <h2>Static data infinite loop</h2>
 
     <DynamicCaroussel
@@ -108,6 +109,10 @@ const Example = ({ setData }) =>
         return items;
       }}
     />
+    <div
+      className="mt-4 underline pointer text-blue-dark"
+      onClick={() => setData(SLIDES.map(({ id }) => ({ id, slide: `-#{id}-`})), 'sample3')}
+    >toggle data</div>
   </div>
 );
 

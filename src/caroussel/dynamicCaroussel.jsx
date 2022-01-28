@@ -6,7 +6,7 @@ import isEqual from 'lodash/isEqual';
 
 /* !- Redux Actions */
 
-import { setData } from '../grid/actions';
+import { setData, flush } from '../grid/actions';
 
 
 /* !- React Elements */
@@ -109,48 +109,34 @@ class DynamicCaroussel extends Component
 
   componentWillReceiveProps(props)
   {
+    console.log(props);
     this.updateSlides(props);
   }
 
-  //TODO kellene egy minta app ahol props.data valtozik
-  // componentDidUpdate(nextProps, nextState)
-  // {
-  //   if (!isEqual(this.props.data, nextProps.data))
-  //   {
-  //     this.context.store.dispatch(
-  //       setData(
-  //         nextProps.data,
-  //         null,
-  //         props.id,
-  //       ),
-  //     );
-  //   }
-  // }
+  componentWillUnmount()
+  {
+    this.context.store.dispatch(flush(this.props.id));
+  }
 
   updateSlides = (props = this.props) =>
   {
-    const store = this.context.store.getState().grid[this.props.id];
-
     /**
      * Length of data less than necessary number of items
      */
     if (props.data.length && props.data.length < 3 * props.visibleSlides)
     {
-      if (!store)
-      {
-        this.context.store.dispatch(
-          setData(
-            props.data,
-            {
-              paginate: {
-                limit: 1,
-                page: 1,
-              },
+      this.context.store.dispatch(
+        setData(
+          props.data,
+          {
+            paginate: {
+              limit: 1,
+              page: 1,
             },
-            props.id,
-          ),
-        );
-      }
+          },
+          props.id,
+        ),
+      );
     }
     else
     {
