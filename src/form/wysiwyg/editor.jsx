@@ -331,6 +331,17 @@ class Wysiwyg extends Field
   }
 
 
+  onClickLinkHandler = (event) =>
+  {
+    this.context.store.dispatch(popover(
+      <LinkForm
+        editorState={this.state.editorState}
+        onChange={this.onChangeEditorHandler}
+      />,
+      event,
+    ));
+  }
+
   focusEditor = () =>
   {
     if (this.editorDom && !this.props.disabled)
@@ -483,7 +494,7 @@ class Wysiwyg extends Field
               <IconClear />
             </div>
             <div className="border-right mx-1 h-2" />
-            <div className="w-3 h-3 p-1/2 hover:bg-gray-light rounded pointer mr-1/2" onClick={this.addLink}>
+            <div className="w-3 h-3 p-1/2 hover:bg-gray-light rounded pointer mr-1/2" onClick={this.onClickLinkHandler}>
               <IconLink />
             </div>
           </div>
