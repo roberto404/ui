@@ -62,7 +62,7 @@ export const MarkerInfoBox = ({ children }, { store }) =>
 
   return (
     <div
-      className="pointer overflow bg-black fill-yellow circle hover:bg-yellow hover:fill-black hover:rotate-45 transition mobile:text-xxs"
+      className="pointer overflow bg-black-20 fill-yellow circle hover:bg-yellow hover:fill-black hover:rotate-45 transition mobile:text-xxs"
       style={{ width: '2.5em', height: '2.5em', padding: '0.3em' }}
       onMouseEnter={onMouseHandler}
       onClick={onClickHandler}
