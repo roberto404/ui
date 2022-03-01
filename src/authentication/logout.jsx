@@ -36,7 +36,7 @@ const Logout = (
     {
       logout();
 
-      if (response.modal)
+      if (typeof response === 'object' && response.modal)
       {
         modal(response.modal);
       }
