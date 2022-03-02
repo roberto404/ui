@@ -93,6 +93,11 @@ const ExampleForm = () =>
       buttonClassName="border border-gray-light shadow white"
       icon={IconFavorite}
     />
+    <Input
+      id="noFlat"
+      label="flat:disabled"
+      className="flat:disabled"
+    />
     <CalendarMonthButton
       id="calendar"
       label="Calendar"

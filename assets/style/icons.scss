@@ -15,6 +15,11 @@
   @include icon('arrow-down', white);
 }
 
+.embed-expand-more-gray
+{
+  @include icon('expand-more', $gray);
+}
+
 .embed-angle-down
 {
   @include icon('angle-down');

@@ -208,13 +208,11 @@
   input[type="datetime-local"],
   {
     padding-right: 0;
-    @extend .shadow;
   }
 
   select
   {
-    @extend .embed-arrow-down-gray;
-    @extend .shadow;
+    @extend .embed-expand-more-gray;
     padding-right: 3rem !important;
     background-size: 1em;
     background-repeat: no-repeat;
@@ -230,7 +228,6 @@
   &.plain-field
   {
     font-family: $font;
-    line-height: 100%;
 
     .table div:not(.postfix):not(.prefix)
     {
@@ -825,7 +822,7 @@
  * Flat form field appearance like OSX contact
  */
 
-.form.flat > .field
+.form.flat > .field:not(.flat\:disabled)
 {
   display: flex;
   align-items: center;
@@ -844,8 +841,8 @@
     min-width: 15rem;
     max-width: 15rem;
     text-align: right;
-    padding-right: 1rem;
-    font-weight: bold;
+    margin-right: 1.5rem;
+    font-weight: 400;
     color: $gray;
   }
 
