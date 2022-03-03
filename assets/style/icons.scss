@@ -40,6 +40,11 @@
   @include icon('lock');
 }
 
+.embed-lock-gray
+{
+  @include icon('lock', $gray);
+}
+
 .embed-checkmark-black,
 .icon-checkmark-black
 {

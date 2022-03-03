@@ -164,8 +164,9 @@
 
     &:disabled
     {
-      background-color: transparent;
-      @extend .embed-lock;
+      background-color: $white;
+      color: $black-light;
+      @extend .embed-lock-gray;
 
       background-position-x: calc(100% - 1em);
       background-position-y: center;
