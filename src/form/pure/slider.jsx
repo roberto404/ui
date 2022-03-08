@@ -162,6 +162,11 @@ class Slider extends Field
 
   dragListener = (event) =>
   {
+    if (!this.field)
+    {
+      return 0;
+    }
+
     if (this.state.active === false)
     {
       this.setState({ active: true });
