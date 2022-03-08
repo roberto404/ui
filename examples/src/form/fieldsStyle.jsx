@@ -55,6 +55,21 @@ const ExampleForm = () =>
       className="postfix-inside fill-blue complete"
     />
 
+    <Input
+      id="input5"
+      label="Input"
+      prefix={<IconFavorite />}
+      className="prefix-inside fill-blue"
+      placeholder="placeholder"
+    />
+
+    <Input
+      id="input6"
+      label="Input"
+      value="disabled"
+      disabled
+    />
+
   </div>
 );
 

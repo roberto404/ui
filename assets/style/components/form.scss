@@ -164,8 +164,9 @@
 
     &:disabled
     {
-      background-color: transparent;
-      @extend .embed-lock;
+      background-color: $white;
+      color: $black-light;
+      @extend .embed-lock-gray;
 
       background-position-x: calc(100% - 1em);
       background-position-y: center;
@@ -208,13 +209,11 @@
   input[type="datetime-local"],
   {
     padding-right: 0;
-    @extend .shadow;
   }
 
   select
   {
-    @extend .embed-arrow-down-gray;
-    @extend .shadow;
+    @extend .embed-expand-more-gray;
     padding-right: 3rem !important;
     background-size: 1em;
     background-repeat: no-repeat;
@@ -824,7 +823,7 @@
  * Flat form field appearance like OSX contact
  */
 
-.form.flat > .field
+.form.flat > .field:not(.flat\:disabled)
 {
   display: flex;
   align-items: center;
@@ -843,8 +842,8 @@
     min-width: 15rem;
     max-width: 15rem;
     text-align: right;
-    padding-right: 1rem;
-    font-weight: bold;
+    margin-right: 1.5rem;
+    font-weight: 400;
     color: $gray;
   }
 
