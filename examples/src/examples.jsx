@@ -118,6 +118,7 @@ import Stepper from './stepper/stepper';
 
 /* !- Example: Utils */
 
+import PrintTable from './print/table';
 import Print from './print';
 
 
@@ -211,6 +212,9 @@ export default {
     screen: StyleScreen,
     mui: StyleMui,
     la: StyleLa,
+  },
+  print: {
+    table: PrintTable,
   },
   misc: {
     print: Print,

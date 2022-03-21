@@ -215,8 +215,6 @@ class GridView extends Component
             data: response.records,
             settings: { helper: response.config },
           };
-
-          return response.records;
         }
 
         return {};
