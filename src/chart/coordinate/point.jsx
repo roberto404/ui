@@ -40,27 +40,42 @@ const Points = ({
     xAxisValueMax,
   } = coordToPix(0, 0).canvas;
 
-  const renderGroupOfPoints = (id, points) =>
+  const renderGroupOfPoints = (id, points, index, length) =>
   {
-    const elements = [];
-
-    xAxisValues.forEach((value, i) =>
-    {
-      if (xAxisValues[i] !== null && points[i + xAxisValueMin])
+    const elements = xAxisValues
+      .map((value, i) => 
       {
-        const { element, x, y } = points[i + xAxisValueMin];
+        const point = points[i + xAxisValueMin];
 
-        elements.push(
-          React.createElement(
-            element || UI,
-            {
-              ...coordToPix(x - xAxisValueMin, y - yAxisValueMin),
-              id: `${id}-${i}`,
-              key: `${id}-${i}`,  // eslint-disable-line
-            }),
-        );
-      }
-    });
+        if (typeof point === 'undefined' || value === null)
+        {
+          return null;
+        }
+
+        const x = point.x || 0;
+        const y = point.y || 0;
+
+        return ({
+          ...coordToPix(x - xAxisValueMin, y - yAxisValueMin),
+          element: point.element || UI,
+          value,
+          index: i,
+          point,
+          seriesIndex: index,
+          seriesLength: length,
+        })
+      })
+      .filter(n => n !== null)
+      .map((props, i, data) =>
+        React.createElement(
+          props.element,
+          {
+            ...props,
+            data,
+            id: `${id}-${i}`,
+            key: `${id}-${i}`,  // eslint-disable-line
+          }),
+      );
 
     return <g key={id} id={id}>{elements}</g>;
   };
@@ -73,7 +88,7 @@ const Points = ({
   return (
     <g id="points">
       {
-      Object.keys(data).map(key => renderGroupOfPoints(key, data[key]))
+      Object.keys(data).map((key, index, keys) => renderGroupOfPoints(key, data[key], index, keys.length))
       }
     </g>
   );

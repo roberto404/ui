@@ -364,6 +364,11 @@ hr
   fill: $green;
 }
 
+.fill-transparent *
+{
+  fill: rgba(0,0,0,0);
+}
+
 .hover\:fill-black:hover *
 {
   fill: $black;
@@ -372,6 +377,27 @@ hr
 .hover\:fill-white:hover *
 {
   fill: $white;
+}
+
+
+.hover\:fill-yellow:hover *
+{
+  fill: $yellow;
+}
+
+.hover\:fill-yellow-light:hover *
+{
+  fill: $yellow-light;
+}
+
+.hover\:fill-blue:hover *
+{
+  fill: $blue;
+}
+
+.hover\:fill-blue-light:hover *
+{
+  fill: $blue-light;
 }
 
 text.blue

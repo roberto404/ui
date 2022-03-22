@@ -1,22 +1,20 @@
 .chart
 {
-
   &.bar
   {
-    rect#bar-bg
+    rect#bar-bg // two axis deterimened background is transparent
     {
       opacity: 0;
     }
 
-    g#bar-xgrid line
+    g#bar-xgrid line // horizontal lines
     {
-      stroke: $gray;
       stroke-width: .5;
+      stroke: $black-light;
 
       &:not(:first-child)
       {
-        stroke-dasharray: 1.5;
-        stroke: $gray-light;
+        stroke-dasharray: 3;
       }
     }
 
@@ -25,31 +23,124 @@
       fill: $gray-dark;
     }
 
-    g#bar-yaxis text
+    g#bar-yaxis text // vertical
     {
-      fill: $gray-light;
-      font-size: 0.5em;
+      fill: $gray;
+      font-size: 0.65em;
     }
 
-    g#points g
+    g#points // bar chart
     {
-      &:first-child
+      text
+      {
+        fill: $white-light;
+      }
+
+      g:first-child g // multiple chart first bar
       {
         rect
         {
-          fill: $green-dark;
-          opacity: .5;
+          fill: $green;
         }
 
-        text
+        text.outside
         {
-          fill: $white-light;
-
-          &.outside
-          {
-            fill: $green-dark;
-          }
+          fill: $green-dark;
         }
+      }
+    
+      g:nth-of-type(2) g
+      {
+        rect
+        {
+          fill: $black;
+        }
+
+        text.outside
+        {
+          fill: $black;
+        }
+      }
+    }
+
+    &:not(.rounded)
+    {
+      #points
+      {
+        rect
+        {
+          clip-path: inherit;
+        }
+      }
+    }
+
+    &.yellow
+    {
+      #points g:first-child g
+      {
+        rect
+        {
+          fill: $yellow;
+        }
+
+        text.outside
+        {
+          fill: $yellow;
+        }
+      }
+    }
+  }
+
+
+  &.line
+  {
+    rect#line-bg // two axis deterimened background is transparent
+    {
+      opacity: 0;
+    }
+
+    g#line-xgrid line // horizontal lines
+    {
+      stroke-width: .5;
+      stroke: $black-light;
+
+      &:not(:first-child)
+      {
+        stroke-dasharray: 3;
+      }
+    }
+
+    g#line-xaxis text
+    {
+      fill: $gray-dark;
+    }
+
+    g#line-y2axis text,
+    g#line-yaxis text // vertical
+    {
+      fill: $gray;
+      font-size: 0.65em;
+    }
+
+    g#points // bar chart
+    {
+      path
+      {
+        stroke-width: 4;
+        stroke: $gray;
+      }
+
+      circle
+      {
+        stroke-width: 3;
+        stroke: $gray;
+        fill: $gray-light;
+        r: 9,
+      }
+
+      text
+      {
+        fill: $gray;
       }
     }
   }

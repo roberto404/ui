@@ -12,7 +12,7 @@ import gcd from '@1studio/utils/math/gcd';
 
 /* !- React Elements */
 
-import Axis, { xAxisLabel, yAxisLabel } from './axis';
+import Axis, { xAxisLabel, yAxisLabel, yAxisLabelInjection } from './axis';
 import Grid from './grid';
 import Points, { Point } from './point';
 
@@ -46,6 +46,7 @@ const Coordinate = ({
   yGrid,
   xAxis,
   yAxis,
+  y2Axis,
   margin,
   point,
   children,
@@ -100,7 +101,7 @@ const Coordinate = ({
    */
   canvas.xAxisSteps = xAxisSteps || canvas.xAxisValueDiff;
   canvas.yAxisSteps = yAxisSteps ||
-    clamp(canvas.yAxisValueDiff / gcd(dataYValues), 0, Math.round(canvas.height / 33.3));
+    clamp(canvas.yAxisValueDiff / Math.abs(gcd(dataYValues)), 0, Math.round(canvas.height / 33.3));
 
   /**
    * Points determine absolute grid of the coordination, based on x, y min and max values
@@ -194,6 +195,16 @@ const Coordinate = ({
         UI={yAxisLabel}
       />
       }
+      { y2Axis &&
+      <Axis
+        id={`${id}-y2axis`}
+        steps={canvas.yAxisRange}
+        direction="y"
+        coordToPix={coordToPix(canvas)}
+        UI={yAxisLabel}
+        top
+      />
+      }
       { data.length !== 0 &&
       <Points
         coordToPix={coordToPix(canvas)}
@@ -231,7 +242,7 @@ Coordinate.defaultProps =
   yAxisValueMax: 0,
   // xAxisValues, !important no default value, need undefined
   // yAxisValueMin: 0, !important no default value, need undefined
-  xAxisValueMax: 0,
+  xAxisValueMax: 1,
   xAxisValueMin: 0,
 };
 

@@ -1,30 +1,34 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import clamp from '@1studio/utils/math/clamp';
 
-export const xAxisLabel = ({ value, x, y }) =>
+export const xAxisLabel = ({ value, x, y, canvas }) =>
 (
   <text
     x={x}
     y={y + 5}
     alignmentBaseline="hanging"
     textAnchor="middle"
+    fontSize={clamp(canvas.colWidth / 4 * 0.8, 4, 16)}
   >
     {value.x}
   </text>
 );
 
-export const yAxisLabel = ({ value, x, y }) =>
+
+export const yAxisLabel = ({ value, x, y, textAnchor }) =>
 (
   <text
-    x={x - 5}
+    x={x + (5 * (textAnchor === 'start' ? 1 : -1))}
     y={y}
     alignmentBaseline="middle"
-    textAnchor="end"
+    textAnchor={textAnchor}
   >
     {Math.round(value.y * 10) / 10}
   </text>
 );
+
 
 xAxisLabel.propTypes =
 yAxisLabel.propTypes = // eslint-disable-line
@@ -40,6 +44,11 @@ yAxisLabel.propTypes = // eslint-disable-line
   y: PropTypes.number.isRequired,
 };
 
+yAxisLabel.defaultProps = // eslint-disable-line
+{
+  textAnchor: "end",
+};
+
 
 /**
  * Axis component
@@ -49,6 +58,7 @@ const Axis = ({
   coordToPix,
   UI,
   direction,
+  top,
 }) =>
 {
   const {
@@ -58,13 +68,12 @@ const Axis = ({
     stepYPoints,
     xAxisValues,
     yAxisValueMin,
+    width,
   } = coordToPix(0, 0).canvas;
 
   const steps = direction === 'x' ? xAxisSteps : yAxisSteps;
 
   const labels = [];
-
-  //[null, 100, 200, 50]
 
   for (let i = 0; i <= steps; i += 1)
   {
@@ -80,7 +89,10 @@ const Axis = ({
             x: xAxisValues[i],
             y: yAxisValueMin + (i * stepYPoints),
           }}
-          {...(direction === 'x' ? coordToPix(i * stepXPoints, 0) : coordToPix(0, i * stepYPoints))}
+          {
+            ...(direction === 'x' ? coordToPix(i * stepXPoints, +top * yAxisSteps) : coordToPix(+top * xAxisSteps, i * stepYPoints))
+          }
+          textAnchor={top ? 'start' : 'end'}
         />,
       );
     }
@@ -113,6 +125,7 @@ Axis.defaultProps =
 {
   id: 'axis',
   direction: 'x',
+  top: false,
 };
 
 export default Axis;
