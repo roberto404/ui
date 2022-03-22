@@ -177,16 +177,30 @@ class Dropdown extends Field
 
         { this.label }
 
-        <button
-          className={`value ${this.props.buttonClassName}`}
-          onClick={this.onClickButtonHandler}
-          ref={(ref) =>
-          {
-            this.element = ref;
-          }}
-        >
-          { valueText || placeholder }
-        </button>
+        <div className="h-center">
+
+          { this.state.prefix &&
+          <div className="prefix">{this.state.prefix}</div>
+          }
+
+          <button
+            className={`value ${this.props.buttonClassName}`}
+            onClick={this.onClickButtonHandler}
+            ref={(ref) =>
+            {
+              this.element = ref;
+            }}
+          >
+            { valueText || placeholder }
+          </button>
+
+          { this.props.postfix &&
+          <div className="postfix">{this.state.postfix}</div>
+          }
+
+        </div>
+
+        
 
         { this.state.error &&
           <div className="error">{this.state.error}</div>
