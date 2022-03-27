@@ -648,13 +648,11 @@
     vertical-align: middle;
   }
 
-  &.prefix-inside,
-  &.postfix-inside
+  &.prefix-inside
   {
     position: relative;
 
-    .prefix,
-    .postfix,
+    .prefix
     {
       position: absolute;
       padding: 0;
@@ -669,11 +667,28 @@
         height: 1.3em;
       }
     }
+  }
 
+  &.postfix-inside
+  {
+    position: relative;
 
     .postfix
     {
       right: 0;
+
+      position: absolute;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      width: auto;
+      padding: 0 1rem;
+
+      svg
+      {
+        width: 1.3em;
+        height: 1.3em;
+      }
     }
   }
 
@@ -693,6 +708,45 @@
     input
     {
       padding-right: 4rem !important;
+    }
+  }
+
+  &.prefix-join
+  {
+    .prefix
+    {
+      @extend .rounded-left;
+      border: 1px solid $gray-light;
+      border-right-width: 0px;
+      padding: 1em 0.8em;
+      padding-right: 0;
+      line-height: 1.33em;
+      font-size: .85em;
+      color: $gray;
+      max-height: 47.27px;
+      min-height: 47.27px;
+    }
+
+    input:not([type="radio"]):not([type="checkbox"])
+    {
+      border-left-width: 0px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+
+      &:focus
+      {
+        // border-width: 4px;
+        border-style: solid;
+        border-image:
+          linear-gradient(
+            to right,
+            $gray-light,
+            $blue
+          ) 1;
+
+        border-left-width: 0px;
+
+      }
     }
   }
 

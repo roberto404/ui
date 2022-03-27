@@ -19,6 +19,7 @@ import Slider from './pure/slider';
 import Field from './pure/field';
 import Plain from './pure/plain';
 import Collection from './pure/collection';
+import Autocomplete from './pure/autocomplete';
 
 
 export {
@@ -42,6 +43,7 @@ export {
   Plain,
   Field,
   Collection,
+  Autocomplete,
 };
 
 export default Form;

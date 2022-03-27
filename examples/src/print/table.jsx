@@ -26,7 +26,6 @@ const pivot = new PivotTable(
 )
 .toTable();
 
-console.log(pivot);
 
 const Example = () =>
 {

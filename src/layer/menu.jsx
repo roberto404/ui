@@ -25,15 +25,17 @@ const renderItems = (items) =>
 
 /* !- React Elements */
 
-export const Item = ({
-  id,
-  title,
-  handler,
-  className,
-  icon,
-  childs,
-}) =>
+export const Item = (props) =>
 {
+  const {
+    id,
+    title,
+    handler,
+    className,
+    icon,
+    childs,
+  } = props;
+
   const itemClasses = classNames({
     item: true,
     [className]: true,
@@ -45,7 +47,7 @@ export const Item = ({
   return (
     <div
       className={itemClasses}
-      onClick={(event) => handler({ id, title }, event)}
+      onClick={(event) => handler(props, event)}
       data-index={id}
     >
       { icon &&

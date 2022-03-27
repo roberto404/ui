@@ -23,7 +23,7 @@ class Input extends Field
    */
   onChangeInputHandler = (event) =>
   {
-    this.onChangeHandler(event.target.value);
+    this.onChangeHandler(event.target.value, event);
   }
 
   /* !- Renders */

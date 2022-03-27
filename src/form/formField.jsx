@@ -195,6 +195,11 @@ class FormField extends Component
         postfix: nextProps.preload ? <IconPreload /> : this.props.postfix,
       });
     }
+
+    if (nextProps.prefix)
+    {
+      this.setState({ prefix: nextProps.prefix });
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState)

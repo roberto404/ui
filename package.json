@@ -98,7 +98,7 @@
     "html-to-draftjs": "1.4.0",
     "intl": "1.2.5",
     "jquery": "3.4.1",
-    "lodash": "4.17.19",
+    "lodash": "4.17.21",
     "material-ui": "0.18.7",
     "moment": "2.24.0",
     "node-uuid": "1.4.8",

@@ -13,6 +13,7 @@ import StyleGrid from './style/grid';
 
 import FormBasic from './form/basic';
 import FormFields from './form/fields';
+import FormAutocomplete from './form/autocomplete';
 import FormFieldsStyle from './form/fieldsStyle';
 import FormFormat from './form/format';
 import FormSubmit from './form/submit';
@@ -126,6 +127,7 @@ export default {
   form: {
     basic: FormBasic,
     fields: FormFields,
+    autocomplete: FormAutocomplete,
     fieldsStyle: FormFieldsStyle,
     submit: FormSubmit,
     connect: FormConnect,
