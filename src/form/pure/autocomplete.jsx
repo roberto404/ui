@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 /* !- Redux Actions */
 
-import { popover, menu, flush } from '../../../src/layer/actions';
+import { popover, menu, flush } from '../../layer/actions';
 import { setValues } from '../actions';
 
 
