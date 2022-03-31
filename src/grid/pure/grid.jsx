@@ -905,15 +905,7 @@ Grid.propTypes =
   helper: PropTypes.objectOf(
     PropTypes.oneOfType([
       PropTypes.object,
-      PropTypes.arrayOf(
-        PropTypes.shape({
-          id: PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.number,
-          ]),
-          title: PropTypes.string,
-        }),
-      ),
+      PropTypes.array,
     ]),
   ),
   /**

@@ -81,7 +81,7 @@ class Layer extends Component
     {
       if (event.keyCode === 27)
       {
-        close();
+        onClickCloseHandler();
       }
     };
 
@@ -89,7 +89,7 @@ class Layer extends Component
     {
       if (closeable && event.currentTarget.isEqualNode(event.target))
       {
-        close();
+        onClickCloseHandler();
       }
     };
 
@@ -100,6 +100,14 @@ class Layer extends Component
      */
     const onClickCloseHandler = () =>
     {
+      if (typeof options.onClose === 'function')
+      {
+        if (options.onClose() === false)
+        {
+          return;
+        };
+      }
+
       close();
     };
 
@@ -156,7 +164,7 @@ class Layer extends Component
     //
     //   // if (layer.active && layer.method === 'popover' && JSON.stringify(layer.containerStyle()) === layer.element.toString())
     //   // {
-    //   //   close();
+    //   //   onClickCloseHandler();
     //   // }
     // }
     //
@@ -214,8 +222,8 @@ Layer.defaultProps =
   element: <div />,
   className: '',
   closeable: true,
-  containerStyle: {},
   options: {},
+  onClose: () => {},
 };
 
 Layer.contextTypes =
