@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStore, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import promise from 'redux-promise';
 import { createLogger } from 'redux-logger';
 import isEmpty from 'lodash/isEmpty';
@@ -15,10 +15,12 @@ const loadStateFromLocalStorage = () =>
   try
   {
     const serializedState = localStorage.getItem('state');
+
     if (serializedState === null)
     {
-      return undefined;
+      return {};
     }
+
     return JSON.parse(serializedState);
   }
   catch (error)
@@ -112,6 +114,53 @@ export const crashReporterMiddleware = exception => store => next => (action) =>
   }
 };
 
+/**
+ * The reducer registry enables Redux reducers to be added to the store’s reducer after the store has been created. This allows Redux modules to be loaded on-demand, without requiring all Redux modules to be bundled in the main chunk for the store to correctly initialize.
+ */
+export class ReducerRegistry
+{
+  constructor(reducers)
+  {
+    this._emitChange = null;
+    this._reducers = reducers || {};
+  }
+
+  getReducers()
+  {
+    return { ...this._reducers };
+  }
+
+  register(name, reducer)
+  {
+    this._reducers = { ...this._reducers, [name]: reducer };
+
+    if (this._emitChange)
+    {
+      this._emitChange(this.getReducers());
+    }
+  }
+
+  remove(name)
+  {
+    if (name && typeof this._reducers[name] !== 'undefined')
+    {
+      delete this._reducers[name];
+
+      if (this._emitChange)
+      {
+        this._emitChange(this.getReducers());
+      }
+    }
+  }
+
+  setChangeListener(listener)
+  {
+    this._emitChange = listener;
+  }
+}
+
+export let reducerRegistry;
+
 
 export const storeWrapper = (reducers = null, middlewares = []) =>
 {
@@ -141,11 +190,39 @@ export const storeWrapper = (reducers = null, middlewares = []) =>
     enhancers = applyMiddleware(...middlewares);
   }
 
-  return createStore(
-    reducers || defaultReducers,
+  // Preserve initial state for not-yet-loaded reducers
+  const combine = (reducers) =>
+  {
+    const reducerNames = Object.keys(reducers);
+
+    Object.keys(loadStateFromLocalStorage()).forEach(item =>
+      {
+      if (reducerNames.indexOf(item) === -1)
+      {
+        reducers[item] = (state = null) => state;
+      }
+    });
+
+    return combineReducers(reducers);
+  };
+
+  reducerRegistry = new ReducerRegistry(reducers);
+
+  const reducer = combine(reducerRegistry.getReducers());
+
+  const store = createStore(
+    // reducers || defaultReducers,
+    reducer,
     loadStateFromLocalStorage(),
     enhancers,
   );
+
+  // Replace the store's reducer whenever a new reducer is registered.
+  reducerRegistry.setChangeListener(reducers => {
+    store.replaceReducer(combine(reducers));
+  });
+
+  return store;
 };
 
 export default storeWrapper;
