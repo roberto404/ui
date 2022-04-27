@@ -201,7 +201,10 @@ class GridView extends Component
         {
           if (response.config)
           {
-            this.context.register.add({ [this.id]: response.config });
+            if (this.props.registerConfig === true)
+            {
+              this.context.register.add({ [this.id]: response.config });
+            }
 
             this.props.settings.helper = response.config;
           }
@@ -518,6 +521,7 @@ GridView.propTypes =
   close: PropTypes.func.isRequired,
   responseParser: PropTypes.func,
   fetchPreload: PropTypes.bool,
+  registerConfig: PropTypes.bool,
 };
 
 /**
@@ -536,6 +540,7 @@ GridView.defaultProps =
   flushFiltersUnmount: true,
   style: {},
   fetchPreload: false,
+  registerConfig: true,
 };
 
 /**
