@@ -199,24 +199,33 @@ class GridView extends Component
 
         if (response.status !== 'SUCCESS' || response.records)
         {
-          if (response.config)
+          if (response.config && this.props.registerConfig === true)
           {
-            if (this.props.registerConfig === true)
-            {
-              this.context.register.add({ [this.id]: response.config });
-            }
-
-            this.props.settings.helper = response.config;
+            this.context.register.add({ [this.id]: response.config });
           }
+
+          const settings = { helper: response.config };
 
           if (typeof this.props.responseParser === 'function')
           {
-            return this.props.responseParser(response);
+            const parsedResponse = this.props.responseParser(response);
+
+            if (typeof parsedResponse === 'object' && !Array.isArray(parsedResponse))
+            {
+              return parsedResponse;
+            }
+            else
+            {
+              return {
+                data: parsedResponse,
+                settings,
+              }
+            }
           }
 
           return {
             data: response.records,
-            settings: { helper: response.config },
+            settings,
           };
         }
 
