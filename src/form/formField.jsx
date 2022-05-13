@@ -543,7 +543,10 @@ class FormField extends Component
     return true;
   }
 
-
+  focus = () =>
+  {
+    this.element.focus();
+  }
 
 
   /**
