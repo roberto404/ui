@@ -238,7 +238,7 @@ export const CalendarMonthIntervalCarousselButton = connect(mapStateToProps, { c
           {...props}
         />
       }
-      value={value}
+      stateFormat={() => value}
     />
   );
 });
