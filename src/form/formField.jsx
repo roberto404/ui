@@ -406,7 +406,7 @@ class FormField extends Component
     const values = ids.map((id) => {
       if (!form)
       {
-        return state[id] || props.value;
+        return state[id] === undefined ? props.value : state[id];
       }
       else if (!state[form] || typeof state[form][id] === 'undefined')
       {
