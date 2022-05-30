@@ -5,7 +5,7 @@ import { createLogger } from 'redux-logger';
 import isEmpty from 'lodash/isEmpty';
 import UserError from '@1studio/utils/error/userError';
 
-import defaultReducers from './reducers';
+import { reducers as defaultReducers } from './reducers';
 import { setUser } from './authentication/actions';
 import { dialog } from './layer/actions';
 
@@ -25,7 +25,7 @@ const loadStateFromLocalStorage = () =>
   }
   catch (error)
   {
-    return undefined;
+    return {};
   }
 };
 
@@ -162,7 +162,7 @@ export class ReducerRegistry
 export let reducerRegistry;
 
 
-export const storeWrapper = (reducers = null, middlewares = []) =>
+export const storeWrapper = (reducers = defaultReducers, middlewares = []) =>
 {
   if (process.env.NODE_ENV !== 'production')
   {
@@ -193,7 +193,7 @@ export const storeWrapper = (reducers = null, middlewares = []) =>
   // Preserve initial state for not-yet-loaded reducers
   const combine = (reducers) =>
   {
-    const reducerNames = Object.keys(reducers);
+    const reducerNames = Object.keys(reducers || {});
 
     Object.keys(loadStateFromLocalStorage()).forEach(item =>
       {
@@ -211,7 +211,6 @@ export const storeWrapper = (reducers = null, middlewares = []) =>
   const reducer = combine(reducerRegistry.getReducers());
 
   const store = createStore(
-    // reducers || defaultReducers,
     reducer,
     loadStateFromLocalStorage(),
     enhancers,
