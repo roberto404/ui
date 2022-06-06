@@ -54,13 +54,18 @@ const SETTINGS = {
   [
     {
       id: 'search',
-      handler: (record, value, filters, model, index) => search({
-        record,
-        value,
-        helpers: SETTINGS.helper,
-        hooks: SETTINGS.hook,
-        index,
-      }),
+      handler: (record, value, filters, model, index) =>
+        value[0] === '?' ?
+          search({
+            record,
+            value: value.substring(1),
+            helpers: {},
+            hooks: {},
+              // hooks: HOOK_TABLE,
+            index,
+          })
+          :
+          Object.values(record).join('').indexOf(value) !== -1,
       arguments: [],
       status: false,
       // arguments: ['name=Á&gender==male&id<10'],

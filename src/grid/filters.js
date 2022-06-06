@@ -52,7 +52,7 @@ export const compare = {
       subject
         .toString()
         .toLowerCase()
-        .indexOf(term.toString().toLowerCase()) >= 0
+        .indexOf(term.toString().toLowerCase()) != -1
     );
   },
 
@@ -62,7 +62,8 @@ export const compare = {
   '~==': (subject, term) => latinTextCompare(subject, term),
   '~=': (subject, term) => (isNaN(subject) ?
     weakTextCompare(subject, term) : parseFloat(subject) === parseFloat(term)),
-  '!=': (subject, term) => new RegExp(`^${term}$`, 'i').exec(subject) === null,
+  '!==': (subject, term) => new RegExp(`^${term}$`, 'i').exec(subject) === null,
+  '!=': (subject, term) => compare[DEFAULT_COMPARE](subject, term) === false,
   '*=': (subject, term) => new RegExp(term).exec(subject) !== null,
   '^=': (subject, term) => new RegExp(`^${term}`, 'i').exec(subject) !== null,
   '$=': (subject, term) => new RegExp(`${term}$`, 'i').exec(subject) !== null,
