@@ -37,6 +37,7 @@ const Modal = (
   const onClickButtonHandler = (event) =>
   {
     event.preventDefault();
+    event.stopPropagation();
     
     if (button.handler(store.getState().form.modal || {}) !== false && store.getState().layer.method !== 'preload')
     {
@@ -47,6 +48,7 @@ const Modal = (
   const onClickSecondaryButtonHandler = (event) =>
   {
     event.preventDefault();
+    event.stopPropagation();
 
     if (buttonSecondary.handler)
     {
