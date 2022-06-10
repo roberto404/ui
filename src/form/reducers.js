@@ -1,5 +1,6 @@
 import isEmpty from 'lodash/isEmpty';
 import validate from 'validate.js';
+import stringify from '@1studio/utils/object/stringify';
 
 import
 {
@@ -52,7 +53,7 @@ export default (state = {}, action = {}) =>
 
           if (scheme)
           {
-            newState[FORM_ERRORS_KEY] = validate(newState, scheme);
+            newState[FORM_ERRORS_KEY] = validate(stringify(newState), scheme);
           }
         }
         else
@@ -75,7 +76,7 @@ export default (state = {}, action = {}) =>
           if (scheme)
           {
             newState[action.form][FORM_ERRORS_KEY] = validate(
-              newState[action.form],
+              stringify(newState[action.form]),
               scheme,
             );
           }
@@ -93,7 +94,7 @@ export default (state = {}, action = {}) =>
 
         if (scheme)
         {
-          newState[FORM_ERRORS_KEY] = validate(newState, scheme);
+          newState[FORM_ERRORS_KEY] = validate(stringify(newState), scheme);
         };
 
 
@@ -163,7 +164,7 @@ export default (state = {}, action = {}) =>
 
         if (state && !isEmpty(state[FORM_SCHEME_KEY]))
         {
-          newState[FORM_ERRORS_KEY] = validate(newState, state[FORM_SCHEME_KEY]);
+          newState[FORM_ERRORS_KEY] = validate(stringify(newState), state[FORM_SCHEME_KEY]);
         }
         return newState;
       }
@@ -174,7 +175,7 @@ export default (state = {}, action = {}) =>
         {
           return {
             ...state,
-            [FORM_ERRORS_KEY]: validate(state, state[FORM_SCHEME_KEY]),
+            [FORM_ERRORS_KEY]: validate(stringify(state), state[FORM_SCHEME_KEY]),
           };
         }
 
