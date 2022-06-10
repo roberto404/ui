@@ -20,6 +20,7 @@ import { preload, close, modal } from '../layer/actions';
 
 import { PROPTYPES } from '@1studio/utils/models/data';
 import { FORM_PREFIX } from '../grid/constants';
+import { FORM_SCHEME_KEY } from '../form/constants';
 
 
 
@@ -310,8 +311,18 @@ class GridView extends Component
       }
     }
 
+    const records = concatMultipleFormRecords(gridSelectedRecords);
+
+    // keep sceme to reset form
+    const scheme = (this.context.store.getState().form[this.id] || {})[FORM_SCHEME_KEY];
+
+    if (scheme)
+    {
+      records[FORM_SCHEME_KEY] = scheme;
+    }
+
     this.props.setForm(
-      concatMultipleFormRecords(gridSelectedRecords),
+      records,
       this.id,
     );
   }
