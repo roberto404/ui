@@ -364,6 +364,11 @@ hr
   fill: $green;
 }
 
+.fill-green-dark *
+{
+  fill: $green-dark;
+}
+
 .fill-transparent *
 {
   fill: rgba(0,0,0,0);

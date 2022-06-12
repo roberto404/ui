@@ -31,10 +31,12 @@ const Points = ({
   data,
   coordToPix,
   UI,
+  reverseAxis,
 }) =>
 {
   const {
     yAxisValueMin,
+    yAxisValues,
     xAxisValues,
     xAxisValueMin,
     xAxisValueMax,
@@ -42,7 +44,9 @@ const Points = ({
 
   const renderGroupOfPoints = (id, points, index, length) =>
   {
-    const elements = xAxisValues
+    const axisValues = reverseAxis.indexOf(id) !== -1 ? yAxisValues : xAxisValues;
+
+    const elements = axisValues
       .map((value, i) => 
       {
         const point = points[i + xAxisValueMin];
@@ -112,6 +116,7 @@ Points.propTypes =
   ]),
   coordToPix: PropTypes.func.isRequired,
   UI: PropTypes.func.isRequired,
+  reverseAxis: PropTypes.arrayOf(PropTypes.string),
 };
 
 /**
@@ -121,6 +126,7 @@ Points.propTypes =
 Points.defaultProps =
 {
   data: [],
+  reverseAxis: [],
 };
 
 export default Points;

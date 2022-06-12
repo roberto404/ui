@@ -39,6 +39,7 @@ const Coordinate = ({
   yAxisLabel,
   yAxisValueMax,
   yAxisValueMin,
+  yAxisValues,
   xAxisValueMax,
   xAxisValueMin,
   xAxisValues,
@@ -47,6 +48,7 @@ const Coordinate = ({
   xAxis,
   yAxis,
   y2Axis,
+  reverseAxis,
   margin,
   point,
   children,
@@ -148,6 +150,12 @@ const Coordinate = ({
     i => canvas.xAxisValueMin + ((canvas.xAxisValueDiff / canvas.xAxisSteps) * i),
   );
 
+  canvas.yAxisValues = yAxisValues || produceNumericArray(
+    0,
+    canvas.yAxisSteps,
+    i => canvas.yAxisValueMin + ((canvas.yAxisValueDiff / canvas.yAxisSteps) * i),
+  );
+
   return (
     <svg
       id={id}
@@ -210,6 +218,7 @@ const Coordinate = ({
         coordToPix={coordToPix(canvas)}
         data={data}
         UI={point}
+        reverseAxis={reverseAxis}
       />
       }
       {children}
@@ -244,6 +253,8 @@ Coordinate.defaultProps =
   // yAxisValueMin: 0, !important no default value, need undefined
   xAxisValueMax: 1,
   xAxisValueMin: 0,
+
+  reverseAxis: [],
 };
 
 export default Coordinate;
