@@ -84,12 +84,15 @@ const Card = ({
     const layer = store.getState().layer || {};
 
     if (
-      layer.method !== 'popover' &&
-      event.relatedTarget &&
+      layer.method !== 'popover'
+      ||
       (
-        event.currentTarget.contains(event.relatedTarget)
-        || event.relatedTarget === cardElement
-        || cardElement.contains(event.relatedTarget)
+        event.relatedTarget &&
+        (
+          event.currentTarget.contains(event.relatedTarget)
+          || event.relatedTarget === cardElement
+          || cardElement.contains(event.relatedTarget)
+        )
       )
     )
     {
