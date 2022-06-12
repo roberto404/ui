@@ -81,7 +81,10 @@ const Card = ({
 
   const onMouseOutLayerHandler = (event) =>
   {
+    const layer = store.getState().layer || {};
+
     if (
+      layer.method !== 'popover' &&
       event.relatedTarget &&
       (
         event.currentTarget.contains(event.relatedTarget)
@@ -219,7 +222,6 @@ Card.propTypes =
 Card.contextTypes =
 {
   store: PropTypes.object,
-  register: PropTypes.object,
 };
 
 export default Card;

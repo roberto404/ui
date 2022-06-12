@@ -185,8 +185,28 @@ class CardEditor extends Component
 
 
     this.setState({ markers });
-    this.context.store.dispatch(flush());
+
+    const layer = this.context.store.getState().layer;
+    
+    if (layer.method === 'popover')
+    {
+      this.context.store.dispatch(flush());
+    }
   }
+
+  onClickHandler = () =>
+  {
+    const settings = this.context.store.getState().form.markerSetting;
+
+    const marker = {
+      category,
+      settings,
+      position: [50, 50],
+    };
+
+    this.setState({ markers: [...(this.state.markers || []), marker] });
+    this.context.store.dispatch(flush());
+  };
 
 
 
@@ -198,26 +218,34 @@ class CardEditor extends Component
 
     const category = event.currentTarget.dataset.id;
 
-    const onClickHandler = () =>
-    {
-      const settings = this.context.store.getState().form.markerSetting;
 
-      const marker = {
+    if (this.context.store.getState().layer.active)
+    {
+      let settings = prompt("Létrehozom:", "");
+
+       const marker = {
         category,
         settings,
         position: [50, 50],
       };
 
       this.setState({ markers: [...(this.state.markers || []), marker] });
-      this.context.store.dispatch(flush());
-    };
 
-    this.context.store.dispatch(dialog(
-      <div>
-        <Input id="markerSetting" />
-        <div className="button primary" onClick={onClickHandler}>Létrehozom</div>
-      </div>,
-    ));
+    }
+    else
+    {
+      this.context.store.dispatch(dialog(
+        <div>
+          <Input id="markerSetting" />
+          <div className="button primary" onClick={this.onClickHandler}>Létrehozom</div>
+        </div>,
+      ));
+    }
+
+
+    
+
+    
   }
 
   onClickSaveHandler = (event) =>
