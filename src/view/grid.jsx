@@ -182,7 +182,7 @@ class GridView extends Component
 
     return this.api({
       method: this.id,
-      query: isPreloaded ? 'preload' : undefined,
+      query: isPreloaded ? 'preload' : this.props.query,
       header: this.props.header,
     })
       .then((response) =>

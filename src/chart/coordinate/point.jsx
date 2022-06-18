@@ -44,9 +44,9 @@ const Points = ({
 
   const renderGroupOfPoints = (id, points, index, length) =>
   {
-    const axisValues = reverseAxis.indexOf(id) !== -1 ? yAxisValues : xAxisValues;
+    // const axisValues = reverseAxis.indexOf(id) !== -1 ? yAxisValues : xAxisValues;
 
-    const elements = axisValues
+    const elements = points
       .map((value, i) => 
       {
         const point = points[i + xAxisValueMin];

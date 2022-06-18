@@ -144,4 +144,57 @@
       }
     }
   }
+
+
+  &.github
+  {
+    g#github-xaxis
+    {
+      text
+      {
+        font-size: 70%;
+        font-weight: bold;
+        fill: $gray-dark;
+      }
+    }
+
+    g#points
+    {
+      g#weeks
+      {
+        rect
+        {
+          &.fill-red
+          {
+            fill: $red;
+          }
+
+          &.fill-gray-light
+          {
+            fill: $gray-light;
+          }
+
+          &:hover
+          {
+            stroke: $blue-dark;
+            stroke-width: 1;
+          }
+        }
+
+        text
+        {
+          font-weight: bold;
+          font-size: 90%;
+        }
+      }
+
+      g#separator
+      {
+        line
+        {
+          stroke: $gray-light;
+        }
+      }
+    }
+  }
 }
