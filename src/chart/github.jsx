@@ -18,6 +18,8 @@ import Coordinate from './coordinate';
 
 /* !- Constants */
 
+import { DATE_FORMAT } from '../calendar/constants'; 
+
 const BOX_PADDING = 2;
 const WEEKS_OF_THE_MONTH = 5;
 const MONTHS_OF_THE_YEAR = 12;
@@ -106,12 +108,12 @@ const separator = ({ x, y, canvas }) => (
      const col = (i - 1) % MONTHS_OF_THE_YEAR + 1;
      const row = Math.floor((i - 1) / MONTHS_OF_THE_YEAR);
     
-     const date = moment(`2022-${col}-1`).add(row, 'weeks');
+     const date = moment(`2022-${col}-1`, 'YYYY-M-D').startOf('isoWeek').add(row, 'weeks').endOf('isoWeek');
  
      const week = date.isoWeek();
      const month = date.month() + 1;
  
-     if (week === 52 && month == 1)
+     if (week === 52 && col == 1)
      {
        return false; // week start of prev year
      }
