@@ -42,15 +42,15 @@ const xAxisLabel = ({ i, x, y, canvas }) =>
   </text>
 );
 
+const WHITE_TEXT = ['red'];
 
 const box = (record, { store, Popover }) => ({ x, y, canvas }) =>
 {
-  if (!record)
+  if (!record || !record.value)
   {
     return <g />;
   }
 
-  const isPositive = record.value >= record.comparedValue;
 
   const onClickHandler = event =>
     store.dispatch(popover(<Popover record={record} />, event));
@@ -60,8 +60,7 @@ const box = (record, { store, Popover }) => ({ x, y, canvas }) =>
       <rect
         className={classNames({
           pointer: true,
-          "fill-gray-light": isPositive,
-          "fill-red": !isPositive,
+          [`fill-${record.color}`]: true,
         })}
         x={x + BOX_PADDING}
         y={y + BOX_PADDING}
@@ -78,7 +77,7 @@ const box = (record, { store, Popover }) => ({ x, y, canvas }) =>
         alignmentBaseline="middle"
         textAnchor="middle"
         fill={classNames({
-          'white': !isPositive,
+          'white': WHITE_TEXT.indexOf(record.color) !== -1,
         })}
       >
         { record.value }
@@ -126,7 +125,7 @@ const separator = ({ x, y, canvas }) => (
    }
 
 
-const ChartGithub = ({ data, width, height, Popover }, { store }) => (
+const ChartGithub = ({ data, sumData, width, height, Popover }, { store }) => (
   <Coordinate
     id="github"
     className="chart github no-select"
@@ -136,13 +135,18 @@ const ChartGithub = ({ data, width, height, Popover }, { store }) => (
       weeks: produceNumericArray(1, WEEKS_OF_THE_YEAR).map(i => ({
         x: (i - 1) % MONTHS_OF_THE_YEAR,
         y: yAxisValueMax - Math.floor((i - 1) / MONTHS_OF_THE_YEAR),
-        element: box(data[getWeek(i)], { Popover, store}),
+        element: box(data[getWeek(i)], { Popover, store }),
       })),
       separator: [{
         x: 0,
         y: 2,
         element: separator,
-      }]
+      }],
+      months: produceNumericArray(1, MONTHS_OF_THE_YEAR).map(i => ({
+        x: i - 1,
+        y: 1,
+        element: box(sumData[i - 1], { Popover, store })
+      }))
     }}
     xAxisSteps={MONTHS_OF_THE_YEAR}
     yAxisSteps={7}
@@ -166,6 +170,7 @@ const ChartGithub = ({ data, width, height, Popover }, { store }) => (
 ChartGithub.defaultProps =
 {
   data: [],
+  sumData: [],
   width: 800,
   height: 500,
 }

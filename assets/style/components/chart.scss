@@ -160,7 +160,8 @@
 
     g#points
     {
-      g#weeks
+      g#weeks,
+      g#months
       {
         rect
         {
@@ -174,6 +175,11 @@
             fill: $gray-light;
           }
 
+          &.fill-green
+          {
+            fill: $green;
+          }
+
           &:hover
           {
             stroke: $blue-dark;
@@ -184,7 +190,6 @@
         text
         {
           font-weight: bold;
-          font-size: 90%;
         }
       }
 
@@ -195,6 +200,7 @@
           stroke: $gray-light;
         }
       }
+
     }
   }
 }
