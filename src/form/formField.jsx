@@ -219,7 +219,7 @@ class FormField extends Component
       this.unsubscribe();
     }
 
-    if (typeof this.element !== 'undefined')
+    if (typeof this.element !== 'undefined' && typeof this.element.removeEventListener === 'function')
     {
       this.element.removeEventListener('paste', this.onPasteHandler, false);
     }

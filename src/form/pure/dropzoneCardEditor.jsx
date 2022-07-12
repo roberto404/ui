@@ -194,7 +194,7 @@ class CardEditor extends Component
     }
   }
 
-  onClickHandler = () =>
+  onClickHandler = category => () =>
   {
     const settings = this.context.store.getState().form.markerSetting;
 
@@ -237,7 +237,7 @@ class CardEditor extends Component
       this.context.store.dispatch(dialog(
         <div>
           <Input id="markerSetting" />
-          <div className="button primary" onClick={this.onClickHandler}>Létrehozom</div>
+          <div className="button primary" onClick={this.onClickHandler(category)}>Létrehozom</div>
         </div>,
       ));
     }

@@ -138,6 +138,10 @@ class Slider extends Field
   getPercents = (props = this.props) =>
     this.getValue().map(value => this.valueToPercent(value));
 
+  getValue = () =>
+    this.props.stateFormat(super.getValue())
+      .map(value => parseFloat(value.toString().replace(',', '.').replace(/[^0-9.]/g, '')))
+
   getValues = () => [
     this.percentToValue(this.state.percent[0]),
     this.percentToValue(this.state.percent[1]),
@@ -225,7 +229,6 @@ class Slider extends Field
           });
 
           this.onChangeHandler(this.getValues());
-
           break;
         }
 
