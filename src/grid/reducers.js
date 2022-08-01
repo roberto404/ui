@@ -183,7 +183,8 @@ const reducers = (state = {}, action = {}) =>
 
         if (index !== -1)
         {
-          const record = {
+          const record = action.record.constructor.name !== 'Object' ? action.record :
+          {
             ...model.data[index],
             ...action.record,
           };
