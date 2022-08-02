@@ -13,6 +13,8 @@ import IconCheck from '../../../icon/mui/navigation/check';
 import { DATE_FORMAT, DATETIME_FORMAT } from '../../../calendar/constants';
 
 
+const thisYear = moment().startOf('year').unix();
+
 
 /**
  * [MessageGroup description]
@@ -25,9 +27,12 @@ const MessageGroup = ({ title , level, children }) =>
   /* date */
   if (level === 0)
   {
+    const date = moment(title, DATE_FORMAT);
+    const format = date.unix() < thisYear ? 'YYYY MMM D.' : 'MMM D.';
+
     return (
       <div>
-        <div className="py-1 text-center text-xs text-gray">{moment(title, DATE_FORMAT).format('MMM D.')}</div>
+        <div className="py-1 text-center text-xs text-gray">{date.format(format)}</div>
         {children}
       </div>
     );
