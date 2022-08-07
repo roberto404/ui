@@ -109,6 +109,10 @@ const Example = ({
       <button className="outline gray w-auto" onClick={() => sidebar(<div className="bg-red" style={{ width: '200px' }}>right</div>, sidebarProps)}>Sidebar</button>
       <br />
 
+      <h2>Sidebar Left no curtain</h2>
+      <button className="outline gray w-auto" onClick={() => sidebar(<div className="bg-red" style={{ width: '200px' }}>right</div>, { position: 'left', bodyClass: 'hide:curtain' })}>Sidebar</button>
+      <br />
+
       <h2>Fullscreen</h2>
       <button className="outline gray w-auto" onClick={() => fullscreen(DialogComponent)}>Fullscreen</button>
 

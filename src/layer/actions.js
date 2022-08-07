@@ -139,8 +139,8 @@ export const sidebar = (element: React.Element, options = {}) =>
   element,
   containerStyle: options.containerStyle,
   options: {
-    // ...options,
-    className: options.position || 'left',
+    ...options,
+    className: options.position || 'right',
   },
 });
 

@@ -138,6 +138,11 @@ class Layer extends Component
         $('body').addClass(`overflow h-screen layer-${method}`);
       }
 
+      if (options.bodyClass)
+      {
+        $('body').addClass(options.bodyClass);
+      }
+
       $('body').data('scrollTop', $('body').scrollTop());
 
       if (closeable)
