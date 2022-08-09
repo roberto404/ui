@@ -65,6 +65,7 @@ export const compare = {
   '!==': (subject, term) => new RegExp(`^${term}$`, 'i').exec(subject) === null,
   '!=': (subject, term) => compare[DEFAULT_COMPARE](subject, term) === false,
   '*=': (subject, term) => new RegExp(term).exec(subject) !== null,
+  '*!=': (subject, term) => new RegExp(`^((?!${term}).)*$`).exec(subject) !== null,
   '^=': (subject, term) => new RegExp(`^${term}`, 'i').exec(subject) !== null,
   '$=': (subject, term) => new RegExp(`${term}$`, 'i').exec(subject) !== null,
   '>': (subject, term) => parseFloat(subject) > parseFloat(term),
@@ -108,6 +109,25 @@ export const REGEX_QUERY_LEVEL1 = new RegExp(`([${FIELD_CHARS}]+[ ]*[${OPERATOR_
 
 export const isQuery = term =>
   term.match(new RegExp(`^[${FIELD_CHARS}]+[ ]*[${OPERATOR_UNIQUE}]+`, 'g')) !== null;
+
+
+export const queryToFilters = query =>
+  query
+    .split('|')
+    .map(filterOr => 
+      filterOr
+        .split('&')
+        .map((filter) =>
+        {
+          const match = (new RegExp(`^([${FIELD_CHARS}]+)[ ]*([${OPERATOR_UNIQUE}])+[ ]*(.*)$`, 'g')).exec(filter);
+    
+          return ({
+            field: match[1],
+            operator: match[2],
+            value: match[3],
+          });
+        })
+    )
 
 /**
  * @example
