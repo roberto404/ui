@@ -135,7 +135,7 @@ export const queryToFilters = query =>
  * // =>
  * [field, >, 2]
  */
-export const REGEX_QUERY_LEVEL2 = new RegExp(`^([${FIELD_CHARS}]+)([${OPERATOR_UNIQUE}]{1}[=]{0,1})(.+)$`);
+export const REGEX_QUERY_LEVEL2 = new RegExp(`^([${FIELD_CHARS}]+)([${OPERATOR_UNIQUE}]{1}[!]{0,1}[=]{0,1})(.+)$`);
 // const REGEX_QUERY_LEVEL2 = new RegExp(`^([0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ_]+)([${OPERATOR_UNIQUE}]{1}[=]{0,1})([a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ0-9]+)$`);
 
 let SEARCH_CACHE = [];
