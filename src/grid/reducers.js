@@ -3,7 +3,6 @@
 import Data from '@1studio/utils/models/data';
 import findIndex from 'lodash/findIndex';
 import omit from 'lodash/omit';
-import PropTypes, { checkPropTypes } from '@1studio/utils/propType';
 
 import { addRecord } from './actions';
 
