@@ -51,7 +51,7 @@ export const Bar = ({ x, y, canvas, coord, id, seriesIndex, seriesLength, point 
 
 
 
-const ChartBar = ({ data, width, height, className, yAxisValueMin }) => (
+const ChartBar = ({ data, width, height, className, yAxisValueMin, margin }) => (
   <Coordinate
     id="bar"
     className={className || "chart bar rounded"}
@@ -70,13 +70,18 @@ const ChartBar = ({ data, width, height, className, yAxisValueMin }) => (
     yAxisValueMin={yAxisValueMin === undefined ? findMinimumValueInSeries(data) : yAxisValueMin}
     yGrid={false}
 
-    margin={{
-      top: 40,
-      right: 100,
-      bottom: 40,
-      left: 100,
-    }}
+    margin={margin}
   />
 );
+
+ChartBar.defaultProps =
+{
+  margin: {
+    top: 40,
+    right: 100,
+    bottom: 40,
+    left: 100,
+  },
+}
 
 export default ChartBar;
