@@ -100,7 +100,7 @@
     "jquery": "3.4.1",
     "lodash": "4.17.21",
     "material-ui": "0.18.7",
-    "moment": "2.24.0",
+    "moment": "2.29.4",
     "node-uuid": "1.4.8",
     "prop-types": "15.5.10",
     "react": "15.6.1",
