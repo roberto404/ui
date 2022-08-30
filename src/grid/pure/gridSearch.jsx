@@ -178,9 +178,7 @@ export const GridSearchDialog = ({ id, fields, prefix, draggable, onClick }, { s
       store.dispatch(setValues({ [id]: value }));
     }
 
-    store.dispatch(flush());
-
-    
+    store.dispatch(flush());    
   };
 
   return (
