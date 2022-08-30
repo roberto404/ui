@@ -12,7 +12,7 @@ import * as GridActions from '../grid/actions';
 
 /* !- React Elements */
 
-import Slides, { Slide } from './slides';
+import Slides, { SlideHelperComponent as Slide } from './slides';
 import Pager from '../pagination/pure/pager';
 import { Pages } from '../pagination/pure/pages';
 import IconArrow from '../icon/mui/navigation/expand_less';
