@@ -204,7 +204,7 @@ class View extends Component
 
     if (!isEqual(views, this.views))
     {
-      const prev = [...this.views];
+      const prev = { ...this.views };
       this.views = views;
 
       if (this.props.onChange)
