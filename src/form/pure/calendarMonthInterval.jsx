@@ -141,8 +141,10 @@ class CalendarMonthInterval extends Field
       toId,
       dateFormat,
       intervalLength,
+      intervalAI,
     } = this.props;
 
+    // current value or default
     const { startDate, endDate } = this.getDateInterval({
       start: moment(date).startOf('day').toDate(),
       end: moment(date).startOf('day').add(intervalLength ? intervalLength - 1 : 1, 'days').toDate(),
@@ -155,50 +157,65 @@ class CalendarMonthInterval extends Field
     const selectedDate = new Date(date);
 
     /**
-     * Calculated new values (start, end)
-     */
+    * Calculated new values (start, end)
+    */
     let dateFrom = moment(startDate).format(dateFormat);
     let dateTo = moment(endDate).format(dateFormat);
 
-    if (intervalLength)
+    if (intervalAI === false)
     {
-      dateFrom = moment(date).format(dateFormat);
-      dateTo = moment(date).add(intervalLength - 1, 'days').format(dateFormat);
-    }
-    // out of current period same day => moving selection
-    else if (
-      startDate.getTime() !== endDate.getTime()
-      && (selectedDate < startDate || selectedDate > endDate)
-      && selectedDate.getDay() === startDate.getDay()
-    )
-    {
-      const intervalDiff = moment(endDate).diff(startDate);
-      dateFrom = moment(date).format(dateFormat);
-      dateTo = moment(selectedDate.getTime() + intervalDiff).format(dateFormat);
-    }
-    // : before <= expand selection
-    else if (selectedDate < startDate)
-    {
-      dateFrom = moment(date).format(dateFormat);
-    }
-    // : after <= expand selection
-    else if (selectedDate > endDate)
-    {
-      dateTo = moment(date).format(dateFormat);
-    }
-    // first day in period
-    else if (selectedDate.getTime() === startDate.getTime())
-    {
-      dateTo = moment(date).format(dateFormat);
-    }
-    // in period
-    else if (selectedDate < endDate && selectedDate > startDate)
-    {
-      dateTo = moment(date).format(dateFormat);
+      if (selectedDate.getTime() < startDate.getTime())
+      {
+        dateFrom = moment(selectedDate).format(dateFormat);
+      }
+      else
+      {
+        dateTo = moment(selectedDate).format(dateFormat);
+      }
     }
     else
     {
-      dateFrom = dateTo;
+
+      if (intervalLength)
+      {
+        dateFrom = moment(date).format(dateFormat);
+        dateTo = moment(date).add(intervalLength - 1, 'days').format(dateFormat);
+      }
+      // out of current period same day => moving selection
+      else if (
+        startDate.getTime() !== endDate.getTime()
+        && (selectedDate < startDate || selectedDate > endDate)
+        && selectedDate.getDay() === startDate.getDay()
+      )
+      {
+        const intervalDiff = moment(endDate).diff(startDate);
+        dateFrom = moment(date).format(dateFormat);
+        dateTo = moment(selectedDate.getTime() + intervalDiff).format(dateFormat);
+      }
+      // : before <= expand selection
+      else if (selectedDate < startDate)
+      {
+        dateFrom = moment(date).format(dateFormat);
+      }
+      // : after <= expand selection
+      else if (selectedDate > endDate)
+      {
+        dateTo = moment(date).format(dateFormat);
+      }
+      // first day in period
+      else if (selectedDate.getTime() === startDate.getTime())
+      {
+        dateTo = moment(date).format(dateFormat);
+      }
+      // in period
+      else if (selectedDate < endDate && selectedDate > startDate)
+      {
+        dateTo = moment(date).format(dateFormat);
+      }
+      else
+      {
+        dateFrom = dateTo;
+      }
     }
 
     this.context.store.dispatch(setValues({
@@ -245,6 +262,7 @@ CalendarMonthInterval.propTypes =
     PropTypes.string,
   ]),
   dateFormat: PropTypes.string,
+  intervalAI: PropTypes.bool,
 };
 
 /**
@@ -261,6 +279,7 @@ CalendarMonthInterval.defaultProps =
   month: new Date().getMonth() + 1,
   dateFormat: 'YYYY-MM-DDTHH:mm',
   intervalLength: 0,
+  intervalAI: true,
 };
 
 CalendarMonthInterval.contextTypes =
