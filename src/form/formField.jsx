@@ -829,7 +829,7 @@ FormField.defaultProps =
 {
   form: '',
   value: '',
-  onChange()
+  onChange: () =>
   {},
   label: '',
   placeholder: '',
