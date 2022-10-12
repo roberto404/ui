@@ -89,7 +89,7 @@ const reducers = (state = DEFAULT_STATE, action = {}) =>
           active: reducers(state, { type: 'SET_LAYER_VISIBLE', active: action.active }).active,
           element: reducers(state, { type: 'SET_LAYER_ELEMENT', element: action.element }).element,
           method: reducers(state, { type: 'SET_LAYER_METHOD', method: action.method }).method,
-          closeable: options.closeable || closeable,
+          closeable: typeof options.closeable !== 'undefined' ? options.closeable : closeable,
           containerStyle,
           options,
         };
