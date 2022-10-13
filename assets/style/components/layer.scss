@@ -18,6 +18,12 @@ body[class*=" layer-"]:not(.hide\:curtain)
 body.hide\:curtain .layer
 {
   background-color: transparent !important;
+  pointer-events: none;
+
+  .container
+  {
+    pointer-events: initial;
+  }
 }
 
 .layer
