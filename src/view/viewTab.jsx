@@ -107,6 +107,7 @@ const ViewTab = ({
   classNameButtonActive,
   classNameChildren,
   showAllLabel,
+  onChange,
 }) =>
 (
     <div className={className}>
@@ -129,6 +130,7 @@ const ViewTab = ({
           }
         }}
         nested
+        onChange={onChange}
       >
         { items.map((item, n) => <div key={n} data-view={`${id}-${n}`}>{item.children}</div>) }
       </View>
