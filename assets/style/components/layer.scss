@@ -352,6 +352,12 @@ body.hide\:curtain .layer
       transform: translateX(0%);
       transition: transform 300ms ease-in 0s;
       left: 100%;
+
+      .content
+      {
+        max-height: 100%;
+        overflow-y: scroll;
+      }
     }
 
     &.show .container
