@@ -126,41 +126,31 @@ h3,
   text-transform: uppercase;
 }
 
-.text-black
-{
-  color: $black;
-}
-
+.text-black,
 .hover\:text-black:hover
 {
   color: $black;
 }
 
-.text-black-light
+.text-black-light,
+.hover\:text-black-light:hover
 {
   color: $black-light;
 }
 
-.text-white
+.text-white,
+.hover\:text-white:hover
 {
   color: $white;
 }
 
-.text-gray
-{
-  color: $gray;
-}
-
+.text-gray,
 .hover\:text-gray:hover
 {
   color: $gray;
 }
 
-.text-gray-light
-{
-  color: $gray-light;
-}
-
+.text-gray-light,
 .hover\:text-gray-light:hover
 {
   color: $gray-light;
