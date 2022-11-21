@@ -153,7 +153,7 @@ const ExampleForm = () =>
     </div>
 
     <h2>SVG mixed position</h2>
-    <div classNAme="grid-2 card">
+    <div className="grid-2 card">
       <div className="col-1-4">
         <button className="w-full outline shadow">
           <div className="w-full">

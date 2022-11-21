@@ -1,5 +1,6 @@
 
     import React from 'react';
+import SrcIconMuiMapsMylocation from '../../../src/icon/mui/maps/my_location';
 import SrcIconMuiMapsMenubook from '../../../src/icon/mui/maps/menu_book';
 import SrcIconMuiAvPlayarrow from '../../../src/icon/mui/av/play_arrow';
 import SrcIconMuiAvPause from '../../../src/icon/mui/av/pause';
@@ -7,6 +8,7 @@ import SrcIconMuiAvWeb from '../../../src/icon/mui/av/web';
 import SrcIconMuiAvVideocam from '../../../src/icon/mui/av/videocam';
 import SrcIconMuiAvPlaylistplay from '../../../src/icon/mui/av/playlist_play';
 import SrcIconMuiAvMovie from '../../../src/icon/mui/av/movie';
+import SrcIconMuiAudioVideoViewin_ar from '../../../src/icon/mui/audioVideo/view_in_ar';
 import SrcIconMuiFileUpload from '../../../src/icon/mui/file/upload';
 import SrcIconMuiFileFolder from '../../../src/icon/mui/file/folder';
 import SrcIconMuiFileCloud from '../../../src/icon/mui/file/cloud';
@@ -76,6 +78,9 @@ import SrcIconMuiImageHideimage from '../../../src/icon/mui/image/hide_image';
 import SrcIconMuiImageImagesearch from '../../../src/icon/mui/image/image_search';
 import SrcIconMuiImageImage from '../../../src/icon/mui/image/image';
 import SrcIconMuiImageLens from '../../../src/icon/mui/image/lens';
+import SrcIconMuiImageContrast from '../../../src/icon/mui/image/contrast';
+import SrcIconMuiImageCenterfocus_strong from '../../../src/icon/mui/image/center_focus_strong';
+import SrcIconMuiImageRotate90_degrees_cw from '../../../src/icon/mui/image/rotate_90_degrees_cw';
 import SrcIconMuiToggleStar from '../../../src/icon/mui/toggle/star';
 import SrcIconMuiSocialPersonadd from '../../../src/icon/mui/social/person_add';
 import SrcIconMuiSocialNotifications from '../../../src/icon/mui/social/notifications';
@@ -101,6 +106,7 @@ import SrcIconMuiActionDelete from '../../../src/icon/mui/action/delete';
 import SrcIconMuiActionDeleteforever from '../../../src/icon/mui/action/delete_forever';
 import SrcIconMuiActionDescription from '../../../src/icon/mui/action/description';
 import SrcIconMuiActionTimeline from '../../../src/icon/mui/action/timeline';
+import SrcIconMuiActionRebaseedit from '../../../src/icon/mui/action/rebase_edit';
 import SrcIconMuiActionSchedule from '../../../src/icon/mui/action/schedule';
 import SrcIconMuiActionAutorenew from '../../../src/icon/mui/action/autorenew';
 import SrcIconMuiActionVerifieduser from '../../../src/icon/mui/action/verified_user';
@@ -108,6 +114,7 @@ import SrcIconMuiActionVisibilityoff from '../../../src/icon/mui/action/visibili
 import SrcIconMuiActionFavorite from '../../../src/icon/mui/action/favorite';
 import SrcIconMuiActionSwapvert from '../../../src/icon/mui/action/swap_vert';
 import SrcIconMuiActionSearchoff from '../../../src/icon/mui/action/search_off';
+import SrcIconMuiActionRefresh from '../../../src/icon/mui/action/refresh';
 import SrcIconMuiActionCheckcircle from '../../../src/icon/mui/action/check_circle';
 import SrcIconMuiActionExplore from '../../../src/icon/mui/action/explore';
 import SrcIconMuiActionBugreport from '../../../src/icon/mui/action/bug_report';
@@ -119,6 +126,7 @@ import SrcIconMuiActionCode from '../../../src/icon/mui/action/code';
 import SrcIconMuiActionUpdate from '../../../src/icon/mui/action/update';
 import SrcIconMuiActionFlaky from '../../../src/icon/mui/action/flaky';
 import SrcIconMuiActionDashboard from '../../../src/icon/mui/action/dashboard';
+import SrcIconMuiActionHidesource from '../../../src/icon/mui/action/hide_source';
 import SrcIconMuiActionBook from '../../../src/icon/mui/action/book';
 import SrcIconMuiActionToday from '../../../src/icon/mui/action/today';
 import SrcIconMuiActionShoppingcart from '../../../src/icon/mui/action/shopping_cart';
@@ -131,6 +139,8 @@ import SrcIconMuiActionCalendartoday from '../../../src/icon/mui/action/calendar
 import SrcIconMuiActionRule from '../../../src/icon/mui/action/rule';
 import SrcIconMuiActionLock from '../../../src/icon/mui/action/lock';
 import SrcIconMuiActionAssignmentturned_in from '../../../src/icon/mui/action/assignment_turned_in';
+import SrcIconMuiActionExpand from '../../../src/icon/mui/action/expand';
+import SrcIconMuiActionToken from '../../../src/icon/mui/action/token';
 import SrcIconMuiActionSwaphoriz from '../../../src/icon/mui/action/swap_horiz';
 import SrcIconMuiActionSupervisoraccount from '../../../src/icon/mui/action/supervisor_account';
 import SrcIconMuiActionSettings from '../../../src/icon/mui/action/settings';
@@ -144,10 +154,12 @@ import SrcIconMuiActionLogout from '../../../src/icon/mui/action/logout';
 import SrcIconMuiActionGeneratingtokens from '../../../src/icon/mui/action/generating_tokens';
 import SrcIconMuiActionZoomin from '../../../src/icon/mui/action/zoom_in';
 import SrcIconMuiActionVerified from '../../../src/icon/mui/action/verified';
+import SrcIconMuiActionRestartalt from '../../../src/icon/mui/action/restart_alt';
 import SrcIconMuiActionBackup from '../../../src/icon/mui/action/backup';
 import SrcIconMuiActionSearch from '../../../src/icon/mui/action/search';
 import SrcIconMuiActionHome from '../../../src/icon/mui/action/home';
 import SrcIconMuiActionFace from '../../../src/icon/mui/action/face';
+import SrcIconMuiTextDesignservices from '../../../src/icon/mui/text/design_services';
 import SrcIconMuiCommunicationLocationon from '../../../src/icon/mui/communication/location_on';
 import SrcIconMuiCommunicationPhone from '../../../src/icon/mui/communication/phone';
 import SrcIconMuiCommunicationMessage from '../../../src/icon/mui/communication/message';
@@ -167,11 +179,18 @@ import SrcIconMuiEditorFormatitalic from '../../../src/icon/mui/editor/format_it
 import SrcIconMuiEditorFormatcolor_reset from '../../../src/icon/mui/editor/format_color_reset';
 import SrcIconMuiEditorFormatquote from '../../../src/icon/mui/editor/format_quote';
 import SrcIconMuiEditorStrikethroughs from '../../../src/icon/mui/editor/strikethrough_s';
+import SrcIconMuiCommonActionsdrotation from '../../../src/icon/mui/commonActions/3drotation';
 
     const Example = () =>
     (
       <div className="grid-4-4 text-center">
         
+        <div className="col-1-5">
+        <SrcIconMuiMapsMylocation className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/maps/my_location</div>
+        </div>
+      
+
         <div className="col-1-5">
         <SrcIconMuiMapsMenubook className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/maps/menu_book</div>
@@ -211,6 +230,12 @@ import SrcIconMuiEditorStrikethroughs from '../../../src/icon/mui/editor/striket
         <div className="col-1-5">
         <SrcIconMuiAvMovie className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/av/movie</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiAudioVideoViewin_ar className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/audioVideo/view_in_ar</div>
         </div>
       
 
@@ -629,6 +654,24 @@ import SrcIconMuiEditorStrikethroughs from '../../../src/icon/mui/editor/striket
       
 
         <div className="col-1-5">
+        <SrcIconMuiImageContrast className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/image/contrast</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiImageCenterfocus_strong className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/image/center_focus_strong</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiImageRotate90_degrees_cw className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/image/rotate_90_degrees_cw</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiToggleStar className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/toggle/star</div>
         </div>
@@ -779,6 +822,12 @@ import SrcIconMuiEditorStrikethroughs from '../../../src/icon/mui/editor/striket
       
 
         <div className="col-1-5">
+        <SrcIconMuiActionRebaseedit className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/rebase_edit</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiActionSchedule className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/schedule</div>
         </div>
@@ -817,6 +866,12 @@ import SrcIconMuiEditorStrikethroughs from '../../../src/icon/mui/editor/striket
         <div className="col-1-5">
         <SrcIconMuiActionSearchoff className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/search_off</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiActionRefresh className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/refresh</div>
         </div>
       
 
@@ -883,6 +938,12 @@ import SrcIconMuiEditorStrikethroughs from '../../../src/icon/mui/editor/striket
         <div className="col-1-5">
         <SrcIconMuiActionDashboard className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/dashboard</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiActionHidesource className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/hide_source</div>
         </div>
       
 
@@ -955,6 +1016,18 @@ import SrcIconMuiEditorStrikethroughs from '../../../src/icon/mui/editor/striket
         <div className="col-1-5">
         <SrcIconMuiActionAssignmentturned_in className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/assignment_turned_in</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiActionExpand className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/expand</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiActionToken className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/token</div>
         </div>
       
 
@@ -1037,6 +1110,12 @@ import SrcIconMuiEditorStrikethroughs from '../../../src/icon/mui/editor/striket
       
 
         <div className="col-1-5">
+        <SrcIconMuiActionRestartalt className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/restart_alt</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiActionBackup className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/backup</div>
         </div>
@@ -1057,6 +1136,12 @@ import SrcIconMuiEditorStrikethroughs from '../../../src/icon/mui/editor/striket
         <div className="col-1-5">
         <SrcIconMuiActionFace className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/face</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiTextDesignservices className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/text/design_services</div>
         </div>
       
 
@@ -1171,6 +1256,12 @@ import SrcIconMuiEditorStrikethroughs from '../../../src/icon/mui/editor/striket
         <div className="col-1-5">
         <SrcIconMuiEditorStrikethroughs className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/editor/strikethrough_s</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiCommonActionsdrotation className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/commonActions/3drotation</div>
         </div>
       
       </div>

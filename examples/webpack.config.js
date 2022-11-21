@@ -44,7 +44,32 @@ const Common = {
       },
       {
         test: /\.(scss|css)$/,
-        use: ['style-loader', 'css-loader', 'sass-loader'],
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: [
+                  [
+                    "postcss-inline-svg",
+                    {
+                      // Options
+                    },
+                  ],
+                ],
+              },
+            },
+            // options: {
+            //   plugins: (loader) => [
+            //     require('postcss-inline-svg')
+            //   ],
+            //   sourceMap: true,
+            // },
+          },
+          'sass-loader',
+        ],
       },
     ],
   },
@@ -108,7 +133,7 @@ module.exports = (env) =>
         '/library': 'http://butor.rs.loc:80'
       },
       open: {
-        target: ['http://butor.rs.loc:9118'],
+        target: ['http://butor.rs.loc:9009'],
         app: {
           name: 'google chrome'
         },
