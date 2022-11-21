@@ -1,155 +1,123 @@
-/**
- * Requires
- */
+const path  = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const rimraf = require('rimraf');
 
-const path = require('path');
-
-const join = path.join;
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 
-/**
- * Variables
- */
+const yaml = require('js-yaml');
+const fs = require('fs');
+
+// const config = yaml.load(fs.readFileSync('config.yml', 'utf8'));
+
+
 const PATHS = {
-  src: join(__dirname, 'src'),
-  dist: join(__dirname, '../docs'),
+  app: path.join(__dirname, 'src'),
+  dist: path.join(__dirname, '../docs'),
+  src: path.join(__dirname, '../src'),
 };
 
- /**
-  * Common Configuration
-  */
+
+/**
+ * Common Configuration
+ */
 const Common = {
-  context: PATHS.src,
+  context: PATHS.app,
   entry: [
-    'core-js/fn/promise',
-    'core-js/fn/object',
-    'core-js/fn/array',
     './index.jsx',
   ],
   output: {
-    filename: 'app.js',
     path: PATHS.dist,
+    filename: 'app.js',
     publicPath: '/',
   },
   module: {
     rules: [
       {
         test: /\.js(x)?$/,
-        exclude: [/node_modules\/(?!@1studio)/],
         use: 'babel-loader',
+        // include: [
+        //   PATHS.app,
+        //   PATHS.src,
+        //   path.join(__dirname, '../node_modules/@1studio/'),
+        // ],
+      },
+      {
+        test: /\.(scss|css)$/,
+        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
     ],
   },
+  plugins:
+  [
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+    }),
+    new (class {
+      apply(compiler) {
+        compiler.hooks.done.tap('Remove LICENSE', () => {
+          rimraf.sync(PATHS.dist + '/*.LICENSE.txt');
+        });
+      }
+    })(),
+  ],
   resolve: {
     extensions: ['.js', '.jsx'],
+    alias: {
+      'src': PATHS.src,
+    //   '@1studio/kontakt2': PATHS.kontakt2,
+    //   '@1studio/3d': PATHS['3D'],
+    //   '@1studio/components': PATHS.shared,
+    },
+    fallback: {
+      crypto: require.resolve('crypto-browserify'),
+      stream: require.resolve('stream-browserify'),
+      buffer: require.resolve('buffer')
+    },
   },
-  plugins: [
-    new ExtractTextPlugin('app.css'),
-  ],
 };
-
 
 module.exports = (env) =>
 {
-  /**
-   * Production
-   */
-  if (env.prod)
+  if (env.production)
   {
     return {
       ...Common,
-      module:
-      {
-        rules: [
-          ...Common.module.rules,
-          {
-            test: /\.scss$/,
-            use: ExtractTextPlugin.extract({
-              use: [
-                {
-                  loader: 'css-loader',
-                  options: {
-                    minimize: true,
-                    importLoaders: true,
-                  },
-                },
-                {
-                  loader: 'postcss-loader',
-                  options: {
-                    plugins: (loader) => [
-                      require('postcss-inline-svg'),
-                      require('autoprefixer'),
-                    ]
-                  },
-                },
-                'sass-loader',
-              ],
-              fallback: 'style-loader',
-            }),
-          },
-        ],
-      },
-      plugins:
-      [
-        ...Common.plugins,
-      ],
     };
   }
 
-  /**
-   * Development
-   */
   return {
     ...Common,
-    module:
+    devtool: 'eval', // 'source-map',
+    devServer:
     {
-      rules: [
-        ...Common.module.rules,
-        {
-          test: /\.scss$/,
-          use: [
-            'style-loader',
-            {
-              loader: 'css-loader',
-              options:
-              {
-                sourceMap: true,
-              },
-            },
-            {
-              loader: 'postcss-loader',
-              options: {
-                plugins: (loader) => [
-                  require('postcss-inline-svg')
-                ],
-                sourceMap: true,
-              },
-            },
-            {
-              loader: 'sass-loader',
-              options:
-              {
-                sourceMap: true,
-              },
-            },
-          ],
-        },
-      ],
-    },
-    devtool: 'eval',
-    devServer: {
-      contentBase: PATHS.dist,
+      static: 
+      {
+        directory: Common.output.path,
+      },
       compress: true,
-      port: 9009,
       hot: true,
-      // host: '192.168.0.206',
+      liveReload: true,
+      allowedHosts: [
+        'butor.rs.loc',
+      ],
+      port: 9009,
       historyApiFallback: true,
+      proxy: {
+        '/api': 'http://butor.rs.loc:80',
+        '/library': 'http://butor.rs.loc:80'
+      },
+      open: {
+        target: ['http://butor.rs.loc:9118'],
+        app: {
+          name: 'google chrome'
+        },
+      },
     },
     plugins: [
       ...Common.plugins,
       new webpack.HotModuleReplacementPlugin(),
-    ],
+    ]
   };
 };
+ 
