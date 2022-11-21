@@ -11,6 +11,29 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import IconArrow from '../../icon/mui/navigation/expand_more';
 
 /**
+ * Create nested data structure from array
+ * 
+ * @param {array} data [{ id: 1 }, { id: 2, pid: 1 }, { id: 3 }, { id: 4, pid: 1 }]
+ * @param {string} propValue observed propKey value. Usually {}.id === pid
+ * @param {string} propKey 
+ * @param {string} propParentKey 
+ * @returns {object} { #1: {#2: {}, #4: {}}, #3: {}}
+ */
+export const getNestedData = (data = [], propValue, propKey = 'id', propParentKey = 'pid') =>
+    data
+      .filter(record => record[propParentKey] === propValue)
+      .reduce(
+        (result, record) => ({
+          ...result,
+          [`#${record[propKey]}`]: getNestedData(data, record[propKey], propKey, propParentKey),
+        }),
+        {},
+      );
+
+
+
+
+/**
  * [Parent description]
  */
 class Parent extends Component
@@ -171,6 +194,8 @@ const NestedList = (
     nestedData,
     model,
     groupBy,
+    nestedDataKey,
+    nestedDataParentKey,
     UI,
     UiProps,
     className,
@@ -183,7 +208,9 @@ const NestedList = (
    * Redux Grid data by group
    * @type {Object} { groupIndex: [items] }
    */
-  const data = nestedData || (model ? model.collectResultsByField(groupBy) : {});
+  const data = nestedData || (groupBy ? 
+    (model?.collectResultsByField(groupBy) || {}) : getNestedData(model?.data, undefined, nestedDataKey, nestedDataParentKey));
+
 
   /**
    * NoResults view component
@@ -211,8 +238,11 @@ const NestedList = (
             index,
             level,
             groupBy,
+            nestedDataKey,
+            nestedDataParentKey,
             isFirst: Object.keys(nestedItems).indexOf(index.toString()) === 0,
             isLast:  Object.keys(nestedItems).indexOf(index.toString()) === Object.keys(nestedItems).length - 1,
+            model,
             ...UiProps,
             intl,
           },
@@ -235,6 +265,12 @@ const NestedList = (
 NestedList.propTypes =
 {
   // data: PropTypes.object(),
+  /**
+   * instead of groupBy or nestedData
+   * use getNestedData method.
+   */
+  nestedDataKey: PropTypes.string,
+  nestedDataParentKey: PropTypes.string,
   UI: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.arrayOf(PropTypes.func),
@@ -248,6 +284,8 @@ NestedList.propTypes =
 NestedList.defaultProps =
 {
   data: {},
+  nestedDataKey: 'id',
+  nestedDataParentKey: 'pid',
   UI: Results,
   UiProps: {},
   className: 'nested-list',

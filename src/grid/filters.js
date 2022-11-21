@@ -110,7 +110,11 @@ export const REGEX_QUERY_LEVEL1 = new RegExp(`([${FIELD_CHARS}]+[ ]*[${OPERATOR_
 export const isQuery = term =>
   term.match(new RegExp(`^[${FIELD_CHARS}]+[ ]*[${OPERATOR_UNIQUE}]+`, 'g')) !== null;
 
-
+/**
+ * 
+ * @param {string} query Ex: name=Joe&age>2
+ * @returns {Array} [...Array<{ field, operator, value }>]
+ */
 export const queryToFilters = query =>
   query
     .split('|')
