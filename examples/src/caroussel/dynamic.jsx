@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 /* !- Actions */
 
-import { setData } from '@1studio/ui/grid/actions';
+import { setData } from 'src/grid/actions';
 
 
 /* !- React Elements */

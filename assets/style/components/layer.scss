@@ -184,7 +184,7 @@ body.hide\:curtain .layer
           text-align: left;
           padding: $layer-padding;
           text-transform: uppercase;
-          font-size: $layer-padding / 3 * 2;
+          font-size: calc($layer-padding / 3) * 2;
           background: $yellow;
 
           svg

@@ -4,10 +4,10 @@ import React from 'react';
 
 /* !- React Elements */
 
-import { Grid as GridView } from '@1studio/ui/view';
-import Connect from '@1studio/ui/grid/connect';
-import Grid from '@1studio/ui/grid/pure/grid';
-import Pagination from '@1studio/ui/pagination/pure/pagination';
+import { Grid as GridView } from 'src/view';
+import Connect from 'src/grid/connect';
+import Grid from 'src/grid/pure/grid';
+import Pagination from 'src/pagination/pure/pagination';
 
 /* !- Constatnts */
 

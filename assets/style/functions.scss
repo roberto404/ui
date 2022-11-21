@@ -11,17 +11,13 @@
     // font-display: swap;
 
     @if $asset-pipeline == true {
-      src: font-url('#{$file-path}.eot');
-      src: font-url('#{$file-path}.eot?#iefix')          format('embedded-opentype'),
+      src:
            font-url('#{$file-path}.woff')                format('woff'),
            font-url('#{$file-path}.ttf')                 format('truetype'),
-           font-url('#{$file-path}.svg##{$font-family}') format('svg');
     } @else {
-      src: url('#{$file-path}.eot');
-      src: url('#{$file-path}.eot?#iefix')               format('embedded-opentype'),
+      src:
            url('#{$file-path}.woff')                     format('woff'),
            url('#{$file-path}.ttf')                      format('truetype'),
-           url('#{$file-path}.svg##{$font-family}')      format('svg');
     }
   }
 }
@@ -44,7 +40,7 @@
     display: block;
     content: " ";
     width: 100%;
-    padding-top: ($height / $width) * 100%;
+    padding-top: calc($height / $width) * 100%;
   }
 
   > *

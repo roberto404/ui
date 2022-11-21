@@ -433,12 +433,18 @@ button,
       &:last-child
       {
         @extend .mt-1\/2;
-        @extend .button.large;
+        font-size: .9em;
 
         &:not([class])
         {
-          @extend .button.red;
-          @extend .button.shadow;
+          background-color: $red;
+          box-shadow: 0 3px 9px 0 rgba(0, 0, 0, 0.2);
+
+          svg polygon,
+          svg path
+          {
+            fill: white;
+          }
         }
 
       }
@@ -449,9 +455,15 @@ button,
       button:not(:last-child)
       {
         @extend .block;
-        @extend .button.gray;
-        @extend .button.small;
+        font-size: .6em;
+        background-color: $gray;
         @extend .mb-1;
+
+        svg polygon,
+        svg path
+        {
+          fill: white;
+        }
       }
     }
   }

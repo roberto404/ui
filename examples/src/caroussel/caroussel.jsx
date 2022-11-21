@@ -11,7 +11,7 @@ import IconArrow from '../../../src/icon/mui/navigation/arrow_drop_up';
 
 /* !- Actions */
 
-import { setData } from '@1studio/ui/grid/actions';
+import { setData } from 'src/grid/actions';
 
 
 /* !- Constants */

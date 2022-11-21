@@ -17,7 +17,7 @@ import IconArrow from '../../../src/icon/mui/navigation/expand_more';
 
 import Connect from '../../../src/connect';
 import NestedList, { Menu as NestedListItem } from '../../../src/grid/pure/nestedList';
-import NestedListItem2 from '../../../src/grid/pure/nestedItems/menu';
+import NestedListItem2 from 'src/grid/pure/nestedItems/menu';
 
 
 

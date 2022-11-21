@@ -11,7 +11,7 @@ import Card from '../../../src/card';
 
 /* !- Actions */
 
-import { setData } from '@1studio/ui/grid/actions';
+import { setData } from 'src/grid/actions';
 
 
 /* !- Constants */

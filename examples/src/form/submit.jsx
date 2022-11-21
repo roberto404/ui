@@ -10,7 +10,7 @@ import Form,
 from '../../../src/form/pure';
 import InputStandalone from '../../../src/form/pure/inputStandalone';
 
-import Icon from '@1studio/ui/icon/mui/action/open_with';
+import Icon from 'src/icon/mui/action/open_with';
 
 /* !- Constants */
 

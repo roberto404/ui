@@ -4,14 +4,14 @@ import React from 'react';
 
 /* !- React Elements */
 
-import { Grid as GridView } from '@1studio/ui/view';
-import Connect from '@1studio/ui/grid/connect';
-// import Connect from '@1studio/ui/connect';
-import Grid from '@1studio/ui/grid/pure/grid';
+import { Grid as GridView } from 'src/view';
+import Connect from 'src/grid/connect';
+// import Connect from 'src/connect';
+import Grid from 'src/grid/pure/grid';
 
 import {
   Input,
-} from '@1studio/ui/form/pure/intl';
+} from 'src/form/pure/intl';
 
 
 /* !- Constatnts */

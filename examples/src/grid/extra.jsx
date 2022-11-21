@@ -4,16 +4,12 @@ import React from 'react';
 
 /* !- React Elements */
 
-import { Grid as GridView } from '@1studio/ui/view';
-import Connect from '@1studio/ui/grid/connect';
-import Grid from '@1studio/ui/grid/pure/grid';
-import GridDownload from '@1studio/ui/grid/pure/gridDownload';
-import GridOrder from '@1studio/ui/grid/pure/gridOrder';
-import GridSelectableButton from '@1studio/ui/grid/pure/gridSelectableButton';
-
-import {
-  Input,
-} from '@1studio/ui/form/pure/intl';
+import { Grid as GridView } from 'src/view';
+import Connect from 'src/grid/connect';
+import Grid from 'src/grid/pure/grid';
+import GridDownload from 'src/grid/pure/gridDownload';
+import GridOrder from 'src/grid/pure/gridOrder';
+import GridSelectableButton from 'src/grid/pure/gridSelectableButton';
 
 
 /* !- Constants */

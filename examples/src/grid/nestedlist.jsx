@@ -10,6 +10,7 @@ import Connect from '../../../src/connect';
 import NestedList from '../../../src/grid/pure/nestedList';
 import Messages from '../../../src/grid/pure/nestedItems/messages';
 import History from '../../../src/grid/pure/nestedItems/history';
+import Hierarchy from '../../../src/grid/pure/nestedItems/hierarchy';
 
 import IconArrow from '../../../src/icon/mui/navigation/expand_more';
 
@@ -17,11 +18,12 @@ import IconArrow from '../../../src/icon/mui/navigation/expand_more';
 /* !- Constants */
 
 import { DATE_FORMAT, DATETIME_FORMAT } from '../../../src/calendar/constants';
-import { DATA, DATA_MESSAGES, DATA_LOG, SETTINGS } from './constants';
+import { DATA, DATA_MESSAGES, DATA_LOG, DATA_HIERARCHY, SETTINGS } from './constants';
 
 const fakeApi = () => new Promise(resolve => resolve({ status: 'SUCCESS', records: DATA }));
 const fakeApiMessages = () => new Promise(resolve => resolve({ status: 'SUCCESS', records: DATA_MESSAGES }));
 const fakeApiLog = () => new Promise(resolve => resolve({ status: 'SUCCESS', records: DATA_LOG }));
+const fakeApiHierarchy = () => new Promise(resolve => resolve({ status: 'SUCCESS', records: DATA_HIERARCHY }));
 
 
 
@@ -108,10 +110,10 @@ const NestedListItemSimple = ({ index, children, level, items }) =>
 };
 
 
-const Example = () =>
+const ExampleLog = () =>
 (
   <GridView
-    id="sample-chat"
+    id="sample-log"
     api={fakeApiLog}
     settings={SETTINGS}
     responseParser={({ records }) => records.map(record => ({
@@ -133,10 +135,38 @@ const Example = () =>
   </GridView>
 );
 
+const ExampleHierarchy = () =>
+(
+  <GridView
+    id="hierarchy"
+    api={fakeApiHierarchy}
+    settings={SETTINGS}
+    responseParser={({ records }) => records.map(record => ({
+      ...record,
+      title: record.title || record.name,
+      dimension: record.dimension?.join(', '),
+      rotation: record.rotation?.join(', '),
+      position: record.position?.join(', '),
+    }))}
+  >
+    <div className="p-2">
+      <h2>Parent-Child hierarchy</h2>
+      <Connect>
+        <NestedList
+          nestedDataKey="name"
+          nestedDataParentKey="parent"
+          UI={Hierarchy}
+        />
+      </Connect>
+    </div>
+
+  </GridView>
+);
+
 /**
  * GridView + Filters + Connect + Paginate
  */
-const Example2 = () =>
+const Example = () =>
 (
   <div>
     <h1>NestedList</h1>
@@ -200,6 +230,10 @@ const Example2 = () =>
 
     </GridView>
 
+
+    <ExampleLog />
+
+    <ExampleHierarchy />
   </div>
 );
 
