@@ -163,6 +163,7 @@ class GridView extends Component
     }
 
     this.props.flush(this.id);
+    this.props.unsetValues({ id: FORM_PREFIX + this.id });
 
     if (typeof this.props.onWillUnmount === 'function')
     {
