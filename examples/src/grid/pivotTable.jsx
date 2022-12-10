@@ -30,6 +30,7 @@ class Example extends Component
       data: [],
     }
   }
+
   render()
   {
     const pivotData = pivotTable(this.state.data, 'id', count, ['visits', 'gender']) || [];
@@ -50,12 +51,21 @@ class Example extends Component
       return record;
     });
 
+    console.log(data);
+
+
     return (
       <GridView
         id="sample"
         api={fakeApi}
         className="p-4"
-        onLoad={({ grid }) => this.setState({ data: grid.data })}
+        onLoad={({ grid }) =>
+        {
+          if (!this.state.data.length)
+          {
+            this.setState({ data: grid.data })
+          }
+        }}
       >
         <Grid
           data={data}
@@ -63,7 +73,7 @@ class Example extends Component
             id: 'Date',
             '1': 'Male',
             '2': 'Female',
-            count: { title: 'Sum' },
+            summary: { title: 'Sum' },
           }}
         />
 

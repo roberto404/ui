@@ -35,7 +35,7 @@ const GridFieldGroupBy = (props, context) =>
 
   const fetchData = () =>
   {
-    const helper = typeof props.helper === 'function' ? props.helper() : props.helper;
+    const helper = typeof props.helper === 'function' ? props.helper() : props.helper || [];
     const grid = context.store.getState().grid[context.grid] || {};
 
     return (

@@ -47,6 +47,23 @@
     }
   }
 
+  .thead.small > div
+  {
+    left: 0;
+    padding: 0;
+    width: 100%;
+    border-bottom-color: $black-light;
+    margin-bottom: 0.5em;
+
+    > div
+    {
+      color: $black;
+      font-weight: bold;
+      padding: 0.5em 0;
+      font-size: 0.75em;
+    }
+  }
+
   // .tbody:not(.infinity) > div
   // .tbody.infinity > div > div > div
 
@@ -57,7 +74,7 @@
     display: flex;
     border-bottom: 1px solid $gray-light;
     // font-size: 0.9em;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
+    // transition: background-color 0.2s ease, border-color 0.2s ease;
 
     &:nth-child(2n)
     {
@@ -69,11 +86,6 @@
       border-bottom: none;
     }
 
-    &:hover:not(.active)
-    {
-      background-color: $gray-light;
-    }
-
     > div
     {
       padding: 0.85em 1em;
@@ -83,17 +95,54 @@
     }
   }
 
+  .tbody:not(.no-hover):not(.infinity) > div,
+  .tbody:not(.no-hover).infinity > div > div > div > div
+  {
+    &:hover:not(.active)
+    {
+      background-color: $gray-light;
+    }
+  }
+
+  .tbody.bg-nth-even:not(.infinity) > div,
+  .tbody.bg-nth-even.infinity > div > div > div > div
+  {
+    border-bottom: transparent;
+
+    &:nth-child(even):not(.active)
+    {
+      background-color: $white-dark;
+    }
+  }
+
+  .tbody.small:not(.infinity) > div,
+  .tbody.small.infinity > div > div > div > div
+  {
+    > div
+    {
+      font-size: 75%;
+      padding: 0.3em 0.85em;
+    }
+  }   
+
+
+
   .tbody .active
   {
     // background: rgba(0, 94, 212, 1);
     background: $blue-dark;
-    color: white;
+    // color: white;
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
 
     // background: linear-gradient(to left, rgba(169, 209, 255, 1) 4px, #e1efff 4px);
     // background: linear-gradient(to left, $yellow-dark 4px, $yellow-light 4px);
     border-bottom: 1px solid $white-dark;
+
+    *
+    {
+      color: white;
+    }
   }
 
   .thead .checkbox,

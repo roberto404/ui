@@ -1,6 +1,6 @@
 
 import React from 'react';
-import classNames from 'classnames';
+import simplify from '@1studio/utils/math/simplify';
 
 
 /* !- React Elements */
@@ -33,8 +33,27 @@ export const DATA = [
 
 export const SETTINGS =
 {
-  // hook:
-  // {},
+  hook:
+  {
+    title:
+    {
+      title: "Name",
+      width: '80%',
+      align: 'left',
+    },
+    size: {
+      title: 'Size',
+      format: ({ record }) => <span className="text-gray-dark">{simplify(parseInt(record.size), 1024, [' B', ' KB', ' MB', ' GB'])}</span>,
+      align: 'right',
+      width: '10%',
+    },
+    ext:
+    {
+      title:  'Kind',
+      align: 'left',
+      width: '10%',
+    }
+  },
   // helper:
   // {},
   paginate:
@@ -76,6 +95,7 @@ const Example = () =>
     api={fakeApi}
     settings={SETTINGS}
     onLoad="selectFirst"
+    className="p-4"
   >
 
     {/* Add new + Filters */}
@@ -99,6 +119,23 @@ const Example = () =>
     </div>
 
 
+
+    {/* Table-View */}
+
+    <h2>List view small class</h2>
+    <Connect>
+      <Grid
+        className="no-select"
+        headClassName="thead small"
+        bodyClassName="tbody small no-hover bg-nth-even"
+        infinity
+        selectable
+        onDoubleClickCell={(record, column) => console.log(record, column)}
+        onContextClickCell={(record, column) => console.log(record, column)}
+      />
+    </Connect>
+
+
     {/* List-View */}
 
     <Connect>
@@ -113,6 +150,7 @@ const Example = () =>
         expandSelect
       />
     </Connect>
+
 
 
   </GridView>

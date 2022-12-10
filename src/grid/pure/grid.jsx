@@ -529,6 +529,8 @@ class Grid extends Component
   {
     const {
       onClickCell,
+      onDoubleClickCell,
+      onContextClickCell,
       data,
       helper,
       hook,
@@ -557,7 +559,9 @@ class Grid extends Component
     return (
       <div
         key={column}
-        onClick={() => onClickCell(record, column)}
+        onClick={event => onClickCell(record, column, event)}
+        onDoubleClick={event => onDoubleClickCell(record, column, event)}
+        onContextMenu={event => onContextClickCell(record, column, event)}
         style={{
           textAlign: (typeof columnHook.align !== 'undefined') ?
             columnHook.align : 'center',
@@ -1031,6 +1035,10 @@ Grid.defaultProps =
   rowElement: ({ children, onClick, data, className }) =>
     <div className={className} onClick={onClick}>{children}</div>,
   onClickCell()
+  {},
+  onDoubleClickCell()
+  {},
+  onContextClickCell()
   {},
   onChangeOrder()
   {},

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import importJs from '@1studio/utils/window/importJs';
-import underscroreToCamelCase from '@1studio/utils/string/underscroreToCamelCase';
+import snakeToCamelCase from '@1studio/utils/string/snakeToCamelCase';
 
 
 import {
@@ -143,7 +143,7 @@ class Map extends Component
     // Add listeners
     GOOGLE_MAPS_EVENTS.forEach((eventName) =>
     {
-      const eventPropName = `on${underscroreToCamelCase(eventName)}`;
+      const eventPropName = `on${snakeToCamelCase(eventName, true)}`;
 
       if (this.props[eventPropName])
       {
