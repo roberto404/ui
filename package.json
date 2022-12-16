@@ -83,7 +83,7 @@
     "sinon": "4.1.2"
   },
   "dependencies": {
-    "@1studio/utils": "4.21.0",
+    "@1studio/utils": "4.21.2",
     "@tinymce/tinymce-react": "2.5.0",
     "array-move": "3.0.1",
     "browserstack-local": "1.4.8",

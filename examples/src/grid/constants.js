@@ -90,6 +90,12 @@ export const SETTINGS =
       format: ({ value, helper }, config = {}) =>
         ((helper.gender) ? helper.gender[value] || value : value),
     },
+    custom:
+    {
+      title: 'Visit Sort',
+      format: ({ record }) => record.visits,
+      sort: (a, b) => new Date(b.visits).getTime() < new Date(a.visits).getTime(),
+    },
   },
   helper:
   {

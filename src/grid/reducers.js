@@ -291,11 +291,31 @@ const reducers = (state = {}, action = {}) =>
       {
         const model = getModel(state, action);
 
-        // @todo column props? v a model ellenőrzi?
-
         if ( typeof action.order === 'string')
         {
-          model.order = { column: action.order };
+          const { hook } = action.grid ? state[action.grid] : state;
+
+          if (hook && hook[action.order] && hook[action.order].sort)
+          {
+            model.order = { column: hook[action.order].sort };
+
+            const nextState = createNextState(state, model, action.grid);
+
+            if (action.grid)
+            {
+              nextState[action.grid].orderColumn = action.order;
+            }
+            else
+            {
+              nextState.orderColumn = action.order;
+            }
+
+            return nextState;
+          }
+          else
+          {
+            model.order = { column: action.order };
+          }
         }
         else
         {
