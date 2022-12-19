@@ -86,6 +86,7 @@ import ChartCoordinate from './chart/coordinate';
 import ChartComplex from './chart/complex';
 import ChartBar from './chart/barChart';
 import ChartDonut from './chart/donut';
+import ChartPie from './chart/pie';
 import ChartGithub from './chart/github';
 
 
@@ -188,6 +189,7 @@ export default {
     coordinate: ChartCoordinate,
     complex: ChartComplex,
     bar: ChartBar,
+    pie: ChartPie,
     donut: ChartDonut,
     github: ChartGithub,
   },
