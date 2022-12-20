@@ -69,8 +69,11 @@ import SrcIconMuiContentCreate from '../../../src/icon/mui/content/create';
 import SrcIconMuiContentInventory2 from '../../../src/icon/mui/content/inventory_2';
 import SrcIconMuiContentRemovecircle_outline from '../../../src/icon/mui/content/remove_circle_outline';
 import SrcIconMuiContentReply from '../../../src/icon/mui/content/reply';
+import SrcIconMuiHardverRouter from '../../../src/icon/mui/hardver/router';
 import SrcIconMuiHardverKeyboardreturn from '../../../src/icon/mui/hardver/keyboard_return';
 import SrcIconMuiHardverKeyboardbackspace from '../../../src/icon/mui/hardver/keyboard_backspace';
+import SrcIconMuiHardverHarddrive from '../../../src/icon/mui/hardver/hard_drive';
+import SrcIconMuiHardverDns from '../../../src/icon/mui/hardver/dns';
 import SrcIconMuiImageAddphoto_alternate from '../../../src/icon/mui/image/add_photo_alternate';
 import SrcIconMuiImagePhotolibrary from '../../../src/icon/mui/image/photo_library';
 import SrcIconMuiImageTune from '../../../src/icon/mui/image/tune';
@@ -159,6 +162,7 @@ import SrcIconMuiActionBackup from '../../../src/icon/mui/action/backup';
 import SrcIconMuiActionSearch from '../../../src/icon/mui/action/search';
 import SrcIconMuiActionHome from '../../../src/icon/mui/action/home';
 import SrcIconMuiActionFace from '../../../src/icon/mui/action/face';
+import SrcIconMuiTextFolder from '../../../src/icon/mui/text/folder';
 import SrcIconMuiTextDesignservices from '../../../src/icon/mui/text/design_services';
 import SrcIconMuiCommunicationLocationon from '../../../src/icon/mui/communication/location_on';
 import SrcIconMuiCommunicationPhone from '../../../src/icon/mui/communication/phone';
@@ -600,6 +604,12 @@ import SrcIconMuiCommonActionsdrotation from '../../../src/icon/mui/commonAction
       
 
         <div className="col-1-5">
+        <SrcIconMuiHardverRouter className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/hardver/router</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiHardverKeyboardreturn className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/hardver/keyboard_return</div>
         </div>
@@ -608,6 +618,18 @@ import SrcIconMuiCommonActionsdrotation from '../../../src/icon/mui/commonAction
         <div className="col-1-5">
         <SrcIconMuiHardverKeyboardbackspace className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/hardver/keyboard_backspace</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiHardverHarddrive className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/hardver/hard_drive</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiHardverDns className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/hardver/dns</div>
         </div>
       
 
@@ -1136,6 +1158,12 @@ import SrcIconMuiCommonActionsdrotation from '../../../src/icon/mui/commonAction
         <div className="col-1-5">
         <SrcIconMuiActionFace className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/face</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiTextFolder className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/text/folder</div>
         </div>
       
 
