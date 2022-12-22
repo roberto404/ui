@@ -48,6 +48,7 @@ import GridWithoutGrid from './grid/withoutGrid';
 import GridNestedList from './grid/nestedList';
 import GridNestedListMenu from './grid/nestedListMenu';
 import GridNestedListAccordion from './grid/nestedListAccordion';
+import GridSkeleton from './grid/skeleton';
 
 
 /* !- Example: Layer */
@@ -151,6 +152,7 @@ export default {
     paginate: GridPaginate,
     filters: GridFilters,
     search: GridSearch,
+    skeleton: GridSkeleton,
     extra: GridExtra,
     complex: GridComplex,
     list: GridList,

@@ -121,12 +121,20 @@ class Connect extends Component
 
     if (this.isEmpty && this.props.skeleton)
     {
-      return (
+      const skeleton = (
         <div>
           { produceNumericArray(1, this.props.skeletonRepeat).map(i => React.cloneElement(this.props.skeleton, { key: i }) ) }
         </div>
       )
-      return this.props.skeleton;
+
+      if (this.props.store === 'grid')
+      {
+        props.noResults = skeleton;
+      }
+      else
+      {
+        return skeleton;
+      }
     }
 
     return children ? React.cloneElement(children, props) : React.createElement(UI, props);

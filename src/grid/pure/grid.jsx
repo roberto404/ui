@@ -793,9 +793,7 @@ class Grid extends Component
     }
 
     return (
-      <div className="noResults">
-        { noResults }
-      </div>
+      <div>{ noResults }</div>
     );
   };
 
@@ -1015,6 +1013,7 @@ Grid.propTypes =
   infinity: PropTypes.bool,
 };
 
+
 /**
  * @type {Object}
  */
@@ -1031,7 +1030,7 @@ Grid.defaultProps =
   helper: {},
   orderDirection: '',
   orderColumn: '',
-  noResults: 'No Results.',
+  noResults: <div className='v-center py-1/2 text-gray'>No Results.</div>,
   rowElement: ({ children, onClick, data, className }) =>
     <div className={className} onClick={onClick}>{children}</div>,
   onClickCell()
