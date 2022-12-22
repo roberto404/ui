@@ -87,7 +87,7 @@ const Card = ({
       layer.method !== 'popover'
       ||
       (
-        event.relatedTarget &&
+        event.relatedTarget && event.currentTarget && typeof(event.currentTarget.contains) === 'function' &&
         (
           event.currentTarget.contains(event.relatedTarget)
           || event.relatedTarget === cardElement
