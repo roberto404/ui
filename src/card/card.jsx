@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { createMarkers } from './marker';
 import 'element-closest-polyfill';
+import isElement from 'lodash/isElement';
 
 
 /* !- React Actions */
@@ -87,7 +88,7 @@ const Card = ({
       layer.method !== 'popover'
       ||
       (
-        event.relatedTarget && event.currentTarget && typeof(event.currentTarget.contains) === 'function' &&
+        event.relatedTarget && event.currentTarget && typeof(event.currentTarget.contains) === 'function' && isElement(event.relatedTarget) &&
         (
           event.currentTarget.contains(event.relatedTarget)
           || event.relatedTarget === cardElement
