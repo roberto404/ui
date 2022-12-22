@@ -99,6 +99,7 @@ const Card = ({
       return;
     }
 
+    event.stopPropagation(); // need before remove listener
     event.currentTarget.removeEventListener('mouseout', onMouseOutLayerHandler);
     store.dispatch(flush());
   }
