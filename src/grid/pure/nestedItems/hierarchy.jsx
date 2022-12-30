@@ -1,6 +1,5 @@
 
 import React, { Component } from 'react';
-import moment from 'moment';
 import classNames from 'classnames';
 
 
@@ -25,9 +24,25 @@ const intlRegex = new RegExp(/^[a-z0-9.]+$/);
 /**
  * [Messages description]
  */
-const Hierarchy = ({ index, children, level, items, isFirst, isLast, model, intl, nestedDataKey, onClickControllerA, onClickControllerB }) =>
+const Hierarchy = (props) =>
 {
+  const {
+    index,
+    children,
+    level,
+    items,
+    isFirst,
+    isLast,
+    model,
+    intl,
+    nestedDataKey,
+    onClickControllerA,
+    onClickControllerB,
+  } = props;
+
   const record = model.data.find(record => record[nestedDataKey] === index.substring(1)) || {};
+
+  console.warn(record);
 
   const {
     name,
@@ -40,6 +55,30 @@ const Hierarchy = ({ index, children, level, items, isFirst, isLast, model, intl
   } = record;
 
   const isParentChild = level || children.length;
+
+  const onClick = () =>
+  {
+    if (typeof props.onClick === 'function')
+    {
+      props.onClick(record);
+    }
+  }
+
+  const onMouseEnter = () =>
+  {
+    if (typeof props.onMouseEnter === 'function')
+    {
+      props.onMouseEnter(record);
+    }
+  }
+
+  const onMouseLeave = () =>
+  {
+    if (typeof props.onMouseLeave === 'function')
+    {
+      props.onMouseLeave(record);
+    }
+  }
 
 
   const icon = items.icon || (
@@ -58,12 +97,20 @@ const Hierarchy = ({ index, children, level, items, isFirst, isLast, model, intl
 
   return (
     <div>
-      <div className={classNames({ "text-black-light fill-black-light": visible === false })}>
+      <div
+        className={classNames({ "text-black-light fill-black-light pointer": visible === false })}
+        onClick={onClick}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      >
+
         <div className='h-center no-select'>
 
           { icon }
 
-          <div className="bold grow p-1/2 px-1 firstcase">
+          <div
+            className="bold grow p-1/2 px-1 firstcase"
+          >
             { title && intlRegex.test(title) ? intl.formatMessage({ id: title }) : title }
           </div>
 
@@ -81,31 +128,31 @@ const Hierarchy = ({ index, children, level, items, isFirst, isLast, model, intl
 
         <div
           className={classNames({
-            "pl-2 pb-2 my-1": true,
+            "pl-2 pt-1": true,
             "border-left border-blue-dark border-2": isParentChild && (children.length || !isLast),
           })}
           style={{ marginLeft: 9 }}
         >
-          <div className='flex'>
+          <div className='flex mb-2 text-s'>
 
             { material &&
-            <div className='v-center pb-1'>
+            <div className='h-center'>
               <IconMaterial className="w-3/2 h-3/2" />
-              <div className="text-s px-1 firstcase">{material}</div>
+              <div className="text-s px-1/2 pr-1 firstcase">{material}</div>
             </div>
             }
 
             { dimension &&
-            <div className='v-center pb-1'>
-              <IconDimension className="w-3/2 h-3/2" />
-              <div className="text-s px-1">{dimension}</div>
+            <div className='h-center'>
+              <IconDimension className="@h-1 @w-1" />
+              <div className="text-s px-1/2 pr-1">{dimension}</div>
             </div>
             }
 
           </div>
 
 
-          <div className='flex'>
+          {/* <div className='flex'>
             { rotation &&
               <div className='v-center pb-1'>
                 <IconRotation className="w-3/2 h-3/2" />
@@ -119,7 +166,7 @@ const Hierarchy = ({ index, children, level, items, isFirst, isLast, model, intl
                 <div className="text-s px-1">{position}</div>
               </div>
             }
-          </div>
+          </div> */}
 
         </div>
       </div>

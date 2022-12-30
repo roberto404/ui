@@ -608,7 +608,7 @@
 
   &.border-none
   {
-    input,
+    input:not([type="radio"]):not([type="checkbox"]),
     select
     {
       border-width: 0px;
@@ -702,12 +702,21 @@
     }
   }
 
-  &.postfix-inside
+  &.postfix-inside:not(.postfix-float)
   {
     select,
     input
     {
       padding-right: 4rem !important;
+    }
+  }
+
+  &.postfix-float
+  {
+    input:hover ~ .postfix,
+    input:focus ~ .postfix
+    {
+      display: none;
     }
   }
 
@@ -788,6 +797,23 @@
     }
   }
 
+
+  &.gray
+  {
+    input:not([type="radio"]):not([type="checkbox"])
+    {
+      background-color: $gray-light;
+    }    
+  }
+
+  &.small
+  {
+    input:not([type="radio"]):not([type="checkbox"])
+    {
+      padding: 0.3em 0.5em;
+      font-size: .7em;
+    }  
+  }
 
 
   /* !- Slider */
