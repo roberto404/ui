@@ -1,6 +1,7 @@
 
     import React from 'react';
 import SrcIconMuiMapsMylocation from '../../../src/icon/mui/maps/my_location';
+import SrcIconMuiMapsLayers from '../../../src/icon/mui/maps/layers';
 import SrcIconMuiMapsMenubook from '../../../src/icon/mui/maps/menu_book';
 import SrcIconMuiAvPlayarrow from '../../../src/icon/mui/av/play_arrow';
 import SrcIconMuiAvPause from '../../../src/icon/mui/av/pause';
@@ -80,6 +81,8 @@ import SrcIconMuiImageTune from '../../../src/icon/mui/image/tune';
 import SrcIconMuiImageHideimage from '../../../src/icon/mui/image/hide_image';
 import SrcIconMuiImageImagesearch from '../../../src/icon/mui/image/image_search';
 import SrcIconMuiImageImage from '../../../src/icon/mui/image/image';
+import SrcIconMuiImageCamera from '../../../src/icon/mui/image/camera';
+import SrcIconMuiImageGradient from '../../../src/icon/mui/image/gradient';
 import SrcIconMuiImageLens from '../../../src/icon/mui/image/lens';
 import SrcIconMuiImageContrast from '../../../src/icon/mui/image/contrast';
 import SrcIconMuiImageCenterfocus_strong from '../../../src/icon/mui/image/center_focus_strong';
@@ -131,6 +134,7 @@ import SrcIconMuiActionFlaky from '../../../src/icon/mui/action/flaky';
 import SrcIconMuiActionDashboard from '../../../src/icon/mui/action/dashboard';
 import SrcIconMuiActionHidesource from '../../../src/icon/mui/action/hide_source';
 import SrcIconMuiActionBook from '../../../src/icon/mui/action/book';
+import SrcIconMuiActionSelectall from '../../../src/icon/mui/action/select_all';
 import SrcIconMuiActionToday from '../../../src/icon/mui/action/today';
 import SrcIconMuiActionShoppingcart from '../../../src/icon/mui/action/shopping_cart';
 import SrcIconMuiActionInfo from '../../../src/icon/mui/action/info';
@@ -162,8 +166,12 @@ import SrcIconMuiActionBackup from '../../../src/icon/mui/action/backup';
 import SrcIconMuiActionSearch from '../../../src/icon/mui/action/search';
 import SrcIconMuiActionHome from '../../../src/icon/mui/action/home';
 import SrcIconMuiActionFace from '../../../src/icon/mui/action/face';
+import SrcIconMuiTextViewweek from '../../../src/icon/mui/text/view_week';
 import SrcIconMuiTextFolder from '../../../src/icon/mui/text/folder';
 import SrcIconMuiTextDesignservices from '../../../src/icon/mui/text/design_services';
+import SrcIconMuiTextGridview from '../../../src/icon/mui/text/grid_view';
+import SrcIconMuiTextViewcarousel from '../../../src/icon/mui/text/view_carousel';
+import SrcIconMuiTextList from '../../../src/icon/mui/text/list';
 import SrcIconMuiCommunicationLocationon from '../../../src/icon/mui/communication/location_on';
 import SrcIconMuiCommunicationPhone from '../../../src/icon/mui/communication/phone';
 import SrcIconMuiCommunicationMessage from '../../../src/icon/mui/communication/message';
@@ -192,6 +200,12 @@ import SrcIconMuiCommonActionsdrotation from '../../../src/icon/mui/commonAction
         <div className="col-1-5">
         <SrcIconMuiMapsMylocation className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/maps/my_location</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiMapsLayers className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/maps/layers</div>
         </div>
       
 
@@ -670,6 +684,18 @@ import SrcIconMuiCommonActionsdrotation from '../../../src/icon/mui/commonAction
       
 
         <div className="col-1-5">
+        <SrcIconMuiImageCamera className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/image/camera</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiImageGradient className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/image/gradient</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiImageLens className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/image/lens</div>
         </div>
@@ -976,6 +1002,12 @@ import SrcIconMuiCommonActionsdrotation from '../../../src/icon/mui/commonAction
       
 
         <div className="col-1-5">
+        <SrcIconMuiActionSelectall className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/select_all</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiActionToday className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/today</div>
         </div>
@@ -1162,6 +1194,12 @@ import SrcIconMuiCommonActionsdrotation from '../../../src/icon/mui/commonAction
       
 
         <div className="col-1-5">
+        <SrcIconMuiTextViewweek className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/text/view_week</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiTextFolder className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/text/folder</div>
         </div>
@@ -1170,6 +1208,24 @@ import SrcIconMuiCommonActionsdrotation from '../../../src/icon/mui/commonAction
         <div className="col-1-5">
         <SrcIconMuiTextDesignservices className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/text/design_services</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiTextGridview className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/text/grid_view</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiTextViewcarousel className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/text/view_carousel</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiTextList className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/text/list</div>
         </div>
       
 
