@@ -42,8 +42,6 @@ const Hierarchy = (props) =>
 
   const record = model.data.find(record => record[nestedDataKey] === index.substring(1)) || {};
 
-  console.warn(record);
-
   const {
     name,
     title,
@@ -133,7 +131,7 @@ const Hierarchy = (props) =>
           })}
           style={{ marginLeft: 9 }}
         >
-          <div className='flex mb-2 text-s'>
+          <div className='flex pb-2 text-s'>
 
             { material &&
             <div className='h-center'>
@@ -168,10 +166,12 @@ const Hierarchy = (props) =>
             }
           </div> */}
 
+          { level >= 1 && children }
+
         </div>
       </div>
 
-      { children }
+      { level < 1 && children }
 
     </div>
   )
