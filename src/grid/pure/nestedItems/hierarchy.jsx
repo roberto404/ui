@@ -112,14 +112,14 @@ const Hierarchy = (props) =>
             { title && intlRegex.test(title) ? intl.formatMessage({ id: title }) : title }
           </div>
 
-          <IconFitToZoom className="fill-black-light w-2 h-2 mx-1 pointer hover:fill-black" onClick={() => onClickControllerA(record)} />
+          <IconFitToZoom className="fill-black-light w-2 h-2 mx-1 pointer hover:fill-black" onClick={(event) => onClickControllerA(record, event)} />
           
           { visible !== false &&
-          <IconVisibility className="fill-black-light w-2 h-2 pointer hover:fill-black" onClick={() => onClickControllerB(record)} />
+          <IconVisibility className="fill-black-light w-2 h-2 pointer hover:fill-black" onClick={(event) => onClickControllerB(record, event)} />
           }
 
           { visible === false &&
-          <IconVisibilityHide className="fill-black-light w-2 h-2 pointer hover:fill-black" onClick={() => onClickControllerB(record)} />
+          <IconVisibilityHide className="fill-black-light w-2 h-2 pointer hover:fill-black" onClick={(event) => onClickControllerB(record, event)} />
           }
 
         </div>
