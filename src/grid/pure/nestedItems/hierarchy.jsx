@@ -54,27 +54,27 @@ const Hierarchy = (props) =>
 
   const isParentChild = level || children.length;
 
-  const onClick = () =>
+  const onClick = (event) =>
   {
     if (typeof props.onClick === 'function')
     {
-      props.onClick(record);
+      props.onClick(record, event);
     }
   }
 
-  const onMouseEnter = () =>
+  const onMouseEnter = (event) =>
   {
     if (typeof props.onMouseEnter === 'function')
     {
-      props.onMouseEnter(record);
+      props.onMouseEnter(record, event);
     }
   }
 
-  const onMouseLeave = () =>
+  const onMouseLeave = (event) =>
   {
     if (typeof props.onMouseLeave === 'function')
     {
-      props.onMouseLeave(record);
+      props.onMouseLeave(record, event);
     }
   }
 
@@ -150,7 +150,7 @@ const Hierarchy = (props) =>
           </div>
 
 
-          {/* <div className='flex'>
+          <div className='flex'>
             { rotation &&
               <div className='v-center pb-1'>
                 <IconRotation className="w-3/2 h-3/2" />
@@ -164,7 +164,7 @@ const Hierarchy = (props) =>
                 <div className="text-s px-1">{position}</div>
               </div>
             }
-          </div> */}
+          </div>
 
           { level >= 1 && children }
 
