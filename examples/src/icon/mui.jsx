@@ -83,6 +83,7 @@ import SrcIconMuiImageImagesearch from '../../../src/icon/mui/image/image_search
 import SrcIconMuiImageImage from '../../../src/icon/mui/image/image';
 import SrcIconMuiImageCamera from '../../../src/icon/mui/image/camera';
 import SrcIconMuiImageGradient from '../../../src/icon/mui/image/gradient';
+import SrcIconMuiImageCrop16_9 from '../../../src/icon/mui/image/crop_16_9';
 import SrcIconMuiImageLens from '../../../src/icon/mui/image/lens';
 import SrcIconMuiImageContrast from '../../../src/icon/mui/image/contrast';
 import SrcIconMuiImageCenterfocus_strong from '../../../src/icon/mui/image/center_focus_strong';
@@ -124,6 +125,7 @@ import SrcIconMuiActionRefresh from '../../../src/icon/mui/action/refresh';
 import SrcIconMuiActionCheckcircle from '../../../src/icon/mui/action/check_circle';
 import SrcIconMuiActionExplore from '../../../src/icon/mui/action/explore';
 import SrcIconMuiActionBugreport from '../../../src/icon/mui/action/bug_report';
+import SrcIconMuiActionMovedown from '../../../src/icon/mui/action/move_down';
 import SrcIconMuiActionSettingsethernet from '../../../src/icon/mui/action/settings_ethernet';
 import SrcIconMuiActionEvent from '../../../src/icon/mui/action/event';
 import SrcIconMuiActionShoppingcart_outlined from '../../../src/icon/mui/action/shopping_cart_outlined';
@@ -144,6 +146,7 @@ import SrcIconMuiActionHomefilled from '../../../src/icon/mui/action/home_filled
 import SrcIconMuiActionLockopen from '../../../src/icon/mui/action/lock_open';
 import SrcIconMuiActionCalendartoday from '../../../src/icon/mui/action/calendar_today';
 import SrcIconMuiActionRule from '../../../src/icon/mui/action/rule';
+import SrcIconMuiActionMoveup from '../../../src/icon/mui/action/move_up';
 import SrcIconMuiActionLock from '../../../src/icon/mui/action/lock';
 import SrcIconMuiActionAssignmentturned_in from '../../../src/icon/mui/action/assignment_turned_in';
 import SrcIconMuiActionExpand from '../../../src/icon/mui/action/expand';
@@ -696,6 +699,12 @@ import SrcIconMuiCommonActionsdrotation from '../../../src/icon/mui/commonAction
       
 
         <div className="col-1-5">
+        <SrcIconMuiImageCrop16_9 className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/image/crop_16_9</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiImageLens className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/image/lens</div>
         </div>
@@ -942,6 +951,12 @@ import SrcIconMuiCommonActionsdrotation from '../../../src/icon/mui/commonAction
       
 
         <div className="col-1-5">
+        <SrcIconMuiActionMovedown className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/move_down</div>
+        </div>
+      
+
+        <div className="col-1-5">
         <SrcIconMuiActionSettingsethernet className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/settings_ethernet</div>
         </div>
@@ -1058,6 +1073,12 @@ import SrcIconMuiCommonActionsdrotation from '../../../src/icon/mui/commonAction
         <div className="col-1-5">
         <SrcIconMuiActionRule className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/action/rule</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiActionMoveup className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/action/move_up</div>
         </div>
       
 
