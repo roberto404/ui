@@ -107,20 +107,22 @@ const Hierarchy = (props) =>
           { icon }
 
           <div
-            className="bold grow p-1/2 px-1 firstcase"
+            className="bold grow p-1/2 px-1 firstcase overflow"
           >
             { title && intlRegex.test(title) ? intl.formatMessage({ id: title }) : title }
           </div>
 
-          <IconFitToZoom className="fill-black-light w-2 h-2 mx-1 pointer hover:fill-black" onClick={(event) => onClickControllerA(record, event)} />
-          
-          { visible !== false &&
-          <IconVisibility className="fill-black-light w-2 h-2 pointer hover:fill-black" onClick={(event) => onClickControllerB(record, event)} />
-          }
+          <div className="w-6 flex" style={{ _minWidth: '5rem' }}>
+            <IconFitToZoom className="fill-black-light w-2 h-2 mx-1 pointer hover:fill-black" onClick={(event) => onClickControllerA(record, event)} />
+            
+            { visible !== false &&
+            <IconVisibility className="fill-black-light w-2 h-2 pointer hover:fill-black" onClick={(event) => onClickControllerB(record, event)} />
+            }
 
-          { visible === false &&
-          <IconVisibilityHide className="fill-black-light w-2 h-2 pointer hover:fill-black" onClick={(event) => onClickControllerB(record, event)} />
-          }
+            { visible === false &&
+            <IconVisibilityHide className="fill-black-light w-2 h-2 pointer hover:fill-black" onClick={(event) => onClickControllerB(record, event)} />
+            }
+          </div>
 
         </div>
 

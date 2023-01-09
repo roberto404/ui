@@ -36,7 +36,7 @@ export const getNestedData = (data = [], propValue, propKey = 'id', propParentKe
 /**
  * [Parent description]
  */
-class Parent extends Component
+export class Parent extends Component
 {
   constructor(props)
   {
@@ -56,12 +56,12 @@ class Parent extends Component
     const rotate = 270 * (+!this.state.active);
 
     return (
-      <div style={{ padding: `0 0 1.5rem ${this.props.level * 2}rem` }}>
-        <div className="h-center pointer" onClick={this.onClickButtonHandler}>
+      <div style={{ padding: `0 0 1.5rem ${this.props.level * 2}rem` }} className={this.props.className}>
+        <div className="h-center v-justify pointer" onClick={this.onClickButtonHandler}>
           <IconArrow
             className={`w-2 h-2 rotate-${rotate}`}
             style={{ transition: 'all 0.2s ease-out' }}/>
-          <span className="pl-1 grow">{this.props.title}</span>
+          <div className="pl-1">{this.props.title}</div>
         </div>
         { this.state.active === true &&
         <div className="pt-1">
