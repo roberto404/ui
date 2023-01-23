@@ -102,6 +102,7 @@ const Example = ({}, { store }) =>
         <GridSearch
           fields={fieldData}
           prefix="?"
+          nested={false}
         />
       </div>
 

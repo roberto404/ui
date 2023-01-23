@@ -25,7 +25,14 @@ import IconSearch from '../../icon/mui/action/search';
 
 /* !- Constants */
 
-import { OPERATOR_REGEX, LOGICAL_REGEX, OPERATOR_KEYS, OPERATOR_UNIQUE } from '../../grid/filters';
+import {
+  OPERATOR_REGEX,
+  LOGICAL_REGEX,
+  OPERATOR_KEYS,
+  OPERATOR_UNIQUE,
+  filterToQuery,
+  filtersToQuery,
+} from '../../grid/filters';
 
 
 /**
@@ -148,17 +155,25 @@ export const NestedCollectionItem = ({
 /**
  * Advance Search Dialog
  */
-export const GridSearchDialog = ({ id, fields, prefix, draggable, onClick }, { store }) =>
+export const GridSearchDialog = (
+{
+  id,
+  fields,
+  prefix,
+  draggable,
+  onClick,
+  nested,
+},
+{
+  store,
+}) =>
 {
   const onClickApplyHandler = (event) =>
   {
     event.preventDefault();
 
     const collection = store.getState().form[`${id}-collection`];
-    const value = prefix +
-      collection
-        .map(i => i.field + i.operator + i.value)
-        .join('&');
+    const value = prefix + (nested ? filtersToQuery : filterToQuery)(collection);
 
 
     if (typeof onClick === 'function')
@@ -181,17 +196,25 @@ export const GridSearchDialog = ({ id, fields, prefix, draggable, onClick }, { s
     store.dispatch(flush());    
   };
 
+  let defaultValue = [{ field: fields[0].id, operator: OPERATOR_KEYS[0], value: '' }];
+
+  if (nested)
+  {
+    defaultValue = [defaultValue];
+  }
+
   return (
     <div className="w-640">
       <div className="mb-4 bold">Keresési feltételek:</div>
       <Collection
         id={`${id}-collection`}
-        UI={CollectionItem}
+        UI={nested ? NestedCollectionItem : CollectionItem}
         uiProps={{
           fields,
+          draggable,
         }}
         draggable={draggable}
-        value={[{ field: fields[0].id, operator: OPERATOR_KEYS[0], value: '' }]}
+        value={defaultValue}
       />
       <button className="primary w-auto mx-auto mb-1" onClick={onClickApplyHandler}>
         <IconSearch />
@@ -204,6 +227,7 @@ export const GridSearchDialog = ({ id, fields, prefix, draggable, onClick }, { s
 GridSearchDialog.defaultProps = {
   id: 'search',
   prefix: '',
+  nested: false,
 }
 
 GridSearchDialog.contextTypes = {
@@ -213,7 +237,19 @@ GridSearchDialog.contextTypes = {
 /**
  * Search Filter width advance button
  */
-const GridSearch = ({ id, fields, prefix, placeholder }, { store, grid }) =>
+const GridSearch = (
+  {
+    id,
+    fields,
+    prefix,
+    placeholder,
+    nested,
+  },
+  {
+    store,
+    grid,
+  }
+) =>
 {
   if (typeof fields === 'undefined' && grid)
   {
@@ -273,7 +309,7 @@ const GridSearch = ({ id, fields, prefix, placeholder }, { store, grid }) =>
     }
 
     store.dispatch(setValues({ id: `${id}-collection`, value }));
-    store.dispatch(dialog(<GridSearchDialog id={id} fields={fields} prefix={prefix} />));
+    store.dispatch(dialog(<GridSearchDialog id={id} fields={fields} prefix={prefix} nested={nested} />));
   };
 
   return (
@@ -295,6 +331,7 @@ GridSearch.propTypes =
   id: PropTypes.string,
   placeholder: PropTypes.string,
   prefix: PropTypes.string,
+  nested: PropTypes.bool,
 };
 
 GridSearch.defaultProps =
@@ -302,6 +339,7 @@ GridSearch.defaultProps =
   id: 'search',
   placeholder: 'Search term',
   prefix: '',
+  nested: false,
 };
 
 GridSearch.contextTypes =
