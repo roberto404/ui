@@ -317,11 +317,6 @@ class FormField extends Component
    */
   onChangeHandler = (value, event) =>
   {
-    if (!this.validate(value))
-    {
-      return;
-    }
-
     /**
      * If the client erase from string
      * @type {boolean|null}
@@ -333,6 +328,11 @@ class FormField extends Component
       id: this.props.id,
       value: this.props.format(value, reduce),
     };
+
+    if (!this.validate(payload.value))
+    {
+      return;
+    }
 
     const options = {
       reduce,
