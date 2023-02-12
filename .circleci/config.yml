@@ -2,6 +2,11 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+general:
+  branches:
+    only:
+      - master
+
 orbs:
   node: circleci/node@5.1.0
 
