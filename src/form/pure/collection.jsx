@@ -101,7 +101,7 @@ class Collection extends Field
         else
         {
           item[key] = (this.props.value.length && typeof this.props.value[0][key] !== 'undefined') ?
-            this.props.value[0][key] : undefined;
+            this.props.value[0][key] : keys[key];
         }
       });
     }
