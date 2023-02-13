@@ -27,6 +27,7 @@ import { CollectionItem, NestedCollectionItem } from '../../../src/grid/pure/gri
 import Grid from '../../../src/grid/pure/grid';
 
 import Connect from '../../../src/form/connect';
+import JsonCollection from './collectionJSON';
 
 
 
@@ -270,7 +271,13 @@ const Example = (props, { store }) =>
       { field: 'gender', operator: '==', value: 'male' },
       { field: 'id', operator: '<', value: '10' },
     ],
+    props: {
+      discounts: [{ value: '0', method: 'ft', subject: 'cart' }],
+      filters: [[{ field: 'discount', operator: '=', value: '0' }]],
+      validators: [[{ field: 'totalSaleGross', operator: '=', value: '0' }]],
+    },
   }, 'example'));
+
 
 
 
@@ -387,6 +394,10 @@ const Example = (props, { store }) =>
           },
         ]}
       />
+
+
+      <h2>Multiple keys Json collection</h2>
+      <JsonCollection />
 
 
       <h2>Use Case #1</h2>

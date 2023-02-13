@@ -81,16 +81,18 @@ class Collection extends Field
 
     let item;
 
+    const def = this.props.value || this.state.value;
+
     // nested collection add new array
-    if (Array.isArray(this.props.value[0]))
+    if (Array.isArray(def[0]))
     {
-      item = this.props.value[0]
+      item = def[0];
     }
     else
     {
       item = {};
 
-      const keys = this.state.value.length ? this.state.value[0] : this.props.value[0];
+      const keys = this.state.value.length ? this.state.value[0] : def[0];
 
       Object.keys(keys).forEach((key) =>
       {
@@ -100,8 +102,8 @@ class Collection extends Field
         }
         else
         {
-          item[key] = (this.props.value.length && typeof this.props.value[0][key] !== 'undefined') ?
-            this.props.value[0][key] : keys[key];
+          item[key] = (def.length && typeof def[0][key] !== 'undefined') ?
+            def[0][key] : keys[key];
         }
       });
     }
