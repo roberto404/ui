@@ -8,7 +8,6 @@ import arrayMove from 'array-move';
 
 import Field from '../../form/formField';
 import IconAdd from '../../icon/mui/content/add_circle_outline';
-// import IconRemove from '../../icon/mui/content/clear';
 import IconRemove from '../../icon/mui/content/remove_circle_outline';
 
 
@@ -159,7 +158,10 @@ class Collection extends Field
         )}
 
         { (this.state.value.length > 0 || this.props.value) &&
-          <button className="action" onClick={this.onClickAddHandler}><IconAdd /></button>
+          <button className="initial h-center bg-green rounded-l fill-white text-white p-1/4 px-1/2 pr-1 text-xs pointer" onClick={this.onClickAddHandler} style={{ width: 'auto' }}>
+            <IconAdd className="w-2 h-2 mr-1/2 no-events" />
+            <div className="no-events">{Array.isArray(this.state.value?.[0]) ? 'VAGY': 'ÉS'}</div>
+          </button>
         }
 
         { this.state.error &&
