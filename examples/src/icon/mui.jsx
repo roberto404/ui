@@ -27,6 +27,16 @@ import SrcIconMuiNotificationPriorityhigh from '../../../src/icon/mui/notificati
 import SrcIconMuiAlertError from '../../../src/icon/mui/alert/error';
 import SrcIconMuiAlertErroroutline from '../../../src/icon/mui/alert/error-outline';
 import SrcIconMuiAlertWarning from '../../../src/icon/mui/alert/warning';
+import SrcIconMuiBusinessQrcode_scanner from '../../../src/icon/mui/business/qr_code_scanner';
+import SrcIconMuiBusinessSell from '../../../src/icon/mui/business/sell';
+import SrcIconMuiBusinessBarcode from '../../../src/icon/mui/business/barcode';
+import SrcIconMuiBusinessRedeem from '../../../src/icon/mui/business/redeem';
+import SrcIconMuiBusinessCalculate from '../../../src/icon/mui/business/calculate';
+import SrcIconMuiBusinessBarchart from '../../../src/icon/mui/business/bar_chart';
+import SrcIconMuiBusinessReceiptlong from '../../../src/icon/mui/business/receipt_long';
+import SrcIconMuiBusinessStore from '../../../src/icon/mui/business/store';
+import SrcIconMuiBusinessCreditcard from '../../../src/icon/mui/business/credit_card';
+import SrcIconMuiBusinessAccounttree from '../../../src/icon/mui/business/account_tree';
 import SrcIconMuiNavigationExpandless from '../../../src/icon/mui/navigation/expand_less';
 import SrcIconMuiNavigationMenu from '../../../src/icon/mui/navigation/menu';
 import SrcIconMuiNavigationMorevert from '../../../src/icon/mui/navigation/more_vert';
@@ -359,6 +369,66 @@ import SrcIconMuiCommonActionsdrotation from '../../../src/icon/mui/commonAction
         <div className="col-1-5">
         <SrcIconMuiAlertWarning className="w-6 h-6" />
           <div className="mt-1 text-gray text-xs">mui/alert/warning</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiBusinessQrcode_scanner className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/business/qr_code_scanner</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiBusinessSell className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/business/sell</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiBusinessBarcode className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/business/barcode</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiBusinessRedeem className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/business/redeem</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiBusinessCalculate className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/business/calculate</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiBusinessBarchart className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/business/bar_chart</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiBusinessReceiptlong className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/business/receipt_long</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiBusinessStore className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/business/store</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiBusinessCreditcard className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/business/credit_card</div>
+        </div>
+      
+
+        <div className="col-1-5">
+        <SrcIconMuiBusinessAccounttree className="w-6 h-6" />
+          <div className="mt-1 text-gray text-xs">mui/business/account_tree</div>
         </div>
       
 
