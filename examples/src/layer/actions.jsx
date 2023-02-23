@@ -15,6 +15,7 @@ import IconLogout from '../../../src/icon/mui/action/lock';
 import Tooltip from '../../../src/layer/tooltip';
 import Info from '../../../src/layer/info';
 import IconInfo from '../../../src/icon/mui/action/info';
+import Input from '../../../src/form/pure/input';
 
 const PopoverComponent = () =>
 (
@@ -23,7 +24,10 @@ const PopoverComponent = () =>
 
 const DialogComponent = () =>
 (
-  <div>Hello Dialog!</div>
+  <div>
+    <div>Hello Dialog!</div>
+    <Input id="foo" />
+  </div>
 );
 
 

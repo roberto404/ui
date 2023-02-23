@@ -55,6 +55,11 @@ class Layer extends Component
     }
   }
 
+  onMouseDownHandler = (event) =>
+  {
+    this.mouseDownElementTarget = event.target;
+  }
+
   render()
   {
     const {
@@ -87,7 +92,11 @@ class Layer extends Component
 
     const onClickLayerCurtain = (event) =>
     {
-      if (closeable && event.currentTarget.isEqualNode(event.target))
+      if (
+        closeable
+        && event.currentTarget.isEqualNode(event.target)
+        && event.target === this.mouseDownElementTarget
+      )
       {
         onClickCloseHandler();
       }
@@ -183,6 +192,7 @@ class Layer extends Component
         className={layerClasses}
         style={options.style || {}}
         onClick={onClickLayerCurtain}
+        onMouseDown={this.onMouseDownHandler}
       >
         <div
           className="container"
