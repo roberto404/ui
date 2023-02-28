@@ -63,6 +63,7 @@ const ExampleForm = () =>
     <Select
       id="select"
       label="Select"
+      value={'fake'}
       data={[
         { id: 1, title: 'Option #1' },
         { id: 2, title: 'Option #2' },

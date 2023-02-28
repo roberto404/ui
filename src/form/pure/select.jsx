@@ -98,8 +98,8 @@ class Select extends Field
               }}
               data-name={this.props.name}
             >
-              { this.state.placeholder && !find(this.data, i => i.id === 0) &&
-              <option value="">{this.state.placeholder}</option>
+              { ((this.state.placeholder && !find(this.data, i => i.id === 0)) || !find(this.data, i => i.id == this.state.value)) &&
+              <option value="">{this.state.placeholder || this.state.value}</option>
               }
 
               { this.data.map(item =>
