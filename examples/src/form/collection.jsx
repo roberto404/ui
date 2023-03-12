@@ -261,23 +261,22 @@ export const Example2 = ({ record, index, id, fields, onChange }) =>
  */
 const Example = (props, { store }) =>
 {
-  store.dispatch(setValues({
-    collection: [
-      { id: 1, title: 'foo' },
-      { id: 2, title: 'bar' },
-    ],
-    collection2: [
-      { field: 'name', operator: '=', value: 'Á' },
-      { field: 'gender', operator: '==', value: 'male' },
-      { field: 'id', operator: '<', value: '10' },
-    ],
-    props: {
-      discounts: [{ value: '0', method: 'ft', subject: 'cart' }],
-      filters: [[{ field: 'discount', operator: '=', value: '0' }]],
-      validators: [[{ field: 'totalSaleGross', operator: '=', value: '0' }]],
-    },
-  }, 'example'));
-
+  // store.dispatch(setValues({
+  //   collection: [
+  //     { id: 1, title: 'foo' },
+  //     { id: 2, title: 'bar' },
+  //   ],
+  //   collection2: [
+  //     { field: 'name', operator: '=', value: 'Á' },
+  //     { field: 'gender', operator: '==', value: 'male' },
+  //     { field: 'id', operator: '<', value: '10' },
+  //   ],
+  //   props: {
+  //     discounts: [{ value: '0', method: 'ft', subject: 'cart' }],
+  //     filters: [[{ field: 'discount', operator: '=', value: '0' }]],
+  //     validators: [[{ field: 'totalSaleGross', operator: '=', value: '0' }]],
+  //   },
+  // }, 'example'));
 
 
 
@@ -301,7 +300,15 @@ const Example = (props, { store }) =>
         draggable
       />
 
-    <h2>Custom draggable UI items</h2>
+      <h2>Array collection UI items</h2>
+      <Collection
+        id="collectionArray"
+        label="CollectionArray"
+        value={['foo', 'bar']}
+        UI={Input}
+      />
+
+      <h2>Custom draggable UI items</h2>
       <Collection
         label={(
           <div className="grid-2 pr-4">

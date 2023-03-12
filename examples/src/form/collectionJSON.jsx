@@ -89,7 +89,7 @@ const FieldProps = (props, { store, }) =>
   const onChangeListener = id => ({ value, form }) =>
   {
     const props = {
-      ...store.getState().form[form].props || {},
+      ...store.getState().form[form]?.props || {},
       [id]: value,
     };
 
@@ -121,6 +121,7 @@ const FieldProps = (props, { store, }) =>
         UI={DiscountCollectionItem}
         stateFormat={onChangeState('discounts')}
         onChange={onChangeListener('discounts')}
+        value={[{ value: '0', method: 'ft', subject: 'cart' }]}
       />
 
 
@@ -157,6 +158,7 @@ const FieldProps = (props, { store, }) =>
         }}
         stateFormat={onChangeState('filters')}
         onChange={onChangeListener('filters')}
+        value={[[{ field: 'discount', operator: '=', value: '0' }]]}
       />
       
       <h3>validators:</h3>
@@ -178,6 +180,7 @@ const FieldProps = (props, { store, }) =>
         }}
         stateFormat={onChangeState('validators')}
         onChange={onChangeListener('validators')}
+        value={[[{ field: 'totalSaleGross', operator: '=', value: '0' }]]}
       />
 
     </div>

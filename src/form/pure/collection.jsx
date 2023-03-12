@@ -56,8 +56,16 @@ class Collection extends Field
 {
   onChangeItemListener = (record, index) =>
   {
+    // simple Array
+    if (Array.isArray(this.state.value) && typeof this.state.value[0] === 'string')
+    {
+      const value = [...this.state.value];
+      value[index] = record.value;
+
+      this.onChangeHandler(value);
+    }
     // nested collection empty child
-    if (Array.isArray(record) && !record.length)
+    else if (Array.isArray(record) && !record.length)
     {
       this.onChangeHandler(this.state.value.filter((v, i) => i !== index));
     }
@@ -82,8 +90,12 @@ class Collection extends Field
 
     const def = this.props.value || this.state.value;
 
+    if (Array.isArray(def) && typeof def[0] === 'string')
+    {
+      item = '';
+    }
     // nested collection add new array
-    if (Array.isArray(def[0]))
+    else if (Array.isArray(def[0]))
     {
       item = def[0];
     }
@@ -124,6 +136,7 @@ class Collection extends Field
         <UI
           {...this.props.uiProps}
           record={record}
+          stateFormat={(value) => value[index] || ''}
           index={index}
           id={this.props.id}
           onChange={record => this.onChangeItemListener(record, index)}
