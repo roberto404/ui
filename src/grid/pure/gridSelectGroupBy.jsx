@@ -30,11 +30,12 @@ import Select from '../../form/pure/select';
 */
 const GridSelectGroupBy = (props, context) =>
 {
-  const { helper, id, reducer } = props;
+  const { id, reducer } = props;
 
   const fetchData = () =>
   {
     const grid = context.store.getState().grid[context.grid] || {};
+    const helper = props.helper || grid.helper?.[id];
 
     return (
       reduce(
@@ -52,6 +53,7 @@ const GridSelectGroupBy = (props, context) =>
           {
             title = helper[helperIndex].title;
           }
+
           return { id: item, title };
         },
       )
@@ -108,7 +110,6 @@ GridSelectGroupBy.defaultProps =
   id: 'dropdownGroupByFilter',
   label: '',
   placeholder: '',
-  helper: [],
   reducer: (result, record, id) =>
   {
     if (Array.isArray(record[id]))
