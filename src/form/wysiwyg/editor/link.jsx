@@ -184,11 +184,20 @@ class LinkForm extends Component
   {
     const { editorState, onChange } = this.props;
 
+    let url = this.state.value;
+
+    // add slash before link
+    if (/^(([a-z]+\:\/\/)|(\/{1}))/.test(this.state.value))
+    {
+      url = '/' + url;
+    }
+
+
     const contentState = editorState.getCurrentContent();
     const contentStateWithEntity = contentState.createEntity(
       'LINK',
       'MUTABLE',
-      { url: this.state.value }
+      { url }
     );
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 

@@ -35,6 +35,10 @@ class StandaloneInput extends Component
       this.setState({ error: 'Wrong Input' });
       return;
     }
+    else if (this.state.error)
+    {
+      this.setState({ error: '' })
+    }
 
     this.props.onSubmit({
       value: this.state.value
@@ -47,10 +51,9 @@ class StandaloneInput extends Component
         }
         else
         {
-          this.props.onSuccess(response);
-          this.setState({ value: '', active: false });
+          this.setState({ active: false });
+          this.props.onSuccess(response, (error) => { this.setState({ error })});
         }
-        
       });
 
     this.setState({ active: true });

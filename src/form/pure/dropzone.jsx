@@ -357,6 +357,12 @@ class DropzoneComponent extends Field
     super.componentDidMount();
   }
 
+  componentWillReceiveProps(nextProps)
+  {
+    this.element.dropzone.removeAllFiles();
+    super.componentWillReceiveProps(nextProps);
+  }
+
   render()
   {
     const buttonsClass = classNames({

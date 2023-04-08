@@ -150,7 +150,7 @@ export const filtersToQuery = filters =>
  * // =>
  * [field, >, 2]
  */
-export const REGEX_QUERY_LEVEL2 = new RegExp(`^([${FIELD_CHARS}]+)([${OPERATOR_UNIQUE}]{1}[!]{0,1}[=]{0,1})(.+)$`);
+export const REGEX_QUERY_LEVEL2 = new RegExp(`^([${FIELD_CHARS}]+)(([${OPERATOR_UNIQUE}]{1}[!]{0,1}[=]{0,2})|([[a-z öüóőúéáűí]+]))(.+)$`);
 
 let SEARCH_CACHE = [];
 
@@ -173,8 +173,10 @@ let SEARCH_CACHE = [];
  * "category=186|category=190"
  * "category=186&category=190"
  */
-export const search = ({ record, value, helpers, hooks, index = 0 }) =>
+export const search = (props) =>
 {
+  const { record, value, helpers, hooks, index = 0 } = props;
+
   /**
    * Create SEARCH_CACHE
    * @example
@@ -239,7 +241,7 @@ export const search = ({ record, value, helpers, hooks, index = 0 }) =>
              */
             if (termMatches)
             {
-              term = termMatches[3];
+              term = termMatches[5];
               handlerIndex = termMatches[2];
               columns = [termMatches[1]];
 
@@ -285,6 +287,8 @@ export const search = ({ record, value, helpers, hooks, index = 0 }) =>
     columns.some(
       (column) =>
       {
+        const compareMethod = props.compare?.[handlerIndex] ? props.compare : compare;
+
         if (typeof record[column] === 'undefined')
         {
           return false;
@@ -297,7 +301,7 @@ export const search = ({ record, value, helpers, hooks, index = 0 }) =>
           subject = JSON.stringify(subject);
         }
 
-        if (compare[handlerIndex](subject, term) === true)
+        if (compareMethod[handlerIndex](subject, term, record) === true)
         {
           return true;
         }
@@ -322,7 +326,7 @@ export const search = ({ record, value, helpers, hooks, index = 0 }) =>
           return false;
         }
 
-        return compare[handlerIndex](subject, term);
+        return compareMethod[handlerIndex](subject, term, record);
       },
     )));
 };
