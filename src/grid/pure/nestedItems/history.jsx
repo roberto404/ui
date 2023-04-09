@@ -49,7 +49,16 @@ let prevUserId;
 /**
  * [Messages description]
  */
-const History = ({ index, children, level, items, isFirst, isLast, intl }) =>
+const History = ({
+  index,
+  children,
+  level,
+  items,
+  isFirst,
+  isLast,
+  intl,
+  onClick,
+}) =>
 {
   if (children)
   {
@@ -115,12 +124,17 @@ const History = ({ index, children, level, items, isFirst, isLast, intl }) =>
 
 
   return (
-    <div>
+    <div
+      className={classNames({
+      'pointer': typeof onClick === 'function'
+      })}
+      onClick={event => onClick(items, event)}
+    >
 
       <div className="h-center">
 
         <div className="text-xs w-4">
-          {moment(insertDateTime).format('k:mm')}
+          { moment(insertDateTime).format('k:mm') }
         </div>
 
         { icon }
