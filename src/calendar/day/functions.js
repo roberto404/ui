@@ -192,7 +192,7 @@ export const getEventCoordinate = (e, context) =>
  * @param  {Object} context { startDate, rowHeight, colWidth, calendarCoord }
  * @return {Object}         { start, end }
  */
-export const getEventDate = (rect, context, ENABLEACCURANCY: boolean = true) =>
+export const getEventDate = (rect, context, ENABLEACCURANCY = true) =>
 {
   const {
     startDate,

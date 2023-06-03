@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
+import { ReactReduxContext } from 'react-redux';
 
 
 /* !- Redux Actions */
@@ -25,11 +26,11 @@ export const CAROUSSEL_SETTINGS = {
 
 /**
  * Create infinite caroussel by static data
- * @param  {[integer]} page current Caroussel page
- * @param  {[array]} data static data
- * @return {[array]}      active three data
+ * @param  {number} page current Caroussel page
+ * @param  {array} data static data
+ * @return {array}      active three data
  */
-const fetchData = (page, data, visibleSlides) =>
+const fetchData = (page = 0, data, visibleSlides) =>
 {
   const items = [];
   const length = data.length;
@@ -101,15 +102,14 @@ const fetchData = (page, data, visibleSlides) =>
  */
 class DynamicCaroussel extends Component
 {
-  componentWillMount()
+  UNSAFE_componentWillMount()
   {
     // Enable caroussel settings and create datas if it is non-static
     this.updateSlides();
   }
 
-  componentWillReceiveProps(props)
+  UNSAFE_componentWillReceiveProps(props)
   {
-    console.log(props);
     this.updateSlides(props);
   }
 
@@ -142,7 +142,7 @@ class DynamicCaroussel extends Component
     {
       this.context.store.dispatch(
         setData(
-          props.fetchData(this.carousselPage, props.data, props.visibleSlides),
+          props.fetchData(this.carousselPage || 0, props.data, props.visibleSlides),
           CAROUSSEL_SETTINGS,
           props.id,
         ));
@@ -153,7 +153,13 @@ class DynamicCaroussel extends Component
 
   transitionEndListener = () =>
   {
-    const page = this.context.store.getState().grid[this.props.id].page;
+    const page = this.context.store.getState().grid[this.props.id]?.page;
+
+    if (typeof page === undefined)
+    {
+      this.carousselPage = 0;
+      return;
+    }
 
     const nextPage = this.carousselPage + page - 2;
 
@@ -197,8 +203,6 @@ DynamicCaroussel.defaultProps =
   visibleSlides: 1,
 };
 
-DynamicCaroussel.contextTypes = {
-  store: PropTypes.object,
-};
+DynamicCaroussel.contextType = ReactReduxContext;
 
 export default DynamicCaroussel;

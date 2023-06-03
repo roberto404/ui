@@ -3,8 +3,8 @@ import React from 'react';
 
 /* !- React Elements */
 
-import Form from '../form/form';
-import Textarea from '../form/pure/textarea';
+import Form from '../form/form'; // 8
+import Textarea from '../form/components/textarea'; // 18
 import IconDelete from '../icon/mui/action/delete_forever';
 import IconSubmit from '../icon/mui/action/done';
 

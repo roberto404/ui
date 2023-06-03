@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
+import { AppContext } from '../context';
+
 
 /**
  * Floating element inside parent DOM
@@ -226,10 +227,6 @@ Sticky.defaultProps =
   disable: false,
 };
 
-Sticky.contextTypes =
-{
-  addListener: PropTypes.func,
-  removeListener: PropTypes.func,
-};
+Sticky.contextType = AppContext;
 
 export default Sticky;

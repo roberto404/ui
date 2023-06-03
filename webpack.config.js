@@ -1,173 +1,129 @@
-/**
- * Requires
- */
+const path  = require('path');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const rimraf = require('rimraf');
 
-const path = require('path');
-const join = path.join;
+/* !-- Constants */
 
-const yaml = require('js-yaml');
-const fs = require('fs');
-
-const config = yaml.load(fs.readFileSync('config.yml', 'utf8'));
-
-
-/**
- * Variables
- */
 const PATHS = {
-  src: join(__dirname, 'examples'),
-  dist: join(__dirname, 'build'),
+  app: path.join(__dirname, 'src/.examples'),
+  src: path.join(__dirname, 'src'),
+  dist: path.join(__dirname, 'docs'),
 };
 
- /**
-  * Common Configuration
-  */
+
+/**
+ * Common Configuration
+ */
 const Common = {
-  context: PATHS.src,
+  context: PATHS.app,
   entry: [
-    'core-js/fn/promise',
-    'core-js/fn/object',
-    'core-js/fn/array',
-    './build.jsx',
+    './index.jsx',
   ],
   output: {
-    filename: 'app.js',
     path: PATHS.dist,
+    filename: 'app.js',
     publicPath: '/',
   },
   module: {
     rules: [
       {
-        test: /\.js(x)?$/,
-        exclude: [/node_modules\/(?!@1studio)/],
+        test: /\.(j|t)s(x)?$/,
         use: 'babel-loader',
+        include: [
+          PATHS.src,
+          path.join(__dirname,  './node_modules/@1studio/utils'),
+        ],
       },
       {
-        test: /\.pug$/,
-        use: 'pug-loader',
+        test: /\.(scss|css)$/,
+        use: [
+          'style-loader',
+          'css-loader',{
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                plugins: [
+                  [
+                    "postcss-inline-svg",
+                    "autoprefixer",
+                  ],
+                ],
+              },
+            },
+          },
+          'sass-loader',
+        ],
       },
     ],
   },
-  resolve: {
-    extensions: ['.js', '.jsx'],
-  },
-  plugins: [
-    new ExtractTextPlugin('app.css'),
+  plugins:
+  [
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+    }),
+    new (class {
+      apply(compiler) {
+        compiler.hooks.done.tap('Remove LICENSE', () => {
+          rimraf.sync(PATHS.dist + '/*.LICENSE.txt');
+        });
+      }
+    })(),
   ],
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js', '.jsx'],
+    alias: {
+      '@1studio/ui': PATHS.src,
+    },
+    fallback: {
+      crypto: require.resolve('crypto-browserify'),
+      stream: require.resolve('stream-browserify'),
+      // buffer: false,
+      buffer: require.resolve('buffer/')
+    },
+  },
 };
-
 
 module.exports = (env) =>
 {
-  /**
-   * Production
-   */
-  if (env.prod)
+  if (env.production)
   {
     return {
       ...Common,
-      module:
-      {
-        rules: [
-          ...Common.module.rules,
-          {
-            test: /\.scss$/,
-            use: ExtractTextPlugin.extract({
-              use: [
-                {
-                  loader: 'css-loader',
-                  options: {
-                    minimize: true,
-                    importLoaders: true,
-                  },
-                },
-                {
-                  loader: 'postcss-loader',
-                  options: {
-                    plugins: (loader) => [
-                      require('postcss-inline-svg'),
-                      require('autoprefixer'),
-                    ]
-                  },
-                },
-                'sass-loader',
-              ],
-              fallback: 'style-loader',
-            }),
-          },
-        ],
-      },
-      plugins:
-      [
-        ...Common.plugins,
-        new HtmlWebpackPlugin({
-          inject: false,
-          template: '../assets/html/index.pug',
-          templateConfig: config,
-        }),
-      ],
     };
   }
 
-  /**
-   * Development
-   */
   return {
     ...Common,
-    module:
+    devtool: 'eval', // 'source-map',
+    devServer:
     {
-      rules: [
-        ...Common.module.rules,
-        {
-          test: /\.scss$/,
-          use: [
-            'style-loader',
-            {
-              loader: 'css-loader',
-              options:
-              {
-                sourceMap: true,
-              },
-            },
-            {
-              loader: 'postcss-loader',
-              options: {
-                plugins: (loader) => [
-                  require('postcss-inline-svg')
-                ],
-                sourceMap: true,
-              },
-            },
-            {
-              loader: 'sass-loader',
-              options:
-              {
-                sourceMap: true,
-              },
-            },
-          ],
-        },
-      ],
-    },
-    devtool: 'eval',
-    devServer: {
-      contentBase: PATHS.dist,
+      static: 
+      {
+        directory: Common.output.path,
+      },
       compress: true,
-      port: 9002,
       hot: true,
+      liveReload: true,
+      allowedHosts: [
+        'butor.rs.loc',
+      ],
+      port: 9019,
       historyApiFallback: true,
+      proxy: {
+        '/api': 'http://butor.rs.loc:80',
+        '/library': 'http://butor.rs.loc:80'
+      },
+      open: {
+        target: ['http://butor.rs.loc:9019'],
+        app: {
+          name: 'google chrome'
+        },
+      },
     },
     plugins: [
       ...Common.plugins,
-      new HtmlWebpackPlugin({
-        inject: 'body',
-        template: '../assets/html/index.pug',
-        templateConfig: config,
-      }),
       new webpack.HotModuleReplacementPlugin(),
-    ],
+    ]
   };
 };
+ 

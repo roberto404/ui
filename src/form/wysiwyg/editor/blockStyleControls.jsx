@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext } from 'react';
 import classNames from 'classnames';
-
+import { ReactReduxContext } from 'react-redux';
+import { WysiwygContext } from '../context';
 
 import { flush } from '../../../layer/actions';
 
@@ -44,16 +44,16 @@ var INLINE_STYLES = [
     className="v-center mb-1"
   />
  */
-const BlockStyleControls = (props, context) =>
+const BlockStyleControls = (props) =>
 {
   const {
     controls,
     inlineStyle,
   } = props;
 
-  const {
-    store,
-  } = context;
+  const context = useContext(WysiwygContext);
+  const { store } = useContext(ReactReduxContext);
+
 
   const editorState = context.editorState || props.editorState;
   const toggleBlockType = context.toggleBlockType || props.toggleBlockType;
@@ -128,15 +128,6 @@ BlockStyleControls.defaultProps =
 {
   blocks: [],
   inlineStyle: false,
-}
-
-BlockStyleControls.contextTypes = 
-{
-  store: PropTypes.object,
-  editorState: PropTypes.object,
-  toggleBlockType: PropTypes.func,
-  toggleInlineStyle: PropTypes.func,
-  focusEditor: PropTypes.func,
 }
 
 export default BlockStyleControls;

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Coordinate from './coordinate';
-import { findMinimumValueInSeries } from './coordinate/func';
+import { findMinimumValueInSeries } from './coordinate/functions';
 
 export const Bar = ({ x, y, canvas, coord, id, seriesIndex, seriesLength, point }) =>
 {

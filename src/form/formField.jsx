@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import { injectIntl } from 'react-intl';
 import isEqual from 'lodash/isEqual';
 import isEmpty from 'lodash/isEmpty';
 import classNames from 'classnames';
+import { MergedContexts } from '../context';
 
 
 /* !- Redux Actions */
@@ -85,7 +85,7 @@ class FormField extends Component
 
   /* !- React Lifecycle */
 
-  componentWillMount()
+  UNSAFE_componentWillMount()
   {
     const form = this.props.form || this.context.form;
     const store = this.context.store.getState();
@@ -160,15 +160,7 @@ class FormField extends Component
     }
   }
 
-  // componentDidUpdate()
-  // {
-  //   if (process.env.NODE_ENV !== 'production')
-  //   {
-  //     console.log(`%c update ${this.constructor.name}#${this.props.id}`, 'color: orange');
-  //   }
-  // }
-
-  componentWillReceiveProps(nextProps)
+  UNSAFE_componentWillReceiveProps(nextProps)
   {
     if (!isEqual(nextProps.value, this.getValue()))
     {
@@ -200,15 +192,17 @@ class FormField extends Component
     {
       this.setState({ prefix: nextProps.prefix });
     }
-  }
 
-  shouldComponentUpdate(nextProps, nextState)
-  {
+
     this.data = this.getData(nextProps);
-    nextState.label = (nextProps.label && typeof nextProps.label === 'string' && nextProps.intl) ?
-      nextProps.intl.formatMessage({ id: nextProps.label }) : nextProps.label;
 
-    return true;
+    if (nextProps.label)
+    {
+      this.setState({
+        label: (nextProps.label && typeof nextProps.label === 'string' && nextProps.intl) ?
+        nextProps.intl.formatMessage({ id: nextProps.label }) : nextProps.label,
+      })
+    }
   }
 
 
@@ -280,8 +274,10 @@ class FormField extends Component
     const value = props.stateFormat(this.getValue(props));
     const error = this.getError();
 
-    const isChanged = Array.isArray(props.id) ?
-      JSON.stringify(this.state.value) !== JSON.stringify(value) : this.state.value !== value;
+    // const isChanged = Array.isArray(props.id) ?
+    //   JSON.stringify(this.state.value) !== JSON.stringify(value) : this.state.value !== value;
+
+    const isChanged = isEqual(value, this.state.value) === false;
 
     if (
       (typeof value !== 'undefined' && isChanged) ||
@@ -328,6 +324,11 @@ class FormField extends Component
       id: this.props.id,
       value: this.props.format(value, reduce),
     };
+
+    // if (isEqual(payload.value, this.state.value))
+    // {
+    //   return;
+    // }
 
     if (!this.validate(payload.value))
     {
@@ -645,6 +646,7 @@ class FormField extends Component
    */
   render()
   {
+    // console.log(this.context);
     if (this.context.readOnly !== true)
     {
       return null;
@@ -858,15 +860,26 @@ FormField.defaultProps =
   dataTranslate: true,
 };
 
-FormField.contextTypes =
-{
-  readOnly: PropTypes.bool,
-  form: PropTypes.string,
-  fields: PropTypes.object,
-  store: PropTypes.object,
-  onChange: PropTypes.func,
-  addListener: PropTypes.func,
-  removeListener: PropTypes.func,
-};
+// FormField.contextTypes =
+// {
+//   readOnly: PropTypes.bool,
+//   form: PropTypes.string,
+//   fields: PropTypes.object,
+//   onChange: PropTypes.func,
+
+//   store: PropTypes.object,
+//   addListener: PropTypes.func,
+//   removeListener: PropTypes.func,
+//   register: PropTypes.func,
+// };
+
+// FormField.contextType = AppContext;
+// FormField.contextType = FormContext;
+FormField.contextType = MergedContexts;
+
+
+
+
+
 
 export default FormField;

@@ -1,5 +1,7 @@
 
-import React from 'react';
+import React, { useContext } from 'react';
+import { ReactReduxContext } from 'react-redux';
+import { FormContext } from '../../form/context';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import isEmpty from 'lodash/isEmpty';
@@ -43,16 +45,18 @@ export const CalendarPager = (
   form,
   className,
   children,
-},
-context,
-) =>
+}) =>
 {
+  const { store } = useContext(ReactReduxContext);
+  const context = useContext(FormContext);
+
+
+
   const onClickButtonHandler = (event) =>
   {
     event.preventDefault();
 
-    const formId = form || context.form;
-    const store = context.store;
+    const formId = form || context?.form;
 
     const formState = store.getState().form;
 
@@ -146,10 +150,5 @@ CalendarPager.defaultProps =
   children: <IconArrowForward />,
 };
 
-CalendarPager.contextTypes =
-{
-  form: PropTypes.string,
-  store: PropTypes.object,
-};
 
 export default CalendarPager;

@@ -2,7 +2,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import clamp from '@1studio/utils/math/clamp';
+import { bindGridContexts } from '../../grid/context';
+import { MergedContexts } from '../../context';
 
 
 import { modifyLimit } from '../../grid/actions';
@@ -272,12 +273,6 @@ ShowMore.defaultProps =
   autoPaginate: false,
 };
 
-ShowMore.contextTypes =
-{
-  store: PropTypes.object,
-  grid: PropTypes.string,
-  addListener: PropTypes.func,
-  removeListener: PropTypes.func,
-};
+ShowMore.contextType = MergedContexts;
 
-export default ShowMore;
+export default bindGridContexts(ShowMore);

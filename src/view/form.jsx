@@ -2,13 +2,34 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
 import isEmpty from 'lodash/isEmpty';
 import uniq from 'lodash/uniq';
 
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
+
+function withRouter(Component) {
+  function ComponentWithRouterProp(props) {
+    let location = useLocation();
+    let navigate = useNavigate();
+    let params = useParams();
+    return (
+      <Component
+        {...props}
+        router={{ location, navigate, params }}
+      />
+    );
+  }
+
+  return ComponentWithRouterProp;
+}
 
 
-import Form from '../form/pure/intl';
+import Form from '../form/form';
 
 /* !- Actions */
 
@@ -154,7 +175,7 @@ class FormView extends Component
 
   onSuccess = () =>
   {
-    this.props.history.push(location.pathname.replace(/(.*)\/.*$/, "$1"));
+    this.props.router.navigate(location.pathname.replace(/(.*)\/.*$/, "$1"));
   }
 
   onLoad = () =>
@@ -169,7 +190,7 @@ class FormView extends Component
         if (response.status !== 'SUCCESS' || !response.records)
         {
           this.props.modal(response.modal);
-          this.props.history.replace(location.pathname.replace(/(.*)\/.*$/, "$1"));
+          this.props.router.navigate(location.pathname.replace(/(.*)\/.*$/, "$1"), { replace: true });
 
           return {};
         }

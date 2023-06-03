@@ -1,6 +1,6 @@
 
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext} from 'react';
+import { FormContext } from './context';
 
 
 /* !- Actions */
@@ -42,12 +42,15 @@ import Connect from '../connect';
  *    onChange={(state, prevState) => console.log(state.totalPage)}
  *   />
  */
-const FormConnect = (props, { store, form }) =>
+const FormConnect = (props) =>
 {
+  const { form } = useContext(FormContext) || {};
   const id = props.id || form;
+
 
   return (
     <Connect
+      id={id}
       store="form"
       {...props}
     />
@@ -55,15 +58,6 @@ const FormConnect = (props, { store, form }) =>
 };
 
 
-/**
- * contextTypes
- * @type {Object}
- */
-FormConnect.contextTypes =
-{
-  form: PropTypes.string,
-  store: PropTypes.object,
-};
 
 
 export default FormConnect;

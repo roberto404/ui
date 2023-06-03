@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import { bindMapContexts } from './context';
+import { MergedContexts } from '../../context';
 import { popover } from '../../layer/actions';
 
 class Marker extends Component
 {
-  componentWillMount()
+  UNSAFE_componentWillMount()
   {
     if (this.context.map && this.props.lat && this.props.lng)
     {
@@ -143,11 +144,7 @@ Marker.propTypes = {
   onClick: PropTypes.func,
 };
 
-Marker.contextTypes =
-{
-  store: PropTypes.object,
-  map: PropTypes.object,
-  mapElement: PropTypes.object,
-};
 
-export default Marker;
+Marker.contextType = MergedContexts;
+
+export default bindMapContexts(Marker);

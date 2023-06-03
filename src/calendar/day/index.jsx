@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { AppContext } from '../../context';
 
 
 /* !- Redux Actions */
@@ -82,6 +83,7 @@ class Calendar extends Component
           this.context.store.dispatch(LayerActions.close());
         }
       }),
+      store: this.context.store,
     };
   }
 
@@ -98,7 +100,7 @@ class Calendar extends Component
     }
   }
 
-  componentWillReceiveProps(nextProps)
+  UNSAFE_componentWillReceiveProps(nextProps)
   {
     this.setState(
       this.init({
@@ -324,12 +326,10 @@ Calendar.childContextTypes =
 
   onEventMouseEnter: PropTypes.func,
   onEventMouseLeave: PropTypes.func,
+  store: PropTypes.object,
 };
 
 
-Calendar.contextTypes =
-{
-  store: PropTypes.object.isRequired,
-};
+Calendar.contextType = AppContext;
 
 export default Calendar;

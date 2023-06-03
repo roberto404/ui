@@ -4,6 +4,12 @@ import importJs from '@1studio/utils/window/importJs';
 import snakeToCamelCase from '@1studio/utils/string/snakeToCamelCase';
 
 
+/* !- Context */
+
+import { AppContext } from '../../context';
+import { MapContext } from './context';
+
+
 import {
   GOOGLE_MAPS_PROPS,
   GOOGLE_MAPS_EVENTS,
@@ -55,11 +61,12 @@ class Map extends Component
     this._listeners = {};
   }
 
-  getChildContext()
+  getContext()
   {
     return {
       map: this.map,
       mapElement: this.element,
+      ...this.context,
     };
   }
 
@@ -186,31 +193,26 @@ class Map extends Component
   render()
   {
     return (
-      <div
-        className={this.props.className}
-      >
+      <MapContext.Provider value={this.getContext()}>
         <div
           className={this.props.className}
-          ref={(ref) =>
-            {
-              this.element = ref;
-            }}
-        />
-        { this.map && this.props.children }
-      </div>
+        >
+          <div
+            className={this.props.className}
+            ref={(ref) =>
+              {
+                this.element = ref;
+              }}
+          />
+          { this.map && this.props.children }
+        </div>
+      </MapContext.Provider>
     );
   }
 }
 
 
-/**
- * childContextTypes
- * @type {Object}
- */
-Map.childContextTypes = {
-  map: PropTypes.object,
-  mapElement: PropTypes.object,
-};
+
 
 
 Map.propTypes = {
@@ -271,5 +273,7 @@ Map.defaultProps = {
   className: 'h-full w-full',
   children: <span />,
 };
+
+Map.contextType = AppContext;
 
 export default Map;

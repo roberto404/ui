@@ -1,8 +1,7 @@
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
-
+import { useAppContext } from '../context';
 
 /* !- Actions */
 
@@ -28,12 +27,11 @@ const Modal = (
     button,
     buttonSecondary,
     className,
-  },
-  {
-    store,
   }
 ) =>
 {
+  const { store } = useAppContext();
+  
   const onClickButtonHandler = (event) =>
   {
     event.preventDefault();
@@ -113,18 +111,5 @@ const Modal = (
     </div>
   );
 };
-
-// Modal.propTypes =
-// {
-// };
-
-// Modal.defaultProps =
-// {
-// };
-
-Modal.contextTypes =
-{
-  store: PropTypes.object,
-}
 
 export default Modal;

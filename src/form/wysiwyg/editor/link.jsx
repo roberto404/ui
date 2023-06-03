@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Link as LinkRouter } from 'react-router-dom';
+import { ReactReduxContext } from 'react-redux';
 
 import {
   EditorState,
@@ -187,7 +187,7 @@ class LinkForm extends Component
     let url = this.state.value;
 
     // add slash before link
-    if (/^(([a-z]+\:\/\/)|(\/{1}))/.test(this.state.value))
+    if (/^(([a-z]+\:\/\/)|(\/{1}))/.test(this.state.value) === false)
     {
       url = '/' + url;
     }
@@ -260,10 +260,7 @@ LinkForm.defaultProps =
   buttonLabel: 'Insert',
 }
 
-LinkForm.contextTypes = 
-{
-  store: PropTypes.object,
-}
+LinkForm.contextType = ReactReduxContext;
 
 
 export default LinkForm;

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Coordinate from './coordinate';
-import { findMinimumValueInSeries } from './coordinate/func';
+import { findMinimumValueInSeries } from './coordinate/functions';
 
 
 export const Line = ({ x, y, canvas, coord, id, index, length, value, data, foo }) =>

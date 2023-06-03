@@ -23,10 +23,14 @@
 }
 
 
-@mixin icon($svg, $color: $black) {
-  @if variable-exists(iconPath) {
+@mixin icon($svg, $color: $black)
+{
+  @if variable-exists(iconPath)
+  {
     background-image: svg-load('#{$iconPath}#{$svg}.svg', fill=$color);
-  } @else {
+  }
+  @else
+  {
     background-image: svg-load('../icon/#{$svg}.svg', fill=$color);
   }
 }

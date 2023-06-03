@@ -44,8 +44,8 @@ const TemplateTable = ({
     <svg
       id="report"
       width={widthSVG}
-      height={heightSVG}
-      viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+      height={heightSVG*2}
+      viewBox={`0 0 ${WIDTH} ${HEIGHT*2}`}
       className={className}
       preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" onClick={onClick}
     >

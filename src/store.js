@@ -3,11 +3,11 @@ import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import promise from 'redux-promise';
 import { createLogger } from 'redux-logger';
 import isEmpty from 'lodash/isEmpty';
-import UserError from '@1studio/utils/error/userError';
+import UserError from '@1studio/utils/error/userError'; // 1 Kbyte
 
 import { reducers as defaultReducers } from './reducers';
-import { setUser } from './authentication/actions';
-import { dialog } from './layer/actions';
+import { setUser } from './authentication/actions'; // 1 Kbyte
+// import { dialog } from './layer/actions';
 
 
 const loadStateFromLocalStorage = () =>

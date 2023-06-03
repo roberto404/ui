@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { connect, ReactReduxContext } from 'react-redux';
 import isEmpty from 'lodash/isEmpty';
 import forEach from 'lodash/forEach';
 import remove from 'lodash/remove';
@@ -397,10 +397,7 @@ View.defaultProps =
  * contextTypes
  * @type {Object}
  */
-View.contextTypes =
-{
-  store: PropTypes.object,
-};
+View.contextType = ReactReduxContext;
 
 export default connect(
   null,

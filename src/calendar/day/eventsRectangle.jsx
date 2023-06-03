@@ -50,7 +50,7 @@ class EventsRectangle extends Component
     // this.initHammerDrag();
   }
 
-  componentWillReceiveProps(nextProps)
+  UNSAFE_componentWillReceiveProps(nextProps)
   {
     this.setState({
       active: false,

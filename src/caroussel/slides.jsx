@@ -101,7 +101,7 @@ class Slides extends Component
     this.forceStart = !!props.forceStart;
   }
 
-  componentWillMount()
+  UNSAFE_componentWillMount()
   {
     this.props.setSettings(CAROUSSEL_SETTINGS, this.props.id);
   }
@@ -116,7 +116,7 @@ class Slides extends Component
     this.startAutoPlay();
   }
 
-  componentWillReceiveProps(nextProps)
+  UNSAFE_componentWillReceiveProps(nextProps)
   {
     if (!isEqual(this.props.rawData, nextProps.rawData))
     {

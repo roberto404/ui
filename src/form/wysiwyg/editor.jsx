@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
+import { bindFormContexts } from '../context';
 
 import {
   Editor,
@@ -23,6 +24,11 @@ import classNames from 'classnames';
 /* !- Redux Actions */
 
 import { popover } from '../../layer/actions';
+
+
+/* !- Context */
+
+import { WysiwygContext } from './context';
 
 
 /* !- React Elements */
@@ -109,7 +115,7 @@ class Wysiwyg extends Field
     }
   }
 
-  getChildContext()
+  getContext()
   {
     return {
       editorState: this.state.editorState,
@@ -249,76 +255,79 @@ class Wysiwyg extends Field
     this.context.store.dispatch(popover(
       (
         (
-          <div className="" style={{ width: 200 }}>
-            <BlockStyleControls
-              controls={[
-                {
-                  type: 'BOLD',
-                  element: <IconBold />,
-                },
-                {
-                  type: 'ITALIC',
-                  element: <IconItalic />,
-                },
-                {
-                  type: 'UNDERLINE',
-                  element: <IconUnderline />,
-                },
-                {
-                  type: 'STRIKETHROUGH',
-                  element: <IconStrikestrow />,
-                },
-              ]}
-              editorState={this.state.editorState}
-              toggleInlineStyle={this.toggleInlineStyle}
-              focusEditor={this.focusEditor}
-              className="v-center mb-1"
-              inlineStyle
-            />
-            <BlockStyleControls
-              controls={[
-                {
-                  type: 'header-two',
-                  element: <h2 style={{ padding: '0'}} className={blockClassNames['header-two']}>Heading</h2>,
-                  className,
-                },
-                {
-                  type: 'header-three',
-                  element: <h3 style={{ padding: '0'}} className={blockClassNames['header-three']}>Subheading</h3>,
-                  className,
-                },
-                {
-                  type: 'blockquote',
-                  element: <div style={{ margin: 0 }} className="italic text-l">Blockquote</div>,
-                  className,
-                },
-                {
-                  type: 'caption',
-                  element: <div style={{ margin: 0 }} className="light text-s">Caption</div>,
-                  className,
-                },
-                {
-                  type: 'unordered-list-item',
-                  element: <ul><li style={{ margin: 0 }} className="ml-1 disc light">Unordered list item</li></ul>,
-                  className,
-                },
-                {
-                  type: 'ordered-list-item',
-                  element: <ol><li style={{ margin: 0 }} className="ml-1 decimal light">Ordered list item</li></ol>,
-                  className,
-                },
-                {
-                  type: 'unstyle',
-                  element: <div className={blockClassNames['unstyle']}>Body</div>,
-                  className,
-                },
-              ]}
-              editorState={this.state.editorState}
-              toggleBlockType={this.toggleBlockType}
-              focusEditor={this.focusEditor}
-              className=""
-            />
-          </div>
+
+          <WysiwygContext.Provider value={this.getContext()}>
+            <div className="" style={{ width: 200 }}>
+              <BlockStyleControls
+                controls={[
+                  {
+                    type: 'BOLD',
+                    element: <IconBold />,
+                  },
+                  {
+                    type: 'ITALIC',
+                    element: <IconItalic />,
+                  },
+                  {
+                    type: 'UNDERLINE',
+                    element: <IconUnderline />,
+                  },
+                  {
+                    type: 'STRIKETHROUGH',
+                    element: <IconStrikestrow />,
+                  },
+                ]}
+                editorState={this.state.editorState}
+                toggleInlineStyle={this.toggleInlineStyle}
+                focusEditor={this.focusEditor}
+                className="v-center mb-1"
+                inlineStyle
+              />
+              <BlockStyleControls
+                controls={[
+                  {
+                    type: 'header-two',
+                    element: <h2 style={{ padding: '0'}} className={blockClassNames['header-two']}>Heading</h2>,
+                    className,
+                  },
+                  {
+                    type: 'header-three',
+                    element: <h3 style={{ padding: '0'}} className={blockClassNames['header-three']}>Subheading</h3>,
+                    className,
+                  },
+                  {
+                    type: 'blockquote',
+                    element: <div style={{ margin: 0 }} className="italic text-l">Blockquote</div>,
+                    className,
+                  },
+                  {
+                    type: 'caption',
+                    element: <div style={{ margin: 0 }} className="light text-s">Caption</div>,
+                    className,
+                  },
+                  {
+                    type: 'unordered-list-item',
+                    element: <ul><li style={{ margin: 0 }} className="ml-1 disc light">Unordered list item</li></ul>,
+                    className,
+                  },
+                  {
+                    type: 'ordered-list-item',
+                    element: <ol><li style={{ margin: 0 }} className="ml-1 decimal light">Ordered list item</li></ol>,
+                    className,
+                  },
+                  {
+                    type: 'unstyle',
+                    element: <div className={blockClassNames['unstyle']}>Body</div>,
+                    className,
+                  },
+                ]}
+                editorState={this.state.editorState}
+                toggleBlockType={this.toggleBlockType}
+                focusEditor={this.focusEditor}
+                className=""
+              />
+            </div>
+          </WysiwygContext.Provider>
         )
       ),
       event,
@@ -500,7 +509,7 @@ class Wysiwyg extends Field
           </div>
 
           <div className="flex">
-           
+            
           </div>
         </div>
 
@@ -530,17 +539,6 @@ class Wysiwyg extends Field
   }
 }
 
-/**
- * childContextTypes
- * @type {Object}
- */
-Wysiwyg.childContextTypes = {
-  editorState: PropTypes.object,
-  toggleBlockType: PropTypes.func,
-  toggleInlineStyle: PropTypes.func,
-  focusEditor: PropTypes.func,
-};
-
 Wysiwyg.defaultProps =
 {
   ...Wysiwyg.defaultProps,
@@ -561,4 +559,7 @@ Wysiwyg.defaultProps =
 //   ...Wysiwyg.propTypes,
 // }
 
-export default Wysiwyg;
+
+export default bindFormContexts(Wysiwyg);
+
+// export default Wysiwyg;

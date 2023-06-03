@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { v4 } from 'node-uuid';
 import isEmpty from 'lodash/isEmpty';
 import classNames from 'classnames';
-import { intlShape } from 'react-intl';
+import { AppContext } from '../context';
 
 
-/* !- Redux Actions */
+// /* !- Redux Actions */
 
 import * as FormActions from './actions';
 import * as LayerActions from '../layer/actions';
+import * as GridActions from '../grid/actions';
+
+
+// /* !- Context */
+
+import { FormContext } from './context';
 
 
 /**
@@ -102,8 +107,6 @@ import * as LayerActions from '../layer/actions';
 */
 class Form extends Component
 {
-  /* !- Privates */
-
   constructor(props)
   {
     super(props);
@@ -113,22 +116,9 @@ class Form extends Component
     };
   }
 
-  getChildContext()
-  {
-    return {
-      readOnly: this.props.readOnly,
-      form: this.props.id,
-      fields: this.props.fields,
-      onChange: this.onChangeHandler,
-      onStart: this.onStart,
-      onFinish: this.onFinish,
-      onError: this.onError,
-    };
-  }
-
   /* !- React lifecycle */
 
-  componentWillMount = () =>
+  UNSAFE_componentWillMount = () =>
   {
     // set scheme
     if (!isEmpty(this.props.scheme))
@@ -239,6 +229,14 @@ class Form extends Component
           return;
         }
       }
+      else
+      {
+        const action = Array.isArray(response.records) ?
+          GridActions.modifyOrAddRecords : GridActions.modifyOrAddRecord;
+          
+        this.context.store.dispatch(action(response.records, this.props.id));
+        this.context.store.dispatch(LayerActions.close());
+      }
 
       this.clear();
     }
@@ -305,6 +303,17 @@ class Form extends Component
 
   render()
   {
+    const context = {
+      readOnly: this.props.readOnly,
+      form: this.props.id,
+      fields: this.props.fields,
+      onChange: this.onChangeHandler,
+      onStart: this.onStart,
+      onFinish: this.onFinish,
+      onError: this.onError,
+      ...this.context,
+    };
+
     const formClasses = classNames({
       form: true,
       [this.props.id]: true,
@@ -318,7 +327,9 @@ class Form extends Component
         autoComplete="off"
         className={formClasses}
       >
-        {this.props.children}
+        <FormContext.Provider value={context}>
+          {this.props.children}
+        </FormContext.Provider>
       </form>
     );
   }
@@ -486,26 +497,25 @@ Form.propTypes =
    * Modal's title when default OnError handler execute
    */
   onErrorTitle: PropTypes.string,
-  intl: intlShape,
 };
 
 /**
  * defaultProps
  * @type {Object}
  */
-Form.defaultProps =
+Form.defaultProps = 
 {
-  id: v4(),
+  id: Math.floor(Math.random() * 1000000),
   readOnly: false,
   scheme: {},
   fields: {},
   className: '',
   children: null,
   onErrorTitle: 'global.error_form',
-  flush: true,
+  flush: false,
   onLoad: () => null,
   onChange: () => null,
-  onSuccess: () => null,
+  // onSuccess: () => null,
   onFailed: () => null,
   intl: {
     now: ({ id }) => id,
@@ -523,22 +533,6 @@ Form.defaultProps =
  * contextTypes
  * @type {Object}
  */
-Form.contextTypes = {
-  store: PropTypes.object,
-};
-
-/**
- * childContextTypes
- * @type {Object}
- */
-Form.childContextTypes = {
-  form: PropTypes.string,
-  readOnly: PropTypes.bool,
-  fields: PropTypes.object,
-  onChange: PropTypes.func,
-  onStart: PropTypes.func,
-  onFinish: PropTypes.func,
-  onError: PropTypes.func,
-};
+Form.contextType = AppContext;
 
 export default Form;
