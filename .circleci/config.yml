@@ -25,9 +25,9 @@ jobs:
       - node/install:
           node-version: '12.18.2' 
       - node/install-packages
-      - run:
-          name: Move files
-          command: cp -r ./src/* ./ && rm -rf ./src
+      #- run:
+      #    name: Move files
+      #    command: cp -r ./src/* ./ && rm -rf ./src
       - run:
           name: npm deploy
           command: npx semantic-release
