@@ -23,7 +23,7 @@ jobs:
     steps:
       - checkout
       - node/install:
-          node-version: '14.0.0' 
+          node-version: '12.0.0' 
       - node/install-packages
       #- run:
       #    name: Move files
