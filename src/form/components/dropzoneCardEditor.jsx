@@ -99,7 +99,7 @@ Sidebar.defaultProps =
 
 
 
-class CardEditor extends Component
+export class CardEditor extends Component
 {
   constructor(props)
   {
@@ -423,6 +423,5 @@ CardEditor.defaultProps =
 };
 
 CardEditor.contextType = MergedContexts;
-
 
 export default bindContexts(CardEditor, [FormContext, AppContext]);

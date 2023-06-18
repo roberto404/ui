@@ -204,7 +204,15 @@ export const Grid = ({
   const getId = () => id;
 
   const getApi = () =>
-    api || context.api;
+  {
+    if (api === false)
+    {
+      return false;
+    }
+
+    
+    return api || context.api;
+  }
 
 
   const getSettings = () =>

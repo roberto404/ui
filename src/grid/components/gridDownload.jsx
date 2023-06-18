@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useContext} from 'react';
 import PropTypes from 'prop-types';
 // import { connect } from 'react-redux';
 import { saveAs } from 'file-saver';
@@ -7,8 +7,8 @@ import clone from 'lodash/clone';
 import isEmpty from 'lodash/isEmpty';
 import toCSV from '@1studio/utils/array/toCSV';
 
-
-
+import { useAppContext } from '../../context';
+import { GridContext } from '../context';
 
 /**
 * Grid Download Component
@@ -16,11 +16,15 @@ import toCSV from '@1studio/utils/array/toCSV';
 * @example
 * <GridDownload />
 */
-const GridDownload = ({ id, label, className, hook }, context) =>
+const GridDownload = ({ id, label, className, hook }) =>
 {
+
+  const { store } = useAppContext();
+  const context = useContext(GridContext);
+
   const onClickDownloadHandler = () =>
   {
-    const grid = context.store.getState().grid[id || context.grid];
+    const grid = store.getState().grid[id || context.grid];
 
     if (grid)
     {
@@ -71,16 +75,6 @@ GridDownload.defaultProps =
   label: 'Download',
   className: '',
   hook: {},
-};
-
-/**
- * contextTypes
- * @type {Object}
- */
-GridDownload.contextTypes =
-{
-  store: PropTypes.object,
-  grid: PropTypes.string,
 };
 
 

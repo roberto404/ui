@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import { useAppContext, AppContext } from '../../context';
 
 
 /* !- Redux Action */
@@ -30,8 +31,10 @@ import { DATE_FORMAT_HTML5, isDateL, isDateHTML5 } from '../../calendar/constant
 /**
  * CalendarMonthInterval with caroussel pager
  */
-export const CalendarMonthIntervalCaroussel = (props, { store }) =>
+export const CalendarMonthIntervalCaroussel = (props) =>
 {
+  const { store } = useAppContext();
+
   const isRealTime = props.realTime;
 
   const fromId = isRealTime ? props.fromId : `${props.fromId}@${props.id}`;
@@ -60,6 +63,7 @@ export const CalendarMonthIntervalCaroussel = (props, { store }) =>
       store.dispatch(setValues(values));
     }
   }
+
 
   return (
     <div className="grid-2">
@@ -187,11 +191,6 @@ CalendarMonthIntervalCaroussel.defaultProps =
   ...CalendarMonthInterval.defaultProps,
 };
 
-CalendarMonthIntervalCaroussel.contextTypes =
-{
-  store: PropTypes.object,
-};
-
 
 /**
  * CalendarMonthIntervalCarousselButton connected data.
@@ -232,6 +231,7 @@ export const CalendarMonthIntervalCarousselButton = connect(mapStateToProps, { c
       buttonClassName="shadow outline fill-gray"
       {...props}
       data={{}}
+
       popover={
         <CalendarMonthIntervalCaroussel
           onClickApplyButton={() => props.close()}

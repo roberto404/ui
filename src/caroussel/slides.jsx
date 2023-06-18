@@ -10,6 +10,10 @@ import classNames from 'classnames';
 
 import * as GridActions from '../grid/actions';
 
+/* !- Contexts */
+
+import { AppContext } from '../context';
+
 
 /* !- Constants */
 
@@ -319,7 +323,7 @@ class Slides extends Component
     const classNameSlides = classNames({
       'slides': true,
       'scroll': disableDrag,
-    })
+    });
 
     return (
       <div
@@ -459,6 +463,8 @@ Slides.defaultProps =
   forceStart: true,
   disableDrag: false,
 };
+
+Slides.contextType = AppContext;
 
 
 export default connect(

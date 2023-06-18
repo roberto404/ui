@@ -65,6 +65,7 @@ const Logout = (
       }
 
       navigate('/', { replace: true });
+      window.location.reload();
     });
 
     dispatch(preload());

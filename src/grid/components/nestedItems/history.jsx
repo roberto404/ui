@@ -128,7 +128,7 @@ const History = ({
       className={classNames({
       'pointer': typeof onClick === 'function'
       })}
-      onClick={event => onClick(items, event)}
+      onClick={event => onClick?.(items, event)}
     >
 
       <div className="h-center">

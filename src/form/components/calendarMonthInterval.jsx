@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -10,8 +10,8 @@ import CalendarMonth from '../../calendar/month/';
 
 /* !- Contexts */
 
-import { FormContext } from '../context';
-import { AppContext, bindContexts } from '../../context';
+import { FormContext, bindFormContexts } from '../context';
+import { AppContext, bindContexts, MergedContexts } from '../../context';
 
 
 /* !- Redux Actions */
@@ -288,5 +288,10 @@ CalendarMonthInterval.defaultProps =
   intervalAI: true,
 };
 
+CalendarMonthInterval.contextType = AppContext;
+
 
 export default bindContexts(CalendarMonthInterval, [FormContext, AppContext]);
+// export default bindFormContexts(CalendarMonthInterval);
+
+// export default CalendarMonthInterval;

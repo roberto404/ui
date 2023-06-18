@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
 import { ReactReduxContext } from 'react-redux';
-
+import { AppContext } from '../context';
 
 /* !- Redux Actions */
 
@@ -140,9 +140,28 @@ class DynamicCaroussel extends Component
     }
     else
     {
+
+      const data =
+        props.fetchData(this.carousselPage || 0, props.data, props.visibleSlides)
+          .map(i =>
+          {
+            if (typeof i.slide === undefined)
+            {
+              return i;
+            }
+
+            const slide = (
+              <AppContext.Provider value={this.context}>
+                {i.slide}
+              </AppContext.Provider>
+            )
+
+            return ({ ...i, slide });
+          });
+
       this.context.store.dispatch(
         setData(
-          props.fetchData(this.carousselPage || 0, props.data, props.visibleSlides),
+          data,
           CAROUSSEL_SETTINGS,
           props.id,
         ));
@@ -203,6 +222,6 @@ DynamicCaroussel.defaultProps =
   visibleSlides: 1,
 };
 
-DynamicCaroussel.contextType = ReactReduxContext;
+DynamicCaroussel.contextType = AppContext;
 
 export default DynamicCaroussel;

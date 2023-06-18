@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+// import { flushSync } from 'react-dom';
+import ReactDOM from "react-dom";
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
 import isEmpty from 'lodash/isEmpty';
@@ -284,7 +286,13 @@ class FormField extends Component
       this.state.error !== error
     )
     {
-      this.setState({ value, error });
+      ReactDOM.flushSync(() => {
+        this.setState({ value, error });
+      });
+
+      ReactDOM.flushSync(() => {
+        this.setState(({ mandatory }) => ({ mandatory: !mandatory }));
+      });
     }
   }
 
@@ -352,18 +360,24 @@ class FormField extends Component
       && this.props.onChange.toString() !== FormField.defaultProps.onChange.toString()
     )
     {
-      this.props.onChange(payload, options);
+      // flushSync(() => {
+        this.props.onChange(payload, options);
+      // });
     }
     else if (this.context.onChange)
     {
-      this.context.onChange(payload, options);
+      // flushSync(() => {
+        this.context.onChange(payload, options);
+      // });
     }
     else if (payload.value === undefined)
     {
       this.context.store.dispatch(unsetValues({ id: payload.id }, payload.form))
     }
     else {
+      // flushSync(() => {
       this.context.store.dispatch(setValues({ [payload.id]: payload.value }, payload.form));
+      // });
     }
   }
 

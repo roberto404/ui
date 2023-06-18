@@ -131,6 +131,10 @@ class DropzoneComponent extends Field
     .on('drop', this.onDropHandler);
   }
 
+  getState = () =>
+    this.state.value;
+    // this.context.store.getState().form[this.context.form]?.[this.props.id] || [];
+
 
   /* !- Handlers */
 
@@ -172,10 +176,10 @@ class DropzoneComponent extends Field
    * @param {object} xhr
    * @param {object} formData
    */
-  onSendingHandler = (file) =>
+  onSendingHandler = (file, xhr, formData) =>
   {
     this.onChangeHandler([
-      ...this.state.value,
+      ...this.getState(),
       {
         id: parseInt(`${file.lastModified}${file.size}`),
         title: file.name,
@@ -203,7 +207,7 @@ class DropzoneComponent extends Field
    */
   onUploadProgressHandler = (file, percent, bytesSend) =>
   {
-    const value = [...this.state.value];
+    const value = [...this.getState()];
 
     const id = parseInt(file.lastModified + '' + file.size);
     const index = findIndex(value, { id: id });
@@ -226,7 +230,7 @@ class DropzoneComponent extends Field
    */
   onCompleteHandler = (file) =>
   {
-    const value = [...this.state.value];
+    const value = [...this.getState()];
 
     const id = parseInt(file.lastModified + '' + file.size);
     const index = findIndex(value, { id: id });
@@ -275,13 +279,13 @@ class DropzoneComponent extends Field
   onErrorHandler = (file, message) =>
   {
     const id = parseInt(file.lastModified + '' + file.size);
-    const index = this.state.value.findIndex(item => item.id === id);
+    const index = this.getState().findIndex(item => item.id === id);
 
     if (index !== -1)
     {
       this.onChangeHandler([
-        ...this.state.value.slice(0, index),
-        ...this.state.value.slice(index + 1),
+        ...this.getState().slice(0, index),
+        ...this.getState().slice(index + 1),
       ]);
     }
 
@@ -313,6 +317,8 @@ class DropzoneComponent extends Field
       'buttons concat': this.props.onClickBrowse,
     });
 
+    console.log(this.state);
+
     return (
       <div
         className={`field file-field ${this.props.className}`}
@@ -326,27 +332,23 @@ class DropzoneComponent extends Field
 
         <div className="files">
 
-          { this.state.value.length > 0 &&
+          { this.getState().length > 0 &&
             React.cloneElement(
               this.props.children,
               {
                 ...this.props,
-                items: this.state.value,
+                items: this.getState(),
                 onChange: this.onChangeHandler,
               },
             )
           }
 
-          { 1===2 && this.state.value.length > 0 && this.props.maxFiles > this.state.value.length &&
-          <div className="h-1" />
-          }
-
-          { this.props.maxFiles > this.state.value.length &&
+          { this.props.maxFiles > this.getState().length &&
             <div className={buttonsClass}>
               { React.createElement(this.props.UI, { ...this.props, onClick: this.onClickButtonHandler })}
               { this.props.onClickBrowse &&
               <button
-                onClick={event => this.props.onClickBrowse(event, file => this.onChangeHandler([...this.state.value, file]))}
+                onClick={event => this.props.onClickBrowse(event, file => this.onChangeHandler([...this.getState(), file]))}
                 className={this.props.classNameButtonBrowse}
               >
                 <IconAdd />
