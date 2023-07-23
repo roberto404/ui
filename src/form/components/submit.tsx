@@ -10,7 +10,7 @@ import reduce from 'lodash/reduce';
 
 import { flush as formFlush } from '../actions';
 import { close, preload } from '../../layer/actions';
-import { removeRecord } from '../../grid/actions';
+import { removeRecord, setData } from '../../grid/actions';
 
 
 /* !- Constants */
@@ -155,7 +155,14 @@ const Submit = (props: PropTypes) =>
     })
       .then((response) =>
       {
-        dispatch(removeRecord(response.records, id));
+        if (Array.isArray(response.records))
+        {
+          dispatch(setData(response.records, undefined, id));
+        }
+        else
+        {
+          dispatch(removeRecord(response.records, id));
+        }
         dispatch(formFlush(id));
         dispatch(close());
       });    

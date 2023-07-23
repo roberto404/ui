@@ -101,13 +101,7 @@ const GridSelectGroupBy = (props: PropTypes) =>
       .map(
         (item) =>
         {
-          let title = item;
-          const helperIndex = findIndex(helper, { id: item.toString() });
-
-          if (helperIndex >= 0)
-          {
-            title = helper[helperIndex].title;
-          }
+          const title = helper.find(({ id }) => id.toString() === item.toString())?.title || item;
 
           return { id: item, title };
         },

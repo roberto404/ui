@@ -9,6 +9,7 @@ import
 }
 from './constants';
 
+validate.validators.presence.options = { allowEmpty: false };
 
 validate.validators.custom = (fieldValue, scheme, fieldId, formData) =>
 {

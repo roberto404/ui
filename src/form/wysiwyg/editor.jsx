@@ -127,7 +127,7 @@ class Wysiwyg extends Field
 
   componentWillReceiveProps = (nextProps) =>
   {
-    if (nextProps.value && nextProps.value !== this.value)
+    if (typeof nextProps.value !== 'undefined' && nextProps.value !== this.value)
     {
       let editorState = {};
 
@@ -544,7 +544,7 @@ Wysiwyg.defaultProps =
   ...Wysiwyg.defaultProps,
   format: editorState => typeof editorState === 'object' && editorState.getCurrentContent !== undefined ?
     JSON.stringify(convertToRaw(editorState.getCurrentContent()))
-    : '',
+    : editorState,
   decorator: [
     {
       strategy: findLinkEntities,

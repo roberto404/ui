@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { MergedContexts } from '../../context';
+import { bindFormContexts } from '../context';
+import { useAppContext } from '../../context';
 
 
 /* !- Redux Actions */
@@ -34,8 +37,9 @@ const Tags = (props) =>
   )
 };
 
-export const TagsMenu = (props, { store }) =>
+export const TagsMenu = (props) =>
 {
+  const { store } = useAppContext();
   const items = (props.items || []).filter(i => typeof i === 'object' && i.title);
 
   const onClickMandatoryHandler = (a,b,c) =>
@@ -78,11 +82,6 @@ export const TagsMenu = (props, { store }) =>
   )
 }
 
-TagsMenu.contextTypes = 
-{
-  store: PropTypes.store,
-}
-
 
 
 
@@ -91,16 +90,6 @@ TagsMenu.contextTypes =
 */
 class Autocomplete extends Component
 {
-  constructor(props)
-  {
-    super(props);
-
-    this.state =
-    {
-      data: props.data.map(i => ({ handler: this.onClickMenuHandler, ...i })),
-    }
-  }
-
   getForm = () =>
     this.props.form || this.context.form;
 
@@ -177,13 +166,16 @@ class Autocomplete extends Component
      * 2. Menu click not will trigger
     */
      setTimeout(() => { this.submitInputValue(); }, 100);
-    
   }
 
   onFocusHandler = (payload, event) =>
   {
     this.addShortcuts();
-    this.showMenu(payload);
+
+    if (event)
+    {
+      this.showMenu(payload, event);
+    }
   }
 
 
@@ -223,23 +215,24 @@ class Autocomplete extends Component
   }
 
 
-  showMenu = (payload = {}, event) =>
+  showMenu = ({ value }, event) =>
   {
     const state = this.getState();
-    let inputValue = payload.value;
+    let inputValue = value;
     
     if (this.props.multiple && inputValue)
     {
-      inputValue = typeof payload.value[payload.value.length - 1] === 'string' ? payload.value[payload.value.length - 1] : '';
+      inputValue = typeof value[value.length - 1] === 'string' ? value[value.length - 1] : '';
     }
 
     // menu items
-    const items = this.state.data
+    const items = this.props.data
       .filter(record =>
         (this.props.multiple === false || !state.some(({ id }) => id === record.id))
         && (!inputValue || record.title.indexOf(inputValue) !== -1)
-      );
-
+      )
+      .slice(0, 10)
+      .map(i => ({ handler: this.onClickMenuHandler, ...i }));
 
     if (items.length)
     {
@@ -413,13 +406,6 @@ Autocomplete.defaultProps =
   data: [],
 };
 
-Autocomplete.contextTypes =
-{
-  store: PropTypes.object,
-  form: PropTypes.string,
-  addShortcuts: PropTypes.func,
-  removeShortcuts: PropTypes.func,
-}
+Autocomplete.contextType = MergedContexts;
 
-
-export default Autocomplete;
+export default bindFormContexts(Autocomplete);

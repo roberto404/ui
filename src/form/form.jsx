@@ -218,25 +218,52 @@ class Form extends Component
    */
   onFinish = (response) =>
   {
-    const layer = this.context.store.getState().layer;
+    const { store } = this.context;
 
+    const layer = store.getState().layer;
+    
     if (response.status === 'SUCCESS')
     {
+      let respond = true;
+      
       if (typeof this.props.onSuccess === 'function')
       {
-        if (this.props.onSuccess(response) === false)
+        respond = this.props.onSuccess(response);
+
+        if (respond === false)
         {
           return;
         }
       }
-      else
+
+      const action = Array.isArray(response.records) ?
+        GridActions.modifyOrAddRecords : GridActions.modifyOrAddRecord;
+
+      const formState = store.getState().form[this.props.id];
+
+      if (typeof response.records.id !== 'undefined' && (formState.id === undefined || response.records.id == formState.id))
       {
-        const action = Array.isArray(response.records) ?
-          GridActions.modifyOrAddRecords : GridActions.modifyOrAddRecord;
-          
-        this.context.store.dispatch(action(response.records, this.props.id));
-        this.context.store.dispatch(LayerActions.close());
+        store.dispatch(FormActions.setValues(response.records, this.props.id));
       }
+      // if respose full grid *ReadAll
+      else if (Array.isArray(response.records))
+      {
+        const id = formState.id || response.lastInsertId;
+
+        const record = id ? response.records.find(item => item.id == id) : undefined;
+
+        if (record)
+        {
+          store.dispatch(FormActions.setValues(record, this.props.id))
+        }
+        else
+        {
+          store.dispatch(FormActions.flush(this.props.id))
+        }
+      }
+        
+      store.dispatch(action(response.records, this.props.id));
+      store.dispatch(LayerActions.close());
 
       this.clear();
     }

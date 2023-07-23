@@ -44,11 +44,11 @@ export const formatDropzoneFileId = (value) =>
   return value.slice(0, lastIndex).concat(value[lastIndex].id);
 };
 
-export const formatDropzoneFileIdAndExtHelper = ({ id, title, ext, percent }) =>
+export const formatDropzoneFileIdAndExtHelper = ({ id, title, ext, percent } = {}) =>
   percent === undefined ? ({ id, ext }) : ({ id, title, percent });
 
 export const formatDropzoneFileIdAndExt = (value = []) =>
-  value.map(formatDropzoneFileIdAndExtHelper);
+  value.map(formatDropzoneFileIdAndExtHelper || {});
 
 export const formatDropzoneMarkers = (value = []) =>
   value.map((values) =>
@@ -80,7 +80,7 @@ export const formatDropzoneMarkers = (value = []) =>
 
 
 
-
+let value;
 
 /**
  * Dropzone - File uploader component
@@ -132,11 +132,18 @@ class DropzoneComponent extends Field
   }
 
   getState = () =>
-    this.state.value;
-    // this.context.store.getState().form[this.context.form]?.[this.props.id] || [];
+    this.value || this.state.value;
 
 
   /* !- Handlers */
+
+  onChangePreHandler = (value) =>
+  {
+    // const foo = [...value];
+    this.value = [...value];
+    // value.sort();
+    this.onChangeHandler(value);
+  }
 
   onClickButtonHandler = (event) =>
   {
@@ -178,7 +185,7 @@ class DropzoneComponent extends Field
    */
   onSendingHandler = (file, xhr, formData) =>
   {
-    this.onChangeHandler([
+    this.onChangePreHandler([
       ...this.getState(),
       {
         id: parseInt(`${file.lastModified}${file.size}`),
@@ -216,7 +223,7 @@ class DropzoneComponent extends Field
     if (index !== -1)
     {
       value[index]['percent'] = parseInt(percent);
-      this.onChangeHandler(value);
+      this.onChangePreHandler(value);
     }
 
   }
@@ -249,7 +256,7 @@ class DropzoneComponent extends Field
          */
         value[index] = this.props.onUploadFormat(response.records);
 
-        this.onChangeHandler(value);
+        this.onChangePreHandler(value);
 
         if (this.props.onComplete)
         {
@@ -283,7 +290,7 @@ class DropzoneComponent extends Field
 
     if (index !== -1)
     {
-      this.onChangeHandler([
+      this.onChangePreHandler([
         ...this.getState().slice(0, index),
         ...this.getState().slice(index + 1),
       ]);
@@ -307,17 +314,24 @@ class DropzoneComponent extends Field
 
   UNSAFE_componentWillReceiveProps(nextProps)
   {
+    this.value = undefined;
     this.element.dropzone.removeAllFiles();
     super.UNSAFE_componentWillReceiveProps(nextProps);
   }
+
+  shouldComponentUpdate(nextProps, nextState, nextContext)
+  {
+    this.value = [...nextState.value];
+    // value.sort();
+    return true;
+  }
+
 
   render()
   {
     const buttonsClass = classNames({
       'buttons concat': this.props.onClickBrowse,
     });
-
-    console.log(this.state);
 
     return (
       <div
@@ -338,7 +352,7 @@ class DropzoneComponent extends Field
               {
                 ...this.props,
                 items: this.getState(),
-                onChange: this.onChangeHandler,
+                onChange: this.onChangePreHandler,
               },
             )
           }
@@ -348,7 +362,7 @@ class DropzoneComponent extends Field
               { React.createElement(this.props.UI, { ...this.props, onClick: this.onClickButtonHandler })}
               { this.props.onClickBrowse &&
               <button
-                onClick={event => this.props.onClickBrowse(event, file => this.onChangeHandler([...this.getState(), file]))}
+                onClick={event => this.props.onClickBrowse(event, file => this.onChangePreHandler([...this.getState(), file]))}
                 className={this.props.classNameButtonBrowse}
               >
                 <IconAdd />

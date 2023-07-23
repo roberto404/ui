@@ -27,16 +27,33 @@ import { getViewGroup } from './reducers';
 
 const defaultProps =
 {
+  icons: {},
   classNameButton: 'w-auto',
   classNameButtonActive: 'w-auto active',
+  classNameIcon: 'w-2 h-2 mr-1',
+  classNameIconActive: '',
+  classNameTitle: '',
+  classNameTitleActive: '',
+  filter: () => true,
 };
 
 
 export type PropTypes = 
 {
   id?: string,
+  /**
+   * Base (container) class definition
+   */
   className?: string,
   showAllLabel?: string | JSX.Element,
+  /**
+   * adding icons to buttons
+   */
+  icons?: {[key: string]: React.FC},
+  /**
+   * filtering to restrict which views are displayed
+   */
+  filter?: (view: { id: string, status: string, title: string }) => boolean,
 } & typeof defaultProps;
 
 /**
@@ -47,6 +64,12 @@ const ViewTabButtons = ({
   className,
   classNameButton,
   classNameButtonActive,
+  classNameIcon,
+  classNameIconActive,
+  classNameTitle,
+  classNameTitleActive,
+  icons,
+  filter,
   showAllLabel,
 }: PropTypes) =>
 {
@@ -74,16 +97,20 @@ const ViewTabButtons = ({
 
   const isOnlyOneActive = views.filter(({ status }) => !!status).length === 1;
 
-  const items = views.map(({ id, status, title }) => (
-    <button
-      key={id}
-      data-id={id}
-      onClick={event => onClickTabHandler(event, id)}
-      className={status && isOnlyOneActive ? classNameButtonActive : classNameButton}
-    >
-      {title || id}
-    </button>
-  ));
+  const items =
+    views
+      .filter(view => filter(view))
+      .map(({ id, status, title }) => (
+        <button
+          key={id}
+          data-id={id}
+          onClick={event => onClickTabHandler(event, id)}
+          className={status && isOnlyOneActive ? classNameButtonActive : classNameButton}
+        >
+          { typeof icons[id] !== 'undefined' && React.createElement(icons[id], { className: status ? (classNameIconActive || classNameIcon) : classNameIcon } )}
+          <span className={classNameTitle}>{title || id}</span>
+        </button>
+      ));
 
   const isAllActive = views.every(({ status }) => !!status);
 

@@ -68,7 +68,7 @@ class FormField extends Component
 
         if (value)
         {
-          if (typeof value === 'string')
+          if (typeof value === 'string' && props.disableIntl !== true)
           {
             result[item] = props.intl.formatMessage({ id: value });
           }
@@ -95,10 +95,11 @@ class FormField extends Component
     const formState = form ? store.form[form] : store.form;
 
     if (
-      this.props.value !== undefined &&
-      this.props.value !== null &&
-      this.props.value.length &&
-      (!formState || !formState[this.props.id]))
+      this.props.value !== undefined
+      && this.props.value !== null
+      && this.props.value.length
+      && (!formState || !formState[this.props.id])
+    )
     {
       this.onChangeHandler(this.props.value);
       this.onChangeListener(); // redux subscription has not yet occurred
@@ -201,7 +202,7 @@ class FormField extends Component
     if (nextProps.label)
     {
       this.setState({
-        label: (nextProps.label && typeof nextProps.label === 'string' && nextProps.intl) ?
+        label: (nextProps.label && typeof nextProps.label === 'string' && nextProps.intl && nextProps.disableIntl !== true) ?
         nextProps.intl.formatMessage({ id: nextProps.label }) : nextProps.label,
       })
     }
@@ -289,10 +290,6 @@ class FormField extends Component
       ReactDOM.flushSync(() => {
         this.setState({ value, error });
       });
-
-      ReactDOM.flushSync(() => {
-        this.setState(({ mandatory }) => ({ mandatory: !mandatory }));
-      });
     }
   }
 
@@ -360,24 +357,19 @@ class FormField extends Component
       && this.props.onChange.toString() !== FormField.defaultProps.onChange.toString()
     )
     {
-      // flushSync(() => {
-        this.props.onChange(payload, options);
-      // });
+      this.props.onChange(payload, options);
     }
     else if (this.context.onChange)
     {
-      // flushSync(() => {
-        this.context.onChange(payload, options);
-      // });
+      this.context.onChange(payload, options);
     }
     else if (payload.value === undefined)
     {
       this.context.store.dispatch(unsetValues({ id: payload.id }, payload.form))
     }
-    else {
-      // flushSync(() => {
+    else
+    {
       this.context.store.dispatch(setValues({ [payload.id]: payload.value }, payload.form));
-      // });
     }
   }
 
@@ -851,7 +843,7 @@ FormField.defaultProps =
   placeholder: '',
   prefix: '',
   postfix: '',
-  error: '',
+  // error: '',
   disabled: false,
   mandatory: false,
   format: v => v,
@@ -871,24 +863,10 @@ FormField.defaultProps =
   disableLabel: false,
   complete: false,
   preload: false,
+  disableIntl: false,
   dataTranslate: true,
 };
 
-// FormField.contextTypes =
-// {
-//   readOnly: PropTypes.bool,
-//   form: PropTypes.string,
-//   fields: PropTypes.object,
-//   onChange: PropTypes.func,
-
-//   store: PropTypes.object,
-//   addListener: PropTypes.func,
-//   removeListener: PropTypes.func,
-//   register: PropTypes.func,
-// };
-
-// FormField.contextType = AppContext;
-// FormField.contextType = FormContext;
 FormField.contextType = MergedContexts;
 
 

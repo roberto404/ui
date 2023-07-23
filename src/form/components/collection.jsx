@@ -55,17 +55,19 @@ const SortableContainer = sortableContainer(({children}) => {
 */
 class Collection extends Field
 {
-  onChangeItemListener = (record, index) =>
+  onChangeItemListener = (record, index, dataType) =>
   {
+    const isArray = dataType === 'array' || !dataType && Array.isArray(this.state.value) && typeof this.state.value[0] === 'string'
+
     // simple Array
-    if (Array.isArray(this.state.value) && typeof this.state.value[0] === 'string')
+    if (isArray)
     {
       const value = [...this.state.value];
       value[index] = record.value;
 
       this.onChangeHandler(value);
     }
-    // nested collection empty child
+    // nested collection empty array
     else if (Array.isArray(record) && !record.length)
     {
       this.onChangeHandler(this.state.value.filter((v, i) => i !== index));
@@ -143,7 +145,7 @@ class Collection extends Field
           stateFormat={(value) => value[index] || ''}
           index={index}
           id={this.props.id}
-          onChange={record => this.onChangeItemListener(record, index)}
+          onChange={record => this.onChangeItemListener(record, index, this.props.uiProps.dataType)}
         />
         <button className="action" onClick={e => this.onClickRemoveHandler(e, index)}><IconRemove /></button>
       </div>

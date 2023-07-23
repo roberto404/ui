@@ -724,6 +724,7 @@
   {
     .prefix
     {
+      position: initial;
       @extend .rounded-left;
       border: 1px solid $gray-light;
       border-right-width: 0px;
@@ -732,8 +733,8 @@
       line-height: 1.33em;
       font-size: .85em;
       color: $gray;
-      max-height: 47.27px;
-      min-height: 47.27px;
+      max-height: 45.27px;
+      min-height: 45.27px;
     }
 
     input:not([type="radio"]):not([type="checkbox"])

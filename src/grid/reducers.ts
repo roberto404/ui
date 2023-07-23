@@ -176,7 +176,7 @@ const reducers = (state = {}, action = {}) =>
       {
         // @todo record.id;
         const model = getModel(state, action);
-        const index = findIndex(model.data, { id: action.record.id });
+        const index = findIndex(model.data, item => item.id == action.record.id);
 
         if (index !== -1)
         {
@@ -207,7 +207,7 @@ const reducers = (state = {}, action = {}) =>
         const data = action.records.reduce(
           (result, record) =>
           {
-            const index = findIndex(result, { id: record.id });
+            const index = findIndex(result, item => item.id == record.id);
 
             const nextRecord = {
               ...result[index],

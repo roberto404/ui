@@ -248,7 +248,7 @@ export const getViewGroup = (id?: string) =>
  * @example
  * [{ id, pos, title, children, status }]
  */
-export const getActiveViews = ({ nested }) => (store) =>
+export const getActiveViews = ({ nested, groupId = false, onlyId = false }) => (store) =>
 {
   const { view } = store;
 
@@ -295,7 +295,12 @@ export const getActiveViews = ({ nested }) => (store) =>
     return views.flat();
   }
 
-  return view.groups[view.active] || [];
+
+  const id = groupId || view.active;
+
+  return view.groups[id]
+    .filter(({ status }) => !!status === true)
+    .map(item => (onlyId ? item.id : item));
 }
 
 
