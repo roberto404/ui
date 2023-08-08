@@ -28,9 +28,11 @@ jobs:
       - run:
           name: Install Dependencies
           command: npm install --force
-      #- run:
-      #    name: Move files
-      #    command: cp -r ./src/* ./ && rm -rf ./src
+      - run:
+         name: Move files and clean up
+         command: |
+          cp -r src/* .
+          rm -rf src
       - run:
           name: npm deploy
           command: npx semantic-release
