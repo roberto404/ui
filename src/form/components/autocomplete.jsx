@@ -101,7 +101,7 @@ class Autocomplete extends Component
   /* !- Handlers */
 
 
-  onChangeHandler = (value) =>
+  onChangeHandler = (value, options) =>
   {
     if (value.length && this.stateFormat(value).slice(-1) === ';')
     {
@@ -111,7 +111,7 @@ class Autocomplete extends Component
 
     if (typeof this.props.onChange === 'function')
     {
-      this.props.onChange({ id: this.props.id, value });
+      this.props.onChange({ id: this.props.id, value }, options);
     }
     else
     {
@@ -126,12 +126,21 @@ class Autocomplete extends Component
   
   onClickMenuHandler = (props) =>
   {
+    let value = props.title;
+
     if (typeof this.props.onSelect === 'function')
     {
-      this.props.onSelect(props);
-    }
+      const respond = this.props.onSelect(props, { target: this });
 
-    let value = props.title;
+      if (respond === false)
+      {
+        return;
+      }
+      else if (respond)
+      {
+        value = respond;
+      }
+    }
 
     if (this.props.multiple)
     {
@@ -384,15 +393,6 @@ class Autocomplete extends Component
     );
   }
 }
-
-/**
- * propTypes
- * @override
- * @type {Object}
- */
-Autocomplete.propTypes =
-{
-};
 
 /**
  * defaultProps

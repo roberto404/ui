@@ -9,13 +9,15 @@ import reduce from 'lodash/reduce';
 /* !- React Actions */
 
 import { flush as formFlush } from '../actions';
-import { close, preload } from '../../layer/actions';
+import { close, modal, preload } from '../../layer/actions';
 import { removeRecord, setData } from '../../grid/actions';
 
 
 /* !- Constants */
 
 import { FORM_ERRORS_KEY } from '../constants';
+import { MODAL_PROPS } from '../../layer/constants';
+import { useIntl } from 'react-intl';
 
 /* !- Types */
 
@@ -24,16 +26,16 @@ const defaultProps =
   label: 'global.submit',
   className: 'primary',
   buttonClassName: 'primary',
-  intl: {
-    formatMessage: ({ id }) => id,
-  },
+  // intl: {
+  //   formatMessage: ({ id }) => id,
+  // },
 };
 
 type PropTypes = Partial<typeof defaultProps> &
 {
   id: string,
   api: void,
-  intl: {},
+  // intl: {},
   label: string | JSX.Element,
   className: string,
   buttonClassName: string,
@@ -74,6 +76,7 @@ const Submit = (props: PropTypes) =>
   const formContext = useContext(FormContext);
   const context = useAppContext();
   const dispatch  = useDispatch();
+  const intl = useIntl();
 
   const id = props.id || formContext.form;
   const api = props.api || context.api;
@@ -141,31 +144,66 @@ const Submit = (props: PropTypes) =>
     }
   }
 
-  const onDeleteHandler = (event) =>
-  {
-    event.preventDefault();
-    
+  const onDelete = () =>
+  { 
     dispatch(preload());
 
     const state = context.store.getState().form[id];
 
+    if (!state || !state.id)
+    {
+      dispatch(close());
+      return;
+    }
+
     api({
+      url: `${(props.method || id)}/${state.id}`,
       method: 'delete',
-      payload: state,
     })
       .then((response) =>
       {
-        if (Array.isArray(response.records))
+        if (response.status === 'SUCCESS')
         {
-          dispatch(setData(response.records, undefined, id));
+          if (Array.isArray(response.records))
+          {
+            dispatch(setData(response.records, undefined, id));
+          }
+          else
+          {
+            dispatch(removeRecord(response.records, id));
+          }
+          dispatch(formFlush(id));
+          dispatch(close());  
+
+          return;
+        }
+
+        if (response.modal)
+        {
+            dispatch(modal(response.modal));
         }
         else
         {
-          dispatch(removeRecord(response.records, id));
+          throw new Error('Wrong response on delete');
         }
-        dispatch(formFlush(id));
-        dispatch(close());
       });    
+  }
+
+  const onDeleteHandler = (event) =>
+  {
+    event.preventDefault();
+
+    const modalProps = MODAL_PROPS.delete(onDelete);
+
+    if (intl)
+    {
+      modalProps.title = intl.formatMessage({ id: modalProps.title });
+      modalProps.content = intl.formatMessage({ id: modalProps.content });
+      modalProps.button.title = intl.formatMessage({ id: modalProps.button.title });
+      modalProps.buttonSecondary.title = intl.formatMessage({ id: modalProps.buttonSecondary.title });
+    }
+
+    dispatch(modal(modalProps));
   }
 
   if (props.children)
@@ -179,8 +217,8 @@ const Submit = (props: PropTypes) =>
     );
   }
 
-  const label = (typeof props.label === 'string') ?
-    props.intl.formatMessage({ id: props.label }) : props.label;
+  const label = (typeof props.label === 'string' && intl) ?
+    intl.formatMessage({ id: props.label }) : props.label;
 
   return (
     <div className={`field button-field ${props.className}`}>

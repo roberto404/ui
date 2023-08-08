@@ -10,6 +10,7 @@ export const Button = injectIntl(Fields.Button);
 export const Dropdown = injectIntl(Fields.Dropdown);
 export const Input = injectIntl(Fields.Input);
 export const Textarea = injectIntl(Fields.Textarea);
+export const Groups = injectIntl(Fields.Groups);
 export const Submit = injectIntl(Fields.Submit);
 export const SubmitButtons = injectIntl(Fields.SubmitButtons);
 export const Select = injectIntl(Fields.Select);

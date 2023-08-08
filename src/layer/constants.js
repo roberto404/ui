@@ -17,21 +17,21 @@ export const DEFAULT_METHOD = 'dialog';
 export const MODAL_PROPS = {
   submit: (callback) =>
   ({
-    title: 'Are you sure you want to submit?',
+    title: 'modal.title.submit',
     // content: '',
     icon: IconSubmit,
     className: 'green w-full',
     button: {
-      title: 'Submit',
+      title: 'modal.button.submit',
       handler: callback,
     },
     buttonSecondary: {
-      title: 'Cancel',
+      title: 'modal.button.cancel',
     },
   }),
   submitWithMessage: (callback) =>
   ({
-    title: 'Are you sure you want to submit?',
+    title: 'modal.title.submit',
     content: (
       <Form id="modal" className="p-0 m-0">
         <Textarea resizeAble={false} className="m-0" id="message" rows={2} autoFocus />
@@ -40,30 +40,30 @@ export const MODAL_PROPS = {
     icon: IconSubmit,
     className: 'green w-full',
     button: {
-      title: 'Submit',
+      title: 'modal.button.submit',
       handler: callback,
     },
     buttonSecondary: {
-      title: 'Cancel',
+      title: 'modal.button.cancel',
     },
   }),
   delete: (callback) =>
   ({
-    title: 'Are you sure you want to delete?',
-    content: 'This item will be deleted immediately. You can\'t undo this action.',
+    title: 'modal.title.delete',
+    content: 'modal.content.delete',
     icon: IconDelete,
     className: 'red w-full',
     button: {
-      title: 'Delete',
+      title: 'modal.button.delete',
       handler: callback,
     },
     buttonSecondary: {
-      title: 'Cancel',
+      title: 'modal.button.cancel',
     },
   }),
   deleteWithMessage: (callback) =>
   ({
-    title: 'Are you sure you want to delete?',
+    title: 'modal.delete.title',
     content: (
       <Form id="modal" className="p-0 m-0">
         <Textarea resizeAble={false} className="m-0" id="message" rows={2} autoFocus />
@@ -72,11 +72,11 @@ export const MODAL_PROPS = {
     icon: IconDelete,
     className: 'red w-full',
     button: {
-      title: 'Delete',
+      title: 'modal.button.delete',
       handler: callback,
     },
     buttonSecondary: {
-      title: 'Cancel',
+      title: 'modal.button.cancel',
     },
   }),
 };

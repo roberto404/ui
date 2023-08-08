@@ -228,7 +228,7 @@ class Form extends Component
       
       if (typeof this.props.onSuccess === 'function')
       {
-        respond = this.props.onSuccess(response);
+        respond = this.props.onSuccess(response, this.props.id);
 
         if (respond === false)
         {
@@ -241,7 +241,7 @@ class Form extends Component
 
       const formState = store.getState().form[this.props.id];
 
-      if (typeof response.records.id !== 'undefined' && (formState.id === undefined || response.records.id == formState.id))
+      if (typeof response.records.id !== 'undefined' && typeof formState !== 'undefined' && (formState.id === undefined || response.records.id == formState.id))
       {
         store.dispatch(FormActions.setValues(response.records, this.props.id));
       }

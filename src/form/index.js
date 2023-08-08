@@ -9,6 +9,7 @@ import Textarea from './components/textarea';
 import Submit from './components/submit';
 import SubmitButtons from './components/submitButtons';
 import Select from './components/select';
+import Groups from './components/groups';
 import Dropzone from './components/dropzone';
 import Controllers from './components/controllers';
 import CalendarMonth from './components/calendarMonth';
@@ -34,6 +35,7 @@ export {
   Submit,
   SubmitButtons,
   Select,
+  Groups,
   Dropzone,
   Controllers,
   CalendarMonth,

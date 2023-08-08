@@ -42,6 +42,9 @@ export const saveStateToLocalStorage = (state) =>
   }
 };
 
+let logoutTimer;
+let sessionTime;
+
 /**
  * Every action refresh the user session data timestamp
  * @param  {Object} store
@@ -51,6 +54,31 @@ export const userRefurbishMiddleware = store => next => (action) =>
 {
   const user = store.getState().user;
 
+  try
+  {
+    sessionTime = user.model.sessionTime;
+  }
+  catch (error)
+  {
+    sessionTime  = 30 * 60 * 1000;
+  }
+
+  if (user.isLogged)
+  {
+    if (logoutTimer)
+    {
+      window.clearTimeout(logoutTimer);
+    }
+
+    logoutTimer = window.setTimeout(
+      () =>
+      {
+        window.location = '/logout';
+      },
+      sessionTime - (30 * 1000)
+    );
+  }
+
   if (!isEmpty(user.model.data))
   {
     user.model.refurbish();
@@ -59,8 +87,6 @@ export const userRefurbishMiddleware = store => next => (action) =>
   // user localStorage erased, this notify redux store
   if (user.isLogged && isEmpty(user.model.data))
   {
-    // next(dialog(<div>111</div>));
-
     return next(setUser());
   }
 

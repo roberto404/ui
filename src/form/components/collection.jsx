@@ -55,8 +55,9 @@ const SortableContainer = sortableContainer(({children}) => {
 */
 class Collection extends Field
 {
-  onChangeItemListener = (record, index, dataType) =>
+  onChangeItemListener = (record, index, options) =>
   {
+    const { dataType } = options;
     const isArray = dataType === 'array' || !dataType && Array.isArray(this.state.value) && typeof this.state.value[0] === 'string'
 
     // simple Array
@@ -65,16 +66,16 @@ class Collection extends Field
       const value = [...this.state.value];
       value[index] = record.value;
 
-      this.onChangeHandler(value);
+      this.onChangeHandler(value, null, options);
     }
     // nested collection empty array
     else if (Array.isArray(record) && !record.length)
     {
-      this.onChangeHandler(this.state.value.filter((v, i) => i !== index));
+      this.onChangeHandler(this.state.value.filter((v, i) => i !== index), null, options);
     }
     else
     {
-      this.onChangeHandler(this.state.value.map((v, i) => i === index ? record : v));
+      this.onChangeHandler(this.state.value.map((v, i) => i === index ? record : v), null, options);
     }
   }
 
@@ -145,7 +146,13 @@ class Collection extends Field
           stateFormat={(value) => value[index] || ''}
           index={index}
           id={this.props.id}
-          onChange={record => this.onChangeItemListener(record, index, this.props.uiProps.dataType)}
+          onChange={
+            (record, options = {}) =>
+              this.onChangeItemListener(
+                record,
+                index,
+                { ...options, dataType: (this.props.uiProps || {}).dataType, index }
+            )}
         />
         <button className="action" onClick={e => this.onClickRemoveHandler(e, index)}><IconRemove /></button>
       </div>

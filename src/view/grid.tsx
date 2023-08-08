@@ -120,6 +120,10 @@ type PropTypes = Partial<typeof defaultProps> & {
    */
   close: void,
   responseParser: void,
+  /**
+   * parsed record transfer to form store  when on select record
+   */
+  recordParser: {},
   fetchPreload: boolean,
 }
 
@@ -184,6 +188,7 @@ export const Grid = ({
   settings,
   onSelect,
   responseParser,
+  recordParser,
   flushFiltersUnmount,
   onWillUnmount,
   className,
@@ -311,7 +316,8 @@ export const Grid = ({
 
     selectedItemIdsRef.current = gridSelectedItemIds;
 
-    const gridData = store.getState().grid[getId()].rawData;
+    const grid = store.getState().grid[getId()];
+    const gridData = grid.rawData;
 
     // find selected items records
     const gridSelectedRecords = gridData.filter(({ id }) => gridSelectedItemIds.indexOf(id) !== -1);
@@ -335,7 +341,10 @@ export const Grid = ({
       records[FORM_SCHEME_KEY] = scheme;
     }
 
-    dispatch(setForm(records, getId()));
+    dispatch(setForm(
+      typeof recordParser === 'function' ? recordParser(records, { grid, id: getId() }) : records,
+      getId()
+    ));
   }
 
   /* !- React lifecycle */

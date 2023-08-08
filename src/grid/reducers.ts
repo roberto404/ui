@@ -240,7 +240,7 @@ const reducers = (state = {}, action = {}) =>
       {
         // @todo record.id;
         const model = getModel(state, action);
-        model.data = model.data.filter(record => record.id !== action.record.id);
+        model.data = model.data.filter(record => record.id != action.record.id);
 
         return createNextState(state, model, action.grid);
       }

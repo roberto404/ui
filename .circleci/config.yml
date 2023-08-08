@@ -24,7 +24,10 @@ jobs:
       - checkout
       - node/install:
           node-version: '12.18.2' 
-      - node/install-packages
+      #- node/install-packages
+      - run:
+        name: Install Dependencies
+        command: npm install --force
       #- run:
       #    name: Move files
       #    command: cp -r ./src/* ./ && rm -rf ./src

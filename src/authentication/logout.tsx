@@ -53,7 +53,7 @@ const Logout = (
   api('logout')
     .then((response) =>
     {
-      dispatch(logout());
+      navigate('/', { replace: true });
 
       if (typeof response === 'object' && response.modal)
       {
@@ -64,7 +64,8 @@ const Logout = (
         dispatch(close());
       }
 
-      navigate('/', { replace: true });
+      dispatch(logout());
+
       window.location.reload();
     });
 

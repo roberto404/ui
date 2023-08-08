@@ -316,7 +316,7 @@ class FormField extends Component
    * @param  {string} value Current value of the field
    * @return {void}
    */
-  onChangeHandler = (value, event) =>
+  onChangeHandler = (value, event, options = {}) =>
   {
     /**
      * If the client erase from string
@@ -327,7 +327,7 @@ class FormField extends Component
 
     const payload = {
       id: this.props.id,
-      value: this.props.format(value, reduce),
+      value: this.props.format(value, reduce, options),
     };
 
     // if (isEqual(payload.value, this.state.value))
@@ -340,10 +340,9 @@ class FormField extends Component
       return;
     }
 
-    const options = {
-      reduce,
-      event,
-    }
+    options.reduce = reduce;
+    options.event = event;
+    options.target = this;
 
     const form = this.props.form || this.context.form;
 
