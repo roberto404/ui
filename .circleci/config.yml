@@ -31,6 +31,7 @@ jobs:
       - run:
          name: Move files and clean up
          command: |
+          rm src/assets
           cp -r src/* .
           rm -rf src
       - run:
