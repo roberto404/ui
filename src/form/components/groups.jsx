@@ -132,9 +132,9 @@ class Groups extends Field
     return this.data.filter(({ id }) => groupIds.indexOf(id) === -1);
   }
 
-  getItemSiblings = (id) =>
+  getItemSiblings = (id, onlyId = true) =>
   {
-    return this.state.value.find(group => group.indexOf(id) !== -1) || this.getNonGroupedItems().map(({ id }) => id);
+    return this.state.value.find(group => group.indexOf(id) !== -1) || this.getNonGroupedItems().map((item) => (onlyId ? item.id : item));
   }
 
   getGroupIndex = () =>
