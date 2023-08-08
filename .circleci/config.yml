@@ -23,14 +23,17 @@ jobs:
     steps:
       - checkout
       - node/install:
-          node-version: '12.18.2' 
+          node-version: '18.12.0' 
       #- node/install-packages
       - run:
           name: Install Dependencies
           command: npm install --force
-      #- run:
-      #    name: Move files
-      #    command: cp -r ./src/* ./ && rm -rf ./src
+      - run:
+         name: Move files and clean up
+         command: |
+          rm src/assets
+          cp -r src/* .
+          rm -rf src
       - run:
           name: npm deploy
           command: npx semantic-release
