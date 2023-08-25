@@ -1,5 +1,5 @@
 
-import React, { useContext} from 'react';
+import React, { useContext } from 'react';
 import { useStore } from 'react-redux';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';

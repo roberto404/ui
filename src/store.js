@@ -200,7 +200,8 @@ export const storeWrapper = (reducers = defaultReducers, middlewares = []) =>
   middlewares.push(userRefurbishMiddleware);
 
   /* eslint-disable no-underscore-dangle */
-  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+  let composeEnhancers = typeof window !== 'undefined' ?
+    (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose) : compose;
   /* eslint-enable */
 
   let enhancers;
