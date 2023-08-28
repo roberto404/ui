@@ -347,6 +347,5 @@ export default withRouter(connect(
     close,
     preload,
     modal,
-    history,
   },
 )(FormView));
