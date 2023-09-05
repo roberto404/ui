@@ -24,7 +24,8 @@ const FileListGridRow = ({
     'bg-blue-dark text-white rounded': active,
   });
 
-  const imageSrc = data.url || new File(data).getUrl('250x250');
+  const imageSrc = data.ext === undefined && data.url !== undefined ?
+    data.url : new File(data).getUrl('250x250');
 
   const percent = parseInt(data.percent) === 100 ? 'resizing' : `${data.percent}%`;
 
