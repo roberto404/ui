@@ -6,7 +6,7 @@ button:not(.initial),
   @extend .no-select;
   cursor: pointer !important;
   display: block;
-  width: 100%;
+  // width: 100%;
   padding: 1em;
   position: relative;
   border-radius: 4px;
