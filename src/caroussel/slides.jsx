@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Hammer from 'hammerjs';
 import isEqual from 'lodash/isEqual';
 import clamp from '@1studio/utils/math/clamp';
 import classNames from 'classnames';
@@ -172,11 +171,14 @@ class Slides extends Component
 
   initHammerDrag()
   {
-    if (!this.hammerDragManager)
+    if (typeof window !== 'undefined')
     {
-      this.hammerDragManager = new Hammer.Manager(this.mask, { domEvents: true, touchAction: "pan-y" });
-      this.hammerDragManager.add(new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL }));
-      this.hammerDragManager.on('panstart panmove pancancel panend', this.dragListener);
+      import('hammerjs').then((Hammer) =>
+      {
+        this.hammerDragManager = new Hammer.Manager(this.mask, { domEvents: true, touchAction: "pan-y" });
+        this.hammerDragManager.add(new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL }));
+        this.hammerDragManager.on('panstart panmove pancancel panend', this.dragListener);
+      });
     }
   }
 
