@@ -302,7 +302,7 @@ class FormField extends Component
     event.preventDefault();
 
     // Get pasted data via clipboard API
-    const clipboardData = event.clipboardData || window.clipboardData;
+    const clipboardData = event.clipboardData || window?.clipboardData || '';
     const pastedData = clipboardData.getData('Text');
 
     this.props.onPaste(pastedData, this.onChangeHandler);

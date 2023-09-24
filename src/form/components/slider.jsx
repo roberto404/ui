@@ -153,18 +153,24 @@ class Slider extends Field
 
   initHammerDrag()
   {
-    if (this.props.enableStartHandler && !this.hammerDragManagerStart)
+    if (typeof window !== 'undefined')
     {
-      this.hammerDragManagerStart = new Hammer.Manager(this.handleStart);
-      this.hammerDragManagerStart.add(new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL }));
-      this.hammerDragManagerStart.on('panstart panmove pancancel panend', this.dragListener);
-    }
-
-    if (!this.hammerDragManagerEnd)
-    {
-      this.hammerDragManagerEnd = new Hammer.Manager(this.handleEnd);
-      this.hammerDragManagerEnd.add(new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL }));
-      this.hammerDragManagerEnd.on('panstart panmove pancancel panend', this.dragListener);
+      import('hammerjs').then((Hammer) =>
+      {
+        if (this.props.enableStartHandler && !this.hammerDragManagerStart)
+        {
+          this.hammerDragManagerStart = new Hammer.Manager(this.handleStart);
+          this.hammerDragManagerStart.add(new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL }));
+          this.hammerDragManagerStart.on('panstart panmove pancancel panend', this.dragListener);
+        }
+    
+        if (!this.hammerDragManagerEnd)
+        {
+          this.hammerDragManagerEnd = new Hammer.Manager(this.handleEnd);
+          this.hammerDragManagerEnd.add(new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL }));
+          this.hammerDragManagerEnd.on('panstart panmove pancancel panend', this.dragListener);
+        }
+      });
     }
   }
 
