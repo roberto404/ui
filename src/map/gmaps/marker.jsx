@@ -101,7 +101,7 @@ class Marker extends Component
   {
     if (this.props.onClick)
     {
-      if (this.props.onClick(marker) === false)
+      if (this.props.onClick(marker, this.context.map) === false)
       {
         return;
       }
