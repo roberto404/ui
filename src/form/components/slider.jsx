@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Hammer from 'hammerjs';
 import clamp from '@1studio/utils/math/clamp';
 import classNames from 'classnames';
 import { bindFormContexts } from '../context';
