@@ -17,7 +17,6 @@ import {
 } from './constants';
 
 
-window.assets = [];
 
 
 
@@ -127,9 +126,13 @@ class Map extends Component
     /**
      * Load Google map if it is not
      */
-    if (typeof window.google === 'undefined' || typeof window.google.maps === 'undefined')
+    if (typeof window === 'undefined' || typeof window.google === 'undefined' || typeof window.google.maps === 'undefined')
     {
       importJs(this.getGoogleMapsApiUrl(), this.onLoadGoogleMapsApi);
+    }
+    else
+    {
+      this.createMap();
     }
   }
 
