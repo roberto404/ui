@@ -40,7 +40,22 @@ const defaultProps =
 
 type PropTypes = Partial<typeof defaultProps> & {
   onDragMarker: () => void,
+  heading?: number,
 };
+
+
+const Title = ({ heading, children, className, style }) => {
+
+  if (typeof heading === 'number') {
+
+    const Heading = `h${heading}`;
+
+    return <Heading className={className} style={style}>{children}</Heading>;
+
+  }
+
+  return <div className={className} style={style}>{children}</div>;
+}
 
 
 
@@ -64,6 +79,7 @@ const Card = ({
   onClick,
   onDragMarker,
   children,
+  heading,
 }: PropTypes) =>
 {
   const { store } = useContext(ReactReduxContext);
@@ -217,7 +233,7 @@ const Card = ({
       { (title || subTitle) &&
         <div className={classNameCaption} style={{ minHeight: `calc(${imagePadding})`, padding: `${captionPadding / 2}em 1em`, bottom: 0 }}>
           { title &&
-          <div className={classNameTitle} style={{ wordBreak: 'break-word' }}>{title}</div>
+          <Title heading={heading} className={classNameTitle} style={{ wordBreak: 'break-word' }}>{title}</Title>
           }
           { subTitle &&
           <div className={classNameSubTitle}>{subTitle}</div>
