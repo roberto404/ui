@@ -58,4 +58,10 @@ export const createUserStorage = (data = {}, config = {}) =>
   User = new Storage(data, config);
 };
 
+export const GET_IS_LOGGED = ({ user }) =>
+  user.isLogged;
+
+export const GET_ID = ({ user }) =>
+  user.id;
+
 export default reducers;
