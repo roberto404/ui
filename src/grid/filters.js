@@ -123,7 +123,7 @@ export const queryToFilters = query =>
         .split('&')
         .map((filter) =>
         {
-          const match = (new RegExp(`^([${FIELD_CHARS}]+)[ ]*([${OPERATOR_UNIQUE}])+[ ]*(.*)$`, 'g')).exec(filter);
+          const match = (new RegExp(`^([${FIELD_CHARS}]+)[ ]*([${OPERATOR_UNIQUE}]+)[ ]*(.*)$`, 'g')).exec(filter);
     
           return ({
             field: match[1],
