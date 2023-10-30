@@ -21,10 +21,8 @@ import { CAROUSSEL_SETTINGS } from './caroussel';
 
 /* !- React Components */
 
-export const SlideHelperComponent = ({ id, url, href, active }) =>
-{
-  if (!href || active === true)
-  {
+export const SlideHelperComponent = ({ id, url, href, active }) => {
+  if (!href || active === true) {
     return <img src={url} width="100%" alt={id} />;
   }
 
@@ -89,10 +87,8 @@ SlideHelperComponent.propTypes =
  *  </a>
  * );
  */
-class Slides extends Component
-{
-  constructor(props)
-  {
+class Slides extends Component {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -104,54 +100,50 @@ class Slides extends Component
     this.forceStart = !!props.forceStart;
   }
 
-  UNSAFE_componentWillMount()
-  {
+  UNSAFE_componentWillMount() {
     this.props.setSettings(CAROUSSEL_SETTINGS, this.props.id);
   }
 
-  componentDidMount()
-  {
-    if (this.props.disableDrag === false)
-    {
+  componentDidMount() {
+    if (this.props.disableDrag === false) {
       this.initHammerDrag();
     }
     this.initPaginationListener();
     this.startAutoPlay();
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps)
-  {
-    if (!isEqual(this.props.rawData, nextProps.rawData))
-    {
-      this.setState({ active: true });
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    const isChanged = this.props.rawData?.[0]?.slide ?
+      this.props.rawData.map(({ id }) => id).join() !== nextProps.rawData.map(({ id }) => id).join()
+      :
+      isEqual(this.props.rawData, nextProps.rawData);
+
+    if (isChanged) {
+      if (!this.state.active) {
+        this.setState({ active: true });
+      }
     }
-    else if (this.state.active === true)
-    {
+    else if (this.state.active === true) {
       this.setState({ active: false });
     }
 
-    if (!this.autoplay && nextProps.page !== this.props.page)
-    {
+    if (!this.autoplay && nextProps.page !== this.props.page) {
       this.forceStart = false;
     }
 
-    if (this.autoplay && !nextProps.autoplay)
-    {
+    if (this.autoplay && !nextProps.autoplay) {
       this.flushAutoplay();
     }
   }
 
-  componentDidUpdate(prevProps)
-  {
-    if (!this.autoplay && this.props.autoplay && !prevProps.autoplay)
-    {
+  componentDidUpdate(prevProps) {
+    if (!this.autoplay && this.props.autoplay && !prevProps.autoplay) {
       this.forceStart = !!this.props.forceStart;
       this.startAutoPlay();
     }
   }
 
-  componentWillUnmount()
-  {
+  componentWillUnmount() {
     this.flushAutoplay();
   }
 
@@ -161,43 +153,34 @@ class Slides extends Component
    *
    * this.slidesManager will be the eventListener pointer.
    */
-  initPaginationListener()
-  {
-    if (!this.slidesManager && typeof this.props.onPaginate === 'function')
-    {
+  initPaginationListener() {
+    if (!this.slidesManager && typeof this.props.onPaginate === 'function') {
       this.slidesManager = this.slides.addEventListener('transitionend', this.props.onPaginate);
     }
   }
 
-  initHammerDrag()
-  {
-    if (typeof window !== 'undefined')
-    {
-      import('hammerjs').then((Hammer) =>
-      {
-        this.hammerDragManager = new Hammer.Manager(this.mask, { domEvents: true, touchAction: "pan-y" });
-        this.hammerDragManager.add(new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL }));
+  initHammerDrag() {
+    if (typeof window !== 'undefined') {
+      import('hammerjs').then((Hammer) => {
+        this.hammerDragManager = new Hammer.default.Manager(this.mask, { domEvents: true, touchAction: "pan-y" });
+        this.hammerDragManager.add(new Hammer.default.Pan({ direction: Hammer.default.DIRECTION_HORIZONTAL }));
         this.hammerDragManager.on('panstart panmove pancancel panend', this.dragListener);
       });
     }
   }
 
-  dragListener = (event) =>
-  {
-    if (!this.slides || !this.mask || !this.slides.offsetWidth || !this.mask.offsetWidth)
-    {
+  dragListener = (event) => {
+    if (!this.slides || !this.mask || !this.slides.offsetWidth || !this.mask.offsetWidth) {
       return;
     }
 
     const angle = Math.abs(event.angle);
 
-    if (!this.startCoord)
-    {
+    if (!this.startCoord) {
       this.startCoord = event.center;
       this.startCoord.left = this.slides.offsetLeft;
 
-      if (this.state.active === false)
-      {
+      if (this.state.active === false) {
         this.setState({ active: true });
       }
       return;
@@ -209,22 +192,20 @@ class Slides extends Component
     };
 
 
-    switch (event.type)
-    {
+    switch (event.type) {
       case 'panmove':
         {
           if (
             this.startCoord.left + shift.x < this.slides.offsetWidth * 0.3
             && this.startCoord.left + shift.x >
-              (this.slides.scrollWidth * -1) + (this.slides.offsetWidth * 0.7)
+            (this.slides.scrollWidth * -1) + (this.slides.offsetWidth * 0.7)
             && (this.state.x !== shift.x || this.state.y !== shift.y)
             && event.isFinal !== true
             && !(
               (angle >= 90 && angle < 150)
               || (angle > 30 && angle < 90)
             )
-          )
-          {
+          ) {
             this.setState(shift);
           }
           break;
@@ -235,10 +216,9 @@ class Slides extends Component
         {
           this.startCoord = null;
 
-          if (Math.abs(this.state.x) / this.mask.offsetWidth > 0.1)
-          {
+          if (Math.abs(this.state.x) / this.mask.offsetWidth > 0.1) {
             const direction = this.state.x < 0 ? 1 : -1;
-            
+
             const steps = Math.ceil(
               Math.abs(this.state.x) / (this.mask.offsetWidth / this.props.visibleSlides),
             );
@@ -256,33 +236,27 @@ class Slides extends Component
         }
 
       default:
-        if (this.state.active === true)
-        {
+        if (this.state.active === true) {
           this.setState({ active: false });
         }
         break;
     }
   }
 
-  onMouseOverHandler = () =>
-  {
+  onMouseOverHandler = () => {
     this.flushAutoplay();
   }
 
-  onMouseOutHandler = (event) =>
-  {
-    if (!event.currentTarget.parentElement.contains(event.relatedTarget))
-    {
+  onMouseOutHandler = (event) => {
+    if (!event.currentTarget.parentElement.contains(event.relatedTarget)) {
       this.startAutoPlay();
     }
   }
 
-  goToSlide = (page) =>
-  {
+  goToSlide = (page) => {
     const nextPage = (((page <= this.props.totalPage ? page : 1) - 1) * this.props.stepSlides) + 1;
 
-    if (nextPage !== this.props.page)
-    {
+    if (nextPage !== this.props.page) {
       this.props.goToPage(
         nextPage,
         this.props.id,
@@ -290,8 +264,7 @@ class Slides extends Component
     }
   }
 
-  goToNextSlide = () =>
-  {
+  goToNextSlide = () => {
     const nextPage =
       (this.props.page === (this.props.totalPage - this.props.visibleSlides + 1)) ?
         1 : this.props.page + 1;
@@ -299,25 +272,20 @@ class Slides extends Component
     this.goToSlide(nextPage);
   }
 
-  startAutoPlay = () =>
-  {
-    if (this.forceStart && this.props.autoplay && parseInt(this.props.autoplay) > 0)
-    {
+  startAutoPlay = () => {
+    if (this.forceStart && this.props.autoplay && parseInt(this.props.autoplay) > 0) {
       this.autoplay = setInterval(this.goToNextSlide, this.props.autoplay * 1000);
     }
   }
 
-  flushAutoplay = () =>
-  {
-    if (this.props.autoplay && this.autoplay)
-    {
+  flushAutoplay = () => {
+    if (this.props.autoplay && this.autoplay) {
       clearInterval(this.autoplay);
       this.autoplay = 0;
     }
   }
 
-  render()
-  {
+  render() {
     const { rawData, page, transition, visibleSlides, Slide, disableDrag } = this.props;
 
     const width = `${100 / visibleSlides}%`;
@@ -332,15 +300,13 @@ class Slides extends Component
         className="slide-mask"
         onMouseOver={this.onMouseOverHandler}
         onMouseOut={this.onMouseOutHandler}
-        ref={(ref) =>
-        {
+        ref={(ref) => {
           this.mask = ref;
         }}
       >
         <div
           className={classNameSlides}
-          ref={(ref) =>
-          {
+          ref={(ref) => {
             this.slides = ref;
           }}
           style={{
@@ -348,7 +314,7 @@ class Slides extends Component
             transition: this.state.active || !transition ? 'none' : transition,
           }}
         >
-          { rawData.map(i =>
+          {rawData.map(i =>
           (
             <div
               key={i.id}
@@ -470,8 +436,7 @@ Slides.contextType = AppContext;
 
 
 export default connect(
-  (state, { id }) =>
-  {
+  (state, { id }) => {
     const grid = state.grid[id] || {};
 
     return ({
