@@ -45,6 +45,7 @@ type PropTypes = Partial<typeof defaultProps> & {
   visibleSlides: number,
   stepSlides: number,
   className: string,
+  data?: [],
 };
 
 
@@ -80,6 +81,7 @@ const Caroussel = (
   disablePages,
   pagerNextUI,
   pagerPrevUI,
+  data,
 }: PropTypes
 ) =>
 {
@@ -146,6 +148,7 @@ const Caroussel = (
         stepSlides={stepSlides}
         Slide={Slide}
         autoplay={autoplay}
+        data={data}
       />
 
       { totalPage > 1 &&

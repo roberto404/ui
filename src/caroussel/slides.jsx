@@ -88,6 +88,7 @@ SlideHelperComponent.propTypes =
  * );
  */
 class Slides extends Component {
+
   constructor(props) {
     super(props);
 
@@ -101,7 +102,14 @@ class Slides extends Component {
   }
 
   UNSAFE_componentWillMount() {
-    this.props.setSettings(CAROUSSEL_SETTINGS, this.props.id);
+    if (this.props.data)
+    {
+      this.props.setData(this.props.data, CAROUSSEL_SETTINGS, this.props.id);
+    }
+    else
+    {
+      this.props.setSettings(CAROUSSEL_SETTINGS, this.props.id);
+    }
   }
 
   componentDidMount() {
@@ -448,5 +456,6 @@ export default connect(
   {
     goToPage: GridActions.goToPage,
     setSettings: GridActions.setSettings,
+    setData: GridActions.setData,
   },
 )(Slides);
