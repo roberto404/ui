@@ -110,6 +110,7 @@ const reducers = (state = DEFAULT_STATE, action = {}) =>
   }
 };
 
+
 export const getActive = ({ layer }) => layer.active;
 
 export const getLayer = (({ layer }) =>
@@ -133,5 +134,12 @@ export const getLayer = (({ layer }) =>
   }
 });
 
+
+export const GET_ACTIVE = getActive;
+
+export const GET_LAYER = getLayer;
+
+export const GET_METHOD =
+  ({ layer }) => layer.method;
 
 export default reducers;

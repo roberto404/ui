@@ -57,7 +57,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@1studio/utils": "5.0.2",
+    "@1studio/utils": "5.1.1",
     "@reduxjs/toolkit": "1.9.2",
     "@storybook/addon-essentials": "7.0.0-beta.54",
     "array-move": "4.0.0",
@@ -99,10 +99,6 @@
     "@types/react": "18.0.27",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.14",
-    "babel-loader": "9.1.2",
-    "babel-plugin-transform-class-properties": "6.24.1",
-    "babel-plugin-transform-object-rest-spread": "6.26.0",
-    "babel-preset-react": "6.24.1",
     "buffer": "6.0.3",
     "core-js": "3.27.2",
     "crypto-browserify": "3.12.0",
