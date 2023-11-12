@@ -1,9 +1,11 @@
 import React, { createContext, useContext, Component } from "react";
 
+
 export let AppContext = createContext(null as any);
 
 export const setAppContext = (context) =>
   AppContext = context;
+
 
 if (process.env.NODE_ENV !== 'production')
 {
@@ -60,7 +62,10 @@ const reset = () => {
 reset();
 
 
-export const MergedContexts = createContext<any>(mergedContextsValue);
+export let MergedContexts = createContext<any>(mergedContextsValue);
+
+export const setMergedContexts = (create) =>
+  MergedContexts = create<any>(mergedContextsValue);
 
 
 /**
