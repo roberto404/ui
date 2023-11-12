@@ -1,6 +1,9 @@
 import React, { createContext, useContext, Component } from "react";
 
-export const AppContext = createContext(null as any);
+export let AppContext = createContext(null as any);
+
+export const setAppContext = (context) =>
+  AppContext = context;
 
 if (process.env.NODE_ENV !== 'production')
 {
