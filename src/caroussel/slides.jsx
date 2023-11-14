@@ -102,7 +102,8 @@ class Slides extends Component {
   }
 
   UNSAFE_componentWillMount() {
-    if (this.props.data)
+
+    if (this.props.data?.length)
     {
       this.props.setData(this.props.data, CAROUSSEL_SETTINGS, this.props.id);
     }
