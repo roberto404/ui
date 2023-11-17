@@ -20,13 +20,9 @@ import { LOGIN_SCHEME, LOGIN_FIELDS } from './constants';
 
 /* !- Types */
 
-const defaultProps =
-{
-  fields: LOGIN_FIELDS,
-  scheme: LOGIN_SCHEME,
-};
 
-type PropTypes = Partial<typeof defaultProps> &
+
+type PropTypes =
 {
   fields: {
     email: {},
@@ -36,7 +32,8 @@ type PropTypes = Partial<typeof defaultProps> &
     email: {},
     password: {},
   },
-  onSuccess: (response) => boolean,
+  onSuccess?: (response) => boolean,
+  onError?: (response) => boolean,
 }
 
 
@@ -64,9 +61,10 @@ type PropTypes = Partial<typeof defaultProps> &
 * <Login />
 */
 const Login = ({
-  scheme,
-  fields,
+  scheme = LOGIN_SCHEME,
+  fields = LOGIN_FIELDS,
   onSuccess,
+  onError,
 }: PropTypes) =>
 {
   const dispatch = useDispatch();
@@ -91,6 +89,13 @@ const Login = ({
         }
         dispatch(setUser(response.records));
       }}
+      onFailed={(response) =>
+      {
+        if (typeof onError === 'function')
+        {
+          onError(response);
+        } 
+      }}
     >
       <Input {...fields.email} focus />
       <Input {...fields.password} />
@@ -101,7 +106,5 @@ const Login = ({
     </Form>
   );
 }
-
-Login.defaultProps = defaultProps;
 
 export default Login;
