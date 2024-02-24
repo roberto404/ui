@@ -3,7 +3,7 @@ import React from 'react';
 
 /* !- React Elements */
 
-import Toggle from '../../../src/form/pure/toggleStandalone';
+import Toggle from '../../../src/form/components/toggleStandalone';
 
 
 /* !- Constants */

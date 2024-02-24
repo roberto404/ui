@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId } from 'react';
 import PropTypes from 'prop-types';
 import slugify from '@1studio/utils/string/slugify';
 import random from '@1studio/utils/string/random';
@@ -26,8 +26,8 @@ import Field from '../formField';
 *   data={[{ id, title }, ...]}
 * />
 */
-class Checkbox extends Field
-{
+class Checkbox extends Field {
+
   elements = []
 
   /* !- Handlers */
@@ -38,8 +38,7 @@ class Checkbox extends Field
    * @param  {SytheticEvent} event
    * @return {void}
    */
-  onFocusHandler = (event) =>
-  {
+  onFocusHandler = (event) => {
     this.props.onFocus({ id: this.props.name, value: event.target.value });
   }
 
@@ -49,8 +48,7 @@ class Checkbox extends Field
    * @param  {SytheticEvent} event
    * @return {void}
    */
-  onBlurHandler = (event) =>
-  {
+  onBlurHandler = (event) => {
     this.props.onBlur({ id: this.props.name, value: event.target.value });
   }
 
@@ -63,8 +61,7 @@ class Checkbox extends Field
    * @param  {Object} item { id, title }
    * @return {void}
    */
-  onChangeCheckboxHandler = (event) =>
-  {
+  onChangeCheckboxHandler = (event) => {
     const value = this.state.value;
 
     const item = event.target.value;
@@ -76,12 +73,10 @@ class Checkbox extends Field
      * @param  {Boolean} [toggle=true] you can disable remove method if it is false
      * @return {Array}                new record: [a,b,c]
      */
-    const createNextValue = (record, toggle = true) =>
-    {
+    const createNextValue = (record, toggle = true) => {
       const index = record.indexOf(item);
 
-      if (index === -1)
-      {
+      if (index === -1) {
         return [...record, item];
       }
       else if (toggle === false) // not remove item
@@ -94,23 +89,20 @@ class Checkbox extends Field
         ...record.slice(index + 1)];
     };
 
-    if (this.isMultipleRecords())
-    {
+    if (this.isMultipleRecords()) {
       const nextValue = [];
 
       value.forEach(record => nextValue.push(createNextValue(record, status !== 2)));
 
       this.onChangeHandler(nextValue);
     }
-    else
-    {
+    else {
       this.onChangeHandler(createNextValue(Array.isArray(value) ? value : []));
     }
   }
 
 
-  isMultipleRecords()
-  {
+  isMultipleRecords() {
     return this.state.value && this.state.value.length && Array.isArray(this.state.value[0]);
   }
 
@@ -122,23 +114,19 @@ class Checkbox extends Field
    * 2 => Mixed, multipledata: checked + indeterminate
    * @type {[type]}
    */
-  getStatus = (item) =>
-  {
+  getStatus = (item) => {
     const value = this.state.value;
 
     // multiple records
-    if (this.isMultipleRecords())
-    {
+    if (this.isMultipleRecords()) {
       // every record include flag
       if (
         value.every(record => Array.isArray(record) && record.indexOf(item) !== -1)
-      )
-      {
+      ) {
         return 1;
       }
       // none included
-      else if (value.every(record => Array.isArray(record) && record.indexOf(item) === -1))
-      {
+      else if (value.every(record => Array.isArray(record) && record.indexOf(item) === -1)) {
         return 0;
       }
 
@@ -151,11 +139,9 @@ class Checkbox extends Field
 
   /* !- Lifecycle */
 
-  componentDidUpdate()
-  {
+  componentDidUpdate() {
     // multiple datas set indeterminate
-    this.data.forEach(({ id }) =>
-    {
+    this.data.forEach(({ id }) => {
       this.elements[id].indeterminate = (this.getStatus(id) === 2);
     });
   }
@@ -165,48 +151,46 @@ class Checkbox extends Field
    * @override
    * @return {ReactElement}
    */
-  render()
-  {
+  render() {
     const uid = random(8);
     // this.data = ((typeof this.props.data === 'function') ? this.props.data(this.state, this.getValue()) : this.props.data) || [];
 
     return super.render() || (
       <div className={this.getClasses('checkbox')}>
 
-        { this.label }
+        {this.label}
 
-        { this.data.map(({ id, title }) =>
-          (
-            <div
-              className={`value ${this.props.valueClassName}`}
-              key={`${this.props.id}-${id}`}
-            >
-              { /* slugify: Cannot use props.id because JSON data use same id (see rs/features) */ }
-              <input
-                type="checkbox"
-                id={`${slugify(this.props.id)}-${slugify(this.props.label)}-${id}-${uid}`}
-                name={slugify(this.props.label)}
-                value={id.toString()}
-                checked={this.getStatus(id.toString()) !== 0}
-                onChange={this.onChangeCheckboxHandler}
-                ref={(ref) =>
-                {
-                  this.elements[id.toString()] = ref;
-                }}
-              />
+        {this.data.map(({ id, title }) =>
+        (
+          <div
+            className={`value ${this.props.valueClassName}`}
+            key={`${this.props.id}-${id}`}
+          >
+            { /* slugify: Cannot use props.id because JSON data use same id (see rs/features) */}
+            <input
+              type="checkbox"
+              id={`${slugify(this.props.id)}-${slugify(this.props.label)}-${id}-${uid}`}
+              name={slugify(this.props.label)}
+              value={id.toString()}
+              checked={this.getStatus(id.toString()) !== 0}
+              onChange={this.onChangeCheckboxHandler}
+              ref={(ref) => {
+                this.elements[id.toString()] = ref;
+              }}
+            />
 
-              <label htmlFor={`${slugify(this.props.id)}-${slugify(this.props.label)}-${id}-${uid}`}>
-                {
-                  this.props.intl && this.props.dataTranslate ?
-                    this.props.intl.formatMessage({ id: title, default: title })
-                    : title
-                }
-              </label>
-            </div>
-          ),
+            <label htmlFor={`${slugify(this.props.id)}-${slugify(this.props.label)}-${id}-${uid}`}>
+              {
+                this.props.intl && this.props.dataTranslate ?
+                  this.props.intl.formatMessage({ id: title, default: title })
+                  : title
+              }
+            </label>
+          </div>
+        ),
         )}
 
-        { this.state.error &&
+        {this.state.error &&
           <div className="error">{this.state.error}</div>
         }
       </div>
