@@ -1,5 +1,6 @@
 
 import slugify from '@1studio/utils/string/slugify';
+import UserError from '@1studio/utils/error/userError';
 
 const DEFAULT_COMPARE = '_default';
 
@@ -17,10 +18,8 @@ export const weakTextCompare = (subject, term) =>
  * compare['='](a,b)
  */
 export const compare = {
-  [DEFAULT_COMPARE]: (subject = '', term = '') =>
-  {
-    if (subject === null || typeof subject.toString === 'undefined')
-    {
+  [DEFAULT_COMPARE]: (subject = '', term = '') => {
+    if (subject === null || typeof subject.toString === 'undefined') {
       return false;
     }
 
@@ -78,13 +77,12 @@ export const compare = {
  * Determine operators: ==, !=, >=, = ...
  */
 export const OPERATOR_KEYS = Object.keys(compare)
-    .filter(key => key !== DEFAULT_COMPARE);
+  .filter(key => key !== DEFAULT_COMPARE);
 
-export const OPERATOR_REGEX = `(${
-  OPERATOR_KEYS
-    .join('|')
-    .replace(/(\*|\^|\$)/g, '\\$&')
-})`;
+export const OPERATOR_REGEX = `(${OPERATOR_KEYS
+  .join('|')
+  .replace(/(\*|\^|\$)/g, '\\$&')
+  })`;
 
 // TODO IE11 NOT WORKING
 // export const OPERATOR_UNIQUE = String.prototype.concat(...new Set(OPERATOR_KEYS.join('')))
@@ -118,13 +116,12 @@ export const isQuery = term =>
 export const queryToFilters = query =>
   query
     .split('|')
-    .map(filterOr => 
+    .map(filterOr =>
       filterOr
         .split('&')
-        .map((filter) =>
-        {
+        .map((filter) => {
           const match = (new RegExp(`^([${FIELD_CHARS}]+)[ ]*([${OPERATOR_UNIQUE}]+)[ ]*(.*)$`, 'g')).exec(filter);
-    
+
           return ({
             field: match[1],
             operator: match[2],
@@ -173,8 +170,7 @@ let SEARCH_CACHE = [];
  * "category=186|category=190"
  * "category=186&category=190"
  */
-export const search = (props) =>
-{
+export const search = (props) => {
   const { record, value, helpers, hooks, index = 0 } = props;
 
   /**
@@ -185,16 +181,14 @@ export const search = (props) =>
    *  ...
    * ]
    */
-  if (index === 0)
-  {
+  if (index === 0) {
     /**
      * Split OR expressions
      */
     SEARCH_CACHE =
       value
         .split('|')
-        .map(valueOR =>
-        {
+        .map(valueOR => {
           /**
            * Split AND expressions
            *
@@ -210,8 +204,7 @@ export const search = (props) =>
            */
           const values = valueOR.match(REGEX_QUERY_LEVEL1) || [];
 
-          return values.map((thisValue) =>
-          {
+          return values.map((thisValue) => {
             /**
              * Determine which handler have to apply to compare term and record value
              */
@@ -239,21 +232,17 @@ export const search = (props) =>
              * Eg.: Visit Date => vdate
              * or just 'Vis', 'Visit', 'Date'
              */
-            if (termMatches)
-            {
+            if (termMatches) {
               term = termMatches[5];
               handlerIndex = termMatches[2];
               columns = [termMatches[1]];
 
-              if (hooks)
-              {
+              if (hooks) {
                 columns = Object.keys(hooks).reduce(
-                  (accumulator, column) =>
-                  {
+                  (accumulator, column) => {
                     const subject = (typeof hooks[column] === 'string') ? hooks[column] : hooks[column].title;
 
-                    if (compare[DEFAULT_COMPARE](subject, termMatches[1]))
-                    {
+                    if (compare[DEFAULT_COMPARE](subject, termMatches[1])) {
                       accumulator.push(column);
                     }
                     return accumulator;
@@ -262,8 +251,7 @@ export const search = (props) =>
                 );
               }
             }
-            else
-            {
+            else {
               columns = Object.keys(record);
             }
 
@@ -285,24 +273,31 @@ export const search = (props) =>
    */
   return SEARCH_CACHE.some(cache => cache.every(({ columns, handlerIndex, term }) =>
     columns.some(
-      (column) =>
-      {
+      (column) => {
         const compareMethod = props.compare?.[handlerIndex] ? props.compare : compare;
 
-        if (typeof record[column] === 'undefined')
-        {
+        if (typeof record[column] === 'undefined') {
           return false;
         }
 
         let subject = record[column];
 
-        if (typeof subject === 'object')
-        {
+        if (typeof subject === 'object') {
           subject = JSON.stringify(subject);
         }
 
-        if (compareMethod[handlerIndex](subject, term, record) === true)
-        {
+
+        if (typeof compareMethod[handlerIndex] === 'undefined') {
+          throw new UserError(
+            'Method Not Allowed',
+            {
+              code: 'ui.search.compareMethod',
+              dev: { handlerIndex },
+            },
+          );
+        }
+
+        if (compareMethod[handlerIndex]?.(subject, term, record) === true) {
           return true;
         }
 
@@ -310,19 +305,16 @@ export const search = (props) =>
           typeof hooks !== 'undefined' &&
           typeof hooks[column] !== 'undefined' &&
           typeof hooks[column].format === 'function'
-        )
-        {
+        ) {
           subject = hooks[column].format({ value: subject, helper: helpers, column });
         }
         else if (
           typeof helpers !== 'undefined'
           && typeof helpers[column] !== 'undefined'
-        )
-        {
+        ) {
           subject = helpers[column][subject];
         }
-        else
-        {
+        else {
           return false;
         }
 
@@ -341,32 +333,26 @@ export const search = (props) =>
  * @param  {[type]} id     column
  * @return {bool}
  */
-export const equal = ({ record, value, id }) =>
-{
-  if (value === '-1')
-  {
+export const equal = ({ record, value, id }) => {
+  if (value === '-1') {
     return true;
   }
-  if (typeof value === 'object')
-  {
+  if (typeof value === 'object') {
     return value.indexOf(record[id]) !== -1;
   }
   return record[id] === value;
 };
 
 
-export const dateInterselection = (record, value) =>
-{
+export const dateInterselection = (record, value) => {
   const recordDate = new Date(record.date).getTime();
   const valueDate = value.split('|');
 
-  if (recordDate < parseInt(valueDate[0]))
-  {
+  if (recordDate < parseInt(valueDate[0])) {
     return false;
   }
 
-  if (recordDate > parseInt(valueDate[1]))
-  {
+  if (recordDate > parseInt(valueDate[1])) {
     return false;
   }
 
@@ -391,14 +377,12 @@ export const dateInterselection = (record, value) =>
  *   ],
  * });
  */
-export const dateFrom = (record, value) =>
-{
+export const dateFrom = (record, value) => {
   const recordDate = new Date(record.date).getTime();
   return recordDate > parseInt(value);
 };
 
-export const dateTo = (record, value) =>
-{
+export const dateTo = (record, value) => {
   const recordDate = new Date(record.date).getTime();
   return recordDate < parseInt(value);
 };
