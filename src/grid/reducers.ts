@@ -31,17 +31,14 @@ const createStateFromModel = dataModel =>
  * @param  {string} gridId
  * @return {object}               new state
  */
-const createNextState = (currentState, nextGridState, gridId) =>
-{
+const createNextState = (currentState, nextGridState, gridId) => {
   let next = nextGridState;
 
-  if (nextGridState instanceof Data)
-  {
+  if (nextGridState instanceof Data) {
     next = createStateFromModel(nextGridState);
   }
 
-  if (gridId)
-  {
+  if (gridId) {
     return {
       ...currentState,
       [gridId]: {
@@ -57,14 +54,11 @@ const createNextState = (currentState, nextGridState, gridId) =>
   };
 };
 
-const getModel = (state, action) =>
-{
-  if (!action.grid && state.model)
-  {
+const getModel = (state, action) => {
+  if (!action.grid && state.model) {
     return state.model;
   }
-  else if (action.grid && state[action.grid] && state[action.grid].model)
-  {
+  else if (action.grid && state[action.grid] && state[action.grid].model) {
     return state[action.grid].model;
   }
 
@@ -84,16 +78,14 @@ const getModel = (state, action) =>
  * @param  {Object} action
  * @return {Object}            state
  */
-const reducers = (state = {}, action = {}) =>
-{
-  switch (action.type)
-  {
+const reducers = (state = {}, action = {}) => {
+
+  switch (action.type) {
     case 'SET_GRID_DATA':
       {
         const model = getModel(state, action);
 
-        if (!model.data)
-        {
+        if (!model.data) {
           return state;
         }
 
@@ -109,13 +101,11 @@ const reducers = (state = {}, action = {}) =>
       {
         const model = getModel(state, action);
 
-        if (!model)
-        {
+        if (!model) {
           return reducers(state, { type: 'SET_GRID_DATA', data: [action.record], grid: action.grid });
         }
 
-        if (typeof action.record !== 'object' || Array.isArray(action.record))
-        {
+        if (typeof action.record !== 'object' || Array.isArray(action.record)) {
           // @todo exception
         }
 
@@ -145,24 +135,20 @@ const reducers = (state = {}, action = {}) =>
       {
         const model = getModel(state, action);
 
-        if (!model)
-        {
+        if (!model) {
           return reducers(state, { type: 'SET_GRID_DATA', data: [action.record], grid: action.grid });
         }
 
         const data = [...model.data];
         const ids = data.map(({ id }) => id);
 
-        action.records.forEach((record) =>
-        {
+        action.records.forEach((record) => {
           const index = ids.indexOf(record.id);
 
-          if (index === -1)
-          {
+          if (index === -1) {
             data.push(record);
           }
-          else
-          {
+          else {
             data[index] = record;
           }
         });
@@ -178,21 +164,19 @@ const reducers = (state = {}, action = {}) =>
         const model = getModel(state, action);
         const index = findIndex(model.data, item => item.id == action.record.id);
 
-        if (index !== -1)
-        {
+        if (index !== -1) {
           const record = action.record.constructor.name !== 'Object' ? action.record :
-          {
-            ...model.data[index],
-            ...action.record,
-          };
+            {
+              ...model.data[index],
+              ...action.record,
+            };
 
           const data = [...model.data];
           data[index] = record;
 
           model.data = data;
         }
-        else if (action.options.enableAddRecord)
-        {
+        else if (action.options.enableAddRecord) {
           return reducers(state, addRecord(action.record, action.grid));
         }
 
@@ -205,8 +189,7 @@ const reducers = (state = {}, action = {}) =>
         const model = getModel(state, action);
 
         const data = action.records.reduce(
-          (result, record) =>
-          {
+          (result, record) => {
             const index = findIndex(result, item => item.id == record.id);
 
             const nextRecord = {
@@ -214,15 +197,12 @@ const reducers = (state = {}, action = {}) =>
               ...record,
             };
 
-            if (index === -1)
-            {
-              if (action.options.enableAddRecord)
-              {
+            if (index === -1) {
+              if (action.options.enableAddRecord) {
                 result.push(nextRecord);
               }
             }
-            else
-            {
+            else {
               result[index] = nextRecord;
             }
 
@@ -252,33 +232,27 @@ const reducers = (state = {}, action = {}) =>
 
         const model = getModel(state, action) || new Data([]);
 
-        if (action.settings)
-        {
-          if (action.settings.paginate)
-          {
+        if (action.settings) {
+          if (action.settings.paginate) {
             model.paginate = action.settings.paginate;
           }
 
-          if (action.settings.order)
-          {
+          if (action.settings.order) {
             model.order = action.settings.order;
           }
 
-          if (action.settings.filters)
-          {
+          if (action.settings.filters) {
             model.filters = action.settings.filters;
           }
         }
 
         const next = createStateFromModel(model);
 
-        if (action.settings && action.settings.hook)
-        {
+        if (action.settings && action.settings.hook) {
           next.hook = action.settings.hook;
         }
 
-        if (action.settings && action.settings.helper)
-        {
+        if (action.settings && action.settings.helper) {
           next.helper = action.settings.helper;
         }
 
@@ -289,34 +263,28 @@ const reducers = (state = {}, action = {}) =>
       {
         const model = getModel(state, action);
 
-        if ( typeof action.order === 'string')
-        {
+        if (typeof action.order === 'string') {
           const { hook } = action.grid ? state[action.grid] : state;
 
-          if (hook && hook[action.order] && hook[action.order].sort)
-          {
+          if (hook && hook[action.order] && hook[action.order].sort) {
             model.order = { column: hook[action.order].sort };
 
             const nextState = createNextState(state, model, action.grid);
 
-            if (action.grid)
-            {
+            if (action.grid) {
               nextState[action.grid].orderColumn = action.order;
             }
-            else
-            {
+            else {
               nextState.orderColumn = action.order;
             }
 
             return nextState;
           }
-          else
-          {
+          else {
             model.order = { column: action.order };
           }
         }
-        else
-        {
+        else {
           model.order = action.order;
         }
 
@@ -345,8 +313,7 @@ const reducers = (state = {}, action = {}) =>
       {
         const model = getModel(state, action);
 
-        if (model)
-        {
+        if (model) {
           model.filters = action.filters;
           return createNextState(state, model, action.grid);
         }
@@ -356,45 +323,39 @@ const reducers = (state = {}, action = {}) =>
       {
         const model = getModel(state, action);
 
-        if (model)
-        {
+        if (model) {
           const filters = model.filters;
 
           const index = findIndex(filters, { id: action.filterId });
 
-          if (index === -1)
-          {
+          if (index === -1) {
             return state;
           }
 
           if (
             typeof action.filterValue !== 'undefined' &&
             Array.isArray(filters[index].arguments[0])
-            )
-            {
-              const valueIndex = filters[index].arguments[0].indexOf(action.filterValue);
+          ) {
+            const valueIndex = filters[index].arguments[0].indexOf(action.filterValue);
 
-              if (valueIndex > -1)
-              {
-                filters[index].arguments[0].splice(valueIndex, 1);
-              }
+            if (valueIndex > -1) {
+              filters[index].arguments[0].splice(valueIndex, 1);
             }
-            else
-            {
-              filters[index].arguments = [];
-            }
+          }
+          else {
+            filters[index].arguments = [];
+          }
 
-            return reducers(
-              state,
-              { ...action, filters, type: 'APPLY_GRID_FILTER' },
-            );
+          return reducers(
+            state,
+            { ...action, filters, type: 'APPLY_GRID_FILTER' },
+          );
         }
       }
 
     case 'FLUSH_GRID':
       {
-        if (action.grid)
-        {
+        if (action.grid) {
           return omit(state, action.grid);
         }
 

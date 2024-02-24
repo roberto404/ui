@@ -11,38 +11,7 @@ import isElement from 'lodash/isElement';
 import { flush } from '../layer/actions';
 
 
-/* !- React Elements */
-
-// ...
-
-
-/* !- Constants */
-
-
-/* !- Types */
-
-const defaultProps =
-{
-  image: '',
-  title: '',
-  subTitle: '',
-  className: '',
-  classNameCaption: 'bg-white p-2 absolute w-full',
-  classNameTitle: 'text-l bold text-line-m mobile:text-m',
-  classNameSubTitle: 'pt-1/2 light text-line-l',
-  titleZoom: 100,
-  createMarkers,
-  onClick: () =>
-  {
-    return false;
-  },
-}
-
-type PropTypes = Partial<typeof defaultProps> & {
-  onDragMarker: () => void,
-  heading?: number,
-};
-
+/* !- Components */
 
 const Title = ({ heading, children, className, style }) => {
 
@@ -59,34 +28,59 @@ const Title = ({ heading, children, className, style }) => {
 
 
 
-// ...
+/* !- Constants */
+
+
+/* !- Types */
+
+const defaultProps =
+{
+  image: '',
+  title: '',
+  subTitle: '',
+  className: '',
+  classNameCaption: 'bg-white p-2 absolute w-full',
+  classNameTitle: 'text-l bold text-line-m mobile:text-m',
+  classNameSubTitle: 'pt-1/2 light text-line-l',
+  classNameImage: '',
+  createMarkers,
+  onClick: () => {
+    return false;
+  },
+}
+
+type PropTypes = Partial<typeof defaultProps> & {
+  onDragMarker: () => void,
+  heading?: number,
+};
+
 
 /**
  * [Card description]
  */
 const Card = ({
-  image,
-  title,
-  subTitle,
-  className,
-  classNameCaption,
-  classNameTitle,
-  classNameSubTitle,
-  titleZoom,
+  image = defaultProps.image,
+  title = defaultProps.title,
+  subTitle = defaultProps.subTitle,
+  className = defaultProps.className,
+  classNameImage = defaultProps.classNameImage,
+  classNameCaption = defaultProps.classNameCaption,
+  classNameTitle = defaultProps.classNameTitle,
+  classNameSubTitle = defaultProps.classNameSubTitle,
   border,
   markers,
-  createMarkers,
-  onClick,
+  createMarkers = defaultProps.createMarkers,
+  onClick = defaultProps.onClick,
   onDragMarker,
   children,
   heading,
-}: PropTypes) =>
-{
+}: PropTypes) => {
+
   const { store } = useContext(ReactReduxContext);
   const dispatch = useDispatch();
 
   let cardElement;
-  
+
 
   // const onErrorImageListener = (e) =>
   // {
@@ -99,7 +93,7 @@ const Card = ({
     relative: true,
     'no-select': true,
     border: border === true,
-    pointer: onClick.toString() !== Card.defaultProps.onClick.toString(),
+    pointer: onClick.toString() !== defaultProps.onClick.toString(),
     [className]: true,
   });
 
@@ -107,39 +101,34 @@ const Card = ({
 
   let imagePadding = '0rem';
 
-  if (title || subTitle)
-  {
+  if (title || subTitle) {
     imagePadding += ` + ${captionPadding}em`;
   }
 
-  if (title)
-  {
+  if (title) {
     imagePadding += ' + 1.5em + 0.5em';
   }
 
-  if (subTitle)
-  {
+  if (subTitle) {
     imagePadding += ' + 1.5em';
   }
 
 
-  const onMouseOutLayerHandler = (event) =>
-  {
+  const onMouseOutLayerHandler = (event) => {
     const layer = store.getState().layer || {};
 
     if (
       layer.method !== 'popover'
       ||
       (
-        event.relatedTarget && event.currentTarget && typeof(event.currentTarget.contains) === 'function' && isElement(event.relatedTarget) &&
+        event.relatedTarget && event.currentTarget && typeof (event.currentTarget.contains) === 'function' && isElement(event.relatedTarget) &&
         (
           event.currentTarget.contains(event.relatedTarget)
           || event.relatedTarget === cardElement
           || cardElement.contains(event.relatedTarget)
         )
       )
-    )
-    {
+    ) {
       return;
     }
 
@@ -148,10 +137,8 @@ const Card = ({
     dispatch(flush());
   }
 
-  const onMouseOutHandler = (event) =>
-  {
-    if (!markers || !markers.length)
-    {
+  const onMouseOutHandler = (event) => {
+    if (!markers || !markers.length) {
       return false;
     }
 
@@ -163,10 +150,8 @@ const Card = ({
         event.currentTarget.contains(event.relatedTarget)
         || (event.relatedTarget.closest && event.relatedTarget.closest('.layer'))
       )
-    )
-    {
-      if (event.relatedTarget.closest && event.relatedTarget.closest('.layer .container'))
-      {
+    ) {
+      if (event.relatedTarget.closest && event.relatedTarget.closest('.layer .container')) {
         event.relatedTarget
           .closest('.layer .container')
           .addEventListener(
@@ -180,8 +165,7 @@ const Card = ({
 
     const layer = store.getState().layer;
 
-    if (layer && layer.method === 'popover')
-    {
+    if (layer && layer.method === 'popover') {
       dispatch(flush());
     }
   }
@@ -190,8 +174,7 @@ const Card = ({
    * Invoke when marker position chage by drag.
    * Marker draging enable by onDragMarker props function.
    */
-  const onDragEndHandler = (event) =>
-  {
+  const onDragEndHandler = (event) => {
     const targetRect = event.currentTarget.getBoundingClientRect();
 
     const x = Math.round((event.clientX - targetRect.x) / targetRect.width * 1000) / 10;
@@ -207,43 +190,44 @@ const Card = ({
       className={classes}
       onClick={onClick}
       onMouseOut={onMouseOutHandler}
-      style={{ paddingBottom: `calc(${imagePadding})`, fontSize: `${titleZoom}%` }}
+      style={{ paddingBottom: `calc(${imagePadding})` }}
     >
-      { image &&
-      <div
-        className="relative"
-        onDragEnd={onDragMarker ? onDragEndHandler : undefined}
-        style={{ fontSize: `${100 * 100/titleZoom}%` }}
-      >
-        <img
-          className="block m-auto w-auto h-auto"
-          src={image}
-          width="auto"
-          height="auto"
-          style={{
-            maxWidth: '100%',
-            maxHeight: '100%',
-          }}
-          alt={title}
+      {image &&
+        <div
+          className={classNames({
+            'relative': true,
+            [classNameImage]: true,
+          })}
+          onDragEnd={onDragMarker ? onDragEndHandler : undefined}
+        // style={{ fontSize: `${100 * 100 / titleZoom}%` }}
+        >
+          <img
+            className="block m-auto w-auto h-auto"
+            src={image}
+            width="auto"
+            height="auto"
+            style={{
+              maxWidth: '100%',
+              maxHeight: '100%',
+            }}
+            alt={title}
           // onError={this.onErrorImageListener}
-        />
-        { markers ? createMarkers(onDragMarker ? markers.map(marker => ({...marker, draggable: true })) : markers) : children }
-      </div>
+          />
+          {markers ? createMarkers(onDragMarker ? markers.map(marker => ({ ...marker, draggable: true })) : markers) : children}
+        </div>
       }
-      { (title || subTitle) &&
+      {(title || subTitle) &&
         <div className={classNameCaption} style={{ minHeight: `calc(${imagePadding})`, padding: `${captionPadding / 2}em 1em`, bottom: 0 }}>
-          { title &&
-          <Title heading={heading} className={classNameTitle} style={{ wordBreak: 'break-word' }}>{title}</Title>
+          {title &&
+            <Title heading={heading} className={classNameTitle} style={{ wordBreak: 'break-word' }}>{title}</Title>
           }
-          { subTitle &&
-          <div className={classNameSubTitle}>{subTitle}</div>
+          {subTitle &&
+            <div className={classNameSubTitle}>{subTitle}</div>
           }
         </div>
       }
     </div>
   );
 };
-
-Card.defaultProps = defaultProps;
 
 export default Card;
