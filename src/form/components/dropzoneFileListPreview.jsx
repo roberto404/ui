@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { sortableContainer, sortableElement } from 'react-sortable-hoc';
+// import { sortableContainer, sortableElement } from 'react-sortable-hoc';
 import { arrayMoveImmutable } from 'array-move';
 
 
@@ -15,11 +15,11 @@ import FileListGridRow from '../../grid/components/gridRows/filelist';
 
 
 
-const SortableItem = sortableElement(({ element }) => element);
+// const SortableItem = sortableElement(({ element }) => element);
 
-const SortableContainer = sortableContainer(({ children }) => {
-  return <div className="grid-2-2 mb-2">{children}</div>;
-});
+// const SortableContainer = sortableContainer(({ children }) => {
+//   return <div className="grid-2-2 mb-2">{children}</div>;
+// });
 
 
 
@@ -40,20 +40,20 @@ const DropzoneFileListPreview = ({ items, onEdit, onChange, element, draggable }
     }
   });
 
-  if (draggable)
-  {
-    return (
-      <SortableContainer onSortEnd={onDragEndHandler} axis="xy">
-        { items.map((item, index) =>
-          <SortableItem
-            key={`item-${index}`}
-            index={index}
-            element={React.createElement(element, { data: item })}
-          />
-        )}
-      </SortableContainer>
-    );
-  }
+  // if (draggable)
+  // {
+  //   return (
+  //     <SortableContainer onSortEnd={onDragEndHandler} axis="xy">
+  //       { items.map((item, index) =>
+  //         <SortableItem
+  //           key={`item-${index}`}
+  //           index={index}
+  //           element={React.createElement(element, { data: item })}
+  //         />
+  //       )}
+  //     </SortableContainer>
+  //   );
+  // }
 
   // const files = items.map((item, index) =>
   // (

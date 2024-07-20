@@ -12,6 +12,11 @@ import { setUser } from './authentication/actions'; // 1 Kbyte
 
 const loadStateFromLocalStorage = () =>
 {
+  if (typeof localStorage === 'undefined')
+  {
+    return {};
+  }
+
   try
   {
     const serializedState = localStorage.getItem('state');

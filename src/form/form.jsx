@@ -5,14 +5,14 @@ import classNames from 'classnames';
 import { AppContext } from '../context';
 
 
-// /* !- Redux Actions */
+/* !- Redux Actions */
 
 import * as FormActions from './actions';
 import * as LayerActions from '../layer/actions';
 import * as GridActions from '../grid/actions';
 
 
-// /* !- Context */
+/* !- Context */
 
 import { FormContext } from './context';
 

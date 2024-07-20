@@ -1,12 +1,16 @@
 
 /* !- Constants */
 
-import
-{
-  AVAILABLE_METHODS,
-  DEFAULT_METHOD,
-}
-from './constants';
+
+export const AVAILABLE_METHODS = ['popover', 'fullscreen', 'dialog', 'sidebar', 'preload'];
+export const DEFAULT_METHOD = 'dialog';
+
+// import
+// {
+//   AVAILABLE_METHODS,
+//   DEFAULT_METHOD,
+// }
+// from './constants';
 
 const DEFAULT_STATE = {
   active: false,

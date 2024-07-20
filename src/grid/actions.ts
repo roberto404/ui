@@ -1,5 +1,3 @@
-import isEmpty from 'lodash/isEmpty';
-
 /**
  * Load database to grid
  * @param {Array} data
@@ -31,8 +29,7 @@ export const fetchData = (
   settings?: {},
   grid?: string,
 ) =>
-  fetchApi(optionsApi).then((response) =>
-  {
+  fetchApi(optionsApi).then((response) => {
     const isExtend = (response.data && response.settings);
 
     return setData(
@@ -195,12 +192,10 @@ export const modifyLimit = (limit, grid?: string) =>
  * applyFilter('user', [1,2]);
  * applyFilter([{ id: 'status', arguments: [1] }, ...])
  */
-export const applyFilter = (filterId, filterValue, grid?: string) =>
-{
+export const applyFilter = (filterId, filterValue, grid?: string) => {
   const bootstrap = { type: 'APPLY_GRID_FILTER', grid };
 
-  if (typeof filterId === 'object')
-  {
+  if (typeof filterId === 'object') {
     return {
       ...bootstrap,
       filters: filterId,

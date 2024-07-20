@@ -1,3 +1,5 @@
+"use client";
+
 
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useSelector, useDispatch, useStore } from 'react-redux';
@@ -24,19 +26,24 @@ import {
 
 
 import { useAppContext } from '../context';
-
+import { useComponentDidMount } from '../hooks';
 
 
 /**
  * Layer Component
  * Connect to layer state via Redux.
  */
-const Layer = () =>
-{
+const Layer = () => {
+
+
   /* !- Hooks */
 
-  const scrollTop = useRef(0);
+  const scrollTop = useRef(-1);
   const mouseDownElementTarget = useRef();
+
+  useComponentDidMount(() => {
+    scrollTop.current = 0;
+  });
 
   const dispatch = useDispatch();
   const { addShortcuts, removeShortcuts } = useAppContext();
@@ -53,27 +60,31 @@ const Layer = () =>
   const { className } = options || {};
 
 
+
+
+  if (scrollTop.current === -1)
+  {
+    return <></>;
+  }
+
+
   /* !- Listeners */
 
 
-  const onClickLayerCurtain = (event) =>
-  {
+  const onClickLayerCurtain = (event) => {
     if (
       closeable
       && event.currentTarget.isEqualNode(event.target)
       && event.target === mouseDownElementTarget.current
-    )
-    {
+    ) {
       onClickCloseHandler();
     }
   };
 
-  const documentOnClickListener = () =>
-  {
+  const documentOnClickListener = () => {
     document.onclick = null;
-  
-    if (active && method === 'popover' && JSON.stringify(containerStyle) === element.toString())
-    {
+
+    if (active && method === 'popover' && JSON.stringify(containerStyle) === element.toString()) {
       onClickCloseHandler();
     }
   }
@@ -86,14 +97,11 @@ const Layer = () =>
    * @type {Function}
    * @return {void}
    */
-  const onClickCloseHandler = () =>
-  {
+  const onClickCloseHandler = () => {
     removeShortcuts('layer');
 
-    if (typeof options.onClose === 'function')
-    {
-      if (options.onClose() === false)
-      {
+    if (typeof options.onClose === 'function') {
+      if (options.onClose() === false) {
         return;
       };
     }
@@ -101,45 +109,39 @@ const Layer = () =>
     dispatch(close());
   };
 
-  const onMouseDownHandler = (event) =>
-  {
+  const onMouseDownHandler = (event) => {
     mouseDownElementTarget.current = event.target;
   }
 
 
-  if (options.autoClose)
-  {
+  if (options.autoClose) {
     setTimeout(
       () => dispatch(flush()),
       parseInt(options.autoClose) * 1000,
     );
   }
 
-  if (active)
-  {
+  if (active) {
+
     scrollTop.current = window.scrollY;
 
-    if (method === 'popover')
-    {
+    if (method === 'popover') {
       document.body.classList.add("layer-popover");
       document.onclick = documentOnClickListener;
     }
-    else
-    {
-      `overflow h-screen layer-${method}`.split(' ').forEach(className => 
+    else {
+      `overflow h-screen layer-${method}`.split(' ').forEach(className =>
         document.body.classList.add(className)
       );
     }
 
-    if (options.bodyClass)
-    {
-      options.bodyClass.split(' ').forEach(className => 
+    if (options.bodyClass) {
+      options.bodyClass.split(' ').forEach(className =>
         document.body.classList.add(className)
       );
     }
 
-    if (closeable)
-    {
+    if (closeable) {
       addShortcuts([
         {
           keyCode: "escape",
@@ -149,15 +151,18 @@ const Layer = () =>
       ], 'layer');
     }
 
-    if (method === "fullscreen")
-    {
+    if (method === "fullscreen") {
       window.scrollTo(0, 0);
     }
   }
-  else
-  {
-    document.body.className = '';
-    window.scrollTo(0, scrollTop.current);
+  else {
+    if (typeof document !== 'undefined') {
+      document.body.className = '';
+    }
+
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, scrollTop.current);
+    }
   }
 
 
@@ -187,7 +192,7 @@ const Layer = () =>
         </div>
 
         <div className="content">
-          { element && (React.isValidElement(element) ? element : element()) }
+          {element && (React.isValidElement(element) ? element : element())}
         </div>
 
       </div>

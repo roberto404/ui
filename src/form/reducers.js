@@ -2,26 +2,22 @@ import isEmpty from 'lodash/isEmpty';
 import validate from 'validate.js';
 import stringify from '@1studio/utils/object/stringify';
 
-import
-{
+import {
   FORM_ERRORS_KEY,
   FORM_SCHEME_KEY,
 }
-from './constants';
+  from './constants';
 
 validate.validators.presence.options = { allowEmpty: false };
 
-validate.validators.custom = (fieldValue, scheme, fieldId, formData) =>
-{
+validate.validators.custom = (fieldValue, scheme, fieldId, formData) => {
   const result = scheme.validator(fieldValue, scheme, fieldId, formData);
 
-  if (scheme.message && result === false)
-  {
+  if (scheme.message && result === false) {
     return scheme.message;
   }
 
-  if (typeof result === 'string')
-  {
+  if (typeof result === 'string') {
     return result;
   }
 
@@ -29,22 +25,18 @@ validate.validators.custom = (fieldValue, scheme, fieldId, formData) =>
 };
 
 
-export default (state = {}, action = {}) =>
-{
-  if (action.id === FORM_ERRORS_KEY)
-  {
+export default (state = {}, action = {}) => {
+  if (action.id === FORM_ERRORS_KEY) {
     console.warn(`_${FORM_ERRORS_KEY} is a reserved word.`);
     return state;
   }
 
-  switch (action.type)
-  {
+  switch (action.type) {
     case 'FORM_SET_VALUES':
       {
         let newState = {};
 
-        if (!action.form)
-        {
+        if (!action.form) {
           newState = {
             ...state,
             ...action.items,
@@ -52,13 +44,11 @@ export default (state = {}, action = {}) =>
 
           const scheme = newState[FORM_SCHEME_KEY] || state[FORM_SCHEME_KEY];
 
-          if (scheme)
-          {
+          if (scheme) {
             newState[FORM_ERRORS_KEY] = validate(stringify(newState), scheme);
           }
         }
-        else
-        {
+        else {
           newState = {
             ...state,
             [action.form]: {
@@ -69,13 +59,11 @@ export default (state = {}, action = {}) =>
 
           let scheme = newState[action.form][FORM_SCHEME_KEY];
 
-          if (!scheme && state[action.form])
-          {
+          if (!scheme && state[action.form]) {
             scheme = state[action.form][FORM_SCHEME_KEY];
           }
 
-          if (scheme)
-          {
+          if (scheme) {
             newState[action.form][FORM_ERRORS_KEY] = validate(
               stringify(newState[action.form]),
               scheme,
@@ -93,14 +81,12 @@ export default (state = {}, action = {}) =>
 
         const scheme = newState[FORM_SCHEME_KEY];
 
-        if (scheme)
-        {
+        if (scheme) {
           newState[FORM_ERRORS_KEY] = validate(stringify(newState), scheme);
         };
 
 
-        if (!action.form)
-        {
+        if (!action.form) {
           return newState;
         }
 
@@ -116,64 +102,63 @@ export default (state = {}, action = {}) =>
 
         let instance;
 
-        Object.keys(action.items).forEach((id) =>
-        {
+        Object.keys(action.items).forEach((id) => {
           let values = action.items[id];
 
           instance = (!action.form) ? newState[id] : (newState[action.form] || {})[id];
 
-          if (typeof instance !== 'undefined')
-          {
-            if (Array.isArray(instance) && values !== undefined)
-            {
-              if (!Array.isArray(values))
-              {
+          if (typeof instance !== 'undefined') {
+            if (Array.isArray(instance) && values !== undefined) {
+              if (!Array.isArray(values)) {
                 values = [values];
               }
 
-              values.forEach((value) =>
-              {
+              values.forEach((value) => {
                 const index = instance.indexOf(value);
 
-                if (index > -1)
-                {
-                  if (!action.form)
-                  {
+                if (index > -1) {
+                  if (!action.form) {
                     newState[id].splice(index, 1);
                   }
-                  else
-                  {
+                  else {
                     newState[action.form][id].splice(index, 1);
                   }
                 }
               });
             }
 
-            if (!Array.isArray(instance) || !instance.length || values === undefined)
-            {
-              if (!action.form)
-              {
+            if (!Array.isArray(instance) || !instance.length || values === undefined) {
+              if (!action.form) {
                 delete newState[id];
               }
-              else
-              {
+              else {
                 delete newState[action.form][id];
+                delete newState[action.form][FORM_ERRORS_KEY]?.[id];
               }
             }
           }
         });
 
-        if (state && !isEmpty(state[FORM_SCHEME_KEY]))
-        {
-          newState[FORM_ERRORS_KEY] = validate(stringify(newState), state[FORM_SCHEME_KEY]);
+        if (!action.form) {
+          if (!isEmpty(state[FORM_SCHEME_KEY])) {
+            newState[FORM_ERRORS_KEY] = validate(stringify(newState), state[FORM_SCHEME_KEY]);
+          }
         }
+        else {
+          if (!isEmpty(state[action.form][FORM_SCHEME_KEY])) {
+            newState[action.form][FORM_ERRORS_KEY] = validate(
+              stringify(newState[action.form]),
+              state[action.form][FORM_SCHEME_KEY],
+            );
+          }
+        }
+
         return newState;
       }
 
     case 'FORM_VALIDATE':
       {
-        if (state && !isEmpty(state[FORM_SCHEME_KEY]))
-        {
+        if (state && !isEmpty(state[FORM_SCHEME_KEY])) {
           return {
             ...state,
             [FORM_ERRORS_KEY]: validate(stringify(state), state[FORM_SCHEME_KEY]),
@@ -187,10 +172,8 @@ export default (state = {}, action = {}) =>
       {
         const newState = { ...state };
 
-        if (action.form)
-        {
-          if (typeof newState[action.form] !== 'undefined')
-          {
+        if (action.form) {
+          if (typeof newState[action.form] !== 'undefined') {
             delete newState[action.form];
           }
 

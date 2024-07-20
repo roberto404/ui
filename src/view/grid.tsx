@@ -1,5 +1,5 @@
 
-import React, { useMemo, useContext, useEffect, useRef, createContext } from 'react';
+import React, { useMemo, useContext, useEffect, useRef, createContext, useId } from 'react';
 import { useDispatch, useSelector, ReactReduxContext } from 'react-redux';
 import { useAppContext } from '../context';
 import isEqual from 'lodash/isEqual';
@@ -17,7 +17,7 @@ import { GridContext } from '../grid/context';
 
 /* !- Actions */
 
-import { fetchData, setData, applyFilter, flush } from '../grid/actions';
+import { fetchData, setData, goToPage, applyFilter, flush } from '../grid/actions';
 import { setValues, unsetValues, setForm, flush as flushForm } from '../form/actions';
 import { preload, close, modal } from '../layer/actions';
 
@@ -55,7 +55,7 @@ type PropTypes = Partial<typeof defaultProps> & {
    * @example
    * request.get(id);
    */
-  api: boolean | void,
+  api: false | void,
   /**
    * Grid settings: hook, helper, paginate, order, filters
    */
@@ -178,14 +178,15 @@ type PropTypes = Partial<typeof defaultProps> & {
  *
  */
 export const Grid = ({
-  id,
+  id = useId(),
   api,
+  data = [],
   fetchPreload,
   onLayer,
   query,
   header,
   onLoad,
-  settings,
+  settings = {},
   onSelect,
   responseParser,
   recordParser,
@@ -194,8 +195,9 @@ export const Grid = ({
   className,
   style,
   children,
-}: PropTypes) =>
-{
+  keepPaginationOnDataUpdate = false,
+}: PropTypes) => {
+
   const dispatch = useDispatch();
   const { store } = useContext(ReactReduxContext);
   const context = useAppContext();
@@ -208,20 +210,18 @@ export const Grid = ({
 
   const getId = () => id;
 
-  const getApi = () =>
-  {
-    if (api === false)
-    {
+  const getApi = () => {
+
+    if (api === false) {
       return false;
     }
 
-    
+
     return api || context.api;
   }
 
 
-  const getSettings = () =>
-  {
+  const getSettings = () => {
     let nextSettings = { ...settings };
 
     // @todo context.register
@@ -239,12 +239,9 @@ export const Grid = ({
 
     const form = store.getState().form;
 
-    if (settings.filters)
-    {
-      settings.filters.forEach(({ id }, index) =>
-      {
-        if (form[id] !== undefined)
-        {
+    if (settings.filters) {
+      settings.filters.forEach(({ id }, index) => {
+        if (form[id] !== undefined) {
           settings.filters[index].arguments = [form[id]];
           settings.filters[index].status = true;
         }
@@ -254,31 +251,27 @@ export const Grid = ({
     return nextSettings;
   }
 
-    /* !- Listeners */
+  /* !- Listeners */
 
   /**
    * Invoke applyFilter grid action, when the form state change
    * @private
    */
-  const onChangeForm = () =>
-  {
+  const onChangeForm = () => {
+
     const formState = store.getState().form;
     const filters = [];
     const gridFilters = (store.getState().grid[getId()] || {}).filters || [];
 
-    if (!gridFilters.length || isEqual(formStateRef.current, formState))
-    {
+    if (!gridFilters.length || isEqual(formStateRef.current, formState)) {
       return;
     }
 
-    gridFilters.forEach((filter) =>
-    {
+    gridFilters.forEach((filter) => {
       const index = filter.id;
 
-      if (typeof formState[index] !== 'undefined' || typeof formStateRef.current[index] !== 'undefined')
-      {
-        if (!isEqual(formStateRef.current[index], formState[index]))
-        {
+      if (typeof formState[index] !== 'undefined' || typeof formStateRef.current[index] !== 'undefined') {
+        if (!isEqual(formStateRef.current[index], formState[index])) {
           const thisArgs = formState[index] ? [formState[index]] : [];
 
           filters.push({
@@ -292,8 +285,7 @@ export const Grid = ({
 
     formStateRef.current = { ...formState };
 
-    if (filters.length)
-    {
+    if (filters.length) {
       dispatch(applyFilter(filters, null, getId()));
     }
   }
@@ -301,16 +293,14 @@ export const Grid = ({
   /**
    * Invoke form setValues when grid selection changes
    */
-  const onChangeSelectedGridItems = () =>
-  {
+  const onChangeSelectedGridItems = () => {
     /**
      * @example
      * ['1L01120060012', ...]
      */
     const gridSelectedItemIds = store.getState().form[FORM_PREFIX + getId()] || [];
 
-    if (isEqual(selectedItemIdsRef.current, gridSelectedItemIds))
-    {
+    if (isEqual(selectedItemIdsRef.current, gridSelectedItemIds)) {
       return;
     }
 
@@ -323,10 +313,8 @@ export const Grid = ({
     const gridSelectedRecords = gridData.filter(({ id }) => gridSelectedItemIds.indexOf(id) !== -1);
 
 
-    if (onSelect)
-    {
-      if (!onSelect(gridSelectedItemIds, gridSelectedRecords))
-      {
+    if (onSelect) {
+      if (!onSelect(gridSelectedItemIds, gridSelectedRecords)) {
         return;
       }
     }
@@ -336,8 +324,7 @@ export const Grid = ({
     // keep sceme to reset form
     const scheme = (store.getState().form[getId()] || {})[FORM_SCHEME_KEY];
 
-    if (scheme)
-    {
+    if (scheme) {
       records[FORM_SCHEME_KEY] = scheme;
     }
 
@@ -354,13 +341,11 @@ export const Grid = ({
    * Load Redux grid settings
    */
   useMemo(
-    () =>
-    {
+    () => {
       const settings = getSettings();
-      
-      if (!isEmpty(settings))
-      {
-        dispatch(setData([], settings, getId()));
+
+      if (!isEmpty(settings) || data.length) {
+        dispatch(setData(data, settings, getId()));
       }
     },
     [],
@@ -368,16 +353,13 @@ export const Grid = ({
 
   // componentDidMount, componentWillUnmount
   useEffect(
-    () =>
-    {
+    () => {
       // componentDidMount
 
       // fetchDataViaApi();
 
-      (getSettings().filters || []).forEach((filter) =>
-      {
-        if (filter.status === true)
-        {
+      (getSettings().filters || []).forEach((filter) => {
+        if (filter.status === true) {
           dispatch(setValues({ id: filter.id, value: filter.arguments[0] }));
         }
       });
@@ -389,26 +371,22 @@ export const Grid = ({
 
 
       // componentWillUnmount
-      return () =>
-      {
-        if (flushFiltersUnmount)
-        {
+      return () => {
+        if (flushFiltersUnmount) {
           const grid = store.getState().grid[getId()];
-    
-          if (grid !== undefined)
-          {
+
+          if (grid !== undefined) {
             const values = grid.filters.reduce((ids, { id }) => ({ ...ids, [id]: undefined }), {});
 
             dispatch(unsetValues(values));
           }
         }
-    
+
         dispatch(flush(getId()));
         dispatch(unsetValues({ id: FORM_PREFIX + getId() }));
         dispatch(unsetValues({ id: getId() }));
-    
-        if (typeof onWillUnmount === 'function')
-        {
+
+        if (typeof onWillUnmount === 'function') {
           onWillUnmount();
         }
 
@@ -419,17 +397,33 @@ export const Grid = ({
 
   // componentWillReceiveProps
   useEffect(
-    () =>
-    {
+    () => {
       fetchDataViaApi();
     },
     [api],
-    )
+  );
+
+
+  // componentWillReceiveProps
+  useEffect(
+    () => {
+
+      const settings = {};
+      const pageBeforeUpdate = store.getState().grid[getId()]?.page;
+
+      if (keepPaginationOnDataUpdate && pageBeforeUpdate) {
+        settings.paginate = { page: pageBeforeUpdate };
+      }
+
+      dispatch(setData(data, settings, getId()));
+    },
+    [data],
+  );
+
 
 
   // invoke every redux change
-  useSelector((state) =>
-  {
+  useSelector((state) => {
     onChangeForm();
     onChangeSelectedGridItems();
   });
@@ -438,10 +432,8 @@ export const Grid = ({
 
   /* !- Handlers */
 
-  const onLoadHandler = (isPreloaded = false) => () =>
-  {
-    if (!onLayer)
-    {
+  const onLoadHandler = (isPreloaded = false) => () => {
+    if (!onLayer) {
       dispatch(preload());
     }
 
@@ -450,34 +442,26 @@ export const Grid = ({
       query: isPreloaded ? 'preload' : query,
       header: header,
     })
-      .then((response) =>
-      {
-        if (!onLayer)
-        {
-          if (response.modal)
-          {
+      .then((response) => {
+        if (!onLayer) {
+          if (response.modal) {
             dispatch(modal(response.modal));
           }
-          else if (store.getState().layer.method === 'preload')
-          {
+          else if (store.getState().layer.method === 'preload') {
             dispatch(close());
           }
         }
 
-        if (response.status !== 'SUCCESS' || response.records)
-        {
+        if (response.status !== 'SUCCESS' || response.records) {
           const settings = { helper: response.config };
 
-          if (typeof responseParser === 'function')
-          {
+          if (typeof responseParser === 'function') {
             const parsedResponse = responseParser(response);
 
-            if (typeof parsedResponse === 'object' && !Array.isArray(parsedResponse))
-            {
+            if (typeof parsedResponse === 'object' && !Array.isArray(parsedResponse)) {
               return parsedResponse;
             }
-            else
-            {
+            else {
               return {
                 data: parsedResponse,
                 settings,
@@ -499,45 +483,37 @@ export const Grid = ({
   /**
    * Invoke Grid fetchData action via api
    */
-  const fetchDataViaApi = (isPreloaded = fetchPreload) =>
-  {
-    if (getApi())
-    {
+  const fetchDataViaApi = (isPreloaded = fetchPreload) => {
+
+    if (getApi()) {
       dispatch(fetchData(
         onLoadHandler(isPreloaded),
         getId(),
         getSettings(),
         getId(),
       ))
-      .then((action) =>
-      {
-        if (isPreloaded)
-        {
-          fetchDataViaApi(false);
-        }
-        else if (onLoad)
-        {
-          const grid = store.getState().grid[getId()];
-
-          if (typeof onLoad === 'function')
-          {
-            onLoad({ action, grid });
+        .then((action) => {
+          if (isPreloaded) {
+            fetchDataViaApi(false);
           }
-          else
-          {
-            switch (onLoad)
-            {
-              case 'selectFirst':
-                if (grid.data[0])
-                {
-                  dispatch(setValues({ id: FORM_PREFIX + getId(), value: [grid.data[0].id] }));
-                }
-                break;
-              default:
+          else if (onLoad) {
+            const grid = store.getState().grid[getId()];
+
+            if (typeof onLoad === 'function') {
+              onLoad({ action, grid });
+            }
+            else {
+              switch (onLoad) {
+                case 'selectFirst':
+                  if (grid.data[0]) {
+                    dispatch(setValues({ id: FORM_PREFIX + getId(), value: [grid.data[0].id] }));
+                  }
+                  break;
+                default:
+              }
             }
           }
-        }
-      });
+        });
     }
   }
 

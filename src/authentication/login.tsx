@@ -10,7 +10,9 @@ import { setUser } from './actions';
 
 /* !- React Elements */
 
-import Form, { Input, Submit } from '../form/intl';
+import Form from '../form/intl/form';
+import Input from '../form/intl/input';
+import Submit from '../form/intl/submit';
 
 
 /* !- Constants */

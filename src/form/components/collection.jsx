@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { sortableContainer, sortableElement } from 'react-sortable-hoc';
+// import { sortableContainer, sortableElement } from 'react-sortable-hoc';
 import { arrayMoveImmutable } from 'array-move';
 import { bindFormContexts } from '../context';
 
@@ -35,11 +35,11 @@ const CollectionItem = ({
   );
 };
 
-const SortableItem = sortableElement(({ element }) => element);
+// const SortableItem = sortableElement(({ element }) => element);
 
-const SortableContainer = sortableContainer(({children}) => {
-  return <div>{children}</div>;
-});
+// const SortableContainer = sortableContainer(({children}) => {
+//   return <div>{children}</div>;
+// });
 
 /**
 * Extended Field component.
@@ -171,13 +171,13 @@ class Collection extends Field
 
         { this.label }
 
-        { Array.isArray(this.state.value) && this.props.draggable && this.state.value.length > 1 &&
+        {/* { Array.isArray(this.state.value) && this.props.draggable && this.state.value.length > 1 &&
           <SortableContainer onSortEnd={this.onDragEndHandler}>
             { this.state.value.map((record, index) =>
               <SortableItem key={`item-${index}`} index={index} element={this.renderElement(record, index)} />
             )}
           </SortableContainer>
-        }
+        } */}
 
         { Array.isArray(this.state.value) && (!this.props.draggable || this.state.value.length < 2) && this.state.value.map((record, index) =>
           this.renderElement(record, index)
