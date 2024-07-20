@@ -5,7 +5,7 @@ require('../../../assets/style/index.scss');
 
 /* !- Compontents */
 
-import Grid from '../../grid/grid';
+import Grid from '../../grid';
 import GridRow from '../../.examples/grid/row';
 
 

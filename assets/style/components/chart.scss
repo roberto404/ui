@@ -136,7 +136,32 @@
         stroke: $gray;
         fill: $gray-light;
         r: 9,
+
+
+        // &.fill-red
+        // {
+        //   fill: $red;
+        // }
+
+
+        // &.helper
+        // {
+        //   stroke-width: 1;
+        //   stroke: $gray;
+        //   fill: $gray-light;
+        //   r: 3,
+        // }
       }
+
+      circle.helper
+      {
+        stroke-width: 1;
+        stroke: $gray;
+        fill: $gray-light;
+        r: 3,        
+      }
+
+      
 
       text
       {

@@ -10,7 +10,7 @@ import { PropTypes } from "../index";
 /**
  * 
  */
-const findMinimumValueInSeries = data =>
+const findMinimumValueInSeries = (data: {values: number[]}[]) =>
   Math.min(...data.map(({ values }) => Math.min(...values)));
 
 

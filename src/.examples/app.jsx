@@ -123,28 +123,28 @@ class Content extends Component
     return (
       <div className="column h-screen">
         <div className="px-4 py-2 grow overflow grid">
-          <div className="col-1-4 mobile:hidden scroll-y bg-gray-light p-2 no-select">
+          {/* <div className="col-1-4 mobile:hidden scroll-y bg-gray-light p-2 no-select"> */}
             {/* <Connect>
               <NestedList
                 nestedData={Menu.getNestedTree()}
                 UI={NestedListItem(Menu, this.onClickItemHandler)}
               />
             </Connect> */}
-          </div>
+          {/* </div> */}
           <div className="scroll-y bg-white-light p-2">
-            <div className="relative">
+            {/* <div className="relative">
               <button className="w-auto pin-r absolute" onClick={this.onClickGitHubHandler}>
                 <GitHubIcon className="text-xxl" />
               </button>
-              <h2>{this.state.title}</h2>
+              <h2>{this.state.title}</h2> */}
 
               {React.createElement(this.state.component)}
 
-              <div className="button gray shadow my-4 inline-block w-auto" onClick={this.onClickForwardHandler}>
+              {/* <div className="button gray shadow my-4 inline-block w-auto" onClick={this.onClickForwardHandler}>
                 <IconForward />
-              </div>
+              </div> */}
 
-            </div>
+            {/* </div> */}
           </div>
         </div>
       </div>

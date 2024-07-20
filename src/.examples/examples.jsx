@@ -8,7 +8,7 @@ import React from 'react';
 
 // import FormBasic from './form/basic';
 // import FormFields from './form/fields';
-// import FormAutocomplete from './form/autocomplete';
+import FormAutocomplete from './form/autocomplete';
 // import FormFieldsStyle from './form/fieldsStyle';
 // import FormFormat from './form/format';
 // import FormSubmit from './form/submit';
@@ -64,7 +64,7 @@ import React from 'react';
 
 // import CarousselSlides from './caroussel/slides';
 // import CarousselCaroussel from './caroussel/caroussel';
-import CarousselDynamic from './caroussel/dynamic';
+// import CarousselDynamic from './caroussel/dynamic';
 
 
 
@@ -80,6 +80,7 @@ import CarousselDynamic from './caroussel/dynamic';
 /* !- Example: Chart */
 
 // import ChartCoordinate from './chart/coordinate';
+// import ChartLine from './chart/line';
 // import ChartComplex from './chart/complex';
 // import ChartBar from './chart/barChart';
 // import ChartDonut from './chart/donut';
@@ -108,6 +109,6 @@ import CarousselDynamic from './caroussel/dynamic';
 
 export default {
   form: {
-    fields: CarousselDynamic,
+    fields: FormAutocomplete,
   },
 };

@@ -135,7 +135,7 @@ export class CardEditor extends Component
   {
     this.setState({
       ...DEFAULT_STATE,
-      marker: ((nextProps.item.id !== this.state.id) ? DEFAULT_STATE : this.state).marker,
+      marker: ((nextProps.item?.id !== this.state.id) ? DEFAULT_STATE : this.state).marker,
       ...nextProps.item,
     });
   }

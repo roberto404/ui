@@ -2,14 +2,11 @@ import React from 'react';
 import produceNumericArray from '@1studio/utils/array/produceNumericArray';
 
 
-
-import Form from '../../../src/form/pure';
-import Autocomplete, { TagsMenu } from '../../../src/form/pure/autocomplete';
-import Select from '../../../src/form/pure/select';
-import Toggle from '../../../src/form/pure/toggle';
-import Collection from '../../../src/form/pure/collection';
-
-
+import Form from '../../../src/form/form';
+import Autocomplete, { TagsMenu } from '../../../src/form/components/autocomplete';
+import Select from '../../../src/form/components/select';
+import Toggle from '../../../src/form/components/toggle';
+import Collection from '../../../src/form/components/collection';
 
 
 
