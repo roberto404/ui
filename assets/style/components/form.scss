@@ -1,51 +1,41 @@
-.form
-{
+.form {
   width: 100%;
 
-  &.active
-  {
-    .error
-    {
+  &.active {
+    .error {
       display: block;
     }
   }
 
-  fieldset
-  {
+  fieldset {
     padding: 0;
   }
 }
 
 
-.field
-{
+.field {
   @extend .no-select;
 
-  &:not(.m-0)
-  {
+  &:not(.m-0) {
     margin-bottom: 2.5rem;
   }
 
   /* !- Label */
 
-  .label
-  {
+  .label {
     margin-bottom: .75em;
     font-size: .85em;
     font-weight: 200;
 
-    .mandatory
-    {
+    .mandatory {
       margin-left: 2px;
 
-      &:after
-      {
+      &:after {
         content: "*";
       }
     }
 
-    &:first-letter
-    {
+    &:first-letter {
       text-transform: uppercase;
     }
   }
@@ -53,55 +43,46 @@
 
   /* !- Prefix */
 
-  .prefix
-  {
+  .prefix {
     padding-right: 1rem;
   }
 
-  .postfix
-  {
+  .postfix {
     padding-left: 1rem;
   }
 
   .prefix,
-  .postfix
-  {
+  .postfix {
     // background: #f8fafb;
 
-    svg
-    {
+    svg {
       width: 1.5em;
       height: 1.5em;
     }
   }
 
 
-  .table
-  {
+  .table {
     position: relative;
   }
 
   /* !- Button */
 
-  &.button-field button
-  {
+  &.button-field button {
     text-align: center;
 
-    &.input
-    {
+    &.input {
       text-align: left;
       justify-content: left;
       font-weight: normal;
 
-      span
-      {
+      span {
         padding-top: 0px;
       }
     }
   }
 
-  button
-  {
+  button {
     width: 100%;
   }
 
@@ -131,8 +112,7 @@
   input:not([type="radio"]):not([type="checkbox"]),
   textarea,
   select,
-  button.input
-  {
+  button.input {
     @extend .rounded;
     border: 1px solid $gray-light;
 
@@ -151,19 +131,16 @@
     -webkit-appearance: none;
 
     &[class^="embed-"],
-    &[class*=" embed-"]
-    {
+    &[class*=" embed-"] {
       padding-right: 3rem;
     }
 
-    &:focus
-    {
+    &:focus {
       @extend .border;
       @extend .border-blue;
     }
 
-    &:disabled
-    {
+    &:disabled {
       background-color: $white;
       color: $black-light;
       @extend .embed-lock-gray;
@@ -175,29 +152,25 @@
     }
   }
 
-  textarea
-  {
+  textarea {
     line-height: 200%;
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
     resize: vertical;
   }
 
-  textarea::placeholder
-  {
+  textarea::placeholder {
     color: $gray;
   }
 
-  input::placeholder
-  {
+  input::placeholder {
     color: $gray;
   }
 
-  input[type=text]
-  {
+  input[type=text] {
+
     &::-ms-clear,
-    &::-ms-reveal
-    {
+    &::-ms-reveal {
       display: none;
       width: 0;
       height: 0;
@@ -208,694 +181,615 @@
   input[type="date"],
   input[type="datetime-local"],
   {
-    padding-right: 0;
+  padding-right: 0;
+}
+
+select {
+  @extend .embed-expand-more-gray;
+  padding-right: 3rem !important;
+  background-size: 1em;
+  background-repeat: no-repeat;
+  background-position-y: center;
+  background-position-x: calc(100% - 1em);
+
+  -moz-appearance: none;
+}
+
+
+/* !- Plain */
+
+&.plain-field {
+  font-family: $font;
+
+  .table div:not(.postfix):not(.prefix) {
+    padding-left: 1rem;
+    font-size: .85em;
+    white-space: pre-wrap;
   }
+}
 
-  select
-  {
-    @extend .embed-expand-more-gray;
-    padding-right: 3rem !important;
-    background-size: 1em;
-    background-repeat: no-repeat;
-    background-position-y: center;
-    background-position-x: calc(100% - 1em);
+/* !- Checkbox */
 
-    -moz-appearance: none;
-  }
+&.checkbox-field,
+&.radio-field,
+{
+.value {
+  display: inline-flex;
+  align-items: center;
+}
+
+label {
+  font-size: 0.85em;
+  padding: .35em .5em;
+  width: 100%;
+  cursor: pointer;
+  line-height: 140%;
+}
+
+input {
+  margin: 0.2em;
+}
+
+input:checked~label {
+  @extend .flashing-once;
+}
+}
 
 
-  /* !- Plain */
+/* !- Toggle */
 
-  &.plain-field
-  {
-    font-family: $font;
+&.toggle-field {
+  button {
+    width: 4em !important;
+    height: 2em;
+    background-color: $gray-light !important;
+    padding: 2px;
+    box-sizing: content-box;
+    border-radius: 1em;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.5s ease;
 
-    .table div:not(.postfix):not(.prefix)
-    {
-      padding-left: 1rem;
-      font-size: .85em;
-      white-space: pre-wrap;
-    }
-  }
-
-  /* !- Checkbox */
-
-  &.checkbox-field,
-  &.radio-field,
-  {
-    .value
-    {
-      display: inline-flex;
-      align-items: center;
-    }
-
-    label
-    {
-      font-size: 0.85em;
-      padding: .35em .5em;
-      width: 100%;
-      cursor: pointer;
-      line-height: 140%;
-    }
-
-    input
-    {
-      margin: 0.2em;
+    &:hover {
+      background: $gray;
     }
 
-    input:checked ~ label
-    {
-      @extend .flashing-once;
-    }
-  }
-
-
-  /* !- Toggle */
-
-  &.toggle-field
-  {
-    button
-    {
-      width: 4em !important;
+    &::before {
+      background: white;
+      position: absolute;
+      margin: 0em 2px;
+      width: 2em;
       height: 2em;
-      background-color: $gray-light !important;
-      padding: 2px;
-      box-sizing: content-box;
-      border-radius: 1em;
-      position: relative;
-      cursor: pointer;
-      transition: background 0.5s ease;
-
-      &:hover
-      {
-        background: $gray;
-      }
-
-      &::before
-      {
-        background: white;
-        position: absolute;
-        margin: 0em 2px;
-        width: 2em;
-        height: 2em;
-        border-radius: 100%;
-        display: block;
-        content: '';
-        left: 0;
-        transition: left 0.5s ease;
-      }
-    }
-
-    &.active
-    {
-      button
-      {
-        background: $green !important;
-
-        &::before
-        {
-          left: 2em;
-        }
-      }
-
+      border-radius: 100%;
+      display: block;
+      content: '';
+      left: 0;
+      transition: left 0.5s ease;
     }
   }
 
+  &.active {
+    button {
+      background: $green !important;
 
-  /* !- File */
-
-  &.file-field
-  {
-    .files
-    {
-      button
-      {
-        width: auto;
-
-        *
-        {
-          pointer-events: none;
-        }
+      &::before {
+        left: 2em;
       }
-      // @extend .grid-2-1;
-      //
-      // .file
-      // {
-      //   @include aspect-ratio(100%, 100%);
-      //   @extend .col-2-12;
-      //   @extend .rounded;
-      //   background-size: cover;
-      //
-      //   @include respond-to(mobile)
-      //   {
-      //     width: 33.33%;
-      //   }
-      //
-      //   &::before
-      //   {
-      //     @extend .rounded;
-      //     background-color: rgba(0, 0, 0, 0.1);
-      //   }
-      //
-      //   div
-      //   {
-      //     @extend .rounded;
-      //     bottom: 0;
-      //     right: 0;
-      //     pointer-events: none;
-      //     background-size: contain;
-      //     background-repeat: no-repeat;
-      //
-      //     // files grid
-      //     margin-bottom: 1rem;
-      //     margin-right: 2rem;
-      //   }
-      //
-      //   &.add
-      //   {
-      //     &::before
-      //     {
-      //       background-color: white;
-      //       cursor: pointer;
-      //     }
-      //
-      //     svg
-      //     {
-      //       fill: $yellow;
-      //       transform: scale(.75);
-      //       pointer-events: none;
-      //       padding-right: 2rem;
-      //       padding-bottom: 2rem;
-      //
-      //       // aspect-ratio
-      //       // position: absolute;
-      //       // top: 0;
-      //     }
-      //   }
-      //
-      //
-      //   .progress
-      //   {
-      //     width: 100%;
-      //     height: 100%;
-      //     background: yellowgreen;
-      //     background-image: linear-gradient(to right, transparent 50%, #655 0);
-      //
-      //     // aspect-ratio
-      //     position: relative;
-      //     top: -100%;
-      //
-      //     &::before
-      //     {
-      //       content: '';
-      //       display: block;
-      //       margin-left: 50%;
-      //       height: 100%;
-      //       // border-radius: 0 100% 100% 0 / 50%;
-      //       // background-color: inherit;
-      //       // transform-origin: left;
-      //       background: #655;
-      //       transform-origin: left;
-      //       transform: rotate(.1turn);
-      //     }
-      //   }
-      // }
+    }
+
+  }
+}
+
+
+/* !- File */
+
+&.file-field {
+  .files {
+    button {
+      width: auto;
+
+      * {
+        pointer-events: none;
+      }
+    }
+
+    // @extend .grid-2-1;
+    //
+    // .file
+    // {
+    //   @include aspect-ratio(100%, 100%);
+    //   @extend .col-2-12;
+    //   @extend .rounded;
+    //   background-size: cover;
+    //
+    //   @include respond-to(mobile)
+    //   {
+    //     width: 33.33%;
+    //   }
+    //
+    //   &::before
+    //   {
+    //     @extend .rounded;
+    //     background-color: rgba(0, 0, 0, 0.1);
+    //   }
+    //
+    //   div
+    //   {
+    //     @extend .rounded;
+    //     bottom: 0;
+    //     right: 0;
+    //     pointer-events: none;
+    //     background-size: contain;
+    //     background-repeat: no-repeat;
+    //
+    //     // files grid
+    //     margin-bottom: 1rem;
+    //     margin-right: 2rem;
+    //   }
+    //
+    //   &.add
+    //   {
+    //     &::before
+    //     {
+    //       background-color: white;
+    //       cursor: pointer;
+    //     }
+    //
+    //     svg
+    //     {
+    //       fill: $yellow;
+    //       transform: scale(.75);
+    //       pointer-events: none;
+    //       padding-right: 2rem;
+    //       padding-bottom: 2rem;
+    //
+    //       // aspect-ratio
+    //       // position: absolute;
+    //       // top: 0;
+    //     }
+    //   }
+    //
+    //
+    //   .progress
+    //   {
+    //     width: 100%;
+    //     height: 100%;
+    //     background: yellowgreen;
+    //     background-image: linear-gradient(to right, transparent 50%, #655 0);
+    //
+    //     // aspect-ratio
+    //     position: relative;
+    //     top: -100%;
+    //
+    //     &::before
+    //     {
+    //       content: '';
+    //       display: block;
+    //       margin-left: 50%;
+    //       height: 100%;
+    //       // border-radius: 0 100% 100% 0 / 50%;
+    //       // background-color: inherit;
+    //       // transform-origin: left;
+    //       background: #655;
+    //       transform-origin: left;
+    //       transform: rotate(.1turn);
+    //     }
+    //   }
+    // }
+  }
+}
+
+
+/* !- Week */
+
+&.dayselect-field {
+  circle {
+    fill: none;
+  }
+
+  text {
+    font-family: $font;
+    fill: $black;
+  }
+
+  #weekend,
+  #current\ weekend {
+    text {
+      fill: $black-light;
     }
   }
 
-
-  /* !- Week */
-
-  &.dayselect-field
-  {
-    circle
-    {
-      fill: none;
-    }
-
-    text
-    {
-      font-family: $font;
+  #current,
+  #current\ weekend {
+    circle {
       fill: $black;
     }
 
-    #weekend,
-    #current\ weekend
-    {
-      text
-      {
-        fill: $black-light;
-      }
-    }
-
-    #current,
-    #current\ weekend
-    {
-      circle
-      {
-        fill: $black;
-      }
-      text:last-of-type
-      {
-        fill: white;
-      }
-    }
-
-    #today
-    {
-      text:last-of-type
-      {
-        fill: $red;
-      }
-    }
-
-    #today\ current,
-    #today\ current\ weekend,
-    {
-      circle
-      {
-        fill: $red;
-      }
-      text:last-of-type
-      {
-        fill: white;
-      }
-    }
-
-    .value
-    {
-      text-align: center;
+    text:last-of-type {
+      fill: white;
     }
   }
 
-
-  /* !- DateTime */
-
-  &.date-field
-  {
-    // max-width: 200px;
-
-    // > div
-    // {
-    //   max-width: 200px;
-    //
-    //   &:not(:first-child)
-    //   {
-    //     margin: 0 auto;
-    //   }
-    // }
-    //
-    // .pager button
-    // {
-    //   top: 5%;
-    // }
-    //
-    // .pages,
-    // .field .error
-    // {
-    //   display: none;
-    // }
-    //
-    // .label
-    // {
-    //   margin-bottom: 1em;
-    // }
-    //
-    // .calendar-month-field
-    // {
-    //   svg > text
-    //   {
-    //     font-size: 1em;
-    //   }
-    // }
-
-    .date-fields
-    {
-      display: flex;
-
-      .select-field
-      {
-        width: 100%;
-
-        &:not(:first-child)
-        {
-          padding-left: 1rem;
-        }
-
-        select
-        {
-          min-width: 6em;
-        }
-      }
+  #today {
+    text:last-of-type {
+      fill: $red;
     }
+  }
 
-    .time-fields
-    {
-      display: flex;
-      align-items: center;
+  #today\ current,
+  #today\ current\ weekend,
+  {
+  circle {
+    fill: $red;
+  }
 
-      .select-field
-      {
-        width: 40%;
+  text:last-of-type {
+    fill: white;
+  }
+}
+
+.value {
+  text-align: center;
+}
+}
+
+
+/* !- DateTime */
+
+&.date-field {
+  // max-width: 200px;
+
+  // > div
+  // {
+  //   max-width: 200px;
+  //
+  //   &:not(:first-child)
+  //   {
+  //     margin: 0 auto;
+  //   }
+  // }
+  //
+  // .pager button
+  // {
+  //   top: 5%;
+  // }
+  //
+  // .pages,
+  // .field .error
+  // {
+  //   display: none;
+  // }
+  //
+  // .label
+  // {
+  //   margin-bottom: 1em;
+  // }
+  //
+  // .calendar-month-field
+  // {
+  //   svg > text
+  //   {
+  //     font-size: 1em;
+  //   }
+  // }
+
+  .date-fields {
+    display: flex;
+
+    .select-field {
+      width: 100%;
+
+      &:not(:first-child) {
+        padding-left: 1rem;
       }
 
-      .time-colon
-      {
-        text-align: center;
-        width: 20%;
-      }
-
-      select
-      {
+      select {
         min-width: 6em;
       }
     }
   }
 
+  .time-fields {
+    display: flex;
+    align-items: center;
 
-  /* !- Calendar */
-
-  &.calendar-month-field
-  {
-    // .caroussel,
-    .calendar
-    {
-      max-width: 200px;
-      margin: 0 auto;
+    .select-field {
+      width: 40%;
     }
 
-    .pages
-    {
-      display: none;
-    }
-    .pager button
-    {
-      top: 0;
-
-      &.active
-      {
-      }
-    }
-  }
-
-
-
-
-
-
-
-  /* !- Variante */
-
-  &.border-none
-  {
-    input:not([type="radio"]):not([type="checkbox"]),
-    select
-    {
-      border-width: 0px;
-    }
-  }
-
-  &.text-l *
-  {
-    font-size: 1.5rem;
-  }
-
-  &.text-xl *
-  {
-    font-size: 2rem;
-  }
-
-  &.icon
-  {
-    button
-    {
-      @extend .border-none;
-      padding: 0;
-      padding-top: 0.7em;
-      height: 2.3em;
-      // width: max-content;
-      // margin: 0 auto;
-
-      svg
-      {
-        height: 100%;
-      }
-    }
-  }
-
-  .table > *
-  {
-    vertical-align: middle;
-  }
-
-  &.prefix-inside
-  {
-    position: relative;
-
-    .prefix
-    {
-      position: absolute;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      width: auto;
-      padding: 0 1rem;
-
-      svg
-      {
-        width: 1.3em;
-        height: 1.3em;
-      }
-    }
-  }
-
-  &.postfix-inside
-  {
-    position: relative;
-
-    .postfix
-    {
-      right: 0;
-
-      position: absolute;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      width: auto;
-      padding: 0 1rem;
-
-      svg
-      {
-        width: 1.3em;
-        height: 1.3em;
-      }
-    }
-  }
-
-
-  &.prefix-inside
-  {
-    select,
-    input
-    {
-      padding-left: 4rem !important;
-    }
-  }
-
-  &.postfix-inside:not(.postfix-float)
-  {
-    select,
-    input
-    {
-      padding-right: 4rem !important;
-    }
-  }
-
-  &.postfix-float
-  {
-    input:hover ~ .postfix,
-    input:focus ~ .postfix
-    {
-      display: none;
-    }
-  }
-
-  &.prefix-join
-  {
-    .prefix
-    {
-      position: initial;
-      @extend .rounded-left;
-      border: 1px solid $gray-light;
-      border-right-width: 0px;
-      padding: 1em 0.8em;
-      padding-right: 0;
-      line-height: 1.33em;
-      font-size: .85em;
-      color: $gray;
-      max-height: 45.27px;
-      min-height: 45.27px;
+    .time-colon {
+      text-align: center;
+      width: 20%;
     }
 
-    input:not([type="radio"]):not([type="checkbox"])
-    {
+    select {
+      min-width: 6em;
+    }
+  }
+}
+
+
+/* !- Calendar */
+
+&.calendar-month-field {
+
+  // .caroussel,
+  .calendar {
+    max-width: 200px;
+    margin: 0 auto;
+  }
+
+  .pages {
+    display: none;
+  }
+
+  .pager button {
+    top: 0;
+
+    &.active {}
+  }
+}
+
+
+
+
+
+
+
+/* !- Variante */
+
+&.border-none {
+
+  input:not([type="radio"]):not([type="checkbox"]),
+  select {
+    border-width: 0px;
+  }
+}
+
+&.text-l * {
+  font-size: 1.5rem;
+}
+
+&.text-xl * {
+  font-size: 2rem;
+}
+
+&.icon {
+  button {
+    @extend .border-none;
+    padding: 0;
+    padding-top: 0.7em;
+    height: 2.3em;
+    // width: max-content;
+    // margin: 0 auto;
+
+    svg {
+      height: 100%;
+    }
+  }
+}
+
+.table>* {
+  vertical-align: middle;
+}
+
+&.prefix-inside {
+  position: relative;
+
+  .prefix {
+    position: absolute;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    width: auto;
+    padding: 0 1rem;
+
+    svg {
+      width: 1.3em;
+      height: 1.3em;
+    }
+  }
+}
+
+&.postfix-inside {
+  position: relative;
+
+  .postfix {
+    right: 0;
+
+    position: absolute;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    width: auto;
+    padding: 0 1rem;
+
+    svg {
+      width: 1.3em;
+      height: 1.3em;
+    }
+  }
+}
+
+
+&.prefix-inside {
+
+  select,
+  input {
+    padding-left: 4rem !important;
+  }
+}
+
+&.postfix-inside:not(.postfix-float) {
+
+  select,
+  input {
+    padding-right: 4rem !important;
+  }
+}
+
+&.postfix-float {
+
+  input:hover~.postfix,
+  input:focus~.postfix {
+    display: none;
+  }
+}
+
+&.prefix-join {
+  .prefix {
+    position: initial;
+    @extend .rounded-left;
+    border: 1px solid $gray-light;
+    border-right-width: 0px;
+    padding: 1em 0.8em;
+    padding-right: 0;
+    line-height: 1.33em;
+    font-size: .85em;
+    color: $gray;
+    max-height: 45.27px;
+    min-height: 45.27px;
+    max-width: calc(100% - 4em);
+  }
+
+  &.prefix-80 .prefix {
+    max-width: 80%;
+  }
+
+  input:not([type="radio"]):not([type="checkbox"]) {
+    border-left-width: 0px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+
+    &:focus {
+      // border-width: 4px;
+      border-style: solid;
+      border-image:
+        linear-gradient(to right,
+          $gray-light,
+          $blue ) 1;
+
       border-left-width: 0px;
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
 
-      &:focus
-      {
-        // border-width: 4px;
-        border-style: solid;
-        border-image:
-          linear-gradient(
-            to right,
-            $gray-light,
-            $blue
-          ) 1;
+    }
+  }
+}
 
-        border-left-width: 0px;
+&.error\:hidden .error {
+  display: none !important;
+}
 
+.error {
+  margin-left: .75rem;
+  margin-top: .5em;
+  display: none;
+  color: $red;
+  font-size: 80%;
+}
+
+&.label\:hidden .label {
+  display: none;
+  // visibility: hidden;
+}
+
+
+
+&.complete {
+  input:not([type="radio"]):not([type="checkbox"]) {
+    border-color: $green-dark;
+  }
+}
+
+&.transparent {
+  input:not([type="radio"]):not([type="checkbox"]) {
+    background-color: transparent;
+  }
+}
+
+
+&.gray {
+  input:not([type="radio"]):not([type="checkbox"]) {
+    background-color: $gray-light;
+  }
+}
+
+&.small {
+  input:not([type="radio"]):not([type="checkbox"]) {
+    padding: 0.3em 0.5em;
+    font-size: .7em;
+  }
+}
+
+
+/* !- Slider */
+
+&.slider-field {
+  .h-center {
+    justify-content: space-between;
+  }
+
+  .value {
+    padding-bottom: 1rem;
+  }
+
+  .slider {
+    margin-left: calc(1.5em / 2);
+    margin-top: 1rem;
+    position: relative;
+    transform: translateY(50%);
+    width: calc(100% - 1.5em);
+
+    >* {
+      transform: translateY(-50%);
+    }
+
+    .handle {
+      cursor: pointer;
+      top: 0;
+      transform: translate(-50%, -50%);
+      position: absolute;
+      border-radius: 100%;
+      width: 1.5em;
+      height: 1.5em;
+      background-color: $yellow;
+      border: 4px solid white;
+      box-shadow: 0px 2px 5px 2px rgba(0, 0, 0, 0.15);
+    }
+
+    .active-line {
+      top: 0;
+      position: absolute;
+      background-color: $yellow;
+      height: 0.5em;
+      border: 1px solid $yellow;
+      border-radius: 4px;
+    }
+
+    .inactive-line {
+      background-color: white;
+      height: 0.5em;
+      border: 1px solid $black-light;
+      border-radius: 4px;
+    }
+
+    &.active {
+
+      .handle,
+      .active-line {
+        background-color: $yellow-dark;
+        transition: background-color 0.5s ease;
+      }
+    }
+
+    &:not(.active) {
+
+      .handle,
+      .active-line {
+        transition: all 0.5s ease;
       }
     }
   }
-
-  &.error\:hidden .error
-  {
-    display: none !important;
-  }
-
-  .error
-  {
-    margin-left: .75rem;
-    margin-top: .5em;
-    display: none;
-    color: $red;
-    font-size: 80%;
-  }
-
-  &.label\:hidden .label
-  {
-    display: none;
-    // visibility: hidden;
-  }
-
-
-
-  &.complete
-  {
-    input:not([type="radio"]):not([type="checkbox"])
-    {
-      border-color: $green-dark;
-    }
-  }
-
-  &.transparent
-  {
-    input:not([type="radio"]):not([type="checkbox"])
-    {
-      background-color: transparent;
-    }
-  }
-
-
-  &.gray
-  {
-    input:not([type="radio"]):not([type="checkbox"])
-    {
-      background-color: $gray-light;
-    }    
-  }
-
-  &.small
-  {
-    input:not([type="radio"]):not([type="checkbox"])
-    {
-      padding: 0.3em 0.5em;
-      font-size: .7em;
-    }  
-  }
-
-
-  /* !- Slider */
-
-  &.slider-field
-  {
-    .h-center
-    {
-      justify-content: space-between;
-    }
-
-    .value
-    {
-      padding-bottom: 1rem;
-    }
-
-    .slider
-    {
-      margin-left: calc(1.5em / 2);
-      margin-top: 1rem;
-      position: relative;
-      transform: translateY(50%);
-      width: calc(100% - 1.5em);
-
-      > *
-      {
-        transform: translateY(-50%);
-      }
-
-      .handle
-      {
-        cursor: pointer;
-        top: 0;
-        transform: translate(-50%, -50%);
-        position: absolute;
-        border-radius: 100%;
-        width: 1.5em;
-        height: 1.5em;
-        background-color: $yellow;
-        border: 4px solid white;
-        box-shadow: 0px 2px 5px 2px rgba(0, 0, 0, 0.15);
-      }
-
-      .active-line
-      {
-        top: 0;
-        position: absolute;
-        background-color: $yellow;
-        height: 0.5em;
-        border: 1px solid $yellow;
-        border-radius: 4px;
-      }
-
-      .inactive-line
-      {
-        background-color: white;
-        height: 0.5em;
-        border: 1px solid $black-light;
-        border-radius: 4px;
-      }
-
-      &.active
-      {
-        .handle,
-        .active-line
-        {
-          background-color: $yellow-dark;
-          transition: background-color 0.5s ease;
-        }
-      }
-
-      &:not(.active)
-      {
-        .handle,
-        .active-line
-        {
-          transition: all 0.5s ease;
-        }
-      }
-    }
-  }
+}
 }
 
 
@@ -904,8 +798,7 @@
  * Flat form field appearance like OSX contact
  */
 
-.form.flat > .field:not(.flat\:disabled)
-{
+.form.flat>.field:not(.flat\:disabled) {
   display: flex;
   align-items: center;
   border-bottom: 1px solid $gray-light;
@@ -913,13 +806,11 @@
   margin-bottom: 1rem;
   font-size: 90%;
 
-  > div
-  {
+  >div {
     margin: 0;
   }
 
-  .label
-  {
+  .label {
     min-width: 15rem;
     max-width: 15rem;
     text-align: right;
@@ -928,33 +819,27 @@
     color: $gray;
   }
 
-  &.plain-field
-  {
+  &.plain-field {
     align-items: flex-start;
   }
 
-  &.toggle-field button
-  {
+  &.toggle-field button {
     font-size: 70%;
   }
 
-  &.button-field
-  {
+  &.button-field {
     width: 100%;
 
-    .table
-    {
+    .table {
       text-align: left;
 
-      button
-      {
+      button {
         width: fit-content;
       }
     }
   }
 
-  .field
-  {
+  .field {
     margin-bottom: 0;
   }
 }
@@ -963,16 +848,14 @@
 /**
  * Special form field appearance
  */
-.filters
-{
+.filters {
   min-height: 4rem;
   margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: flex-end;
 
-  .field
-  {
+  .field {
     height: 2.4em;
     padding: 0;
     margin-bottom: 0;
@@ -982,21 +865,18 @@
     display: inline-flex;
     align-items: center;
 
-    &:first-child
-    {
+    &:first-child {
       border-top-left-radius: 18px;
       border-bottom-left-radius: 18px;
     }
 
-    &:last-child
-    {
+    &:last-child {
       border-top-right-radius: 18px;
       border-bottom-right-radius: 18px;
       border-right-width: 1px;
     }
 
-    .label
-    {
+    .label {
       font-size: .75em;
       line-height: 120%;
       text-transform: uppercase;
@@ -1006,16 +886,14 @@
       padding-left: 1em;
     }
 
-    .table
-    {
+    .table {
       height: 100%;
     }
 
     input:not([type="radio"]):not([type="checkbox"]),
     textarea,
     select,
-    button
-    {
+    button {
       padding: 0 1em;
       width: auto;
       max-width: 15em;
@@ -1028,15 +906,13 @@
       box-shadow: none;
       color: $gray;
 
-      option
-      {
+      option {
         background: initial;
         color: initial;
         text-transform: inherit;
       }
 
-      &::placeholder
-      {
+      &::placeholder {
         text-transform: none;
         font-style: italic;
         font-weight: 300;
@@ -1044,69 +920,55 @@
         font-size: .9em;
       }
 
-      &:focus
-      {
+      &:focus {
         border: none !important;
       }
 
-      &:hover
-      {
+      &:hover {
         color: $gray !important;
       }
     }
 
     .postfix,
-    .prefix
-    {
-      button
-      {
+    .prefix {
+      button {
         padding-left: 0;
       }
     }
 
     button,
-    select
-    {
+    select {
       cursor: pointer;
     }
 
-    input#search
-    {
+    input#search {
       width: 200em;
     }
 
-    &.button-field
-    {
+    &.button-field {
       padding: 0;
 
-      button
-      {
+      button {
         border-radius: 0;
 
-        > *
-        {
+        >* {
           font-size: 100%;
         }
       }
     }
 
-    &.dropdown-field
-    {
-      &.active
-      {
-        button.embed-arrow-down-gray
-        {
+    &.dropdown-field {
+      &.active {
+        button.embed-arrow-down-gray {
           @extend .embed-arrow-down-white;
         }
       }
     }
 
-    &.active
-    {
+    &.active {
       background-color: $blue-dark;
 
-      .label
-      {
+      .label {
         // color: $white-light;
         color: $blue-light;
       }
@@ -1116,24 +978,21 @@
       select,
       button,
       {
-        font-weight: bold;
-        color: $white-light;
+      font-weight: bold;
+      color: $white-light;
 
-        &:hover
-        {
-          color: white !important;
-        }
-      }
-
-      *:not(.no-fill):not([class^="fill-"]):not([class*=" fill-"]) svg *
-      {
-        fill: white;
+      &:hover {
+        color: white !important;
       }
     }
-  }
 
-  &.gray-dark .field.active
-  {
-    background-color: $gray-dark;
+    *:not(.no-fill):not([class^="fill-"]):not([class*=" fill-"]) svg * {
+      fill: white;
+    }
   }
+}
+
+&.gray-dark .field.active {
+  background-color: $gray-dark;
+}
 }

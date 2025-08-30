@@ -1,531 +1,450 @@
-hr
-{
+hr {
   border: 0.5px solid $black-light;
   margin: 2rem 0;
 }
 
-.rounded
-{
+.rounded {
   border-radius: .5rem;
 }
 
-.rounded-m
-{
+.rounded-m {
   border-radius: 1rem;
 }
 
-.rounded-l
-{
+.rounded-l {
   border-radius: 2rem;
 }
 
-.rounded-top
-{
+.rounded-top {
   border-top-left-radius: .5rem;
   border-top-right-radius: .5rem;
 }
 
-.rounded-bottom
-{
+.rounded-bottom {
   border-bottom-left-radius: .5rem;
   border-bottom-right-radius: .5rem;
 }
 
-.rounded-left
-{
+.rounded-left {
   border-top-left-radius: .5rem;
   border-bottom-left-radius: .5rem;
 }
-.rounded-right
-{
+
+.rounded-right {
   border-top-right-radius: .5rem;
   border-bottom-right-radius: .5rem;
 }
 
-.circle
-{
+.circle {
   border-radius: 100%;
 }
 
-.square
-{
+.square {
   border-radius: 0rem;
 }
 
-.shadow
-{
-  box-shadow: 0 2px 0px 0 rgba(0,0,0,0.06);
+.shadow {
+  box-shadow: 0 2px 0px 0 rgba(0, 0, 0, 0.06);
 }
 
-.shadow-outer
-{
+.shadow-outer {
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2);
 }
 
-.shadow-outer-2
-{
+.shadow-outer-2 {
   box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.1);
 }
 
-.shadow-outer-3
-{
+.shadow-outer-3 {
   box-shadow: 0px 3px 9px 0px rgba(0, 0, 0, 0.075);
 }
 
-.border
-{
+.border {
   border: 1px solid $black-light;
 }
 
-.border-none
-{
+.border-none {
   border-style: none;
 }
 
-.border-bottom
-{
+.border-bottom {
   border-bottom: 1px solid $black-light;
 }
 
-.border-top
-{
+.border-top {
   border-top: 1px solid $black-light;
 }
 
-.border-right
-{
+.border-right {
   border-right: 1px solid $black-light;
 }
 
-.border-left
-{
+.border-left {
   border-left: 1px solid $black-light;
 }
 
-.border-0
-{
+.border-0 {
   border-width: 0;
 }
 
-.border-1
-{
+.border-1 {
   border-width: 1px;
 }
 
-.border-2
-{
+.border-2 {
   border-width: 2px;
 }
 
-.border-3
-{
+.border-3 {
   border-width: 3px;
 }
 
-.border-blue
-{
+.border-blue {
   border-color: $blue;
 }
 
-.border-blue-dark
-{
+.border-blue-dark {
   border-color: $blue-dark;
 }
 
-.border-green
-{
+.border-green {
   border-color: $green;
 }
 
-.border-red
-{
+.border-red {
   border-color: $red;
 }
 
-.border-yellow
-{
+.border-yellow {
   border-color: $yellow;
 }
 
-.border-gray
-{
+.border-gray {
   border-color: $gray;
 }
 
-.border-white
-{
+.border-white {
   border-color: $white;
 }
 
-.border-gray-light
-{
+.border-gray-light {
   border-color: $gray-light;
 }
 
-.border-black
-{
+.border-black {
   border-color: $black;
 }
 
-.border-dashed
-{
+.border-dashed {
   border-style: dashed;
 }
 
-.border-dotted
-{
+.border-dotted {
   border-style: dotted;
 }
 
 .bg-black,
-.hover\:bg-black:hover
-{
+.hover\:bg-black:hover {
   background-color: $black;
 }
 
-.bg-black-20
-{
+.bg-black-20 {
   background-color: rgba(60, 60, 60, 0.2);
 }
 
-.bg-black-30
-{
+.bg-black-30 {
   background-color: rgba(60, 60, 60, 0.3);
 }
 
 .bg-white,
-.hover\:bg-white:hover
-{
+.hover\:bg-white:hover {
   background-color: $white;
 }
 
 .bg-white-light,
-.hover\:bg-white-light:hover
-{
+.hover\:bg-white-light:hover {
   background-color: $white-light;
 }
 
 .bg-white-semi-light,
-.hover\:bg-white-semi-light:hover
-{
+.hover\:bg-white-semi-light:hover {
   background-color: $white-semi-light
 }
 
 .bg-white-dark,
-.hover\:bg-white-dark:hover
-{
+.hover\:bg-white-dark:hover {
   background-color: $white-dark;
 }
 
 .bg-gray,
-.hover\:bg-gray:hover
-{
+.hover\:bg-gray:hover {
   background-color: $gray;
 }
 
 .bg-gray-dark,
-.hover\:bg-gray-dark:hover
-{
+.hover\:bg-gray-dark:hover {
   background-color: $gray-dark;
 }
 
 .bg-gray-light,
-.hover\:bg-gray-light:hover
-{
+.hover\:bg-gray-light:hover {
   background-color: $gray-light;
 }
 
 .bg-green,
-.hover\:bg-green:hover
-{
+.hover\:bg-green:hover {
   background-color: $green;
 }
 
 .bg-green-light,
-.hover\:bg-green-light:hover
-{
+.hover\:bg-green-light:hover {
   background-color: $green-light;
 }
 
 .bg-green-dark,
-.hover\:bg-green-dark:hover
-{
+.hover\:bg-green-dark:hover {
   background-color: $green-dark;
 }
 
 .bg-red,
-.hover\:bg-red:hover
-{
+.hover\:bg-red:hover {
   background-color: $red;
 }
 
 .bg-red-dark,
-.hover\:bg-red-dark:hover
-{
+.hover\:bg-red-dark:hover {
   background-color: $red-dark;
 }
 
 
 .bg-red-light,
-.hover\:bg-red-light:hover
-{
+.hover\:bg-red-light:hover {
   background-color: $red-light;
 }
 
+
+
+.bg-brown,
+.hover\:bg-brown:hover {
+  background-color: $brown;
+}
+
+.bg-brown-dark,
+.hover\:bg-brown-dark:hover {
+  background-color: $brown-dark;
+}
+
+
+.bg-brown-light,
+.hover\:bg-brown-light:hover {
+  background-color: $brown-light;
+}
+
+
 .bg-transparent,
-.hover\:bg-transparent:hover
-{
+.hover\:bg-transparent:hover {
   background-color: rgba(0, 0, 0, 0.75);
 }
 
 .bg-yellow,
-.hover\:bg-yellow:hover
-{
+.hover\:bg-yellow:hover {
   background-color: $yellow;
 }
 
 .bg-yellow-dark,
-.hover\:bg-yellow-dark:hover
-{
+.hover\:bg-yellow-dark:hover {
   background-color: $yellow-dark;
 }
 
 .bg-yellow-light,
-.hover\:bg-yellow-light:hover
-{
+.hover\:bg-yellow-light:hover {
   background-color: $yellow-light;
 }
 
 .bg-blue,
-.hover\:bg-blue:hover
-{
+.hover\:bg-blue:hover {
   background-color: $blue;
 }
 
 .bg-blue-dark,
-.hover\:bg-blue-dark:hover
-{
+.hover\:bg-blue-dark:hover {
   background-color: $blue-dark;
 }
 
 .bg-blue-light,
-.hover\:bg-blue-light:hover
-{
+.hover\:bg-blue-light:hover {
   background-color: $blue-light;
 }
 
-.fill-black-light *
-{
+.fill-black-light * {
   fill: $black-light;
 }
 
-.fill-white *
-{
+.fill-white * {
   fill: $white;
 }
 
-.fill-gray *
-{
+.fill-gray * {
   fill: $gray;
 }
 
-.fill-gray-light *
-{
+.fill-gray-light * {
   fill: $gray-light;
 }
 
-.fill-gray-dark *
-{
+.fill-gray-dark * {
   fill: $gray-dark;
 }
 
-.fill-yellow *
-{
+.fill-yellow * {
   fill: $yellow;
 }
 
-.fill-blue *
-{
+.fill-blue * {
   fill: $blue;
 }
 
-.fill-blue-dark *
-{
+.fill-blue-dark * {
   fill: $blue-dark;
 }
 
-.fill-red *
-{
+.fill-red * {
   fill: $red;
 }
 
-.fill-green *
-{
+.fill-green * {
   fill: $green;
 }
 
-.fill-green-dark *
-{
+.fill-green-dark * {
   fill: $green-dark;
 }
 
-.fill-transparent *
-{
-  fill: rgba(0,0,0,0);
+.fill-transparent * {
+  fill: rgba(0, 0, 0, 0);
 }
 
-.hover\:fill-black:hover *
-{
+.hover\:fill-black:hover * {
   fill: $black;
 }
 
-.hover\:fill-white:hover *
-{
+.hover\:fill-white:hover * {
   fill: $white;
 }
 
 
-.hover\:fill-yellow:hover *
-{
+.hover\:fill-yellow:hover * {
   fill: $yellow;
 }
 
-.hover\:fill-yellow-light:hover *
-{
+.hover\:fill-yellow-light:hover * {
   fill: $yellow-light;
 }
 
-.hover\:fill-blue:hover *
-{
+.hover\:fill-blue:hover * {
   fill: $blue;
 }
 
-.hover\:fill-blue-light:hover *
-{
+.hover\:fill-blue-light:hover * {
   fill: $blue-light;
 }
 
-text.blue
-{
+text.blue {
   fill: $blue;
 }
 
-text.gray
-{
+text.gray {
   fill: $gray;
 }
 
-text.gray-light
-{
+text.gray-light {
   fill: $gray-light;
 }
 
-text.gray-dark
-{
+text.gray-dark {
   fill: $gray-dark;
 }
 
-text.yellow
-{
+text.yellow {
   fill: $yellow;
 }
 
-path.dashed
-{
+path.dashed {
   stroke-dasharray: 1;
 }
 
-path.dashed-2
-{
+path.dashed-2 {
   stroke-dasharray: 2;
 }
 
-path.dashed-3
-{
+path.dashed-3 {
   stroke-dasharray: 3;
 }
 
-path.stroke-1
-{
+path.stroke-1 {
   stroke-width: 1;
 }
 
-path.stroke-yellow
-{
+path.stroke-yellow {
   stroke: $yellow;
 }
 
 
-.rotate-45
-{
+.rotate-45 {
   transform: rotate(45deg);
 }
 
-.rotate-90
-{
+.rotate-90 {
   transform: rotate(90deg);
 }
 
-.rotate-180
-{
+.rotate-180 {
   transform: rotate(180deg);
 }
 
-.rotate-270
-{
+.rotate-270 {
   transform: rotate(-90deg);
 }
 
-.hover\:rotate-45:hover
-{
+.hover\:rotate-45:hover {
   transform: rotate(45deg);
 }
 
 
 
-@include respond-to(mobile)
-{
-  .mobile\:border
-  {
+@include respond-to(mobile) {
+  .mobile\:border {
     border: 1px solid $black-light;
   }
 
-  .mobile\:border-bottom
-  {
+  .mobile\:border-bottom {
     border-bottom: 1px solid $black-light;
   }
 
-  .mobile\:border-top
-  {
+  .mobile\:border-top {
     border-top: 1px solid $black-light;
   }
 
-  .mobile\:border-right
-  {
+  .mobile\:border-right {
     border-right: 1px solid $black-light;
   }
 
-  .mobile\:border-left
-  {
+  .mobile\:border-left {
     border-left: 1px solid $black-light;
   }
 
-  .mobile\:border-none
-  {
+  .mobile\:border-none {
     border-style: none;
   }
 }
 
 
-@include respond-to(desktop)
-{
-  .desktop\:border-none
-  {
+@include respond-to(desktop) {
+  .desktop\:border-none {
     border-style: none;
   }
 
-  .desktop\:border-right
-  {
+  .desktop\:border-right {
     border-right: 1px solid $black-light;
   }
 }

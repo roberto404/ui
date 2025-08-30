@@ -1,87 +1,70 @@
-.text-white
-{
+.text-white {
   color: $white;
 }
 
-.bold
-{
+.bold {
   font-weight: bold;
 }
 
-.light
-{
+.light {
   font-weight: 300;
 }
 
-.heavy
-{
+.heavy {
   font-weight: 900;
 }
 
-.normal
-{
+.normal {
   font-weight: normal;
 }
 
-.uppercase
-{
+.uppercase {
   text-transform: uppercase;
 }
 
-.lowercase
-{
+.lowercase {
   text-transform: lowercase;
 }
 
-.firstcase:first-letter
-{
+.firstcase:first-letter {
   text-transform: capitalize !important;
 }
 
-.italic
-{
+.italic {
   font-style: italic;
 }
 
-.underline
-{
+.underline {
   text-decoration: underline;
 }
 
-.hover\:underline:hover
-{
+.hover\:underline:hover {
   text-decoration: underline;
 }
 
-.strikethrough
-{
+.strikethrough {
   text-decoration: line-through;
 }
 
-.no-underline
-{
+.no-underline {
   text-decoration: none;
 }
 
-.text-nowarp
-{
+.text-nowarp {
   white-space: nowrap;
 }
 
-.ellipsis
-{
+.ellipsis {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 
-  &:not([class^="h-"]):not([class*=" h-"])
-  {
+  &:not([class^="h-"]):not([class*=" h-"]) {
     height: 1.06em;
   }
 }
 
-.colon:after
-{
+.colon:after {
   content: ':';
   display: inline-block;
   margin-right: 0.3em;
@@ -104,22 +87,19 @@
 }
 
 h1,
-.h1
-{
+.h1 {
   margin: 1.5em 0;
   font-size: 3em;
 }
 
 h2,
-.h2
-{
+.h2 {
   margin: 1.2em 0;
   font-size: 1.5em;
 }
 
 h3,
-.h3
-{
+.h3 {
   margin: 1em 0;
   font-size: 1em;
   color: $yellow;
@@ -127,68 +107,63 @@ h3,
 }
 
 .text-black,
-.hover\:text-black:hover
-{
+.hover\:text-black:hover {
   color: $black;
 }
 
 .text-black-light,
-.hover\:text-black-light:hover
-{
+.hover\:text-black-light:hover {
   color: $black-light;
 }
 
 .text-white,
-.hover\:text-white:hover
-{
+.hover\:text-white:hover {
   color: $white;
 }
 
 .text-gray,
-.hover\:text-gray:hover
-{
+.hover\:text-gray:hover {
   color: $gray;
 }
 
 .text-gray-light,
-.hover\:text-gray-light:hover
-{
+.hover\:text-gray-light:hover {
   color: $gray-light;
 }
 
-.text-gray-dark
-{
+.text-gray-dark {
   color: $gray-dark;
 }
 
-.text-green
-{
+.text-green {
   color: $green;
 }
-.text-yellow
-{
+
+.text-yellow {
   color: $yellow;
 }
-.text-red
-{
+
+.text-yellow-dark {
+  color: $yellow-dark;
+}
+
+.text-red {
   color: $red;
 }
-.text-blue
-{
+
+.text-blue {
   color: $blue;
 }
-.text-blue-dark
-{
+
+.text-blue-dark {
   color: $blue-dark;
 }
 
-.text-yellow-light
-{
+.text-yellow-light {
   color: $yellow-light;
 }
 
-.highlight-red
-{
+.highlight-red {
   display: inline-block;
   background-color: $red;
   color: white;
@@ -223,54 +198,44 @@ h3,
   font-size: 2em;
 }
 
-.text-line-s
-{
+.text-line-s {
   line-height: 1.1em;
 }
 
-.text-line-m
-{
+.text-line-m {
   line-height: 1.25em;
 }
 
-.text-line-l
-{
+.text-line-l {
   line-height: 1.5em;
 }
 
-.text-line-xl
-{
+.text-line-xl {
   line-height: 1.75em;
 }
 
-.text-line-xxl
-{
+.text-line-xxl {
   line-height: 2em;
 }
 
-.text-line-0
-{
+.text-line-0 {
   line-height: 0;
 }
 
-.text-shadow
-{
+.text-shadow {
   text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
 }
 
-.text-shadow-2
-{
+.text-shadow-2 {
   text-shadow: 2px 2px rgba(0, 0, 0, 0.2);
 }
 
-.content-dropHere
-{
+.content-dropHere {
   visibility: hidden;
   text-indent: -9999px;
   line-height: 0;
 
-  &::after
-  {
+  &::after {
     content: 'Drop here!';
     visibility: visible;
     display: block;
@@ -281,81 +246,92 @@ h3,
 
 
 li.disc,
-li.decimal
-{
+li.decimal {
   padding-left: 0.5rem;
   margin-left: 2.5rem;
   margin-bottom: 1rem;
 }
 
-li.disc
-{
+li.disc {
   list-style-type: disc;
 }
 
-li.decimal
-{
+li.decimal {
   list-style-type: decimal;
 }
 
 
-@include respond-to(mobile)
-{
+@include respond-to(mobile) {
   .mobile\:text-left {
     text-align: left;
   }
+
   .mobile\:text-right {
     text-align: right;
   }
+
   .mobile\:text-center {
     text-align: center;
   }
+
   .mobile\:text-xxs {
     font-size: 0.5em;
   }
+
   .mobile\:text-xs {
     font-size: 0.75em;
   }
+
   .mobile\:text-s {
     font-size: 0.875em;
   }
+
   .mobile\:text-m {
     font-size: 1.25em;
   }
+
   .mobile\:text-l {
     font-size: 1.5em;
   }
+
   .mobile\:text-xl {
     font-size: 1.75em;
   }
 }
 
-@include respond-to(desktop)
-{
+@include respond-to(desktop) {
   .desktop\:text-left {
     text-align: left;
   }
+
   .desktop\:text-right {
     text-align: right;
   }
+
   .desktop\:text-center {
     text-align: center;
   }
+
   .desktop\:text-xxs {
     font-size: 0.5em;
   }
+
   .desktop\:text-xs {
     font-size: 0.75em;
   }
+
   .desktop\:text-s {
     font-size: 0.875em;
   }
+
   .desktop\:text-m {
     font-size: 1.25em;
   }
+
   .desktop\:text-l {
     font-size: 1.5em;
   }
+
   .desktop\:text-xl {
     font-size: 1.75em;
   }

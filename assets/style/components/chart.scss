@@ -1,90 +1,78 @@
-.chart
-{
-  &.bar
-  {
+.chart {
+  &.bar {
     rect#bar-bg // two axis deterimened background is transparent
-    {
+
+      {
       opacity: 0;
     }
 
     g#bar-xgrid line // horizontal lines
-    {
+
+      {
       stroke-width: .5;
       stroke: $black-light;
 
-      &:not(:first-child)
-      {
+      &:not(:first-child) {
         stroke-dasharray: 3;
       }
     }
 
-    g#bar-xaxis text
-    {
+    g#bar-xaxis text {
       fill: $gray-dark;
     }
 
     g#bar-yaxis text // vertical
-    {
+
+      {
       fill: $gray;
       font-size: 0.65em;
     }
 
     g#points // bar chart
-    {
-      text
+
       {
+      text {
         fill: $white-light;
       }
 
       g:first-child g // multiple chart first bar
-      {
-        rect
+
         {
+        rect {
           fill: $green;
         }
 
-        text.outside
-        {
+        text.outside {
           fill: $green-dark;
         }
       }
-    
-      g:nth-of-type(2) g
-      {
-        rect
-        {
+
+      g:nth-of-type(2) g {
+        rect {
           fill: $black;
         }
 
-        text.outside
-        {
+        text.outside {
           fill: $black;
         }
       }
     }
 
-    &:not(.rounded)
-    {
-      #points
-      {
-        rect
-        {
+    &:not(.rounded) {
+      #points {
+        rect {
           clip-path: inherit;
         }
       }
     }
 
-    &.yellow
-    {
-      #points g:first-child g
-      {
-        rect
-        {
+    &.yellow {
+      #points g:first-child g {
+        rect {
           fill: $yellow;
         }
 
-        text.outside
-        {
+        text.outside {
           fill: $yellow;
         }
       }
@@ -92,46 +80,45 @@
   }
 
 
-  &.line
-  {
+  &.line {
     rect#line-bg // two axis deterimened background is transparent
-    {
+
+      {
       opacity: 0;
     }
 
     g#line-xgrid line // horizontal lines
-    {
+
+      {
       stroke-width: .5;
       stroke: $black-light;
 
-      &:not(:first-child)
-      {
+      &:not(:first-child) {
         stroke-dasharray: 3;
       }
     }
 
-    g#line-xaxis text
-    {
+    g#line-xaxis text {
       fill: $gray-dark;
     }
 
     g#line-y2axis text,
     g#line-yaxis text // vertical
-    {
+
+      {
       fill: $gray;
       font-size: 0.65em;
     }
 
     g#points // bar chart
-    {
-      path
+
       {
+      path {
         stroke-width: 4;
         stroke: $gray;
       }
 
-      circle
-      {
+      circle {
         stroke-width: 3;
         stroke: $gray;
         fill: $gray-light;
@@ -153,79 +140,84 @@
         // }
       }
 
-      circle.helper
-      {
+      circle.helper {
         stroke-width: 1;
         stroke: $gray;
         fill: $gray-light;
-        r: 3,        
+        r: 3,
       }
 
-      
 
-      text
-      {
+
+      text {
         fill: $gray;
       }
     }
   }
 
 
-  &.github
-  {
-    g#github-xaxis
-    {
-      text
-      {
+  &.github {
+    g#github-xaxis {
+      text {
         font-size: 70%;
         font-weight: bold;
         fill: $gray-dark;
       }
     }
 
-    g#points
-    {
+    g#points {
+
       g#weeks,
-      g#months
-      {
-        rect
-        {
-          &.fill-red
-          {
+      g#months {
+        rect {
+          &.fill-red {
             fill: $red;
           }
 
-          &.fill-gray-light
-          {
+          &.fill-gray-light {
             fill: $gray-light;
           }
 
-          &.fill-green
-          {
+          &.fill-green {
             fill: $green;
           }
 
-          &:hover
-          {
+          &:hover {
             stroke: $blue-dark;
             stroke-width: 1;
           }
         }
 
-        text
-        {
+        text {
           font-weight: bold;
         }
       }
 
-      g#separator
-      {
-        line
-        {
+      g#separator {
+        line {
           stroke: $gray-light;
         }
       }
 
+    }
+  }
+
+  &.boxPlot {
+
+    g#points // bar chart
+
+      {
+      rect {
+        fill: $blue-light;
+        stroke-width: 2;
+        stroke: $blue-dark;
+        // opacity: .1;
+      }
+
+      line {
+        stroke-width: 2;
+        stroke: $blue-dark;
+      }
     }
   }
 }

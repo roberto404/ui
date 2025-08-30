@@ -1,203 +1,175 @@
-.flex
-{
+.flex {
   display: flex;
 }
 
-.column
-{
+.column {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   width: 100%;
 }
 
-.grow
-{
+.grow {
   // display: flex;
   flex-grow: 1;
 }
 
-.wrap
-{
+.gap-1 {
+  gap: 1rem;
+}
+
+.gap-1px {
+  gap: 1px;
+}
+
+.wrap {
   flex-wrap: wrap;
 }
 
-.nowrap
-{
+.nowrap {
   flex-wrap: nowrap;
   white-space: nowrap;
 }
 
-.v-right
-{
+.v-right {
   display: flex;
   justify-content: flex-end;
 }
 
-.v-left
-{
+.v-left {
   display: flex;
   justify-content: flex-start;
 }
 
-.h-center
-{
+.h-center {
   display: flex;
   align-items: center;
 }
 
-.h-top
-{
+.h-top {
   display: flex;
   align-items: flex-start;
 }
 
-.h-bottom
-{
+.h-bottom {
   display: flex;
   align-items: flex-end;
 }
 
-.v-center
-{
+.v-center {
   display: flex;
   justify-content: center;
 }
 
-.v-justify
-{
+.v-justify {
   display: flex;
   justify-content: space-between;
 }
 
-.v-reverse
-{
+.v-reverse {
   flex-direction: row-reverse;
 }
 
-.block
-{
+.block {
   display: block;
 }
 
-.inline-block
-{
+.inline-block {
   display: inline-block;
 }
 
-.contents
-{
+.contents {
   display: contents;
 }
 
 
-.table
-{
+.table {
   display: table;
   width: 100%;
 
-  > *
-  {
+  >* {
     display: table-cell;
     vertical-align: top;
   }
 
-  &.v-center > *
-  {
+  &.v-center>* {
     vertical-align: middle;
   }
 }
 
-table
-{
+table {
   width: 100%;
 
-  td
-  {
+  td {
     vertical-align: top;
   }
 }
 
-.hidden
-{
+.hidden {
   display: none;
 }
 
-.overflow
-{
+.overflow {
   overflow: hidden;
 }
 
-.scroll
-{
+.scroll {
   overflow: scroll;
 }
 
-.scroll-y
-{
+.scroll-y {
   overflow: scroll;
   overflow-x: hidden;
   overflow-y: auto;
 }
 
-.no-select
-{
+.no-select {
   user-select: none;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-touch-callout: none;
   cursor: default;
 }
 
 .selectable,
-.selectable > *
-{
+.selectable>* {
   user-select: initial;
 }
 
-.pointer
-{
+.pointer {
   cursor: pointer;
 }
 
-.no-events
-{
+.no-events {
   pointer-events: none;
 }
 
-.no-child-events *
-{
+.no-child-events * {
   pointer-events: none;
 }
 
-g.no-child-events > *:first-child,
-g.no-child-events g > *:first-child
-{
+g.no-child-events>*:first-child,
+g.no-child-events g>*:first-child {
   pointer-events: auto;
 }
 
-.ratio
-{
-  @include aspect-ratio(1,1);
+.ratio {
+  @include aspect-ratio(1, 1);
 }
 
-.ratio-4-3
-{
-  @include aspect-ratio(4,3);
+.ratio-4-3 {
+  @include aspect-ratio(4, 3);
 }
 
-.ratio-16-9
-{
-  @include aspect-ratio(16,9);
+.ratio-16-9 {
+  @include aspect-ratio(16, 9);
 }
 
 
-.flip-vertical
-{
+.flip-vertical {
   transform: scale(-1, 1);
 }
 
-.flip-horizontal
-{
+.flip-horizontal {
   transform: scaleX(-1);
   filter: FlipH;
   -ms-filter: "FlipH";
@@ -205,8 +177,7 @@ g.no-child-events g > *:first-child
 
 .pin,
 [class^="pin-"],
-[class*=" pin-"]
-{
+[class*=" pin-"] {
   position: fixed;
   z-index: 1;
   transform: translate3d(0, 0, 0);
@@ -271,13 +242,11 @@ g.no-child-events g > *:first-child
   z-index: 1;
 }
 
-.z-index-1000
-{
+.z-index-1000 {
   z-index: 1000;
 }
 
-.z-index-10000
-{
+.z-index-10000 {
   z-index: 10000;
 }
 
@@ -305,31 +274,26 @@ g.no-child-events g > *:first-child
   font-size: 250%;
 }
 
-.opacity-20
-{
+.opacity-20 {
   opacity: 0.2;
 }
 
-.opacity-50
-{
+.opacity-50 {
   opacity: 0.5;
 }
 
-.opacity-100
-{
+.opacity-100 {
   opacity: 1;
 }
 
-.hover\:opacity-100:hover
-{
+.hover\:opacity-100:hover {
   opacity: 1;
 }
 
-@include respond-to(mobile)
-{
+@include respond-to(mobile) {
+
   .mobile\:hidden,
-  .mobile\:hide
-  {
+  .mobile\:hide {
     display: none !important;
   }
 
@@ -341,6 +305,10 @@ g.no-child-events g > *:first-child
     position: absolute;
   }
 
+  .mobile\:relative {
+    position: relative;
+  }
+
   .mobile\:flex {
     display: flex;
   }
@@ -350,14 +318,21 @@ g.no-child-events g > *:first-child
     justify-content: center;
   }
 
-  .mobile\:scroll
-  {
+  .mobile\:v-left {
+    display: flex;
+    justify-content: left;
+  }
+
+  .mobile\:scroll {
     overflow: scroll;
   }
 
-  .mobile\:overflow
-  {
+  .mobile\:overflow {
     overflow: hidden;
+  }
+
+  .mobile\:block {
+    display: block;
   }
 
 
@@ -367,8 +342,7 @@ g.no-child-events g > *:first-child
   }
 }
 
-@include respond-to(desktop)
-{
+@include respond-to(desktop) {
   .desktop\:hidden {
     display: none;
   }
@@ -395,8 +369,7 @@ g.no-child-events g > *:first-child
 }
 
 
-@include orient-to(landscape)
-{
+@include orient-to(landscape) {
   .landscape\:hidden {
     display: none;
   }
