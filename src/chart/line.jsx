@@ -6,15 +6,15 @@ import { findMinimumValueInSeries } from './coordinate/functions';
 import roundPathCorners, { getPathParts, getPathCommands } from './roundedPath';
 
 
-export const Line = ({ x, y, canvas, coord, id, index, length, value, data }) =>
-{
+export const Line = ({ x, y, canvas, coord, id, index, length, value, data }) => {
+
   const gap = 0.5;
+
   let barX = x - ((canvas.colWidth * (1 - gap)) / 2);
   let barW = canvas.colWidth * (1 - gap);
   const barH = canvas.rowHeight * coord.y;
 
-  if (length > 1)
-  {
+  if (length > 1) {
     barW /= length;
     barX += (barW * index);
   }
@@ -23,31 +23,31 @@ export const Line = ({ x, y, canvas, coord, id, index, length, value, data }) =>
   const textY = textIsInside ? y + (barW / 2) : y - (barW / 2);
   const textX = barX + (barW / 2);
 
+
   let path = data.map(({ x, y }, i) => `${i ? 'L' : 'M'}${x},${y}`).join(' ');
 
   path = roundPathCorners(path, 50, false);
 
-  const bezierCommand = 
+
+  const bezierCommand =
     getPathCommands(path)
       .filter(command => command[0] === 'C');
 
-
-  console.log(bezierCommand);
-
   return (
     <g>
-      { index === data[0].index &&
+      {/* line */}
+      {index === data[0].index &&
         <path d={path} stroke="black" fill="none" />
       }
-      { bezierCommand.map(command => (
+      {bezierCommand.map(command => (
         <g>
-        <circle className='helper' cx={command[1]} cy={command[2]} r="5" />
-        <circle className='helper' cx={command[3]} cy={command[4]} r="5" />
-        <circle className='helper' cx={command[5]} cy={command[6]} r="5" />
+          <circle className='helper' cx={command[1]} cy={command[2]} r="5" />
+          <circle className='helper' cx={command[3]} cy={command[4]} r="5" />
+          <circle className='helper' cx={command[5]} cy={command[6]} r="5" />
         </g>
       ))}
       <circle cx={x} cy={y} r="5" />
-      {/* <text
+      <text
         className={textIsInside ? 'inside' : 'outside'}
         x={textX}
         y={textY}
@@ -55,16 +55,16 @@ export const Line = ({ x, y, canvas, coord, id, index, length, value, data }) =>
         alignmentBaseline="hanging"
         textAnchor="middle"
       >
-        {value}
+        {value.y}
       </text>
-       */}
+
     </g>
   );
 };
 
 
 const ChartLine = (props) => {
-  
+
   return (
     <Coordinate
       id="line"
@@ -72,9 +72,9 @@ const ChartLine = (props) => {
       xAxisValueMin={-1}
       xAxisValueMax={props.data[0].values.length}
 
-      xAxisValues={[null, ...(props.data[0].xAxis || props.data[0].values ), null]}
+      xAxisValues={[null, ...(props.data[0].xAxis || props.data[0].values), null]}
       yAxisValueMin={findMinimumValueInSeries(props.data)}
-    
+
       yGrid={false}
 
       margin={{
@@ -84,7 +84,7 @@ const ChartLine = (props) => {
         left: 100,
       }}
 
-      { ...props }
+      {...props}
 
       className={props.className || "chart line rounded"}
       data={

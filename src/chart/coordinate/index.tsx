@@ -28,17 +28,26 @@ import {
 import { LabelPropTypes } from './axisLabel';
 import { PointType } from './point';
 
-export interface PropTypes
-{
+export interface PropTypes {
+  // svg.ID
   id?: string,
-  data: { [key: string]: IData[] },
+  // x,y coordinated data
+  data: Record<string, IData[]>,
+  // svg width
   width?: number,
+  // svg height
   height?: number,
+  // x-axis grid number
   xAxisSteps?: number,
+  // x-axis label element
   xAxisLabel?: React.FC<LabelPropTypes>,
+  // y-axis grid number
   yAxisSteps?: number,
+  // y-axis label element
   yAxisLabel?: React.FC<LabelPropTypes>,
+  // y-axis maximum value
   yAxisValueMax?: number,
+  // y-axis minimum value
   yAxisValueMin?: number,
   yAxisValues?: Array<number | string>,
   xAxisValueMax?: number,
@@ -52,7 +61,7 @@ export interface PropTypes
   reverseAxis?: [], // ???
   margin?: IMargin,
   point?: React.FC<PointType>,
-  children?: JSX.Element, 
+  children?: JSX.Element,
   className?: string,
 }
 
@@ -61,38 +70,37 @@ export interface PropTypes
  * Coordinate component
  */
 const Coordinate: React.FC<PropTypes> = (
-{
-  id = 'coordinate',
-  data,
-  width = 200,
-  height = 200,
-  xAxisSteps = 0,
-  xAxisLabel = AxisLabel.xAxisLabel,
-  yAxisSteps = 0,
-  yAxisLabel = AxisLabel.yAxisLabel,
-  yAxisValueMax,
-  yAxisValueMin, // !important no default value, need undefined
-  yAxisValues,
-  xAxisValueMax,
-  xAxisValueMin = 0,
-  xAxisValues, // !important no default value, need undefined
-  xGrid = true,
-  yGrid = true,
-  xAxis = true,
-  yAxis = true,
-  y2Axis,
-  reverseAxis = [],
-  margin = {
-    top: 10,
-    bottom: 30,
-    left: 30,
-    right: 0,
-  },
-  point = Point,
-  children,
-  className = 'coordinate',
-}) =>
-{
+  {
+    id = 'coordinate',
+    data,
+    width = 200,
+    height = 200,
+    xAxisSteps = 0,
+    xAxisLabel = AxisLabel.xAxisLabel,
+    yAxisSteps = 0,
+    yAxisLabel = AxisLabel.yAxisLabel,
+    yAxisValueMax,
+    yAxisValueMin, // !important no default value, need undefined
+    yAxisValues,
+    xAxisValueMax,
+    xAxisValueMin = 0,
+    xAxisValues, // !important no default value, need undefined
+    xGrid = true,
+    yGrid = true,
+    xAxis = true,
+    yAxis = true,
+    y2Axis,
+    reverseAxis = [],
+    margin = {
+      top: 10,
+      bottom: 30,
+      left: 30,
+      right: 0,
+    },
+    point = Point,
+    children,
+    className = 'coordinate',
+  }) => {
   const dataYValues = flattenDataCoord(data, 'y');
   const dataXValues = flattenDataCoord(data, 'x');
 
@@ -126,7 +134,7 @@ const Coordinate: React.FC<PropTypes> = (
 
   canvas.xAxisValueDiff = canvas.xAxisValueMax - canvas.xAxisValueMin;
   canvas.yAxisValueDiff = canvas.yAxisValueMax - canvas.yAxisValueMin;
-  
+
   canvas.xAxisSteps = xAxisSteps || canvas.xAxisValueDiff;
   canvas.yAxisSteps = yAxisSteps ||
     clamp(canvas.yAxisValueDiff / Math.abs(gcd(dataYValues) || 0), 0, Math.round(canvas.height / 33.3));
@@ -167,57 +175,57 @@ const Coordinate: React.FC<PropTypes> = (
         fill="white"
       />
 
-      { xGrid &&
-      <Grid
-        id={`${id}-xgrid`}
-        direction="x"
-        coordToPix={coordToPix(canvas)}
-      />
+      {xGrid &&
+        <Grid
+          id={`${id}-xgrid`}
+          direction="x"
+          coordToPix={coordToPix(canvas)}
+        />
       }
 
-      { yGrid &&
-      <Grid
-        id={`${id}-ygrid`}
-        direction="y"
-        coordToPix={coordToPix(canvas)}
-      />
+      {yGrid &&
+        <Grid
+          id={`${id}-ygrid`}
+          direction="y"
+          coordToPix={coordToPix(canvas)}
+        />
       }
 
-      { xAxis &&
-      <Axis
-        id={`${id}-xaxis`}
-        direction="x"
-        coordToPix={coordToPix(canvas)}
-        UI={xAxisLabel}
-      />
+      {xAxis &&
+        <Axis
+          id={`${id}-xaxis`}
+          direction="x"
+          coordToPix={coordToPix(canvas)}
+          UI={xAxisLabel}
+        />
       }
 
-      { yAxis &&
-      <Axis
-        id={`${id}-yaxis`}
-        direction="y"
-        coordToPix={coordToPix(canvas)}
-        UI={yAxisLabel}
-      />
+      {yAxis &&
+        <Axis
+          id={`${id}-yaxis`}
+          direction="y"
+          coordToPix={coordToPix(canvas)}
+          UI={yAxisLabel}
+        />
       }
 
-      { y2Axis &&
-      <Axis
-        id={`${id}-y2axis`}
-        direction="y"
-        coordToPix={coordToPix(canvas)}
-        UI={yAxisLabel}
-        top
-      />
+      {y2Axis &&
+        <Axis
+          id={`${id}-y2axis`}
+          direction="y"
+          coordToPix={coordToPix(canvas)}
+          UI={yAxisLabel}
+          top
+        />
       }
 
-      { isEmpty(data) === false &&
-      <Points
-        coordToPix={coordToPix(canvas)}
-        data={data}
-        UI={point}
-        reverseAxis={reverseAxis}
-      />
+      {isEmpty(data) === false &&
+        <Points
+          coordToPix={coordToPix(canvas)}
+          data={data}
+          UI={point}
+          reverseAxis={reverseAxis}
+        />
       }
 
       {children}

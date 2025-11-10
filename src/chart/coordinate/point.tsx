@@ -7,19 +7,18 @@ import { coordToPixFuncType } from './functions/coordToPix';
 
 
 export type PointType =
-{
-  x: number,
-  y: number,
-  element: JSX.Element,
-}
+  {
+    x: number,
+    y: number,
+    element: JSX.Element,
+  }
 
-  // data: PropTypes.oneOfType([
-  //   PropTypes.objectOf(PropTypes.arrayOf(pointShape)),
-  //   PropTypes.arrayOf(pointShape),
-  // ]),
+// data: PropTypes.oneOfType([
+//   PropTypes.objectOf(PropTypes.arrayOf(pointShape)),
+//   PropTypes.arrayOf(pointShape),
+// ]),
 
-export interface PropTypes
-{
+export interface PropTypes {
   data: PointType[],
   coordToPix: coordToPixFuncType,
   UI: React.FC,
@@ -33,10 +32,10 @@ export interface PropTypes
  * Default point Component
  */
 export const Point: React.FC<PointType> = (
-{
-  x,
-  y,
-}) =>
+  {
+    x,
+    y,
+  }) =>
 (
   <circle cx={x} cy={y} r="5" />
 );
@@ -45,13 +44,13 @@ export const Point: React.FC<PointType> = (
  * Points component
  */
 const Points = (
-{
-  data = [],
-  coordToPix,
-  UI,
-  reverseAxis = [],
-}) =>
-{
+  {
+    data = [],
+    coordToPix,
+    UI,
+    reverseAxis = [],
+  }) => {
+
   const {
     yAxisValueMin,
     yAxisValues,
@@ -60,17 +59,16 @@ const Points = (
     xAxisValueMax,
   } = coordToPix(0, 0).canvas;
 
-  const renderGroupOfPoints = (id, points, index, length) =>
-  {
+  const renderGroupOfPoints = (id, points, index, length) => {
     // const axisValues = reverseAxis.indexOf(id) !== -1 ? yAxisValues : xAxisValues;
 
     const elements = points
-      .map((value, i) => 
-      {
-        const point = points[i + xAxisValueMin];
+      .map((value, i) => {
 
-        if (typeof point === 'undefined' || value === null)
-        {
+        // const point = points[i + xAxisValueMin];
+        const point = points[i];
+
+        if (typeof point === 'undefined' || value === null) {
           return null;
         }
 
@@ -102,15 +100,14 @@ const Points = (
     return <g key={id} id={id}>{elements}</g>;
   };
 
-  if (Array.isArray(data))
-  {
+  if (Array.isArray(data)) {
     return renderGroupOfPoints('points', data);
   }
 
   return (
     <g id="points">
       {
-      Object.keys(data).map((key, index, keys) => renderGroupOfPoints(key, data[key], index, keys.length))
+        Object.keys(data).map((key, index, keys) => renderGroupOfPoints(key, data[key], index, keys.length))
       }
     </g>
   );
