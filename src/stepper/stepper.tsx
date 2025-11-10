@@ -9,7 +9,7 @@ import classNames from 'classnames';
 
 /* !- Compontents */
 
-import Step from './step';
+import Step, { PropTypes as PropTypesStep } from './step';
 
 
 /* !- Constants */
@@ -32,8 +32,7 @@ import {
 import { IconTypes } from './icon';
 import { StepTypes } from './const'
 
-export interface IData
-{
+export interface IData {
   label: string,
   status: IconTypes,
   // icon: React.SVGProps<SVGGElement>,
@@ -43,8 +42,7 @@ export interface IData
   classNameText: string,
 }
 
-export interface PropTypes
-{
+export interface PropTypes {
   data: Partial<IData>[],
   width?: number,
   height?: number,
@@ -61,7 +59,7 @@ export interface PropTypes
    * </g>
    * )
    */
-  step?: JSX.Element,
+  step?: React.FC<PropTypesStep>,
   type?: StepTypes
   onClick?: (e: React.MouseEvent<SVGSVGElement>) => void,
   canvasPaddingX?: number,
@@ -81,15 +79,14 @@ export const Stepper: React.FC<PropTypes> = ({
   type,
   onClick,
   canvasPaddingX = CANVAS_PADDING_X,
-}) =>
-{
+}) => {
   // data contains at least one label
   const isLabel = data.find(({ label }) => !!label) !== undefined;
 
   const viewBoxWidth =
     Math.max(0, (data.length * (ICON_ABS_WIDTH + LINE_WIDTH))
-     - LINE_WIDTH
-     + (CANVAS_PADDING_X * 2 * +isLabel));
+      - LINE_WIDTH
+      + (CANVAS_PADDING_X * 2 * +isLabel));
 
   const viewBoxHeight = (TEXT_BOTTOM + TEXT_PADDING_BOTTOM) * +isLabel || ICON_HEIGHT;
   const canvasWidth = width || viewBoxWidth;
@@ -103,7 +100,7 @@ export const Stepper: React.FC<PropTypes> = ({
   });
 
   const ratio = (canvasWidth / canvasHeight) / (viewBoxWidth / viewBoxHeight);
-  const ratioY = canvasHeight / viewBoxHeight ;
+  const ratioY = canvasHeight / viewBoxHeight;
 
   const iconPadding = ICON_PADDING * ratioY;
   const iconWidth = ICON_WIDTH * ratioY;
@@ -115,7 +112,7 @@ export const Stepper: React.FC<PropTypes> = ({
         canvasWidth
         - (
           ((iconPadding + iconWidth + iconPadding) * data.length)
-          + canvasPaddingX
+          + canvasPaddingX * 2
         )
       )
       / (data.length - 1)
@@ -132,7 +129,7 @@ export const Stepper: React.FC<PropTypes> = ({
       width={`${canvasWidth}px`}
       height={`${canvasHeight}px`}
     >
-      { data.map((item, index) => React.createElement(
+      {data.map((item, index) => React.createElement(
         element,
         {
           classNameText,
@@ -146,7 +143,7 @@ export const Stepper: React.FC<PropTypes> = ({
           lineWidth,
           canvasPaddingX,
         },
-        ))
+      ))
       }
       {/* { data.map((item, index) => (
         <Step index={index}

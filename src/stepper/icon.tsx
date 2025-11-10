@@ -18,23 +18,23 @@ export enum IconTypes {
 }
 
 
-interface PropTypes
-{
+interface PropTypes {
   status?: IconTypes | 0 | 1,
   iconWidth?: number,
   index?: number,
 }
 
+
 export const Icon = (
-{
-  iconWidth = ICON_WIDTH,
-  status,
-  index = 0,
-}: PropTypes) =>
-{
+  {
+    iconWidth = ICON_WIDTH,
+    status,
+    index = 0,
+  }: PropTypes) => {
+
   const width = iconWidth / 2;
   const widthRatio = iconWidth / ICON_WIDTH;
-  
+
   const proportions = (value: number) =>
     widthRatio * value;
 
@@ -59,10 +59,7 @@ export const Icon = (
       )
       .join(' ');
 
-    console.log(widthRatio, proportions(3));
-
-  switch (status)
-  {
+  switch (status) {
     case IconTypes.COMPLETE:
       return (
         <g>
@@ -104,6 +101,16 @@ export const Icon = (
         </g>
       )
   }
+}
+
+
+export const IconStatus = (props) => {
+
+  return (
+    <svg version="1.0" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" {...props} >
+      <Icon status={props.status} />
+    </svg>
+  );
 }
 
 export default Icon;
