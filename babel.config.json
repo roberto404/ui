@@ -14,12 +14,15 @@
         "corejs": "3.6.5"
       }
     ],
-    "@babel/preset-react",
+    ["@babel/preset-react", {
+      "runtime": "automatic"
+    }],
     "@babel/preset-typescript"
   ],
   "only": [
     "./src/**/*",
-    "./**/node_modules/@1studio/**/*"
+    "./tests/**/*",
+    "./**/node_modules/@1studio/utils/*"
   ],
   "plugins": [
     "@babel/plugin-proposal-optional-chaining",

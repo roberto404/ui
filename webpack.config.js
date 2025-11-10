@@ -1,4 +1,4 @@
-const path  = require('path');
+const path = require('path');
 const webpack = require('webpack');
 const rimraf = require('rimraf');
 
@@ -8,6 +8,7 @@ const PATHS = {
   app: path.join(__dirname, 'src/.examples'),
   src: path.join(__dirname, 'src'),
   dist: path.join(__dirname, 'docs'),
+  utils: path.resolve(__root + '/engine/utils/src/'),
 };
 
 
@@ -28,17 +29,20 @@ const Common = {
     rules: [
       {
         test: /\.(j|t)s(x)?$/,
-        use: 'babel-loader',
+        use: {
+          loader: 'babel-loader'
+        },
         include: [
           PATHS.src,
-          path.join(__dirname,  './node_modules/@1studio/utils'),
+          PATHS.utils,
+          path.join(__dirname, './node_modules/@1studio/utils'),
         ],
       },
       {
         test: /\.(scss|css)$/,
         use: [
           'style-loader',
-          'css-loader',{
+          'css-loader', {
             loader: "postcss-loader",
             options: {
               postcssOptions: {
@@ -57,22 +61,23 @@ const Common = {
     ],
   },
   plugins:
-  [
-    new webpack.ProvidePlugin({
-      Buffer: ['buffer', 'Buffer'],
-    }),
-    new (class {
-      apply(compiler) {
-        compiler.hooks.done.tap('Remove LICENSE', () => {
-          rimraf.sync(PATHS.dist + '/*.LICENSE.txt');
-        });
-      }
-    })(),
-  ],
+    [
+      new webpack.ProvidePlugin({
+        Buffer: ['buffer', 'Buffer'],
+      }),
+      new (class {
+        apply(compiler) {
+          compiler.hooks.done.tap('Remove LICENSE', () => {
+            rimraf.sync(PATHS.dist + '/*.LICENSE.txt');
+          });
+        }
+      })(),
+    ],
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx'],
     alias: {
       '@1studio/ui': PATHS.src,
+      '@1studio/utils': PATHS.utils,
     },
     fallback: {
       crypto: require.resolve('crypto-browserify'),
@@ -83,10 +88,8 @@ const Common = {
   },
 };
 
-module.exports = (env) =>
-{
-  if (env.production)
-  {
+module.exports = (env) => {
+  if (env.production) {
     return {
       ...Common,
     };
@@ -97,7 +100,7 @@ module.exports = (env) =>
     devtool: 'eval', // 'source-map',
     devServer:
     {
-      static: 
+      static:
       {
         directory: Common.output.path,
       },
@@ -126,4 +129,3 @@ module.exports = (env) =>
     ]
   };
 };
- 

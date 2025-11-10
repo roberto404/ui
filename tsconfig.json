@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "target": "es5",
+    "module": "commonjs",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "baseUrl": "."
+  },
+  "include": [
+    "src",
+    "tests",
+    "node_modules/@1studio/utils"
+  ],
+  "paths": {
+    "@1studio/ui/*": [
+      "src/*"
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".", // A gyökérkönyvtár beállítása
+    "paths": {
+      "@1studio/ui/*": [
+        "src/*"
+      ] // Alias konfiguráció
+    },
+    "jsx": "react", // JSX támogatás React számára
+    "module": "commonjs", // Modultípus
+    "target": "es6", // ECMAScript verzió
+    "allowSyntheticDefaultImports": true // Modul kompatibilitás javítás
+  },
+  "include": [
+    "src/**/*.js", // Include a forráskönyvtárat, ahol a JS fájlok találhatók
+    "src/**/*.jsx", // Include JSX fájlokat
+    "tests/**/*.js", // Teszt könyvtár is include-olva van, ha szükséges
+    "node_modules/@1studio/utils" // Esetleg más modulok
+  ],
+  "exclude": [
+    "node_modules", // Node modulok kizárása
+    "**/dist" // Build mappa kizárása
+  ]
+}
