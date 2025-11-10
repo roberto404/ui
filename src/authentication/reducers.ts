@@ -1,12 +1,12 @@
 import Storage from '@1studio/utils/models/storage'; // 64
-import omit from 'lodash/omit';
 
+import random from '@1studio/utils/string/random';
 
 /**
  * User Model
  * @type {User} from @1studio/utils/models/
  */
-let User = new Storage({}, { password: false, key: 'user' });
+let User = new Storage({}, { password: false, key: 'user', uuid: random() });
 
 
 const createState = () =>
@@ -22,10 +22,8 @@ const createState = () =>
  * @param  {Object} action
  * @return {Object}            state
  */
-const reducers = (state = createState({}), action = {}) =>
-{
-  switch (action.type)
-  {
+const reducers = (state = createState({}), action = {}) => {
+  switch (action.type) {
     case 'SET-USER':
       {
         User.data = action.user;
@@ -54,8 +52,7 @@ const reducers = (state = createState({}), action = {}) =>
   }
 };
 
-export const createUserStorage = (data = {}, config = {}) =>
-{
+export const createUserStorage = (data = {}, config = {}) => {
   User = new Storage(data, config);
 };
 
