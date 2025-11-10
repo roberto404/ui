@@ -17,8 +17,7 @@ import ChartLine from '../../../src/chart/line';
 /**
  * GridView + Filters + Connect + Paginate
  */
-const Example = () =>
-{
+const Example = () => {
   const data = [
     {
       id: 's1',
@@ -50,7 +49,7 @@ const Example = () =>
       />
 
 
-      {/* <h2>Bar chart</h2>
+      <h2>Bar chart</h2>
 
       <ChartBar
         width={800}
@@ -68,10 +67,10 @@ const Example = () =>
         className="chart bar yellow"
       />
 
-      <h2>Bar + Line to compare</h2> */}
- 
+      <h2>Bar + Line to compare</h2>
 
-      {/* <ChartGroup
+
+      <ChartGroup
         width={800}
         height={250}
         data={data}
@@ -83,7 +82,7 @@ const Example = () =>
           yAxis={false}
           y2Axis={true}
         />
-      </ChartGroup> */}
+      </ChartGroup>
 
     </div>
   );

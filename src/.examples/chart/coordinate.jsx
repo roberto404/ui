@@ -76,14 +76,36 @@ const gantData = [
   },
 ]
 
+const Example = () =>
+(
+  <div>
+    <Coordinate
+      id="foo"
+      data={{
+        first: [
+          { x: 0, y: 0 },
+          { x: 3, y: 6 },
+          { x: 8, y: 2 },
+        ]
+      }}
+      // xAxisSteps={16}
+      // yAxisSteps={3}
+      yAxisValueMax={8}
+      yAxisValueMin={2}
+      xAxisValueMax={12}
+      xAxisValueMin={2}
+      yAxisValues={['2', '4', '8']}
+    />
+  </div>
+);
+
 
 /**
  * GridView + Filters + Connect + Paginate
  */
-const Example = () =>
+const Example2 = () =>
 (
   <div>
-
 
     <h1>Coordinate</h1>
 
@@ -202,22 +224,21 @@ const Example = () =>
                 element: () => (
                   <defs>
                     <pattern
-                      id="pattern" 
+                      id="pattern"
                       x="0" y="0"
                       width="10" height="10"
                       patternUnits="userSpaceOnUse"
                     >
-                      <line x1={10} y1={0} x2={0} y2={10}  />
+                      <line x1={10} y1={0} x2={0} y2={10} />
                     </pattern>
                   </defs>
                 ),
               },
             ],
-            orders: 
-              gantData.reverse().map((order, n) =>
-              {
+            orders:
+              gantData.reverse().map((order, n) => {
                 const x1 = Math.max(0, Math.ceil((order.start - now) / ONE_DAY));
-                const x2 = Math.min(7*3, Math.ceil((order.end - now) / ONE_DAY));
+                const x2 = Math.min(7 * 3, Math.ceil((order.end - now) / ONE_DAY));
 
                 const xDiff = x2 - x1;
 
@@ -246,10 +267,11 @@ const Example = () =>
                 })
               }),
             weekend: [
-              { x: 5, y: gantData.length, element: ({ x, y, canvas }) => <rect x={x} y={y} width={canvas.colWidth * 2} height={canvas.height} style={{ fill: 'url(#pattern)' }} />
+              {
+                x: 5, y: gantData.length, element: ({ x, y, canvas }) => <rect x={x} y={y} width={canvas.colWidth * 2} height={canvas.height} style={{ fill: 'url(#pattern)' }} />
               },
-              { x: 5 + 7, y: gantData.length, element: ({ x, y, canvas }) => <rect x={x} y={y} width={canvas.colWidth * 2} height={canvas.height} style={{ fill: 'url(#pattern)' }}  /> },
-              { x: 5 + 7 + 7, y: gantData.length, element: ({ x, y, canvas }) => <rect x={x} y={y} width={canvas.colWidth * 2} height={canvas.height} style={{ fill: 'url(#pattern)' }}  /> },
+              { x: 5 + 7, y: gantData.length, element: ({ x, y, canvas }) => <rect x={x} y={y} width={canvas.colWidth * 2} height={canvas.height} style={{ fill: 'url(#pattern)' }} /> },
+              { x: 5 + 7 + 7, y: gantData.length, element: ({ x, y, canvas }) => <rect x={x} y={y} width={canvas.colWidth * 2} height={canvas.height} style={{ fill: 'url(#pattern)' }} /> },
             ],
             today: [
               {
@@ -258,16 +280,16 @@ const Example = () =>
                 element: ({ x, y, canvas }) =>
                 (
                   <g>
-                  <line x1={x} y1={y} x2={x} y2={canvas.height + y} />
-                  <circle cx={x} cy={y} r="3" />
-                  <rect x={x} y={y} width={canvas.width - x + canvas.margin.left} height={canvas.height} />
-                </g>
+                    <line x1={x} y1={y} x2={x} y2={canvas.height + y} />
+                    <circle cx={x} cy={y} r="3" />
+                    <rect x={x} y={y} width={canvas.width - x + canvas.margin.left} height={canvas.height} />
+                  </g>
                 ),
               },
             ],
           }}
-          xAxisSteps={7*3}
-          xAxisValueMax={7*3}
+          xAxisSteps={7 * 3}
+          xAxisValueMax={7 * 3}
           yAxisSteps={gantData.length}
           yAxisValueMin={0}
           yAxisValueMax={gantData.length}
@@ -286,7 +308,7 @@ const Example = () =>
           xAxisLabel={({ i, x, y, canvas }) =>
           (
             <g>
-              { i % 7 === 0 &&
+              {i % 7 === 0 &&
                 <line
                   key={i}
                   x1={x}
@@ -296,7 +318,7 @@ const Example = () =>
                   stroke="#e8e7e8"
                 />
               }
-              { i && i % 7 === 0 &&
+              {i && i % 7 === 0 &&
                 <text
                   x={x - canvas.colWidth * 7 / 2}
                   y={y - canvas.height - 25}
@@ -306,13 +328,13 @@ const Example = () =>
                   {moment().startOf('weeek').add(i, 'days').format('MMMM')}
                 </text>
               }
-              { i < 7 * 3 &&
-              <text x={x + canvas.colWidth / 2} y={y - canvas.height - 5} textAnchor="middle">
-                <tspan>{capitalizeFirstLetter(moment().startOf('weeek').add(i, 'days').format('ddd'))[0]}</tspan>
-                <tspan dx="2">
-                {capitalizeFirstLetter(moment().startOf('weeek').add(i, 'days').format('DD'))}
-                </tspan>
-              </text>
+              {i < 7 * 3 &&
+                <text x={x + canvas.colWidth / 2} y={y - canvas.height - 5} textAnchor="middle">
+                  <tspan>{capitalizeFirstLetter(moment().startOf('weeek').add(i, 'days').format('ddd'))[0]}</tspan>
+                  <tspan dx="2">
+                    {capitalizeFirstLetter(moment().startOf('weeek').add(i, 'days').format('DD'))}
+                  </tspan>
+                </text>
               }
             </g>
           )}
