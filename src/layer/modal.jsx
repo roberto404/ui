@@ -28,32 +28,26 @@ const Modal = (
     buttonSecondary,
     className,
   }
-) =>
-{
+) => {
   const { store } = useAppContext();
-  
-  const onClickButtonHandler = (event) =>
-  {
+
+  const onClickButtonHandler = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    
-    if (button.handler(store.getState().form.modal || {}) !== false && store.getState().layer.method !== 'preload')
-    {
+
+    if (button.handler(store.getState().form.modal || {}) !== false && store.getState().layer.method !== 'preload') {
       store.dispatch(flush());
     }
   };
 
-  const onClickSecondaryButtonHandler = (event) =>
-  {
+  const onClickSecondaryButtonHandler = (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    if (buttonSecondary.handler)
-    {
+    if (buttonSecondary.handler) {
       buttonSecondary.handler();
     }
-    else
-    {
+    else {
       store.dispatch(flush());
     }
   }
@@ -66,38 +60,38 @@ const Modal = (
   return (
     <div className={modalClasses}>
 
-      { icon &&
-      <div className="icon">
-        {icon()}
-      </div>
+      {icon &&
+        <div className="icon">
+          {icon()}
+        </div>
       }
 
-      { title &&
-      <div className="title">
-        {title}
-      </div>
+      {title &&
+        <div className="title">
+          {title}
+        </div>
       }
 
-      { content && typeof content === 'string' &&
-      <div className="content" dangerouslySetInnerHTML={{__html: content}} />
+      {content && typeof content === 'string' &&
+        <div className="content" dangerouslySetInnerHTML={{ __html: content }} />
       }
 
-      { content && typeof content !== 'string' &&
-      <div className="content">{content}</div>
+      {content && typeof content !== 'string' &&
+        <div className="content">{content}</div>
       }
 
       <div className="buttons">
 
-        { button &&
+        {button &&
           <button
-            className="button secondary"
+            className="button primary"
             onClick={onClickButtonHandler}
           >
             {button.title}
           </button>
         }
 
-        { buttonSecondary &&
+        {buttonSecondary &&
           <button
             className="button"
             onClick={onClickSecondaryButtonHandler}

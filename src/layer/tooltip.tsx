@@ -11,22 +11,22 @@ import { flush, tooltip } from './actions';
 /* !- Types */
 
 
-const defaultProps = 
+const defaultProps =
 {
   className: 'inline-block',
 };
 
 type PropTypes =
-{
-  className?: string,
-  title: string | JSX.Element,
-  children: JSX.Element,
-  /**
-   * Invoke ..
-   */
-  onClick?: () => void,
+  {
+    className?: string,
+    title: string | JSX.Element,
+    children: JSX.Element,
+    /**
+     * Invoke ..
+     */
+    onClick?: () => void,
 
-} & Partial<typeof defaultProps>;
+  } & Partial<typeof defaultProps>;
 
 
 const Tooltip = ({
@@ -34,37 +34,30 @@ const Tooltip = ({
   children,
   title,
   onClick
-}: PropTypes) =>
-{
+}: PropTypes) => {
   const dispatch = useDispatch();
 
   const { store } = useContext(ReactReduxContext)
 
 
-  const onClickHandler = (event) =>
-  {
-    if (typeof onClick === 'function')
-    {
+  const onClickHandler = (event) => {
+    if (typeof onClick === 'function') {
       onClick(event);
     }
   }
 
-  const onMouseHandler = (event) =>
-  {
+  const onMouseHandler = (event) => {
     const isLayer = store.getState().layer.active === true;
 
-    if (!isLayer)
-    {
+    if (!isLayer) {
       dispatch(tooltip(title, event));
     }
   };
 
-  const onMouseOutHandler = () =>
-  {
+  const onMouseLeaveHandler = () => {
     const isTooltip = store.getState().layer.method === 'popover';
 
-    if (isTooltip)
-    {
+    if (isTooltip) {
       dispatch(flush());
     }
   };
@@ -74,7 +67,7 @@ const Tooltip = ({
       className={className}
       onClick={onClickHandler}
       onMouseEnter={onMouseHandler}
-      onMouseOut={onMouseOutHandler}
+      onMouseLeave={onMouseLeaveHandler}
     >
       {children}
     </div>
