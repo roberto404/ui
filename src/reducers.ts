@@ -5,11 +5,12 @@ import grid from './grid/reducers'; // 50 Kbyte
 import view, { StateTypes as ViewStateTypes } from './view/reducers'; // 4
 import layer from './layer/reducers'; // 33 Kbyte
 import user from './authentication/reducers'; // 65 Kbyte
+import notification from './notification/reducers';
 
 export type StateTypes =
-{
-  view: ViewStateTypes,
-}
+  {
+    view: ViewStateTypes,
+  }
 
 export const reducers = {
   form,
@@ -17,6 +18,7 @@ export const reducers = {
   view,
   layer,
   user,
+  notification,
 };
 
 export default combineReducers(reducers);

@@ -1,0 +1,1 @@
+export const AUTO_DISMISS = 5000;
