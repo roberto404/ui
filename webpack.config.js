@@ -8,7 +8,7 @@ const PATHS = {
   app: path.join(__dirname, 'src/.examples'),
   src: path.join(__dirname, 'src'),
   dist: path.join(__dirname, 'docs'),
-  utils: path.resolve(__root + '/engine/utils/src/'),
+  utils: path.resolve(__dirname + '/../utils/src/'),
 };
 
 
