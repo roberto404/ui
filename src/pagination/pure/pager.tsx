@@ -2,6 +2,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
+import clamp from '@1studio/utils/math/clamp';
 
 
 /* !- Types */
@@ -18,25 +19,38 @@ type PropTypes = Partial<typeof defaultProps> & {
   totalPage: number,
   prevText: string | JSX.Element,
   nextText: string | JSX.Element,
-  goToPage: () => void,
+  goToPage: (nextPage: number, page: number) => void,
+  infinity?: boolean,
 };
 
 
 export const Pager = (
-{
-  page,
-  totalPage,
-  prevText,
-  nextText,
-  goToPage,
-}: PropTypes,
-) =>
-{
-  const onClickButtonHandler = (event) =>
   {
+    page,
+    totalPage,
+    prevText = defaultProps.prevText,
+    nextText = defaultProps.nextText,
+    goToPage,
+    infinity = false,
+  }: PropTypes,
+) => {
+
+  const onClickButtonHandler = (event) => {
     event.preventDefault();
     const direction = parseInt(event.currentTarget.dataset.direction);
-    const nextPage = parseInt(page) + direction;
+
+    let nextPage = parseInt(page) + direction;
+
+    if (infinity) {
+      if (nextPage < 0) {
+        nextPage = totalPage;
+      }
+      else if (nextPage > totalPage) {
+        nextPage = 0;
+      }
+    } else {
+      nextPage = clamp(nextPage, 0, totalPage)
+    }
 
     goToPage(nextPage, page);
   };
@@ -64,7 +78,5 @@ export const Pager = (
     </div>
   );
 };
-
-Pager.defaultProps = defaultProps;
 
 export default Pager;
