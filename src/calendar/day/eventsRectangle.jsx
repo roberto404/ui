@@ -29,10 +29,8 @@ const DEFAULT_STYLE = {
 /**
  * Move, scaleable Event Component
  */
-class EventsRectangle extends Component
-{
-  constructor(props)
-  {
+class EventsRectangle extends Component {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -43,15 +41,13 @@ class EventsRectangle extends Component
     };
   }
 
-  componentDidMount()
-  {
+  componentDidMount() {
     this.initHammerEdit(); // <- double tap load before long tap
     this.initHammerActivate();
     // this.initHammerDrag();
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps)
-  {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
       active: false,
       x: nextProps.x,
@@ -60,23 +56,18 @@ class EventsRectangle extends Component
     });
   }
 
-  componentDidUpdate()
-  {
-    if (this.state.active)
-    {
+  componentDidUpdate() {
+    if (this.state.active) {
       this.initHammerResize();
       this.initHammerDrag();
     }
-    else
-    {
-      if (this.upHammerManager)
-      {
+    else {
+      if (this.upHammerManager) {
         this.upHammerManager = undefined;
         this.downHammerManager = undefined;
       }
 
-      if (this.eventHammerManager.recognizers[2])
-      {
+      if (this.eventHammerManager.recognizers[2]) {
         this.eventHammerManager.remove(this.eventHammerManager.recognizers[2]);
       }
     }
@@ -84,14 +75,11 @@ class EventsRectangle extends Component
 
   /* !- Listeners */
 
-  onClickListener = () =>
-  {
-    if (this.state.active === false)
-    {
+  onClickListener = () => {
+    if (this.state.active === false) {
       this.setState({ active: true });
     }
-    else
-    {
+    else {
       window.removeEventListener(window.orientation === undefined ? 'click' : 'touchend', this.onClickListener);
       this.setState({ active: false });
     }
@@ -99,21 +87,18 @@ class EventsRectangle extends Component
 
   /* !- Hammer Manager */
 
-  getHammer(elementName)
-  {
+  getHammer(elementName) {
     const element = this[elementName];
     const index = `${elementName}HammerManager`;
 
-    if (!this[index])
-    {
+    if (!this[index]) {
       this[index] = new Hammer.Manager(element);
     }
 
     return this[index];
   }
 
-  initHammerActivate()
-  {
+  initHammerActivate() {
     const hammerManager = this.getHammer('event');
 
     hammerManager.add(new Hammer.Press({
@@ -126,21 +111,17 @@ class EventsRectangle extends Component
     hammerManager.on('longtap', this.activateListener);
   }
 
-  initHammerDrag()
-  {
+  initHammerDrag() {
     // recognizers: [0] -> tap, [1] -> press
-    if (this.eventHammerManager.recognizers.length === 2)
-    {
+    if (this.eventHammerManager.recognizers.length === 2) {
       const hammerManager = this.getHammer('event');
       hammerManager.add(new Hammer.Pan());
       hammerManager.on('panstart panmove pancancel panend', this.dragListener);
     }
   }
 
-  initHammerResize()
-  {
-    if (!this.upHammerManager)
-    {
+  initHammerResize() {
+    if (!this.upHammerManager) {
       let hammerManager = this.getHammer('up');
 
       hammerManager.add(new Hammer.Pan());
@@ -154,8 +135,7 @@ class EventsRectangle extends Component
     }
   }
 
-  initHammerEdit()
-  {
+  initHammerEdit() {
     const hammerManager = this.getHammer('event');
 
     hammerManager.add(new Hammer.Tap({
@@ -169,24 +149,21 @@ class EventsRectangle extends Component
 
   /* !- Listeners */
 
-  activateListener = (event) =>
-  {
+  activateListener = (event) => {
     window.addEventListener(window.orientation === undefined ? 'click' : 'touchend', this.onClickListener);
   }
 
 
 
-  dragListener = (event) =>
-  {
-    console.log('move - dragListener', event.type);
+  dragListener = (event) => {
+    // console.log('move - dragListener', event.type);
 
     // if (!this.state.active && ['panstart', 'panmove', 'pancancel', 'panend'].indexOf(event.type) !== -1)
     // {
     //   return;
     // }
 
-    if (!this.StartCoord)
-    {
+    if (!this.StartCoord) {
       this.StartCoord = event.center;
       return;
     }
@@ -197,12 +174,10 @@ class EventsRectangle extends Component
       y: event.center.y - this.StartCoord.y,
     };
 
-    switch (event.type)
-    {
+    switch (event.type) {
       case 'panmove':
         {
-          if (this.state.x !== shift.x || this.state.y !== shift.y)
-          {
+          if (this.state.x !== shift.x || this.state.y !== shift.y) {
             // if (Y_MOVEMENT_ACCURANCY)
             // {
             //   const accurancy = rowHeight / 60 * Y_MOVEMENT_ACCURANCY;
@@ -237,20 +212,18 @@ class EventsRectangle extends Component
     //ESC create pancancel.
   };
 
-  resizeListener = (direction, event) =>
-  {
+  resizeListener = (direction, event) => {
     const {
       calendarCoord,
       calendarHeight,
     } = this.context;
 
-    if (!this.StartCoord)
-    {
+    if (!this.StartCoord) {
       this.StartCoord = event.center;
       return;
     }
 
-    console.log('up', event.type);
+    // console.log('up', event.type);
 
     /**
      * pointer movement when start (first click)
@@ -267,12 +240,10 @@ class EventsRectangle extends Component
     //   shift.y = Math.round(shift.y / accurancy) * accurancy;
     // }
 
-    switch (event.type)
-    {
+    switch (event.type) {
       case 'panmove':
         {
-          if (direction === 'up')
-          {
+          if (direction === 'up') {
             const y = clamp(
               this.props.y + shift.y,
               calendarCoord.y,
@@ -284,8 +255,7 @@ class EventsRectangle extends Component
               height: this.props.height - y + this.props.y,
             });
           }
-          else
-          {
+          else {
             this.setState({
               height: clamp(
                 this.props.height + shift.y,
@@ -314,14 +284,12 @@ class EventsRectangle extends Component
     }
   }
 
-  editListener = (event) =>
-  {
+  editListener = (event) => {
     this.context.onEditEvent(this.props);
     // console.log('edit', event.type, this.props);
   }
 
-  render()
-  {
+  render() {
     const {
       width,
       title,
@@ -335,11 +303,11 @@ class EventsRectangle extends Component
 
     return (
       <g
-        // id={`event event-${x}`}
-        // ref={(ref) =>
-        // {
-        //   this.elements.event = ref;
-        // }}
+      // id={`event event-${x}`}
+      // ref={(ref) =>
+      // {
+      //   this.elements.event = ref;
+      // }}
       >
         {/* <clipPath id="clip1">
           <rect
@@ -375,71 +343,69 @@ class EventsRectangle extends Component
           filter={this.state.active ? 'url(#dropshadow)' : null}
           onMouseEnter={event => this.context.onEventMouseEnter(this.props, event)}
           onMouseLeave={event => this.context.onEventMouseLeave(this.props, event)}
-          ref={(ref) =>
-          {
+          ref={(ref) => {
             this.event = ref;
           }}
         />
         {height &&
-        <text
-          x={x + DEFAULT_STYLE.fontMargin}
-          y={y + DEFAULT_STYLE.fontMargin}
-          alignmentBaseline="hanging"
-          fill={DEFAULT_STYLE.fontColor}
-          fontSize={DEFAULT_STYLE.fontSize}
-          fontFamily={DEFAULT_STYLE.fontFamily}
+          <text
+            x={x + DEFAULT_STYLE.fontMargin}
+            y={y + DEFAULT_STYLE.fontMargin}
+            alignmentBaseline="hanging"
+            fill={DEFAULT_STYLE.fontColor}
+            fontSize={DEFAULT_STYLE.fontSize}
+            fontFamily={DEFAULT_STYLE.fontFamily}
+            className='no-events'
           // clipPath="url(#clip1)"
-        >
-          {title}
-        </text>
+          >
+            {title}
+          </text>
         }
 
-        { this.state.active &&
-        <g>
-          <circle
-            cx={x + width - 20}
-            cy={y}
-            r="5"
-            fill="white"
-            fillOpacity={+this.state.active}
-            strokeWidth="2"
-            stroke={DEFAULT_STYLE.fill}
-            strokeOpacity={+this.state.active}
-          />
-          <rect
-            x={x}
-            y={y - 10}
-            width={width - DEFAULT_STYLE.marginRight}
-            height={20}
-            fillOpacity="0"
-            ref={(ref) =>
-            {
-              this.up = ref;
-            }}
-          />
+        {this.state.active &&
+          <g>
+            <circle
+              cx={x + width - 20}
+              cy={y}
+              r="5"
+              fill="white"
+              fillOpacity={+this.state.active}
+              strokeWidth="2"
+              stroke={DEFAULT_STYLE.fill}
+              strokeOpacity={+this.state.active}
+            />
+            <rect
+              x={x}
+              y={y - 10}
+              width={width - DEFAULT_STYLE.marginRight}
+              height={20}
+              fillOpacity="0"
+              ref={(ref) => {
+                this.up = ref;
+              }}
+            />
 
-          <circle
-            cx={x + 20}
-            cy={y + height}
-            r="5"
-            fill="white"
-            fillOpacity={+this.state.active}
-            strokeWidth="2"
-            stroke={DEFAULT_STYLE.fill}
-            strokeOpacity={+this.state.active}
-          />
-          <rect
-            x={x}
-            y={y + height - 10}
-            width={width - DEFAULT_STYLE.marginRight}
-            height={20}
-            fillOpacity="0"
-            ref={(ref) =>
-            {
-              this.down = ref;
-            }}
-          />
-        </g>
+            <circle
+              cx={x + 20}
+              cy={y + height}
+              r="5"
+              fill="white"
+              fillOpacity={+this.state.active}
+              strokeWidth="2"
+              stroke={DEFAULT_STYLE.fill}
+              strokeOpacity={+this.state.active}
+            />
+            <rect
+              x={x}
+              y={y + height - 10}
+              width={width - DEFAULT_STYLE.marginRight}
+              height={20}
+              fillOpacity="0"
+              ref={(ref) => {
+                this.down = ref;
+              }}
+            />
+          </g>
         }
 
       </g>

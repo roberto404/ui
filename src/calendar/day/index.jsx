@@ -78,7 +78,7 @@ class Calendar extends Component
       }),
       onEventMouseLeave: this.props.onEventMouseLeave || (() =>
       {
-        if (this.context.store.getState().layer.element.props.id === 'ToolTip')
+        if (this.context.store.getState().layer.element?.props?.id === 'ToolTip')
         {
           this.context.store.dispatch(LayerActions.close());
         }

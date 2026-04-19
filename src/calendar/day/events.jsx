@@ -91,25 +91,19 @@ class Events extends Component
       y: event.pointers[0].clientY - svg.y - calendarCoord.y,
     };
 
-    this.context.onAddEvent(
-      getEventDate(
-        {
-          x: (Math.floor(coord.x / colWidth) * colWidth) + calendarCoord.x,
-          y: (Math.floor(coord.y / rowHeight) * rowHeight) + calendarCoord.y,
-          height: rowHeight,
-        },
-        this.context,
-      ),
-    );
-
-    // this.props.addEvent(getEventDate(
-    //   {
-    //     x: (Math.floor(coord.x / colWidth) * colWidth) + calendarCoord.x,
-    //     y: (Math.floor(coord.y / rowHeight) * rowHeight) + calendarCoord.y,
-    //     height: rowHeight,
-    //   },
-    //   this.context,
-    // ));
+    if (typeof this.context.onAddEvent === 'function')
+    {
+      this.context.onAddEvent(
+        getEventDate(
+          {
+            x: (Math.floor(coord.x / colWidth) * colWidth) + calendarCoord.x,
+            y: (Math.floor(coord.y / rowHeight) * rowHeight) + calendarCoord.y,
+            height: rowHeight,
+          },
+          this.context,
+        ),
+      );
+    }
   }
 
 
