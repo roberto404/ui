@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-// import { flushSync } from 'react-dom';
-import ReactDOM from "react-dom";
+import { flushSync } from 'react-dom';
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
 import isEmpty from 'lodash/isEmpty';
@@ -33,53 +32,51 @@ import { FORM_SCHEME_KEY } from './constants';
 * - Listen form Redux changes, if affected then update this field component
 * - Set value and error state every change
 */
-class FormField extends Component
-{
-  constructor(props, context)
-  {
+class FormField extends Component {
+  constructor(props, context) {
     // add to props <Form fields={...}>
     const fields = (props.id && context && context.fields && context.fields[props.id])
       ? context.fields[props.id] : {};
 
     super(props);
 
+    const postfixTransformMode = this.getPostfixTransformInitialMode(props);
     let postfix;
 
-    if (props.complete)
-    {
+    if (props.complete) {
       postfix = <IconComplete />;
     }
 
-    if (props.preload)
-    {
+    if (props.preload) {
       postfix = <IconPreload />;
     }
 
+    if (!postfix) {
+      postfix = this.getPostfixElement(props, postfixTransformMode, fields.postfix);
+    }
+
     this.state = {
-      value: props.stateFormat(fields.value || this.getValue(props, context)),
+      value: this.getStateValue(fields.value || this.getValue(props, context), props, postfixTransformMode),
       error: fields.error || this.getError(props, context),
       mandatory: fields.mandatory || this.props.mandatory,
       postfix,
+      postfixTransformMode,
       preload: props.preload,
       complete: props.complete,
-      ...['label', 'prefix', 'postfix', 'placeholder'].reduce((result, item) =>
-      {
+      ...['label', 'prefix', 'placeholder'].reduce((result, item) => {
         const value = fields[item] || props[item];
 
-        if (value)
-        {
-          if (typeof value === 'string' && props.disableIntl !== true)
-          {
+        if (value) {
+          if (typeof value === 'string' && props.disableIntl !== true) {
             result[item] = props.intl.formatMessage({ id: value });
           }
-          else
-          {
+          else {
             result[item] = value;
           }
         }
         return result;
       },
-      {})
+        {})
     };
 
     this.data = this.getData();
@@ -87,8 +84,7 @@ class FormField extends Component
 
   /* !- React Lifecycle */
 
-  UNSAFE_componentWillMount()
-  {
+  UNSAFE_componentWillMount() {
     const form = this.props.form || this.context.form;
     const store = this.context.store.getState();
 
@@ -99,31 +95,26 @@ class FormField extends Component
       && this.props.value !== null
       && this.props.value.length
       && (!formState || !formState[this.props.id])
-    )
-    {
+    ) {
       this.onChangeHandler(this.props.value);
       this.onChangeListener(); // redux subscription has not yet occurred
     }
 
     // Auto mandatory by _scheme.presence
-    if (this.context.store)
-    {
+    if (this.context.store) {
       let state = this.context.store.getState().form;
       const form = this.props.form || this.context.form;
 
-      if (form)
-      {
+      if (form) {
         state = state[form];
       }
 
-      if (state)
-      {
+      if (state) {
         if (
           state[FORM_SCHEME_KEY] &&
           state[FORM_SCHEME_KEY][this.props.id] &&
           state[FORM_SCHEME_KEY][this.props.id].presence
-        )
-        {
+        ) {
           this.setState({ mandatory: true });
         }
       }
@@ -131,99 +122,112 @@ class FormField extends Component
   }
 
 
-  componentDidMount()
-  {
+  componentDidMount() {
     // Subscribe Redux
-    if (this.context.store)
-    {
+    if (this.context.store) {
       this.unsubscribe = this.context.store.subscribe(this.onChangeListener);
     }
 
-    if (typeof this.props.default !== 'undefined' && !this.state.value)
-    {
+    if (typeof this.props.default !== 'undefined' && !this.state.value) {
       this.onChangeHandler(this.props.default);
     }
 
     // AutoFocus or ForceFocus
-    if (this.props.autoFocus || this.props.forceFocus)
-    {
+    if (this.props.autoFocus || this.props.forceFocus) {
       this.element.focus();
 
-      if (this.state.value && this.state.value.length && this.element.setSelectionRange)
-      {
+      if (this.state.value && this.state.value.length && this.element.setSelectionRange) {
         const length = this.state.value.length;
-        this.element.setSelectionRange(length, length);
+        // type email not supported
+        try {
+          this.element.setSelectionRange(length, length)
+        } catch (error) {
+
+        }
       }
     }
 
+    if (this.props.autoSelect) {
+      this.element.select();
+    }
+
     // TODO App listener and remove
-    if (this.element && this.props.onPaste)
-    {
+    if (this.element && this.props.onPaste) {
       this.element.addEventListener('paste', this.onPasteHandler);
     }
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps)
-  {
-    if (!isEqual(nextProps.value, this.getValue()))
-    {
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (!isEqual(nextProps.value, this.getValue())) {
       this.onChangeListener(nextProps);
     }
 
-    if (nextProps.error !== this.state.error)
-    {
+    if (nextProps.error !== this.state.error) {
       this.setState({ error: nextProps.error });
     }
 
-    if (nextProps.complete !== this.props.complete)
-    {
+    if (nextProps.complete !== this.props.complete) {
       this.setState({
         complete: nextProps.complete,
-        postfix: nextProps.complete ? <IconComplete /> : this.props.postfix,
+        postfix: nextProps.complete ?
+          <IconComplete /> :
+          this.getPostfixElement(nextProps, this.getPostfixTransformMode(nextProps)),
       });
     }
 
-    if (nextProps.preload !== this.props.preload)
-    {
+    if (nextProps.preload !== this.props.preload) {
       this.setState({
         preload: nextProps.preload,
-        postfix: nextProps.preload ? <IconPreload /> : this.props.postfix,
+        postfix: nextProps.preload ?
+          <IconPreload /> :
+          this.getPostfixElement(nextProps, this.getPostfixTransformMode(nextProps)),
       });
     }
 
-    if (nextProps.prefix)
-    {
+    if (nextProps.prefix) {
       this.setState({ prefix: nextProps.prefix });
     }
 
 
     this.data = this.getData(nextProps);
 
-    if (nextProps.label)
-    {
+    if (nextProps.label) {
       this.setState({
         label: (nextProps.label && typeof nextProps.label === 'string' && nextProps.intl && nextProps.disableIntl !== true) ?
-        nextProps.intl.formatMessage({ id: nextProps.label }) : nextProps.label,
+          nextProps.intl.formatMessage({ id: nextProps.label }) : nextProps.label,
       })
+    }
+
+    const nextMode = this.getPostfixTransformMode(nextProps);
+    const nextPostfix = nextProps.complete ?
+      <IconComplete /> :
+      (nextProps.preload ? <IconPreload /> : this.getPostfixElement(nextProps, nextMode));
+
+    if (
+      nextMode !== this.state.postfixTransformMode ||
+      nextProps.postfix !== this.props.postfix ||
+      nextProps.postfixTransform !== this.props.postfixTransform
+    ) {
+      this.setState({
+        postfixTransformMode: nextMode,
+        postfix: nextPostfix,
+        value: this.getStateValue(this.getValue(nextProps), nextProps, nextMode),
+      });
     }
   }
 
 
-  componentWillUnmount()
-  {
-    if (this.unsubscribe)
-    {
+  componentWillUnmount() {
+    if (this.unsubscribe) {
       this.unsubscribe();
     }
 
-    if (typeof this.element !== 'undefined' && typeof this.element.removeEventListener === 'function')
-    {
+    if (typeof this.element !== 'undefined' && typeof this.element.removeEventListener === 'function') {
       this.element.removeEventListener('paste', this.onPasteHandler, false);
     }
 
     // TODO depricated change shortcut
-    if (this.context && this.context.removeListener)
-    {
+    if (this.context && this.context.removeListener) {
       this.context.removeListener(this.onKeyDown);
     }
   }
@@ -236,10 +240,8 @@ class FormField extends Component
    * @param  {SytheticEvent} event
    * @return {void}
    */
-  onFocusHandler = (event) =>
-  {
-    if (this.props.forceFocus && this.context.removeListener)
-    {
+  onFocusHandler = (event) => {
+    if (this.props.forceFocus && this.context.removeListener) {
       this.context.removeListener(this.onKeyDown);
     }
 
@@ -254,14 +256,12 @@ class FormField extends Component
    * @param  {SytheticEvent} event
    * @return {void}
    */
-  onBlurHandler = (event) =>
-  {
+  onBlurHandler = (event) => {
     const form = this.props.form || this.context.form;
 
     this.props.onBlur({ id: this.props.id, value: event.target.value, form }, event);
 
-    if (this.props.forceFocus && this.context.addListener)
-    {
+    if (this.props.forceFocus && this.context.addListener) {
       this.context.addListener('keydown', this.onKeyDown);
     }
   }
@@ -272,9 +272,12 @@ class FormField extends Component
    *
    * @param  {object} [props=this.props]
    */
-  onChangeListener = (props = this.props) =>
-  {
-    const value = props.stateFormat(this.getValue(props));
+  onChangeListener = (props = this.props) => {
+    const value = this.getStateValue(
+      this.getValue(props),
+      props,
+      this.getPostfixTransformMode(props),
+    );
     const error = this.getError();
 
     // const isChanged = Array.isArray(props.id) ?
@@ -285,18 +288,22 @@ class FormField extends Component
     if (
       (typeof value !== 'undefined' && isChanged) ||
       this.state.error !== error
-    )
-    {
-      ReactDOM.flushSync(() => {
+    ) {
+      flushSync(() => {
         this.setState({ value, error });
       });
+
+      // Promise.resolve().then(() => {
+      //   flushSync(() => {
+      //     this.setState({ value, error });
+      //   });
+      // });
     }
   }
 
   /* !- Handlers */
 
-  onPasteHandler = (event) =>
-  {
+  onPasteHandler = (event) => {
     // Stop data actually being pasted into div
     event.stopPropagation();
     event.preventDefault();
@@ -316,8 +323,7 @@ class FormField extends Component
    * @param  {string} value Current value of the field
    * @return {void}
    */
-  onChangeHandler = (value, event, options = {}) =>
-  {
+  onChangeHandler = (value, event, options = {}) => {
     /**
      * If the client erase from string
      * @type {boolean|null}
@@ -327,7 +333,7 @@ class FormField extends Component
 
     const payload = {
       id: this.props.id,
-      value: this.props.format(value, reduce, options),
+      value: this.getFormattedValue(value, reduce, options),
     };
 
     // if (isEqual(payload.value, this.state.value))
@@ -335,8 +341,7 @@ class FormField extends Component
     //   return;
     // }
 
-    if (!this.validate(payload.value))
-    {
+    if (!this.validate(payload.value)) {
       return;
     }
 
@@ -346,28 +351,23 @@ class FormField extends Component
 
     const form = this.props.form || this.context.form;
 
-    if (form)
-    {
+    if (form) {
       payload.form = form;
     }
 
     if (
       this.props.onChange
       && this.props.onChange.toString() !== FormField.defaultProps.onChange.toString()
-    )
-    {
+    ) {
       this.props.onChange(payload, options);
     }
-    else if (this.context.onChange)
-    {
+    else if (this.context.onChange) {
       this.context.onChange(payload, options);
     }
-    else if (payload.value === undefined)
-    {
+    else if (payload.value === undefined) {
       this.context.store.dispatch(unsetValues({ id: payload.id }, payload.form))
     }
-    else
-    {
+    else {
       this.context.store.dispatch(setValues({ [payload.id]: payload.value }, payload.form));
     }
   }
@@ -377,10 +377,8 @@ class FormField extends Component
    * @param  {[type]} event [description]
    * @return {[type]}       [description]
    */
-  onKeyDown = (event) =>
-  {
-    if (!event.altKey && !event.metaKey && /^[a-záéúőóüöíA-ZÁÉÚŐÓÜÖÍ0-9- ]{1}$/.test(event.key))
-    {
+  onKeyDown = (event) => {
+    if (!event.altKey && !event.metaKey && /^[a-záéúőóüöíA-ZÁÉÚŐÓÜÖÍ0-9- ]{1}$/.test(event.key)) {
       this.onChangeHandler('');
       this.element.focus();
     }
@@ -396,10 +394,8 @@ class FormField extends Component
    * @param  {Object} [context=this.context]
    * @return {any}
    */
-  getValue(props = this.props, context = this.context)
-  {
-    if (typeof context === 'undefined' || !context.store)
-    {
+  getValue(props = this.props, context = this.context) {
+    if (typeof context === 'undefined' || !context.store) {
       return props.value;
     }
 
@@ -410,12 +406,10 @@ class FormField extends Component
     const ids = Array.isArray(props.id) ? props.id : [props.id];
 
     const values = ids.map((id) => {
-      if (!form)
-      {
+      if (!form) {
         return state[id] === undefined ? props.value : state[id];
       }
-      else if (!state[form] || typeof state[form][id] === 'undefined')
-      {
+      else if (!state[form] || typeof state[form][id] === 'undefined') {
         return props.value;
       }
 
@@ -423,8 +417,7 @@ class FormField extends Component
     });
 
     // normal case
-    if (values.length === 1)
-    {
+    if (values.length === 1) {
       return values[0];
     }
 
@@ -442,25 +435,20 @@ class FormField extends Component
    * @param  {Object} [context=this.context]
    * @return {String}
    */
-  getError(props = this.props, context = this.context)
-  {
-    if (typeof props.error === 'string')
-    {
+  getError(props = this.props, context = this.context) {
+    if (typeof props.error === 'string') {
       return props.error;
     }
 
-    if (typeof context === 'undefined' || !context.store)
-    {
+    if (typeof context === 'undefined' || !context.store) {
       return '';
     }
 
     const state = context.store.getState().form;
     const form = props.form || context.form;
 
-    if (!form)
-    {
-      if (!state._errors || !Array.isArray(state._errors[this.props.id]))
-      {
+    if (!form) {
+      if (!state._errors || !Array.isArray(state._errors[this.props.id])) {
         return '';
       }
       return state._errors[this.props.id]
@@ -471,8 +459,7 @@ class FormField extends Component
       !state[form] ||
       !state[form]._errors ||
       !Array.isArray(state[form]._errors[this.props.id])
-    )
-    {
+    ) {
       return '';
     }
 
@@ -489,14 +476,12 @@ class FormField extends Component
    * Return data of fields, if it is not static use props function
    * @return {Object} data
    */
-  getData(props = this.props)
-  {
+  getData(props = this.props) {
     return ((typeof props.data === 'function') ?
       props.data(this.state, this.getValue(), props) : props.data) || [];
   }
 
-  getClasses(field)
-  {
+  getClasses(field) {
     return classNames({
       field: true,
       [`${field}-field`]: true,
@@ -513,10 +498,8 @@ class FormField extends Component
    * Add mandatory if necessarry
    * @return {ReactElement}
    */
-  get label()
-  {
-    if (!this.state.label || this.props.disableLabel === true)
-    {
+  get label() {
+    if (!this.state.label || this.props.disableLabel === true) {
       return undefined;
     }
 
@@ -524,7 +507,7 @@ class FormField extends Component
       <span>{this.state.label}<span className="mandatory" /></span>
       : this.state.label;
 
-    return <div className="label">{label}</div>;
+    return <div className="label" id={this.props.id}>{label}</div>;
   }
 
 
@@ -534,14 +517,11 @@ class FormField extends Component
    * @param  {string} value
    * @return {boolen}
    */
-  validate = (value) =>
-  {
-    if (this.props.regexp && value)
-    {
+  validate = (value) => {
+    if (this.props.regexp && value) {
       const regex = new RegExp(this.props.regexp);
 
-      if (regex.exec(value) === null)
-      {
+      if (regex.exec(value) === null) {
         return false;
       }
     }
@@ -549,9 +529,138 @@ class FormField extends Component
     return true;
   }
 
-  focus = () =>
-  {
+  focus = () => {
     this.element.focus();
+  }
+
+  getPostfixTransformOptions = (props = this.props) => {
+    const postfixTransform = props.postfixTransform || {};
+    return Array.isArray(postfixTransform.options) ? postfixTransform.options : [];
+  }
+
+  getPostfixTransformInitialMode = (props = this.props) => {
+    const options = this.getPostfixTransformOptions(props);
+
+    if (!options.length) {
+      return undefined;
+    }
+
+    const { defaultMode } = props.postfixTransform || {};
+
+    return options.some(option => option.id === defaultMode) ? defaultMode : options[0].id;
+  }
+
+  getPostfixTransformMode = (props = this.props) => {
+    const options = this.getPostfixTransformOptions(props);
+
+    if (!options.length) {
+      return undefined;
+    }
+
+    const currentMode = this.state?.postfixTransformMode;
+
+    if (currentMode && options.some(option => option.id === currentMode)) {
+      return currentMode;
+    }
+
+    return this.getPostfixTransformInitialMode(props);
+  }
+
+  getPostfixTransformOption = (props = this.props, mode = this.getPostfixTransformMode(props)) =>
+    this.getPostfixTransformOptions(props).find(option => option.id === mode);
+
+  getPostfixTransformContext = (props = this.props, mode = this.getPostfixTransformMode(props), options = {}) => ({
+    field: this,
+    props,
+    mode,
+    option: this.getPostfixTransformOption(props, mode),
+    ...options,
+  });
+
+  getStateValue = (value, props = this.props, mode = this.getPostfixTransformMode(props)) => {
+    const option = this.getPostfixTransformOption(props, mode);
+    const inputValue = option && option.stateFormat ?
+      option.stateFormat(value, this.getPostfixTransformContext(props, mode, { value })) :
+      value;
+
+    return props.stateFormat(inputValue);
+  }
+
+  getFormattedValue = (value, reduce, options = {}, props = this.props, mode = this.getPostfixTransformMode(props)) => {
+    const option = this.getPostfixTransformOption(props, mode);
+    const inputValue = option && option.format ?
+      option.format(value, this.getPostfixTransformContext(props, mode, { value, reduce, options })) :
+      value;
+
+    return props.format(inputValue, reduce, options);
+  }
+
+  getTranslatedViewValue = (value, props = this.props) => {
+    if (!value) {
+      return value;
+    }
+
+    return (typeof value === 'string' && props.disableIntl !== true) ?
+      props.intl.formatMessage({ id: value }) :
+      value;
+  }
+
+  getStaticPostfix = (props = this.props, postfix) =>
+    this.getTranslatedViewValue(typeof postfix !== 'undefined' ? postfix : props.postfix, props);
+
+  onClickPostfixTransformHandler = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const options = this.getPostfixTransformOptions();
+
+    if (options.length < 2) {
+      return;
+    }
+
+    const activeIndex = options.findIndex(option => option.id === this.state.postfixTransformMode);
+    const nextOption = options[(activeIndex + 1) % options.length];
+    const nextMode = nextOption ? nextOption.id : undefined;
+
+    this.setState({
+      postfixTransformMode: nextMode,
+      postfix: this.getPostfixElement(this.props, nextMode),
+      value: this.getStateValue(this.getValue(), this.props, nextMode),
+    });
+  }
+
+  getPostfixElement = (props = this.props, mode = this.getPostfixTransformMode(props), postfix) => {
+    const options = this.getPostfixTransformOptions(props);
+
+    if (!options.length) {
+      return this.getStaticPostfix(props, postfix);
+    }
+
+    const option = this.getPostfixTransformOption(props, mode);
+
+    if (!option) {
+      return this.getStaticPostfix(props, postfix);
+    }
+
+    if (options.length === 1 || props.disabled) {
+      return option.label;
+    }
+
+    return (
+      <span
+        className="pointer no-select"
+        onClick={this.onClickPostfixTransformHandler}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            this.onClickPostfixTransformHandler(event);
+          }
+        }}
+      >
+        {option.label}
+      </span>
+    );
   }
 
 
@@ -562,12 +671,10 @@ class FormField extends Component
    * @param  {Boolean} [toggle=true] you can disable remove method if it is false
    * @return {Array}                new value: [a,b,c]
    */
-  createMultipleValueHelper = (value, item, toggle = true) =>
-  {
+  createMultipleValueHelper = (value, item, toggle = true) => {
     const index = value.indexOf(item);
 
-    if (index === -1)
-    {
+    if (index === -1) {
       return [...value, item];
     }
     else if (toggle === false) // not remove item
@@ -580,8 +687,7 @@ class FormField extends Component
       ...value.slice(index + 1)];
   };
 
-  renderPlainField()
-  {
+  renderPlainField() {
     const { intl, multipleData } = this.props;
     const multipleDataText = () => intl ? intl.formatMessage({ id: multipleData }) : multipleData;
     const placeholder =
@@ -591,8 +697,7 @@ class FormField extends Component
     const data = this.getData();
 
     // checkbox, radio
-    if (data.length)
-    {
+    if (data.length) {
       const values = Array.isArray(value) ? value : [value];
 
       value =
@@ -601,15 +706,12 @@ class FormField extends Component
           .join(', ');
     }
     // toggle, button
-    else if (typeof value === 'boolean')
-    {
+    else if (typeof value === 'boolean') {
       // button data
-      if (typeof data[+value] !== 'undefined')
-      {
+      if (typeof data[+value] !== 'undefined') {
         value = data[+value];
       }
-      else
-      {
+      else {
         value = value ? <IconTrue className="w-1 h-1" /> : <IconFalse className="w-1 h-1" />;
       }
     }
@@ -617,28 +719,28 @@ class FormField extends Component
     return (
       <div className={this.getClasses('plain')}>
 
-        { this.label }
+        {this.label}
 
         <div className="h-center">
 
-          { this.state.prefix &&
-          <div className="prefix">{this.state.prefix}</div>
+          {this.state.prefix &&
+            <div className="prefix">{this.state.prefix}</div>
           }
 
-          { this.props.dangerouslySetInnerHTML &&
+          {this.props.dangerouslySetInnerHTML &&
             <div dangerouslySetInnerHTML={{ '__html': value }} />
           }
-          { !this.props.dangerouslySetInnerHTML &&
+          {!this.props.dangerouslySetInnerHTML &&
             <div>{value || placeholder}</div>
           }
 
-          { this.state.postfix &&
-          <div className="postfix">{this.state.postfix}</div>
+          {this.state.postfix &&
+            <div className="postfix">{this.state.postfix}</div>
           }
 
         </div>
 
-        { this.state.error &&
+        {this.state.error &&
           <div className="error">{this.state.error}</div>
         }
       </div>
@@ -649,11 +751,9 @@ class FormField extends Component
    * This method is called when render the Component instance.
    * @return {ReactElement}
    */
-  render()
-  {
+  render() {
     // console.log(this.context);
-    if (this.context.readOnly !== true)
-    {
+    if (this.context.readOnly !== true) {
       return null;
     }
 
@@ -781,6 +881,10 @@ FormField.propTypes =
    */
   autoFocus: PropTypes.bool,
   /**
+   * Focus input selectAll value
+   */
+  autoSelect: PropTypes.bool,
+  /**
    * OnKeyDown event automatically focus input field
    * @important you can enable if add/removeListener exist on context (See utils>models>app)
    */
@@ -826,6 +930,22 @@ FormField.propTypes =
    * like select options
    */
   dataTranslate: PropTypes.bool,
+  /**
+   * Optional postfix switcher with display/store conversion hooks.
+   * stateFormat runs before props.stateFormat, format runs before props.format.
+   */
+  postfixTransform: PropTypes.shape({
+    defaultMode: PropTypes.string,
+    options: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      label: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.element,
+      ]).isRequired,
+      format: PropTypes.func,
+      stateFormat: PropTypes.func,
+    })),
+  }),
 };
 
 /**
@@ -836,8 +956,7 @@ FormField.defaultProps =
 {
   form: '',
   value: '',
-  onChange: () =>
-  {},
+  onChange: () => { },
   label: '',
   placeholder: '',
   prefix: '',
@@ -852,11 +971,10 @@ FormField.defaultProps =
   },
   className: '',
   autoFocus: false,
+  autoSelect: false,
   forceFocus: false,
-  onBlur()
-  {},
-  onFocus()
-  {},
+  onBlur() { },
+  onFocus() { },
   data: [],
   multipleData: 'placeholder.multipledata',
   disableLabel: false,
@@ -864,6 +982,7 @@ FormField.defaultProps =
   preload: false,
   disableIntl: false,
   dataTranslate: true,
+  postfixTransform: undefined,
 };
 
 FormField.contextType = MergedContexts;
