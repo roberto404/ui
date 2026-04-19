@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
-import { useDispatch, ReactReduxContext } from 'react-redux';
+import React, { useContext, useEffect, useRef } from 'react';
+import { useDispatch, ReactReduxContext, useSelector } from 'react-redux';
 
 /* !- Actions */
 
 import { flush, tooltip } from './actions';
+import { useComponentDidMount, useComponentWillUnmount } from '../hooks';
 
 
 
@@ -37,7 +38,25 @@ const Tooltip = ({
 }: PropTypes) => {
   const dispatch = useDispatch();
 
-  const { store } = useContext(ReactReduxContext)
+  const { store } = useContext(ReactReduxContext);
+  const eventDataRef = useRef<{ x: number; y: number, currentTarget: true } | null>(null);
+
+  useSelector(
+    ({ layer }) => {
+      if (!layer.active && eventDataRef.current) {
+        eventDataRef.current = null;
+      }
+    },
+    () => true,
+  );
+
+  useEffect(() => {
+    const isLayer = store.getState().layer.active === true;
+
+    if (eventDataRef.current && isLayer) {
+      dispatch(tooltip(title, eventDataRef.current));
+    }
+  }, [title]);
 
 
   const onClickHandler = (event) => {
@@ -50,6 +69,8 @@ const Tooltip = ({
     const isLayer = store.getState().layer.active === true;
 
     if (!isLayer) {
+      // useRef cannot keep full event
+      eventDataRef.current = { x: event.clientX, y: event.clientY, currentTarget: event.currentTarget };
       dispatch(tooltip(title, event));
     }
   };

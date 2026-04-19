@@ -15,8 +15,7 @@ import Menu from './menu';
 
 /* !- Constants */
 
-const extendPositions = ({ left, top, width, height }) =>
-{
+const extendPositions = ({ left, top, width, height }) => {
   const positions = { width, height, center: {}, screen: {} };
 
   positions.left = left + window.pageXOffset;
@@ -29,10 +28,8 @@ const extendPositions = ({ left, top, width, height }) =>
   return positions;
 }
 
-const getPositionsElement = (target) =>
-{
-  if (!target)
-  {
+const getPositionsElement = (target) => {
+  if (!target) {
     return {};
   }
 
@@ -40,34 +37,28 @@ const getPositionsElement = (target) =>
   return extendPositions(rect)
 };
 
-const getDynamicPopoverStyle = (position) =>
-{
+const getDynamicPopoverStyle = (position) => {
   const style = {};
   const { screen, left, top, center, width, height } = position;
 
-  if (screen.x < 0.3)
-  {
+  if (screen.x < 0.3) {
     style.left = left;
     style.transform = '';
   }
-  else if (screen.x > 0.7)
-  {
+  else if (screen.x > 0.7) {
     style.left = left + width;
     style.transform = 'translateX(-100%)';
   }
-  else
-  {
+  else {
     style.left = `${center.x}px`;
     style.transform = 'translateX(-50%)';
   }
 
-  if (screen.y > 0.6)
-  {
+  if (screen.y > 0.6) {
     style.top = `${top - 6}px`;
     style.transform += ' translateY(-100%)';
   }
-  else
-  {
+  else {
     style.top = `${top + height + 6}px`;
   }
 
@@ -138,7 +129,7 @@ export const sidebar = (element: React.Element, options = {}) =>
   containerStyle: options.containerStyle,
   options: {
     ...options,
-    className: options.position || 'right',
+    className: (options.position || 'right') + ' ' + options.className,
   },
 });
 
@@ -162,15 +153,13 @@ export const sidebar = (element: React.Element, options = {}) =>
  *  },
  * );
  */
-export const popover = (element: React.Element | string, event: {} = {}, options = {}) =>
-{
+export const popover = (element: React.Element | string, event: {} = {}, options = {}) => {
   let containerStyle = options.containerStyle || {};
 
   const target = event.currentTarget;
 
-  if (target)
-  {
-    const position = options.useMousePosition ? 
+  if (target) {
+    const position = options.useMousePosition ?
       extendPositions({
         left: event.clientX + window.pageXOffset,
         top: event.clientY + window.pageYOffset,
@@ -214,8 +203,7 @@ export const popover = (element: React.Element | string, event: {} = {}, options
  * @param {ReactElement} element Layer (tooltip) content
  * @param {object} event
  */
-export const tooltip = (element: React.Element | string, event: {} = {}, options = {}) =>
-{
+export const tooltip = (element: React.Element | string, event: {} = {}, options = {}) => {
   return ({
     ...popover(element, event, options),
     closeable: false,
@@ -316,13 +304,11 @@ export const modal = (props = {}, options = {}) =>
  * @example
  * preload(<div>Loading...</div>)
  */
-export const preload = (element: React.Element, event: React.MouseEvent<HTMLElement>) =>
-{
+export const preload = (element: React.Element, event: React.MouseEvent<HTMLElement>) => {
   const target = event || React.isValidElement(element) ? null : element;
   let containerStyle = {};
 
-  if (target)
-  {
+  if (target) {
     const { center } = getPositionsElement(target.target);
 
     containerStyle = {
@@ -351,8 +337,7 @@ export const menu = (props = {}, event: React.MouseEvent<HTMLElement> | {} = {},
   popover(<Menu {...props} />, event, { ...options, className: 'no-padding no-close' });
 
 
-export const contextMenu = (props = {}, event: React.MouseEvent<HTMLElement> | {} = {}, options = {}) =>
-{
+export const contextMenu = (props = {}, event: React.MouseEvent<HTMLElement> | {} = {}, options = {}) => {
   event.preventDefault();
   return menu(props, event, options);
 }

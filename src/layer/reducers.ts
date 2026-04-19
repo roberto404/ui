@@ -1,4 +1,6 @@
 
+
+
 /* !- Constants */
 
 
@@ -29,14 +31,11 @@ const DEFAULT_STATE = {
  * @param  {Object} action
  * @return {Object}            state
  */
-const reducers = (state = DEFAULT_STATE, action = {}) =>
-{
-  switch (action.type)
-  {
+const reducers = (state = DEFAULT_STATE, action = {}) => {
+  switch (action.type) {
     case 'SET_LAYER_VISIBLE':
       {
-        if (typeof action.active !== 'boolean')
-        {
+        if (typeof action.active !== 'boolean') {
           return state;
         }
 
@@ -64,10 +63,8 @@ const reducers = (state = DEFAULT_STATE, action = {}) =>
 
     case 'SET_LAYER_METHOD':
       {
-        if (AVAILABLE_METHODS.indexOf(action.method) === -1)
-        {
-          if (state.method === undefined)
-          {
+        if (AVAILABLE_METHODS.indexOf(action.method) === -1) {
+          if (state.method === undefined) {
             return {
               ...state,
               method: DEFAULT_METHOD,
@@ -89,8 +86,7 @@ const reducers = (state = DEFAULT_STATE, action = {}) =>
         const containerStyle = (action.containerStyle instanceof Object) ? action.containerStyle : {};
         const options = (action.options instanceof Object) ? action.options : {};
 
-        if (action.method === 'popover' && state.active && ['dialog', 'fullscreen', 'sidebar'].indexOf(state.method) !== -1)
-        {
+        if (action.method === 'popover' && state.active && ['dialog', 'fullscreen', 'sidebar'].indexOf(state.method) !== -1) {
           return state;
         }
 
@@ -117,8 +113,7 @@ const reducers = (state = DEFAULT_STATE, action = {}) =>
 
 export const getActive = ({ layer }) => layer.active;
 
-export const getLayer = (({ layer }) =>
-{
+export const getLayer = (({ layer }) => {
   const {
     active,
     method,
