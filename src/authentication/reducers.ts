@@ -1,6 +1,6 @@
 import Storage from '@1studio/utils/models/storage'; // 64
-
 import random from '@1studio/utils/string/random';
+import omit from 'lodash/omit';
 
 /**
  * User Model
@@ -11,7 +11,7 @@ let User = new Storage({}, { password: false, key: 'user', uuid: random() });
 
 const createState = () =>
 ({
-  ...User.data,
+  ...omit(User.data, ['immortal']),
   model: User,
   isLogged: !!User.data.timestamp,
 });
@@ -46,6 +46,13 @@ const reducers = (state = createState({}), action = {}) => {
         User.erase();
         return createState();
       }
+
+    case 'TOGGLE-IMMORTAL-USER': {
+      User.refurbish();
+      User.data.immortal = !User.data.immortal;
+
+      return createState();
+    }
 
     default:
       return state;

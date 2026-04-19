@@ -17,6 +17,10 @@ export const modifyUserData = (user = {}) =>
   user,
 });
 
+export const toggleImmortal = () => ({
+  type: 'TOGGLE-IMMORTAL-USER',
+})
+
 
 // import fetchDatabase from '../api';
 
