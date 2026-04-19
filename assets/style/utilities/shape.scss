@@ -59,6 +59,11 @@ hr {
   box-shadow: 0px 3px 9px 0px rgba(0, 0, 0, 0.075);
 }
 
+.focus\:shadow-outer-3:focus,
+.hover\:shadow-outer-3:hover {
+  box-shadow: 0px 3px 9px 0px rgba(0, 0, 0, 0.075);
+}
+
 .border {
   border: 1px solid $black-light;
 }
@@ -91,6 +96,11 @@ hr {
   border-width: 1px;
 }
 
+.focus\:border-1:focus {
+  border-width: 1px !important;
+  border-style: solid !important;
+}
+
 .border-2 {
   border-width: 2px;
 }
@@ -102,6 +112,11 @@ hr {
 .border-blue {
   border-color: $blue;
 }
+
+.focus\:border-blue:focus {
+  border-color: $blue !important;
+}
+
 
 .border-blue-dark {
   border-color: $blue-dark;
@@ -135,6 +150,10 @@ hr {
   border-color: $black;
 }
 
+.focus\:border-black:focus {
+  border-color: $black !important;
+}
+
 .border-dashed {
   border-style: dashed;
 }
@@ -146,6 +165,10 @@ hr {
 .bg-black,
 .hover\:bg-black:hover {
   background-color: $black;
+}
+
+.focus\:bg-black:focus {
+  background-color: $black !important;
 }
 
 .bg-black-20 {
@@ -196,6 +219,10 @@ hr {
   background-color: $green;
 }
 
+.focus\:bg-green:focus {
+  background-color: $green !important;
+}
+
 .bg-green-light,
 .hover\:bg-green-light:hover {
   background-color: $green-light;
@@ -204,6 +231,11 @@ hr {
 .bg-green-dark,
 .hover\:bg-green-dark:hover {
   background-color: $green-dark;
+}
+
+
+.focus\:bg-green-dark:focus {
+  background-color: $green-dark !important;
 }
 
 .bg-red,
@@ -296,6 +328,10 @@ hr {
   fill: $gray-dark;
 }
 
+.hover\:fill-gray-dark:hover * {
+  fill: $gray-dark !important;
+}
+
 .fill-yellow * {
   fill: $yellow;
 }
@@ -325,7 +361,7 @@ hr {
 }
 
 .hover\:fill-black:hover * {
-  fill: $black;
+  fill: $black !important;
 }
 
 .hover\:fill-white:hover * {

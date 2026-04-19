@@ -109,6 +109,11 @@ table {
   display: none;
 }
 
+.disabled {
+  cursor: no-drop !important;
+  opacity: 0.3;
+}
+
 .overflow {
   overflow: hidden;
 }
@@ -121,6 +126,12 @@ table {
   overflow: scroll;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+.scroll-x {
+  overflow: scroll;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .no-select {
@@ -162,6 +173,14 @@ g.no-child-events g>*:first-child {
 
 .ratio-16-9 {
   @include aspect-ratio(16, 9);
+}
+
+.ratio-h2 {
+  @include aspect-ratio(1, 2);
+}
+
+.ratio-A4 {
+  @include aspect-ratio(1, 1.41);
 }
 
 
