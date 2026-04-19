@@ -2,16 +2,19 @@ import React, { useContext } from 'react';
 import { useDispatch, ReactReduxContext } from 'react-redux';
 import classNames from 'classnames';
 import { createMarkers } from './marker';
-// import 'element-closest-polyfill';
 import isElement from 'lodash/isElement';
 
 
 /* !- React Actions */
 
 import { flush } from '../layer/actions';
+import ReactPlayer from 'react-player';
 
 
 /* !- Components */
+
+import IconArrow from '../icon/mui/navigation/arrow_forward';
+
 
 const Title = ({ heading, children, className, style }) => {
 
@@ -20,12 +23,26 @@ const Title = ({ heading, children, className, style }) => {
     const Heading = `h${heading}`;
 
     return <Heading className={className} style={style}>{children}</Heading>;
-
   }
 
   return <div className={className} style={style}>{children}</div>;
 }
 
+
+const VideoWrapper = ({ item, isWideScreen }) => ({ children }) => (
+  <div
+    style={{
+      width: item.width,
+      height: item.height,
+      overflow: 'hidden',
+      position: 'relative',
+      maxWidth: isWideScreen ? '100vw' : 'fit-content',
+      maxHeight: 'fit-content',
+    }}
+  >
+    {children}
+  </div>
+)
 
 
 /* !- Constants */
@@ -35,6 +52,7 @@ const Title = ({ heading, children, className, style }) => {
 
 const defaultProps =
 {
+  // image: "data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=", // blank
   image: '',
   title: '',
   subTitle: '',
@@ -52,6 +70,8 @@ const defaultProps =
 type PropTypes = Partial<typeof defaultProps> & {
   onDragMarker: () => void,
   heading?: number,
+  color?: string,
+  button?: string,
 };
 
 
@@ -60,6 +80,7 @@ type PropTypes = Partial<typeof defaultProps> & {
  */
 const Card = ({
   image = defaultProps.image,
+  color,
   title = defaultProps.title,
   subTitle = defaultProps.subTitle,
   className = defaultProps.className,
@@ -74,6 +95,11 @@ const Card = ({
   onDragMarker,
   children,
   heading,
+  button,
+  // buttonClass
+  primary = false,
+  item,
+  isWideScreen = false,
 }: PropTypes) => {
 
   const { store } = useContext(ReactReduxContext);
@@ -89,28 +115,32 @@ const Card = ({
   //   e.currentTarget.src = 'http://beta.rs.hu/img/uploads/700x510_1561547628.0117_5d1352b33f6cc.jpg';
   // }
 
+  const isLink = onClick.toString() !== defaultProps.onClick.toString();
+
   const classes = classNames({
     relative: true,
-    'no-select': true,
+    'no-select h-full': true,
     border: border === true,
-    pointer: onClick.toString() !== defaultProps.onClick.toString(),
+    pointer: isLink,
     [className]: true,
   });
 
-  const captionPadding = parseInt((/p-([0-9]{1})/.exec(classNameCaption) || [])[1] || 0) * 2 / 1.6;
+  const classPaddingValue = parseInt((/p-([0-9]{1})/.exec(classNameCaption) || [])[1] || 0);
 
   let imagePadding = '0rem';
 
-  if (title || subTitle) {
-    imagePadding += ` + ${captionPadding}em`;
-  }
+  if (image) {
+    if (title || subTitle) {
+      imagePadding += ` + ${classPaddingValue * 2 / 1.6}em`;
+    }
 
-  if (title) {
-    imagePadding += ' + 1.5em + 0.5em';
-  }
+    if (title) {
+      imagePadding += ' + 1.5em + 0.5em';
+    }
 
-  if (subTitle) {
-    imagePadding += ' + 1.5em';
+    if (subTitle) {
+      imagePadding += ' + 1.5em';
+    }
   }
 
 
@@ -185,12 +215,14 @@ const Card = ({
     onDragMarker({ x, y, index });
   }
 
+  const ext = image.split('.').pop().split('?')[0];
+
   return (
     <div
       className={classes}
       onClick={onClick}
       onMouseOut={onMouseOutHandler}
-      style={{ paddingBottom: `calc(${imagePadding})` }}
+      style={{ paddingBottom: `calc(${imagePadding})`, backgroundColor: color }}
     >
       {image &&
         <div
@@ -201,28 +233,55 @@ const Card = ({
           onDragEnd={onDragMarker ? onDragEndHandler : undefined}
         // style={{ fontSize: `${100 * 100 / titleZoom}%` }}
         >
-          <img
-            className="block m-auto w-auto h-auto"
-            src={image}
-            width="auto"
-            height="auto"
-            style={{
-              maxWidth: '100%',
-              maxHeight: '100%',
-            }}
-            alt={title}
-          // onError={this.onErrorImageListener}
-          />
+          {ext === 'mp4' &&
+            <ReactPlayer
+              _playing={primary}
+              playing={true}
+              width="100%"
+              height="auto"
+              controls={false}
+              loop={true}
+              muted={true}
+              playsinline={true}
+              url={image}
+              wrapper={VideoWrapper({ item, isWideScreen })}
+            />
+          }
+          {ext !== 'mp4' &&
+            <img
+              className="block m-auto w-auto h-auto"
+              src={image}
+              width="auto"
+              height="auto"
+              style={{
+                maxWidth: '100%',
+                maxHeight: '100%',
+              }}
+              alt={title}
+            // onError={this.onErrorImageListener}
+            />
+          }
           {markers ? createMarkers(onDragMarker ? markers.map(marker => ({ ...marker, draggable: true })) : markers) : children}
         </div>
       }
-      {(title || subTitle) &&
-        <div className={classNameCaption} style={{ minHeight: `calc(${imagePadding})`, padding: `${captionPadding / 2}em 1em`, bottom: 0 }}>
+      {(title || subTitle || button) &&
+        <div className={classNameCaption} style={{ minHeight: `calc(${imagePadding})`, padding: `${classPaddingValue / 1.6}em ${classPaddingValue / 2}em`, bottom: 0 }}>
           {title &&
             <Title heading={heading} className={classNameTitle} style={{ wordBreak: 'break-word' }}>{title}</Title>
           }
           {subTitle &&
             <div className={classNameSubTitle}>{subTitle}</div>
+          }
+          {typeof button !== 'undefined' &&
+            <div
+              className={classNames({
+                'button mt-2 text-line-m w-content': true,
+                'yellow': true,
+                'wide': !!button
+              })}
+            >
+              {button || <IconArrow className="w-2 h-2 fill-white" />}
+            </div>
           }
         </div>
       }
