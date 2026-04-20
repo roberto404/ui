@@ -1,5 +1,7 @@
 import formatThousand from "@1studio/utils/string/formatThousand";
 
+const roundPercentValue = (value: number) => Math.round(value * 100) / 100;
+
 export const getNumericValue = (value: string | number | null | undefined) => {
   if (value === '' || value === null || typeof value === 'undefined') {
     return undefined;
@@ -47,7 +49,7 @@ export const percent = (basePrice: number) => {
       const amountValue = getNumericValue(value);
 
       return typeof amountValue === 'number' && basePrice ?
-        Math.round((amountValue / basePrice * 100)).toString() :
+        roundPercentValue(amountValue / basePrice * 100).toString() :
         value;
     },
     format: (value: string | number | null | undefined) => {
