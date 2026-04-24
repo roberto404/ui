@@ -31,13 +31,14 @@ const CalendarDateTime = ({
   format,
   resetLabel,
   intl,
+  disableTime = true,
 }) =>
 (
   <div className={className}>
     <DateTime
       id={id}
       form={form}
-      disableTime
+      disableTime={disableTime}
       disableDay
       className="m-0"
       value={value}

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
+import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
 import { AppContext } from '../context';
 
@@ -105,10 +106,8 @@ import { FormContext } from './context';
 *   dispatch => ({ onChange: relay => dispatch(FormActions.setValue(relay)) }),
 * )(Form);
 */
-class Form extends Component
-{
-  constructor(props)
-  {
+class Form extends Component {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -118,11 +117,9 @@ class Form extends Component
 
   /* !- React lifecycle */
 
-  UNSAFE_componentWillMount = () =>
-  {
+  UNSAFE_componentWillMount = () => {
     // set scheme
-    if (!isEmpty(this.props.scheme))
-    {
+    if (!isEmpty(this.props.scheme)) {
       this.context.store.dispatch(FormActions.setScheme(
         this.props.scheme,
         this.props.id,
@@ -132,35 +129,29 @@ class Form extends Component
     // load data via API
     const isOnLoad = this.props.onLoad !== Form.defaultProps.onLoad;
 
-    if (isOnLoad)
-    {
+    if (isOnLoad) {
       this.context.store.dispatch(FormActions.fetchValues(
         this.props.onLoad, this.props.id,
       ));
     }
   }
 
-  componentDidMount = () =>
-  {
+  componentDidMount = () => {
     const isOnChange = this.props.onChange !== Form.defaultProps.onChange;
 
     // Subscribe Redux
-    if (isOnChange && this.context.store)
-    {
+    if (isOnChange && this.context.store) {
       this.formState = this.context.store.getState().form[this.props.id];
       this.unsubscribe = this.context.store.subscribe(this.onChange);
     }
   }
 
-  componentWillUnmount()
-  {
-    if (this.unsubscribe)
-    {
+  componentWillUnmount() {
+    if (this.unsubscribe) {
       this.unsubscribe();
     }
 
-    if (this.props.flush)
-    {
+    if (this.props.flush) {
       this.context.store.dispatch(FormActions.flush(this.props.id));
     }
   }
@@ -173,14 +164,11 @@ class Form extends Component
    * @param  {Object} relay { id, value, form }
    * @return {void}
    */
-  onChangeHandler = ({ id, value, form }) =>
-  {
-    if (value === undefined)
-    {
+  onChangeHandler = ({ id, value, form }) => {
+    if (value === undefined) {
       this.context.store.dispatch(FormActions.unsetValues({ id }, form || this.props.id))
     }
-    else
-    {
+    else {
       this.context.store.dispatch(FormActions.setValues(
         { [id]: value },
         form || this.props.id,
@@ -194,19 +182,20 @@ class Form extends Component
    * Invoke every form redux change, if props.onChange defined.
    * => onChange(formReduxItems, formPrevReduxItems, formReduxId);
    */
-  onChange = () =>
-  {
+  onChange = () => {
     const prev = { ...this.formState };
     const next = this.context.store.getState().form[this.props.id] || {};
-    this.formState = next;
-    this.props.onChange(next, prev, this.props.id);
+
+    if (!isEqual(prev, next)) {
+      this.formState = next;
+      this.props.onChange(next, prev, this.props.id);
+    }
   }
 
   /**
    * Start preload, change form status => class
    */
-  onStart = () =>
-  {
+  onStart = () => {
     this.setState({ active: true });
     this.context.store.dispatch(LayerActions.preload());
   }
@@ -216,22 +205,18 @@ class Form extends Component
    * You can subscribe onSuccess or onFailed, before form clear and modal show
    * @param  {Object} response API response
    */
-  onFinish = (response) =>
-  {
+  onFinish = (response) => {
     const { store } = this.context;
 
     const layer = store.getState().layer;
-    
-    if (response.status === 'SUCCESS')
-    {
+
+    if (response.status === 'SUCCESS') {
       let respond = true;
-      
-      if (typeof this.props.onSuccess === 'function')
-      {
+
+      if (typeof this.props.onSuccess === 'function') {
         respond = this.props.onSuccess(response, this.props.id);
 
-        if (respond === false)
-        {
+        if (respond === false) {
           return;
         }
       }
@@ -241,47 +226,39 @@ class Form extends Component
 
       const formState = store.getState().form[this.props.id];
 
-      if (typeof response.records.id !== 'undefined' && typeof formState !== 'undefined' && (formState.id === undefined || response.records.id == formState.id))
-      {
+      if (typeof response.records.id !== 'undefined' && typeof formState !== 'undefined' && (formState.id === undefined || response.records.id == formState.id)) {
         store.dispatch(FormActions.setValues(response.records, this.props.id));
       }
       // if respose full grid *ReadAll
-      else if (Array.isArray(response.records))
-      {
+      else if (Array.isArray(response.records)) {
         const id = formState.id || response.lastInsertId;
 
         const record = id ? response.records.find(item => item.id == id) : undefined;
 
-        if (record)
-        {
+        if (record) {
           store.dispatch(FormActions.setValues(record, this.props.id))
         }
-        else
-        {
+        else {
           store.dispatch(FormActions.flush(this.props.id))
         }
       }
-        
+
       store.dispatch(action(response.records, this.props.id));
-      store.dispatch(LayerActions.close());
+      // store.dispatch(LayerActions.close()); // destroy userStore popover
 
       this.clear();
     }
-    else
-    {
-      if (this.props.onFailed(response) === false)
-      {
+    else {
+      if (this.props.onFailed(response) === false) {
         return;
       }
     }
 
-    if (response.modal)
-    {
+    if (response.modal) {
       this.context.store.dispatch(LayerActions.modal(response.modal));
     }
     // CLOSE IF: onSuccess or onFailed external method not changed the layer
-    else if (JSON.stringify(layer) === JSON.stringify(this.context.store.getState().layer))
-    {
+    else if (JSON.stringify(layer) === JSON.stringify(this.context.store.getState().layer)) {
       this.context.store.dispatch(LayerActions.close());
     }
   }
@@ -290,21 +267,17 @@ class Form extends Component
    * Show errors on modal, if scheme validation failed
    * @param  {Object} error validate.js error object
    */
-  onError = (error) =>
-  {
+  onError = (error) => {
     this.context.store.dispatch(LayerActions.modal({
       title: this.props.intl.formatMessage({ id: this.props.onErrorTitle }),
       content:
         Object
           .keys(error)
-          .map(e =>
-          {
-            if (!this.props.fields[e] || !this.props.fields[e].label)
-            {
+          .map(e => {
+            if (!this.props.fields[e] || !this.props.fields[e].label) {
               return e;
             }
-            else if (typeof this.props.fields[e].label.props === 'object')
-            {
+            else if (typeof this.props.fields[e].label.props === 'object') {
               return this.props.fields[e].label.props.children;
             }
             return this.props.intl.formatMessage({ id: this.props.fields[e].label });
@@ -317,10 +290,8 @@ class Form extends Component
   /**
    * Clear Redux form, but keep the scheme
    */
-  clear()
-  {
-    if (this.props.flush)
-    {
+  clear() {
+    if (this.props.flush) {
       this.context.store.dispatch(FormActions.flush(this.props.id));
       this.context.store.dispatch(FormActions.setScheme(this.props.scheme, this.props.id));
     }
@@ -328,8 +299,7 @@ class Form extends Component
     this.setState({ active: false });
   }
 
-  render()
-  {
+  render() {
     const context = {
       readOnly: this.props.readOnly,
       form: this.props.id,
@@ -530,7 +500,7 @@ Form.propTypes =
  * defaultProps
  * @type {Object}
  */
-Form.defaultProps = 
+Form.defaultProps =
 {
   id: Math.floor(Math.random() * 1000000),
   readOnly: false,

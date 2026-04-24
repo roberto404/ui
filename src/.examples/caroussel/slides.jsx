@@ -20,8 +20,7 @@ import Card from '../../../src/card';
 import { SLIDES, PHOTO_SLIDES, CUSTOM_SLIDES } from './constants';
 
 
-const Slide = ({ id, url }) =>
-{
+const Slide = ({ id, url }) => {
   return (
     <Card
       image="https://picsum.photos/700/500"
@@ -41,8 +40,7 @@ const Slide = ({ id, url }) =>
 /**
  * GridView + Filters + Connect + Paginate
  */
-const Example = () =>
-{
+const Example = () => {
   const dispatch = useDispatch();
 
   dispatch(setData(SLIDES, {}, 'sample'));
@@ -59,13 +57,13 @@ const Example = () =>
       <h2>Draggable slides</h2>
       <Slides id="sample" />
 
-      
-      <h2>Draggable photo slides</h2>
-      {/* <div style={{ width: '300px', height: '200px' }}>
-        <Slides id="sample_photo" />
-      </div> */}
 
-      {/*
+      <h2>Draggable photo slides</h2>
+      <div style={{ width: '300px', height: '200px' }}>
+        <Slides id="sample_photo" />
+      </div>
+
+
 
       <h2>Autoplay photo slides</h2>
       <div style={{ width: '300px', height: '200px' }}>
@@ -94,9 +92,9 @@ const Example = () =>
         id="sample2"
         transition="0.5s cubic-bezier(0.60,1,0.70,0) 0s"
         onPaginate={() => console.log('end')}
-      />*/}
+      />
 
-      {/* <h2>Classic browser scroll</h2>
+      <h2>Classic browser scroll</h2>
       <div style={{ width: '300px', height: '200px' }}>
         <Slides
           id="sample_photo"
@@ -104,7 +102,7 @@ const Example = () =>
           disableDrag
           Slide={Slide}
         />
-      </div> */}
+      </div>
     </div>
   );
 };

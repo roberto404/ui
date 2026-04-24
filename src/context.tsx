@@ -1,14 +1,18 @@
 import React, { createContext, useContext, Component } from "react";
+import { ApiType } from "./api";
 
 
-export let AppContext = createContext(null as any);
+type ContextType = {
+  api: ApiType
+}
+
+export let AppContext = createContext<ContextType | null>(null);
 
 export const setAppContext = (context) =>
   AppContext = context;
 
 
-if (process.env.NODE_ENV !== 'production')
-{
+if (process.env.NODE_ENV !== 'production') {
   AppContext.displayName = 'AppContext';
 }
 
@@ -16,18 +20,16 @@ if (process.env.NODE_ENV !== 'production')
  * @example
  * const { register } = useAppContext(); 
  */
-export function useAppContext()
-{
+export function useAppContext<T>(): T {
   const contextValue = useContext(AppContext);
 
-  if (process.env.NODE_ENV !== 'production' && !contextValue)
-  {
+  if (process.env.NODE_ENV !== 'production' && !contextValue) {
     throw new Error(
       'could not find app context value; please ensure the component is wrapped in a <Provider>'
     );
   }
 
-  return contextValue;
+  return contextValue as T;
 }
 
 
@@ -38,11 +40,9 @@ export function useAppContext()
  */
 export let mergedContextsValue: any;
 
-const setValue = (newValues) =>
-{
+const setValue = (newValues) => {
   for (let key in newValues) {
-    if (['reset', 'setValue'].indexOf(key) === -1 && newValues.hasOwnProperty(key))
-    {
+    if (['reset', 'setValue'].indexOf(key) === -1 && newValues.hasOwnProperty(key)) {
       mergedContextsValue[key] = newValues[key];
     }
   }
@@ -53,8 +53,8 @@ const reset = () => {
   // Keep the setValue and reset methods attached always 
   // to update the values of contexts to be merged
   mergedContextsValue = {
-      setValue,
-      reset
+    setValue,
+    reset
   };
 };
 
@@ -71,8 +71,7 @@ export const setMergedContexts = (create) =>
 /**
  * Create Element with Provider
  */
-const processContexts = (contexts: any[], ComponentToBeWrapped, props) =>
-{
+const processContexts2 = (contexts: any[], ComponentToBeWrapped, props) => {
   let ChildContext = () => (
     <MergedContexts.Provider value={mergedContextsValue}>
       <ComponentToBeWrapped {...props} />
@@ -82,8 +81,7 @@ const processContexts = (contexts: any[], ComponentToBeWrapped, props) =>
 
   let i = contexts.length - 1;
 
-  for (; i >= 0; i--)
-  {
+  for (; i >= 0; i--) {
     const TempContextItem = contexts[i];
     const OldChildContext = ChildContext();
 
@@ -101,6 +99,20 @@ const processContexts = (contexts: any[], ComponentToBeWrapped, props) =>
   return ChildContext();
 };
 
+const processContexts = (contexts: any[], ComponentToBeWrapped, props) => {
+  let i = contexts.length - 1;
+
+  for (; i >= 0; i--) {
+    mergedContextsValue.setValue(contexts[i]._currentValue)
+  }
+
+  return (
+    <MergedContexts.Provider value={mergedContextsValue}>
+      <ComponentToBeWrapped {...props} />
+    </MergedContexts.Provider>
+  )
+};
+
 
 /**
 * This HOC helps in using values of multiple contexts in a "Class Component".
@@ -114,12 +126,9 @@ const processContexts = (contexts: any[], ComponentToBeWrapped, props) =>
 * 
 * @returns { Component }
 */
-export const bindContexts = (ComponentToBeWrapped, contexts: any[]) =>
-{
-  return class WrappedComponent extends Component<any, any>
-  {
-    render()
-    {
+export const bindContexts = (ComponentToBeWrapped, contexts: any[]) => {
+  return class WrappedComponent extends Component<any, any> {
+    render() {
       mergedContextsValue.reset();
       const ProcessedContexts = processContexts(contexts, ComponentToBeWrapped, this.props);
       return ProcessedContexts;

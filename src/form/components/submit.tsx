@@ -15,7 +15,7 @@ import { removeRecord, setData } from '../../grid/actions';
 
 /* !- Constants */
 
-import { FORM_ERRORS_KEY } from '../constants';
+import { FORM_ERRORS_KEY, FORM_SCHEME_KEY } from '../constants';
 import { MODAL_PROPS } from '../../layer/constants';
 import { useIntl } from 'react-intl';
 
@@ -71,38 +71,33 @@ type PropTypes = Partial<typeof defaultProps> &
 * <Submit label="button.submit" />
 *
 */
-const Submit = (props: PropTypes) =>
-{
+const Submit = (props: PropTypes) => {
   const formContext = useContext(FormContext);
   const context = useAppContext();
-  const dispatch  = useDispatch();
+  const dispatch = useDispatch();
   const intl = useIntl();
 
   const id = props.id || formContext.form;
   const api = props.api || context.api;
 
-  if (!id && !props.onClick)
-  {
+  if (!id && !props.onClick) {
     throw new Error('Id not defined');
   }
 
-  if (!api && !props.onClick)
-  {
+  if (!api && !props.onClick) {
     throw new Error('Api not defined.');
   }
 
-  const onClickButtonHandler = (event) =>
-  {
+  const onClickButtonHandler = (event) => {
+
     event.preventDefault();
 
     const onClick = props.onClick || context.onClick;
 
-    if (onClick)
-    {
+    if (onClick) {
       const stopEvent = onClick(event);
 
-      if (stopEvent)
-      {
+      if (stopEvent) {
         return;
       }
     }
@@ -111,47 +106,42 @@ const Submit = (props: PropTypes) =>
     const onFinish = props.onFinish || formContext.onFinish;
     const onError = props.onError || formContext.onError;
 
+    const form = context.store.getState().form || {};
+
     // start
     //
     onStart();
 
-    const form = context.store.getState().form || {};
     let errors = {};
 
-    if (form[id] && form[id][FORM_ERRORS_KEY])
-    {
+    if (form[id] && form[id][FORM_ERRORS_KEY]) {
       errors = form[id][FORM_ERRORS_KEY];
     }
 
-    if (isEmpty(errors))
-    {
+    if (isEmpty(errors)) {
       api({
         method: props.method || id,
         payload: reduce(
           form[id],
-          (results, item, index) => index.indexOf('_') === 0 ? results : { ...results, [index]: item },
+          (results, item, index) => [FORM_ERRORS_KEY, FORM_SCHEME_KEY].indexOf(index) !== -1 ? results : { ...results, [index]: item },
           {},
         ),
       })
-        .then((response) =>
-        {
+        .then((response) => {
           onFinish(response);
         });
     }
-    else
-    {
+    else {
       onError(errors);
     }
   }
 
-  const onDelete = () =>
-  { 
+  const onDelete = () => {
     dispatch(preload());
 
     const state = context.store.getState().form[id];
 
-    if (!state || !state.id)
-    {
+    if (!state || !state.id) {
       dispatch(close());
       return;
     }
@@ -160,43 +150,35 @@ const Submit = (props: PropTypes) =>
       url: `${(props.method || id)}/${state.id}`,
       method: 'delete',
     })
-      .then((response) =>
-      {
-        if (response.status === 'SUCCESS')
-        {
-          if (Array.isArray(response.records))
-          {
+      .then((response) => {
+        if (response.status === 'SUCCESS') {
+          if (Array.isArray(response.records)) {
             dispatch(setData(response.records, undefined, id));
           }
-          else
-          {
+          else {
             dispatch(removeRecord(response.records, id));
           }
           dispatch(formFlush(id));
-          dispatch(close());  
+          dispatch(close());
 
           return;
         }
 
-        if (response.modal)
-        {
-            dispatch(modal(response.modal));
+        if (response.modal) {
+          dispatch(modal(response.modal));
         }
-        else
-        {
+        else {
           throw new Error('Wrong response on delete');
         }
-      });    
+      });
   }
 
-  const onDeleteHandler = (event) =>
-  {
+  const onDeleteHandler = (event) => {
     event.preventDefault();
 
     const modalProps = MODAL_PROPS.delete(onDelete);
 
-    if (intl)
-    {
+    if (intl) {
       modalProps.title = intl.formatMessage({ id: modalProps.title });
       modalProps.content = intl.formatMessage({ id: modalProps.content });
       modalProps.button.title = intl.formatMessage({ id: modalProps.button.title });
@@ -206,8 +188,7 @@ const Submit = (props: PropTypes) =>
     dispatch(modal(modalProps));
   }
 
-  if (props.children)
-  {
+  if (props.children) {
     return React.cloneElement(
       props.children,
       {

@@ -25,24 +25,18 @@ const defaultProps =
   id: 'dropdownGroupByFilter',
   label: '',
   placeholder: '',
-  reducer: (result, record, id) =>
-  {
-    if (Array.isArray(record[id]))
-    {
-      record[id].forEach((field) =>
-      {
-        if (result.indexOf(field) === -1)
-        {
+  reducer: (result, record, id) => {
+    if (Array.isArray(record[id])) {
+      record[id].forEach((field) => {
+        if (result.indexOf(field) === -1) {
           result.push(field);
         }
       });
     }
-    else if (['string', 'number'].indexOf(typeof record[id]) !== -1)
-    {
+    else if (['string', 'number'].indexOf(typeof record[id]) !== -1) {
       const value = record[id].toString();
 
-      if (result.indexOf(value) === -1)
-      {
+      if (result.indexOf(value) === -1) {
         result.push(value);
       }
     }
@@ -78,8 +72,8 @@ type PropTypes = Partial<typeof defaultProps> &
   ?grid="robot"
 />
 */
-const GridSelectGroupBy = (props: PropTypes) =>
-{
+const GridSelectGroupBy = (props: PropTypes) => {
+
   const { id, reducer } = props;
 
   const context = useContext(GridContext);
@@ -87,10 +81,10 @@ const GridSelectGroupBy = (props: PropTypes) =>
   const store = useStore();
 
 
-  const fetchData = () =>
-  {
+  const fetchData = () => {
+
     const grid = store.getState().grid[context.grid] || {};
-    const helper = props.helper || grid.helper?.[id];
+    const helper = props.helper || grid.helper?.[id] || [];
 
     return (
       reduce(
@@ -98,15 +92,14 @@ const GridSelectGroupBy = (props: PropTypes) =>
         (result, record) => reducer(result, record, id),
         [],
       )
-      .map(
-        (item) =>
-        {
-          const title = helper.find(({ id }) => id.toString() === item.toString())?.title || item;
+        .map(
+          (item) => {
+            const title = helper.find(({ id }) => id.toString() === item.toString())?.title || item;
 
-          return { id: item, title };
-        },
-      )
-      .sort((a, b) => a.title.localeCompare(b.title))
+            return { id: item, title };
+          },
+        )
+        .sort((a, b) => a.title.localeCompare(b.title))
     );
   };
 

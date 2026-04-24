@@ -1,5 +1,6 @@
 export const FORM_ID = 'visible_columns';
-export const FORM_PREFIX = 'grid@'
+export const FORM_PREFIX = 'grid@';
+export const COL_POSTFIX = '@col';
 
 export default {
   FORM_ID,

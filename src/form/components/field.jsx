@@ -91,10 +91,9 @@ export const DEFAULT_FIELD_PROPS =
   }
  }
  */
-const CollectionItem = (props) => ({ onChange, record, index }) =>
-{
-  const onChangeHandler = ({ id, value }) =>
-  {
+export const CollectionItem = (props) => ({ onChange, record, index }) => {
+
+  const onChangeHandler = ({ id, value }) => {
     const collectionId = id.substring(id.indexOf('#') + 1);
     onChange({ ...record, [collectionId]: value });
   };
@@ -133,16 +132,16 @@ const CollectionItem = (props) => ({ onChange, record, index }) =>
     regexp: '[0-9]*',
   },
  */
-const Field = (props) =>
-{
+const Field = (props) => {
+
   let fieldProps = { ...(DEFAULT_FIELD_PROPS[(props.component || '').toString()] || props) };
 
   const { component } = fieldProps;
 
   if (component && Fields[component])
   {
-    if (component === 'Collection')
-    {
+    if (component === 'Collection') {
+
       const fields = fieldProps.fields;
 
       fieldProps.UI = CollectionItem({ ...fieldProps });
@@ -170,7 +169,7 @@ const Field = (props) =>
     )
   }
 
-  return <div />
+  return <></>;
 };
 
 /**

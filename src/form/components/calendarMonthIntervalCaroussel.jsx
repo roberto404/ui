@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch, useStore } from 'react-redux';
 import moment from 'moment';
 import { useAppContext, AppContext } from '../../context';
 
@@ -31,8 +31,7 @@ import { DATE_FORMAT_HTML5, isDateL, isDateHTML5 } from '../../calendar/constant
 /**
  * CalendarMonthInterval with caroussel pager
  */
-export const CalendarMonthIntervalCaroussel = (props) =>
-{
+export const CalendarMonthIntervalCaroussel = (props) => {
   const { store } = useAppContext();
 
   const isRealTime = props.realTime;
@@ -40,16 +39,14 @@ export const CalendarMonthIntervalCaroussel = (props) =>
   const fromId = isRealTime ? props.fromId : `${props.fromId}@${props.id}`;
   const toId = isRealTime ? props.toId : `${props.toId}@${props.id}`;
 
-  const onClickFlushButtonHandler = (event) =>
-  {
+  const onClickFlushButtonHandler = (event) => {
     store.dispatch(unsetValues({ [fromId]: undefined, [toId]: undefined }));
   }
 
   /**
    * Invoke when click non-RealTime button
    */
-  const onClickApplyButtonHandler = (event) =>
-  {
+  const onClickApplyButtonHandler = (event) => {
     const form = store.getState().form;
 
     const fromIdValue = form[fromId];
@@ -57,8 +54,7 @@ export const CalendarMonthIntervalCaroussel = (props) =>
 
     const values = { [props.fromId]: fromIdValue, [props.toId]: toIdValue };
 
-    if (props.onClickApplyButton(event, values, props) !== false)
-    {
+    if (props.onClickApplyButton(event, values, props) !== false) {
       event.preventDefault();
       store.dispatch(setValues(values));
     }
@@ -118,7 +114,7 @@ export const CalendarMonthIntervalCaroussel = (props) =>
           stateFormat={value => isDateHTML5(value) ? moment(value).format('l') : value}
           prefix={<IconCalendar className="fill-gray" />}
           className="prefix-inside"
-          // tabIndex="-1"
+        // tabIndex="-1"
         />
         <DynamicCaroussel
           id={fromId}
@@ -133,7 +129,7 @@ export const CalendarMonthIntervalCaroussel = (props) =>
           stateFormat={value => isDateHTML5(value) ? moment(value).format('l') : value}
           prefix={<IconCalendar className="fill-gray" />}
           className="prefix-inside"
-          // tabIndex="-2"
+        // tabIndex="-2"
         />
         <DynamicCaroussel
           id={toId}
@@ -148,11 +144,11 @@ export const CalendarMonthIntervalCaroussel = (props) =>
         >
           {props.flushLabel}
         </div>
-        { isRealTime === false &&
-        <button className="inline-block green w-auto" onClick={onClickApplyButtonHandler}>
-          <IconDone />
-          <span>{props.applyLabel}</span>
-        </button>
+        {isRealTime === false &&
+          <button className="inline-block green w-auto" onClick={onClickApplyButtonHandler}>
+            <IconDone />
+            <span>{props.applyLabel}</span>
+          </button>
         }
       </div>
     </div>
@@ -182,8 +178,7 @@ CalendarMonthIntervalCaroussel.propTypes =
 CalendarMonthIntervalCaroussel.defaultProps =
 {
   id: 'calendarMonthCaroussel',
-  onChange: () =>
-  {},
+  onChange: () => { },
   realTime: true,
   flushLabel: 'Clear settings',
   applyLabel: 'Apply',
@@ -192,24 +187,12 @@ CalendarMonthIntervalCaroussel.defaultProps =
 };
 
 
-/**
- * CalendarMonthIntervalCarousselButton connected data.
- * for button value updating
- */
-const mapStateToProps = ({ form }, { fromId, toId }) => ({
-  start: form[fromId],
-  end: form[toId],
-});
 
-
-const simplifyDateInterval = (fromDate, toDate) =>
-{
-  if (fromDate.format('YYYY') !== toDate.format('YYYY'))
-  {
+const simplifyDateInterval = (fromDate, toDate) => {
+  if (fromDate.format('YYYY') !== toDate.format('YYYY')) {
     return `${moment(fromDate, DATE_FORMAT_HTML5).format('ll')} - ${moment(toDate, DATE_FORMAT_HTML5).format('ll')}`;
   }
-  else if(fromDate.format('M') !== toDate.format('M'))
-  {
+  else if (fromDate.format('M') !== toDate.format('M')) {
     return `${fromDate.format('YYYY')}. ${moment(fromDate, DATE_FORMAT_HTML5).format('MMM. D')} - ${moment(toDate, DATE_FORMAT_HTML5).format('MMM. Do')}`;
   }
 
@@ -219,29 +202,54 @@ const simplifyDateInterval = (fromDate, toDate) =>
 /**
  * Button invoke CalendarMonthIntervalCaroussel on popover
  */
-export const CalendarMonthIntervalCarousselButton = connect(mapStateToProps, { close })((props) =>
-{
-  const { start, end } = props;
+export const CalendarMonthIntervalCarousselButton = (props) => {
+
+  const {
+    onClickButton,
+    fromId,
+    toId,
+    id,
+    buttonClassName = "shadow outline fill-gray",
+  } = props;
+
+  const { start, end } = useSelector(({ form }) => ({
+    start: form[`${fromId}@${id}`],
+    end: form[`${toId}@${id}`],
+  }));
+
+  const dispatch = useDispatch();
+  const store = useStore();
 
   const value = isDateHTML5(start) && isDateHTML5(end) ? simplifyDateInterval(moment(start, DATE_FORMAT_HTML5), moment(end, DATE_FORMAT_HTML5)) : '';
 
+  const onClickApplyButtonHandler = () => {
+
+    dispatch(close());
+
+    if (typeof onClickButton === 'function') {
+      onClickButton({
+        start: store.getState().form[`${fromId}@${id}`],
+        end: store.getState().form[`${toId}@${id}`],
+      });
+    }
+  }
+
   return (
     <Button
-      id={props.id}
-      buttonClassName="shadow outline fill-gray"
+      buttonClassName={buttonClassName}
       {...props}
       data={{}}
 
       popover={
         <CalendarMonthIntervalCaroussel
-          onClickApplyButton={() => props.close()}
+          onClickApplyButton={onClickApplyButtonHandler}
           {...props}
         />
       }
       stateFormat={() => value}
     />
   );
-});
+};
 
 
 /**

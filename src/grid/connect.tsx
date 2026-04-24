@@ -43,8 +43,7 @@ import Connect from '../connect';
  *    onChange={(state, prevState) => console.log(state.totalPage)}
  *   />
  */
-const GridConnect = (props) =>
-{
+const GridConnect = (props) => {
   const context = useContext(GridContext);
   const dispatch = useDispatch();
 
@@ -54,7 +53,7 @@ const GridConnect = (props) =>
     <Connect
       id={id}
       store="grid"
-      listen="data"
+      listen={props.listen || "data"}
       onChangeOrder={column => dispatch(changeOrder(column, id))}
       onChangePage={nextPage => dispatch(goToPage(nextPage, id))}
       onClickCell={props.onClick || (props.children ? props.children.props.onClickCell : undefined)}

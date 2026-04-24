@@ -19,43 +19,39 @@ import IconArrowDown from '../../icon/mui/navigation/expand_more';
 import classNames from 'classnames';
 
 
-const Tags = (props) =>
-{
+const Tags = (props) => {
   const items = (props.items || []).filter(i => typeof i === 'object' && i.title);
 
   return (
-    <div className="h-center nowrap no-select">
-      {
-        items.map(({ id, title }, index) => (
-          <div className="tag gray-light mx-1/2 rounded text-line-s v-center" key={`${index}-${id}`}>
-            <span className='text-gray-dark'>{title}</span>
-            <IconClose className="w-1 h-1 fill-gray-dark pointer hover:fill-black" onClick={() => props.onClose(index)} />
-          </div>
-        ))
-      }
+
+    <div className='scroll' style={{ maxWidth: '100%' }}>
+      <div className="h-center nowrap no-select">
+        {
+          items.map(({ id, title }, index) => (
+            <div className="tag gray-light mx-1/2 rounded text-line-s v-center" key={`${index}-${id}`}>
+              <span className='text-gray-dark'>{title}</span>
+              <IconClose className="w-1 h-1 fill-gray-dark pointer hover:fill-black" onClick={() => props.onClose(index)} />
+            </div>
+          ))
+        }
+      </div>
     </div>
   )
 };
 
-export const TagsMenu = (props) =>
-{
+export const TagsMenu = (props) => {
   const { store } = useAppContext();
   const items = (props.items || []).filter(i => typeof i === 'object' && i.title);
 
-  const onClickMandatoryHandler = (a,b,c) =>
-  {
-    console.log(a,b,c);
+  const onClickMandatoryHandler = (a, b, c) => {
     store.dispatch(flush());
   }
 
-  const onClickStatusHandler = (a,b,c) =>
-  {
-    console.log(a,b,c);
+  const onClickStatusHandler = (a, b, c) => {
     store.dispatch(flush());
   }
 
-  const onClickHandler = (item, index, event) =>
-  {
+  const onClickHandler = (item, index, event) => {
     const menuItems = [
       { id: 'mandatory', title: 'Kötelező', handler: onClickMandatoryHandler },
       { id: 'status', title: 'Inaktív', handler: onClickStatusHandler },
@@ -88,8 +84,7 @@ export const TagsMenu = (props) =>
 /**
 * Autocomplete Component
 */
-class Autocomplete extends Component
-{
+class Autocomplete extends Component {
   getForm = () =>
     this.props.form || this.context.form;
 
@@ -101,55 +96,44 @@ class Autocomplete extends Component
   /* !- Handlers */
 
 
-  onChangeHandler = (value, options) =>
-  {
-    if (value.length && this.stateFormat(value).slice(-1) === ';')
-    {
+  onChangeHandler = (value, options) => {
+    if (value.length && this.stateFormat(value).slice(-1) === ';') {
       this.submitInputValue();
       return;
     }
 
-    if (typeof this.props.onChange === 'function')
-    {
+    if (typeof this.props.onChange === 'function') {
       this.props.onChange({ id: this.props.id, value }, options);
     }
-    else
-    {
-      this.context.store.dispatch(setValues({[this.props.id]: value}, this.getForm()));
+    else {
+      this.context.store.dispatch(setValues({ [this.props.id]: value }, this.getForm()));
     }
 
-    if (this.props.multiple)
-    {
+    if (this.props.multiple) {
       this.forceUpdate();
     }
   }
-  
-  onClickMenuHandler = (props) =>
-  {
+
+  onClickMenuHandler = (props) => {
     let value = props.title;
 
-    if (typeof this.props.onSelect === 'function')
-    {
+    if (typeof this.props.onSelect === 'function') {
       const respond = this.props.onSelect(props, { target: this });
 
-      if (respond === false)
-      {
+      if (respond === false) {
         return;
       }
-      else if (respond)
-      {
+      else if (respond) {
         value = respond;
       }
     }
 
-    if (this.props.multiple)
-    {
+    if (this.props.multiple) {
       const item = { id: props.id, title: props.title };
 
       value = this.getState() || [];
 
-      if (value.length && typeof value[value.length - 1] === 'object')
-      {
+      if (value.length && typeof value[value.length - 1] === 'object') {
         value.push(item);
       }
 
@@ -161,12 +145,12 @@ class Autocomplete extends Component
     }
 
     this.context.store.dispatch(flush());
-    
+
     this.onChangeHandler(value);
   }
 
-  onBlurHandler = () =>
-  {
+  onBlurHandler = () => {
+
     this.removeShortcuts();
 
     /** Workaround:
@@ -174,15 +158,14 @@ class Autocomplete extends Component
      * 1. onBlur run fist and submit Input value and flush layer
      * 2. Menu click not will trigger
     */
-     setTimeout(() => { this.submitInputValue(); }, 100);
+    setTimeout(() => { this.submitInputValue(); }, 100);
   }
 
-  onFocusHandler = (payload, event) =>
-  {
+  onFocusHandler = (payload, event) => {
+
     this.addShortcuts();
 
-    if (event)
-    {
+    if (event) {
       this.showMenu(payload, event);
     }
   }
@@ -190,47 +173,42 @@ class Autocomplete extends Component
 
   /**
    */
-  onChangeInputHandler = (payload, { event }) =>
-  {
-    this.onFocusHandler(payload, event);
+  onChangeInputHandler = (payload, { event }) => {
+    this.showMenu(payload, event);
     this.onChangeHandler(payload.value);
   }
 
-  onClickRemoveValueHandler = (index) =>
-  {
+  onClickRemoveValueHandler = (index) => {
     const stateValue = this.getState();
 
     this.onChangeHandler([...stateValue.slice(0, index), ...stateValue.slice(index + 1)]);
   }
 
-  onEnterListener = (event) =>
-  {
+  onEnterListener = (event) => {
     event.preventDefault();
-    this.submitInputValue();    
+    this.submitInputValue();
   }
 
-  onBackspaceListener = (event) =>
-  {
+  onBackspaceListener = (event) => {
     const state = this.getState();
     const inputState = this.stateFormat(state);
 
-    if (!inputState && state.length)
-    {
+    if (!inputState && state.length) {
       event.preventDefault();
 
       this.context.store.dispatch(flush());
-      this.onChangeHandler(state.slice(0, -1)); 
+      this.onChangeHandler(state.slice(0, -1));
     }
   }
 
 
-  showMenu = ({ value }, event) =>
-  {
+  showMenu = ({ value }, event) => {
+
     const state = this.getState();
+
     let inputValue = value;
-    
-    if (this.props.multiple && inputValue)
-    {
+
+    if (this.props.multiple && inputValue) {
       inputValue = typeof value[value.length - 1] === 'string' ? value[value.length - 1] : '';
     }
 
@@ -243,23 +221,19 @@ class Autocomplete extends Component
       .slice(0, 10)
       .map(i => ({ handler: this.onClickMenuHandler, ...i }));
 
-    if (items.length)
-    {
+    if (items.length) {
       this.context.store.dispatch(menu({ items }, event));
     }
-    else
-    {
+    else {
       this.context.store.dispatch(flush());
     }
   }
 
 
-  addShortcuts = () =>
-  {
-    if (this.context.addShortcuts)
-    {
-      if (this.props.multiple)
-      {
+  addShortcuts = () => {
+
+    if (this.context.addShortcuts) {
+      if (this.props.multiple) {
         this.removeShortcuts(); // force Update always invoke focus event
 
         this.context.addShortcuts(
@@ -281,10 +255,8 @@ class Autocomplete extends Component
     }
   }
 
-  removeShortcuts = () =>
-  {
-    if (this.context.removeShortcuts)
-    {
+  removeShortcuts = () => {
+    if (this.context.removeShortcuts) {
       this.context.removeShortcuts('enter');
     }
   }
@@ -294,29 +266,23 @@ class Autocomplete extends Component
    * 
    * In case of multiple, value contains only input field value
    */
-  format = (value, reduce) =>
-  {
-    if (this.props.multiple)
-    {
+  format = (value, reduce) => {
+    if (this.props.multiple) {
       const stateValue = this.getState();
 
       // empty state
-      if (!stateValue || !Array.isArray(stateValue))
-      {
+      if (!stateValue || !Array.isArray(stateValue)) {
         return [value];
       }
 
       const lastValue = stateValue[stateValue.length - 1];
 
       // state is not empty (visible some tags) and new word first char on input field
-      if (typeof value === 'string')
-      {
-        if (typeof lastValue === 'object' && lastValue.title)
-        {
+      if (typeof value === 'string') {
+        if (typeof lastValue === 'object' && lastValue.title) {
           stateValue.push(value);
         }
-        else
-        {
+        else {
           stateValue.pop();
           stateValue.push(value);
         }
@@ -327,32 +293,27 @@ class Autocomplete extends Component
 
     return value;
   }
-  
-  stateFormat = (value) =>
-  {
-    if (this.props.multiple)
-    {
+
+  stateFormat = (value) => {
+    if (this.props.multiple) {
       const lastValue = value[value.length - 1];
 
-      return typeof lastValue === 'object' && lastValue.title ? '' : lastValue;
+      return typeof lastValue === 'object' && typeof lastValue.title !== undefined ? '' : lastValue;
     }
 
     return value;
   }
 
-  submitInputValue = () =>
-  {
+  submitInputValue = () => {
     const state = this.getState();
     const inputState = this.stateFormat(state);
 
-    if (inputState)
-    {
-      if (this.props.multiple)
-      {
+    if (inputState) {
+      if (this.props.multiple) {
         // remove ';' char
         const title = inputState.slice(0, (inputState.slice(-1) === ';' ? -1 : undefined));
         const item = { id: title, title };
-  
+
         state[state.length - 1] = item;
       }
 
@@ -364,18 +325,17 @@ class Autocomplete extends Component
 
   /* !- Renders */
 
-  render()
-  {
+  render() {
     const state = this.getState();
     const Prefix = this.props.tags;
 
     return (
       <Input
-        { ...this.props }
+        {...this.props}
         className={classNames({
           [this.props.className]: true,
           "prefix-join": this.props.multiple,
-          "postfix-inside": this.props.data.length,
+          "postfix-inside prefix-80": this.props.data.length,
         })}
         onChange={this.onChangeInputHandler}
         onFocus={this.onFocusHandler}
@@ -384,10 +344,10 @@ class Autocomplete extends Component
         stateFormat={this.stateFormat}
         prefix={
           this.props.multiple ?
-          <Prefix items={state} onClose={this.onClickRemoveValueHandler} /> : this.props.prefix
+            <Prefix items={state} onClose={this.onClickRemoveValueHandler} /> : this.props.prefix
         }
         postfix={
-          this.props.postfix || (this.props.data.length ? <IconArrowDown className="w-1 h-1 fill-gray" onClick={e => this.showMenu({}, e)}/> : undefined)
+          this.props.postfix || (this.props.data.length ? <IconArrowDown className="w-1 h-1 fill-gray" onClick={e => this.showMenu({}, e)} /> : undefined)
         }
       />
     );

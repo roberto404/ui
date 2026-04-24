@@ -22,13 +22,13 @@ import ViewTabButtons from './viewButtons';
 import { PropTypes as ViewTabButtonsTypes } from './viewButtons';
 
 type ItemType =
-{
-  title: string,
-  children: JSX.Element,
-  status: 0 | 1,
-}
+  {
+    title: string,
+    children: JSX.Element,
+    status: 0 | 1,
+  }
 
-const defaultProps = 
+const defaultProps =
 {
   id: 'tab',
   items: [
@@ -40,23 +40,23 @@ const defaultProps =
 };
 
 type PropTypes =
-{
-  /**
-   * Tab items
-   */
-  items: ItemType[],
-  className?: string,
-  classNameButtons?: string,
-  classNameButton?: ViewTabButtonsTypes['classNameButton'],
-  classNameButtonActive?: ViewTabButtonsTypes['classNameButton'],
-  classNameChildren?: string,
-  showAllLabel?: ViewTabButtonsTypes['showAllLabel'],
-  /**
-   * Invoke view changed
-   */
-  onChange?: () => void,
+  {
+    /**
+     * Tab items
+     */
+    items: ItemType[],
+    className?: string,
+    classNameButtons?: string,
+    classNameButton?: ViewTabButtonsTypes['classNameButton'],
+    classNameButtonActive?: ViewTabButtonsTypes['classNameButton'],
+    classNameChildren?: string,
+    showAllLabel?: ViewTabButtonsTypes['showAllLabel'],
+    /**
+     * Invoke view changed
+     */
+    onChange?: () => void,
 
-} & typeof defaultProps;
+  } & typeof defaultProps;
 
 /**
  * Contains: TabButtons and View by items
@@ -71,39 +71,41 @@ const ViewTab = ({
   classNameChildren,
   showAllLabel,
   onChange,
-}: PropTypes) =>
-(
-  <div className={className}>
+}: PropTypes) => {
 
-    {/* <div>{JSON.stringify(items)}</div> */}
+  return (
+    <div className={className}>
 
-    <ViewTabButtons
-      id={id}
-      className={classNameButtons}
-      classNameButton={classNameButton}
-      classNameButtonActive={classNameButtonActive}
-      showAllLabel={showAllLabel}
-    />
+      {/* <div>{JSON.stringify(items)}</div> */}
 
-    <View
-      settings={{
-        active: id,
-        groups: {
-          [id]: items.map((item, n) => ({ id: `${id}-${n}`, pos: n, status: item.status, title: item.title }))
-        }
-      }}
-      className={classNameChildren}
-      nested
-      onChange={onChange}
-    >
-      { items.map((item, n) => (
-        <div key={n} data-view={`${id}-${n}`}>
-          {item.children}
-        </div>
-      )) }
-    </View>
-  </div>
-);
+      <ViewTabButtons
+        id={id}
+        className={classNameButtons}
+        classNameButton={classNameButton}
+        classNameButtonActive={classNameButtonActive}
+        showAllLabel={showAllLabel}
+      />
+
+      <View
+        settings={{
+          active: id,
+          groups: {
+            [id]: items.map((item, n) => ({ id: `${id}-${n}`, pos: n, status: item.status, title: item.title }))
+          }
+        }}
+        className={classNameChildren}
+        // nested
+        onChange={onChange}
+      >
+        {items.map((item, n) => (
+          <div key={n} data-view={`${id}-${n}`}>
+            {item.children}
+          </div>
+        ))}
+      </View>
+    </div>
+  )
+};
 
 ViewTab.defaultProps = defaultProps;
 

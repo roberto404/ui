@@ -8,7 +8,7 @@ import React from 'react';
 
 // import FormBasic from './form/basic';
 // import FormFields from './form/fields';
-import FormAutocomplete from './form/autocomplete';
+// import FormAutocomplete from './form/autocomplete';
 // import FormFieldsStyle from './form/fieldsStyle';
 // import FormFormat from './form/format';
 // import FormSubmit from './form/submit';
@@ -18,7 +18,7 @@ import FormAutocomplete from './form/autocomplete';
 // import FormCollection from './form/collection';
 // import FormSlider from './form/slider';
 // import FormDropzone from './form/dropzone';
-// import FormCalendar from './form/calendar';
+import FormCalendar from './form/calendar';
 // import FormToggle from './form/toggle';
 // import FormConfig from './form/config';
 // import FormWysiwyg from './form/wysiwyg';
@@ -26,7 +26,8 @@ import FormAutocomplete from './form/autocomplete';
 
 /* !- Example: Grid */
 
-// import GridStatic from './grid/static';
+import GridStatic from './grid/static';
+import GridSummary from './grid/summary';
 // import GridConnect from './grid/connect';
 // import GridDynamic from './grid/dynamic';
 // import GridPaginate from './grid/paginate';
@@ -37,6 +38,7 @@ import FormAutocomplete from './form/autocomplete';
 // import GridList from './grid/list';
 // import GridCasual from './grid/casual';
 // import GridFilelist from './grid/filelist';
+// import GridFileIconlist from './grid/fileIconList';
 // import GridPivotTable from './grid/pivotTable';
 // import GridPivotTableComplex from './grid/pivotTableComplex';
 // import GridWithoutGrid from './grid/withoutGrid';
@@ -44,27 +46,28 @@ import FormAutocomplete from './form/autocomplete';
 // import GridNestedListMenu from './grid/nestedListMenu';
 // import GridNestedListAccordion from './grid/nestedListAccordion';
 // import GridSkeleton from './grid/skeleton';
+// import GridFreezePanes from './grid/freezePanes';
 
 
 /* !- Example: Card */
 
-// import CardCard from './card/card';
+import CardCard from './card/card';
 // import CardMarker from './card/marker';
 // import CardResponsible from './card/responsible';
 
 
 /* !- Example: Layer */
 
-// import LayerActions from './layer/actions';
+import LayerActions from './layer/actions';
 // import LayerModals from './layer/modals';
 // import LayerPopover from './layer/popover';
 
 
 /* !- Example: Caroussel */
 
-// import CarousselSlides from './caroussel/slides';
+import CarousselSlides from './caroussel/slides';
 // import CarousselCaroussel from './caroussel/caroussel';
-// import CarousselDynamic from './caroussel/dynamic';
+import CarousselDynamic from './caroussel/dynamic';
 
 
 
@@ -73,19 +76,25 @@ import FormAutocomplete from './form/autocomplete';
 // import CalendarStatic from './calendar/static';
 // import CalendarWeek from './calendar/week';
 // import CalendarDynamic from './calendar/dynamic';
-// import CalendarCaroussel from './calendar/caroussel';
+import CalendarCaroussel from './calendar/caroussel';
 // import CalendarFilters from './calendar/filters';
 
 
 /* !- Example: Chart */
 
-// import ChartCoordinate from './chart/coordinate';
-// import ChartLine from './chart/line';
+import ChartCoordinate from './chart/coordinate';
+import ChartLine from './chart/line';
 // import ChartComplex from './chart/complex';
-// import ChartBar from './chart/barChart';
+import ChartBar from './chart/barChart';
 // import ChartDonut from './chart/donut';
 // import ChartPie from './chart/pie';
 // import ChartGithub from './chart/github';
+import ChartBoxPlot from './chart/boxPlot';
+
+
+/* !- Example: Print */
+
+import PrintTable from './print/table';
 
 
 /* !- Example: Stepper */
@@ -96,10 +105,15 @@ import FormAutocomplete from './form/autocomplete';
 
 /* !- Example: View */
 
-// import ViewBasic from './view/basic';
-// import ViewTab from './view/tab';
-// import ViewNested from './view/nested';
-// import ViewMultiple from './view/multiple';
+import ViewBasic from './view/basic';
+import ViewTab from './view/tab';
+import ViewNested from './view/nested';
+import ViewMultiple from './view/multiple';
+
+
+/* !- Example: Notification */
+
+import Notification from './notification';
 
 
 /* !- Example: Standalone */
@@ -107,8 +121,34 @@ import FormAutocomplete from './form/autocomplete';
 // import Resize from './resize';
 // import Connect from './connect';
 
+import IconMui from './icon/mui';
+
 export default {
   form: {
-    fields: FormAutocomplete,
+    // fields: FormCalendar,
+    // fields: CalendarCaroussel,
+    // fields: CarousselSlides,
+    // fields: CarousselDynamic,
+    // fields: ChartCoordinate,
+    // fields: GridSummary,
+    // fields: ChartLine,
+    // fields: ChartGithub,
+    // fields: ChartBoxPlot,
+    // fields: ChartBar,
+    // fields: Notification,
+    // fields: GridStatic,
+    // fields: GridNestedListAccordion,
+    // fields: CalendarWeek,
+    // fields: GridFreezePanes,
+    // fields: CardCard,
+    // fields: IconMui,
+    // fields: FormCollection,
+    // fields: ViewBasic,
+    // fields: ViewTab,
+    // fields: ViewNested,
+    // fields: ViewMultiple,
+    // fields: GridFileIconlist,
+    // fields: FormDropzone,
+    fields: LayerActions,
   },
 };

@@ -7,7 +7,9 @@ import Form,
   CalendarMonthButton,
   CalendarMonth,
 }
-from '../../../src/form/intl';
+  from '../../../src/form/intl';
+
+import { CalendarMonthIntervalCarousselButton } from '../../../src/form/components/calendarMonthIntervalCaroussel';
 
 import IconFavorite from '../../../src/icon/mui/action/favorite';
 
@@ -23,6 +25,17 @@ const ExampleForm = () =>
     id="example"
     className="p-2"
   >
+    <CalendarMonthIntervalCarousselButton
+      id="preriodCreatedDateTime"
+      fromId="fromCreatedDateTime"
+      toId="toCreatedDateTime"
+      label="Időszak"
+      placeholder="teljes"
+      realTime={false}
+      flushLabel="Naptár beállítás törlése"
+      applyLabel="Beállítás"
+    />
+
     <div style={{ width: '300px' }}>
       <CalendarMonth
         id="dateOfBirth"
@@ -46,7 +59,7 @@ const ExampleForm = () =>
       // format={value => value ? moment(value, DATE_FORMAT_HTML5).format(DATE_FORMAT) : ''}
       // min="2020-08-10"
       // max="2020-10-20"
-      validator={timestamp => [1,3,5].indexOf(new Date(timestamp).getDay()) === -1}
+      validator={timestamp => [1, 3, 5].indexOf(new Date(timestamp).getDay()) === -1}
       resetLabel="reset"
     />
 
@@ -55,7 +68,7 @@ const ExampleForm = () =>
       format={formatDate}
       // regexp="^202[0-9]{1}-1?[0-9]{1}-[1-3]?[0-9]{1}"
       regexp="^((2)|(20)|(202)|(202[0-9]{1})|(202[0-9]{1}-)|(202[0-9]{1}-1?[0-9]{1})|(202[0-9]{1}-1?[0-9]{1}-)|(202[0-9]{1}-1?[0-9]{1}-[1-3]?[0-9]{1}))$"
-      // 2021-12-12
+    // 2021-12-12
     />
 
   </Form>

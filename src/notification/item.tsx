@@ -20,19 +20,26 @@ import NotificationItemWrapper from './itemWrapper';
 import { Templates } from './templates';
 import { useDispatch } from 'react-redux';
 
+export type Button = {
+  title: React.ReactNode,
+  handler?: (onClose: () => void) => void,
+  className?: string,
+};
+
 export type PropTypes = {
-  id: string | number,
-  title: string,
-  caption?: string,
+  id?: string | number,
+  title: React.ReactNode,
+  caption?: React.ReactNode,
   color?: 'blue' | 'yellow' | 'red' | 'green';
   Icon?: React.FC;
-  buttons?: any[];
+  buttons?: Button[];
   template?: Templates,
   payload?: {},
   children?: React.ReactNode,
   componentKey?: string,
-  disableClose: boolean;
-  closeOnChangeLocation: boolean;
+  disableClose?: boolean;
+  closeOnChangeLocation?: boolean;
+  autoClose?: boolean | number;
 };
 
 
@@ -110,7 +117,16 @@ const NotificationItem = (props: PropTypes) => {
               {buttons.map((button, i) => (
                 <div
                   key={i}
-                  className={`pointer text-s text-${color}-dark p-1/2 px-1 border rounded border-${color}-dark hover:bg-${color}-dark hover:text-white`}
+                  className={button.className || `button outline red py-1/2 ${color}`}
+                  onClick={() => {
+                    if (button.handler) {
+                      button.handler(onClose);
+                    }
+
+                    if (props.autoClose !== false) {
+                      onClose();
+                    }
+                  }}
                 >
                   {button.title}
                 </div>
@@ -119,6 +135,8 @@ const NotificationItem = (props: PropTypes) => {
           }
 
         </div>
+
+
       </div>
     </NotificationItemWrapper>
   );

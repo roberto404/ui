@@ -1,12 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
 import formatThousand from '@1studio/utils/string/formatThousand';
 import moment from 'moment';
 
 /* !- Redux Actions */
 
-import { setValues } from '../../../src/form/actions';
+import { setValues } from '@1studio/ui/form/actions';
 
 
 /* !- React Elements */
@@ -20,26 +19,27 @@ import Form,
   Collection,
   CalendarMonthButton,
 }
-from '../../../src/form/intl';
+from '@1studio/ui/form';
 
-import { CollectionItem, NestedCollectionItem } from '../../../src/grid/pure/gridSearch';
+import { CollectionItem, NestedCollectionItem } from '@1studio/ui/grid/components/gridSearch';
 
-import Grid from '../../../src/grid/pure/grid';
+import Grid from '@1studio/ui/grid/components/grid';
 
-import Connect from '../../../src/form/connect';
+import Connect from '@1studio/ui/form/connect';
 
 
 
 /* !- Constants */
 
-import { DATE_FORMAT } from '../../../src/calendar/constants';
+import { DATE_FORMAT } from '@1studio/ui/calendar/constants';
+import { useDispatch } from 'react-redux';
 
 const example2GridValue = 
   [{"id":"141171","invoiceNumber":"T007725\/21","invoicingDate":"2021-10-19","paymentDate":"2021-10-17","priceGross":"15000"},{"id":"141851","invoiceNumber":"T007956\/21","invoicingDate":"2021-10-27","paymentDate":"2021-10-26","priceGross":"18850"}];
 
 
-const CustomCollectionItem = ({ onChange, record, fields }) =>
-{
+export const CustomCollectionItem = ({ onChange, record, fields }) => {
+
   const onChangeHandler = ({ id, value }) =>
   {
     const collectionId = id.substring(id.indexOf('#') + 1);
@@ -191,6 +191,7 @@ const Example1 = ({ record, index, id, fields, onChange }) =>
     </div>
   );
 }
+
 export const Example2 = ({ record, index, id, fields, onChange }) =>
 {
   const onChangeHandler = ({ id, value }) =>
@@ -258,22 +259,24 @@ export const Example2 = ({ record, index, id, fields, onChange }) =>
 /**
  * [Example description]
  */
-const Example = (props, { store }) =>
+const Example = () =>
 {
-  store.dispatch(setValues({
-    collection: [
-      { id: 1, title: 'foo' },
-      { id: 2, title: 'bar' },
-    ],
-    collection2: [
-      { field: 'name', operator: '=', value: 'Á' },
-      { field: 'gender', operator: '==', value: 'male' },
-      { field: 'id', operator: '<', value: '10' },
-    ],
-  }, 'example'));
+  const dispatch = useDispatch();
+
+  // dispatch(setValues({
+  //   collection: [
+  //     { id: 1, title: 'foo' },
+  //     { id: 2, title: 'bar' },
+  //   ],
+  //   collection2: [
+  //     { field: 'name', operator: '=', value: 'Á' },
+  //     { field: 'gender', operator: '==', value: 'male' },
+  //     { field: 'id', operator: '<', value: '10' },
+  //   ],
+  // }, 'example'));
 
 
-
+ 
   return (
     <Form
       id="example"
@@ -282,14 +285,13 @@ const Example = (props, { store }) =>
       <h2>Default collection UI items</h2>
       <Collection
         id="collection"
-        label="Collection"
+        label="Label"
         value={[{ id: 1, title: 'foo' }]}
       />
 
       <h2>Default draggable collection</h2>
       <Collection
-        id="collection"
-        label="Collection"
+        id="collection1"
         value={[{ id: 1, title: 'foo' }]}
         draggable
       />
@@ -441,10 +443,6 @@ const Example = (props, { store }) =>
       
     </Form>
   );
-};
-
-Example.contextTypes = {
-  store: PropTypes.object,
 };
 
 export default Example;

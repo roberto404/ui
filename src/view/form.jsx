@@ -6,27 +6,27 @@ import { connect } from 'react-redux';
 import isEmpty from 'lodash/isEmpty';
 import uniq from 'lodash/uniq';
 
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+// import {
+//   useLocation,
+//   useNavigate,
+//   useParams,
+// } from "react-router-dom";
 
-function withRouter(Component) {
-  function ComponentWithRouterProp(props) {
-    let location = useLocation();
-    let navigate = useNavigate();
-    let params = useParams();
-    return (
-      <Component
-        {...props}
-        router={{ location, navigate, params }}
-      />
-    );
-  }
+// function withRouter(Component) {
+//   function ComponentWithRouterProp(props) {
+//     let location = useLocation();
+//     let navigate = useNavigate();
+//     let params = useParams();
+//     return (
+//       <Component
+//         {...props}
+//         router={{ location, navigate, params }}
+//       />
+//     );
+//   }
 
-  return ComponentWithRouterProp;
-}
+//   return ComponentWithRouterProp;
+// }
 
 
 import Form from '../form/form';
@@ -175,7 +175,7 @@ class FormView extends Component
 
   onSuccess = () =>
   {
-    this.props.router.navigate(location.pathname.replace(/(.*)\/.*$/, "$1"));
+    // this.props.router.navigate(location.pathname.replace(/(.*)\/.*$/, "$1"));
   }
 
   onLoad = () =>
@@ -190,7 +190,7 @@ class FormView extends Component
         if (response.status !== 'SUCCESS' || !response.records)
         {
           this.props.modal(response.modal);
-          this.props.router.navigate(location.pathname.replace(/(.*)\/.*$/, "$1"), { replace: true });
+          // this.props.router.navigate(location.pathname.replace(/(.*)\/.*$/, "$1"), { replace: true });
 
           return {};
         }
@@ -338,7 +338,19 @@ FormView.contextTypes =
 // };
 
 
-export default withRouter(connect(
+// export default withRouter(connect(
+//   state => ({ form: state.form }),
+//   {
+//     validate,
+//     fetchValues,
+//     flush,
+//     close,
+//     preload,
+//     modal,
+//   },
+// )(FormView));
+
+export default connect(
   state => ({ form: state.form }),
   {
     validate,
@@ -348,4 +360,4 @@ export default withRouter(connect(
     preload,
     modal,
   },
-)(FormView));
+)(FormView);

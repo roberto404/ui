@@ -3,8 +3,7 @@ import React from 'react';
 
 /* !- React Elements */
 
-import NestedList, { Accordion } from '../../../src/grid/pure/nestedList';
-
+import NestedList, { Accordion } from '../../grid/components/nestedList';
 
 /* !- Constants */
 

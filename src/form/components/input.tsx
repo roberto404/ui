@@ -21,8 +21,7 @@ import Field from '../formField';
 *
 * @extends Field
 */
-class Input extends Field
-{
+class Input extends Field {
   /**
    * @private
    * @override
@@ -30,8 +29,7 @@ class Input extends Field
    * @param  {SytheticEvent} event
    * @return {void}
    */
-  onChangeInputHandler = (event) =>
-  {
+  onChangeInputHandler = (event) => {
     this.onChangeHandler(event.target.value, event);
   }
 
@@ -42,20 +40,19 @@ class Input extends Field
    * @override
    * @return {ReactElement}
    */
-  render()
-  {
+  render() {
     const { intl, multipleData, complete, preload } = this.props;
     const multipleDataText = () => intl ? intl.formatMessage({ id: multipleData }) : multipleData;
 
     return super.render() || (
       <div className={this.getClasses('input')}>
 
-        { this.label }
+        {this.label}
 
         <div className="h-center">
 
-          { this.state.prefix &&
-          <div className="prefix">{this.state.prefix}</div>
+          {this.state.prefix &&
+            <div className="prefix">{this.state.prefix}</div>
           }
 
           <input
@@ -67,6 +64,7 @@ class Input extends Field
             readOnly={this.props.disabled}
             maxLength={this.props.length}
             autoComplete="off"
+            aria-labelledby={this.props.id}
 
             onChange={this.onChangeInputHandler}
             onBlur={this.onBlurHandler}
@@ -75,20 +73,19 @@ class Input extends Field
               Array.isArray(this.state.value) ? multipleDataText() : this.state.placeholder
             }
 
-            ref={(ref) =>
-            {
+            ref={(ref) => {
               this.element = ref;
             }}
             data-name={this.props.name}
           />
 
-          { this.state.postfix &&
-          <div className="postfix">{this.state.postfix}</div>
+          {this.state.postfix &&
+            <div className="postfix">{this.state.postfix}</div>
           }
 
         </div>
 
-        { this.state.error &&
+        {this.state.error &&
           <div className="error">{this.state.error}</div>
         }
       </div>

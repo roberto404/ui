@@ -1,4 +1,5 @@
-import { useReducer, useEffect, EffectCallback, useRef, useState } from "react";
+import isEmpty from "lodash/isEmpty";
+import { useReducer, useEffect, EffectCallback, useRef, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 
 
@@ -33,17 +34,35 @@ export const useComponentDidMount = (effect: EffectCallback) => {
   useEffect(effect, []);
 }
 
-export const useHookUpdateProps = (callback, dependencies) => {
+/**
+ * Always returns a stable callback that sees fresh state.
+ */
+export function useFreshCallback<T extends (...args: any[]) => any>(fn: T): T {
+  const ref = useRef(fn);
 
-  const callbackRef = useRef(callback);
-
+  // Keep ref updated with latest function
   useEffect(() => {
-    callbackRef.current = callback;
-  }, [callback]);
+    ref.current = fn;
+  }, [fn]);
+
+  // Stable callback identity
+  return useCallback(((...args: any[]) => {
+    return ref.current(...args);
+  }) as T, []);
+}
+
+export const useHookUpdateProps = (fn, dependencies) => {
+
+  const ref = useRef(fn);
+
+  // Always keep ref up to date
+  useEffect(() => {
+    ref.current = fn;
+  }, [fn]);
 
   const callbackWithProps = useRef((...args) => {
-    if (callbackRef.current) {
-      callbackRef.current(...args);
+    if (ref.current) {
+      ref.current(...args);
     }
   });
 
@@ -76,6 +95,37 @@ export const useRefSelector = <T>(selector: (state: any) => T): { value: T, ref:
   }, [value]);
 
   return { value, ref };
+}
+
+/**
+ * Value is changed
+ * 
+ * @example
+ * const rawData = useSelector(state => state.grid[ID]?.rawData);
+ * const isChanged = useChanged(rawData);
+ */
+export const useChanged = (value: any, allowEmpty = false) => {
+
+  const prev = useRef(undefined);
+  const forceUpdate = useForceUpdate();
+
+  const update = (next: any) => {
+    prev.current = next;
+    forceUpdate();
+  }
+
+  if (!allowEmpty && isEmpty(value)) {
+    return [false];
+  }
+
+  if (!prev.current) {
+    prev.current = value;
+    return [false];
+  }
+
+  const changed = JSON.stringify(value) !== JSON.stringify(prev.current);
+
+  return [changed, prev.current, update];
 }
 
 /**

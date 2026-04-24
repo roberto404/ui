@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAppContext } from "./context";
 import { useDispatch } from "react-redux";
 import { modal } from "./layer/actions";
-import { ApiResponse, argsType, Status, SuccessResponse, useApiReturnType, ApiSuccessResponse } from "./apiType";
+import { ApiResponse, argsType, Status, SuccessResponse, useApiReturnType, ApiSuccessResponse, ErrorResponse } from "./apiType";
 export type { ApiResponse, argsType, SuccessResponse, useApiReturnType, ApiSuccessResponse } from "./apiType";
 export { Status } from "./apiType";
 
@@ -37,55 +37,76 @@ export const useApiSuccessContext = () => {
 };
 
 
-function useApi<T>(...args: argsType): useApiReturnType<T> {
+function useApi<T>(args: argsType<T>): useApiReturnType<T> {
 
   const { api } = useAppContext();
 
   const [data, setData] = useState<T>();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<ErrorResponse | undefined>();
 
-  const [argsChanged, setArgsChanged] = useState(undefined);
+  const [argsHash, setArgsHash] = useState<string | undefined>(undefined);
 
-  // Watch for changes in arguments
+  const isSkipped = args?.skip === true;
+
+  // Args változás figyelése
   useEffect(() => {
 
-    if (argsChanged !== JSON.stringify(args)) {
-      setArgsChanged(JSON.stringify(args));
+    if (isSkipped) {
+      setLoading(false);
+      return;
+    }
+
+    // cannot contain a function like: onLoad
+    const serialized = JSON.stringify({ url: args.url, payload: args.payload });
+
+    if (argsHash !== serialized) {
+      setArgsHash(serialized);
       setLoading(true);
       setData(undefined);
       setError(undefined);
     }
-  }, args);
 
+  }, [args]); // ⬅️ CSAK args
+
+  // API hívás
   useEffect(() => {
 
     let isMounted = true;
 
-    if (loading && argsChanged) {
-
-      api.apply(null, args).then((result) => {
-
-        if (isMounted) {
-
-          setLoading(false);
-
-          if (result.status === Status.SUCCESS) {
-            setData(result);
-          } else {
-            setError(result);
-          }
-        }
-      });
+    if (isSkipped || !loading || !argsHash) {
+      return;
     }
+
+    const { skip, ...apiArgs } = args;
+
+    api(apiArgs).then((result: ApiResponse<T>) => {
+
+      if (!isMounted) return;
+
+      setLoading(false);
+
+      if (result.status === Status.SUCCESS) {
+        setData(result);
+      } else {
+        setError(result);
+      }
+
+      if (typeof args.onLoad === 'function') {
+        args.onLoad(result);
+      }
+    });
 
     return () => {
       isMounted = false;
     };
-  }, [argsChanged]);
+
+  }, [argsHash, loading]); // ⬅️ skip NINCS
 
   return [data, loading, error];
 }
 
+
 export default useApi;
+
 

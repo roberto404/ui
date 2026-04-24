@@ -25,10 +25,8 @@ import IconCalendar from '../../icon/mui/action/calendar_today';
  * Button form field.
  * CalendarDateTime open on layer.
  */
-class CalendarMonthButton extends Component
-{
-  constructor(props, context)
-  {
+class CalendarMonthButton extends Component {
+  constructor(props, context) {
     super(props);
 
     this.state = {
@@ -37,17 +35,15 @@ class CalendarMonthButton extends Component
 
     this.calendar = (
       <CalendarDateTime
+        {...props}
         id={props.id}
         form={context.form}
         className="label:hidden"
-        onClickCalendar={({ value }) =>
-        {
-          if (this.isLayer)
-          {
+        onClickCalendar={({ value }) => {
+          if (this.isLayer) {
             this.setState({ showCalendar: false })
           }
-          else
-          {
+          else {
             context.store.dispatch(close());
           }
 
@@ -73,14 +69,11 @@ class CalendarMonthButton extends Component
     this.isLayer = layer.active === true && layer.method !== 'preload';
   }
 
-  onChangeHandler = (event) =>
-  {
-    if (this.isLayer)
-    {
+  onChangeHandler = (event) => {
+    if (this.isLayer) {
       this.setState({ showCalendar: !this.state.showCalendar });
     }
-    else
-    {
+    else {
       this.context.store.dispatch(popover(
         <div className="pr-4">{this.calendar}</div>,
         event,
@@ -88,24 +81,23 @@ class CalendarMonthButton extends Component
     }
   }
 
-  render()
-  {
+  render() {
     return (
       <div>
-        { this.state.showCalendar === false &&
-        <Button
-          id={this.props.id}
-          placeholder={this.props.placeholder}
-          disabled={this.props.disabled}
-          className={this.props.className}
-          buttonClassName={this.props.buttonClassName}
-          onClick={this.onChangeHandler}
-          stateFormat={this.props.stateFormat} // eslint-disable-line
-          icon={IconCalendar}
-          {...this.props}
-        />
+        {this.state.showCalendar === false &&
+          <Button
+            id={this.props.id}
+            placeholder={this.props.placeholder}
+            disabled={this.props.disabled}
+            className={this.props.className}
+            buttonClassName={this.props.buttonClassName}
+            onClick={this.onChangeHandler}
+            stateFormat={this.props.stateFormat} // eslint-disable-line
+            icon={IconCalendar}
+            {...this.props}
+          />
         }
-        { this.state.showCalendar === true && this.calendar}
+        {this.state.showCalendar === true && this.calendar}
       </div>
     );
   }

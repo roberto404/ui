@@ -1,14 +1,19 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
 
-import Form,
-{
-  Input,
-  Checkbox,
+import Form from '@1studio/ui/form/form';
+import Input from '@1studio/ui/form/components/input';
+import Checkbox from '@1studio/ui/form/components/checkbox';
+
+export const postfix = ' [formated]';
+
+export const format = (value) => {
+  return value.replace(postfix, '');
 }
-from '../../../src/form/pure';
 
+export const stateFormat = (value) => {
+  return value + postfix;
+}
 
 
 const ExampleForm = () =>
@@ -31,34 +36,22 @@ const ExampleForm = () =>
       <Input
         id="input"
         label="Demostrate format and stateFormat data manipulation"
-        stateFormat={value => value + ' <- formated component value, user sees it *** Run first!!!'}
-        format={(value, reduce) => {
-          console.log(`input value (not state formated): ${value}`);
-          console.log(`reduce: ${reduce}`);
-          return value;
-        }}
+        stateFormat={stateFormat}
+        format={format}
       />
 
       <Checkbox
-        label="Manipulate state value. Convert array to i/o string"
+        label="Demostrate how to use checkbox array singleton i/o string"
         id="checkbox"
         data={[{ id: 1, title: 'apply' }]}
         stateFormat={(value) =>
         {
           const nextValue = value ? [value] : [];
-
-          console.log(`state input value: ${JSON.stringify(value)}`);
-          console.log(`state output value: ${JSON.stringify(nextValue)}`);
-
           return nextValue;
         }}
         format={(value, reduce) =>
         {
           const nextValue = value[0];
-
-          console.log(`input value for format: ${JSON.stringify(value)}`);
-          console.log(`formated state value: ${JSON.stringify(nextValue)}`);
-
           return nextValue;
         }}
       />

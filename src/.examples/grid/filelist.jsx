@@ -7,8 +7,8 @@ import simplify from '@1studio/utils/math/simplify';
 
 import { Grid as GridView } from '../../../src/view';
 import Connect from '../../../src/grid/connect';
-import Grid from '../../../src/grid/pure/grid';
-import FileListGridRow from '../../../src/grid/pure/gridRows/filelist';
+import Grid from '../../../src/grid/components/grid';
+import FileListGridRow from '../../../src/grid/components/gridRows/filelist';
 import Form, {
   Input,
 } from '../../../src/form/intl';

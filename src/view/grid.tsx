@@ -1,5 +1,5 @@
 
-import React, { useMemo, useContext, useEffect, useRef, createContext, useId } from 'react';
+import React, { useMemo, useContext, useEffect, useRef, createContext, useId, useLayoutEffect } from 'react';
 import { useDispatch, useSelector, ReactReduxContext } from 'react-redux';
 import { useAppContext } from '../context';
 import isEqual from 'lodash/isEqual';
@@ -7,6 +7,7 @@ import forEach from 'lodash/forEach';
 import isEmpty from 'lodash/isEmpty';
 import getParam from '@1studio/utils/location/getParam';
 import { concatMultipleFormRecords } from './form';
+import { useComponentWillMount } from '../hooks';
 
 
 /* !- Context */
@@ -27,6 +28,7 @@ import { preload, close, modal } from '../layer/actions';
 import { PROPTYPES } from '@1studio/utils/models/data';
 import { FORM_PREFIX } from '../grid/constants';
 import { FORM_SCHEME_KEY } from '../form/constants';
+import { ApiResponse } from 'src/apiType';
 
 
 /* !- Types */
@@ -119,7 +121,7 @@ type PropTypes = Partial<typeof defaultProps> & {
    * @private
    */
   close: void,
-  responseParser: void,
+  responseParser: (response: ApiResponse<Record<string, unknown>[]>, gridId: string) => Record<string, unknown>[],
   /**
    * parsed record transfer to form store  when on select record
    */
@@ -222,6 +224,7 @@ export const Grid = ({
 
 
   const getSettings = () => {
+
     let nextSettings = { ...settings };
 
     // @todo context.register
@@ -336,29 +339,45 @@ export const Grid = ({
 
   /* !- React lifecycle */
 
-  /**
-   * ComponentWillMount:
-   * Load Redux grid settings
-   */
-  useMemo(
-    () => {
-      const settings = getSettings();
+  // useComponentWillMount(() => {
 
-      if (!isEmpty(settings) || data.length) {
-        dispatch(setData(data, settings, getId()));
-      }
-    },
-    [],
-  );
+  //   // if (useWillMount === true) {
+  //   const settings = getSettings();
+
+  //   if (!isEmpty(settings) || data.length) {
+  //     dispatch(setData(data, settings, getId()));
+  //   }
+  //   // }
+  // });
+
+  // useLayoutEffect(() => {
+
+  //   const settings = getSettings();
+
+  //   if (!isEmpty(settings) || data.length) {
+  //     dispatch(setData(data, settings, getId()));
+  //   }
+  // }, [dispatch]);
+
 
   // componentDidMount, componentWillUnmount
   useEffect(
     () => {
+
       // componentDidMount
+
+      // if (disableWillMount === true) {
+
+      const nextSettings = getSettings();
+
+      if (!isEmpty(settings) || data.length) {
+        dispatch(setData(data, settings, getId()));
+      }
+      // }
 
       // fetchDataViaApi();
 
-      (getSettings().filters || []).forEach((filter) => {
+      (nextSettings.filters || []).forEach((filter) => {
         if (filter.status === true) {
           dispatch(setValues({ id: filter.id, value: filter.arguments[0] }));
         }
@@ -371,6 +390,7 @@ export const Grid = ({
 
 
       // componentWillUnmount
+
       return () => {
         if (flushFiltersUnmount) {
           const grid = store.getState().grid[getId()];
@@ -408,14 +428,17 @@ export const Grid = ({
   useEffect(
     () => {
 
-      const settings = {};
-      const pageBeforeUpdate = store.getState().grid[getId()]?.page;
+      if (data && data.length) {
 
-      if (keepPaginationOnDataUpdate && pageBeforeUpdate) {
-        settings.paginate = { page: pageBeforeUpdate };
+        const settings = {};
+        const pageBeforeUpdate = store.getState().grid[getId()]?.page;
+
+        if (keepPaginationOnDataUpdate && pageBeforeUpdate) {
+          settings.paginate = { page: pageBeforeUpdate };
+        }
+
+        dispatch(setData(data, settings, getId()));
       }
-
-      dispatch(setData(data, settings, getId()));
     },
     [data],
   );
@@ -456,7 +479,7 @@ export const Grid = ({
           const settings = { helper: response.config };
 
           if (typeof responseParser === 'function') {
-            const parsedResponse = responseParser(response);
+            const parsedResponse = responseParser(response, store.getState().grid[getId()]);
 
             if (typeof parsedResponse === 'object' && !Array.isArray(parsedResponse)) {
               return parsedResponse;

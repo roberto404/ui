@@ -25,8 +25,7 @@ import Field from '../formField';
 *   label="City"
 * />
 */
-class Toggle extends Field
-{
+class Toggle extends Field {
   /* !- Handlers */
 
   /**
@@ -37,8 +36,7 @@ class Toggle extends Field
    * @emits
    * @return {void}
    */
-  onChangeToggleHandler = (event) =>
-  {
+  onChangeToggleHandler = (event) => {
     event.preventDefault();
     this.onChangeHandler(typeof this.state.value === 'boolean' ? !this.state.value : !parseInt(this.state.value), event);
   }
@@ -50,18 +48,17 @@ class Toggle extends Field
    * @override
    * @return {ReactElement}
    */
-  render()
-  {
+  render() {
     return super.render() || (
       <div className={this.getClasses('toggle')}>
 
-        { this.label }
+        {this.label}
 
         <button
           onClick={this.onChangeToggleHandler}
         />
 
-        { this.state.error &&
+        {this.state.error &&
           <div className="error">{this.state.error}</div>
         }
       </div>

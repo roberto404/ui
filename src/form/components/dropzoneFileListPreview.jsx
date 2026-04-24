@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // import { sortableContainer, sortableElement } from 'react-sortable-hoc';
-import { arrayMoveImmutable } from 'array-move';
+import { arrayMoveImmutable } from '@1studio/utils/array/move';
 
 
 /* !- Redux Actions */
@@ -12,21 +12,14 @@ import { arrayMoveImmutable } from 'array-move';
 /* !- React Elements */
 
 import FileListGridRow from '../../grid/components/gridRows/filelist';
-
-
-
-// const SortableItem = sortableElement(({ element }) => element);
-
-// const SortableContainer = sortableContainer(({ children }) => {
-//   return <div className="grid-2-2 mb-2">{children}</div>;
-// });
+import Sortable from '../../dragAndDrop/dnd-sortable';
 
 
 
 /**
  * [DropzoneFileListPreview description]
  */
-const DropzoneFileListPreview = ({ items, onEdit, onChange, element, draggable }) =>
+const DropzoneFileListPreview = ({ items, onEdit, onChange, element = FileListGridRow, draggable = true }) =>
 {
   const onDragEndHandler = (({ oldIndex, newIndex }) =>
   {
@@ -40,39 +33,24 @@ const DropzoneFileListPreview = ({ items, onEdit, onChange, element, draggable }
     }
   });
 
-  // if (draggable)
-  // {
-  //   return (
-  //     <SortableContainer onSortEnd={onDragEndHandler} axis="xy">
-  //       { items.map((item, index) =>
-  //         <SortableItem
-  //           key={`item-${index}`}
-  //           index={index}
-  //           element={React.createElement(element, { data: item })}
-  //         />
-  //       )}
-  //     </SortableContainer>
-  //   );
-  // }
+  if (draggable) {
+    return (
+      <div className='grid-2-2 mb-2'>
+      <Sortable
+        elements={items.map((item, index) => React.createElement(element, { data: item, key: index, onClick: () => onEdit(index) }))}
+        onDragEnd={onDragEndHandler}
+        horizontal
+        vertical
+      />
+      </div>
+    )
+  }
 
-  // const files = items.map((item, index) =>
-  // (
-  //   <FileListGridRow key={`${item.id}|${index}`} data={item} onClick={() => onEdit(index)} />
-  // ));
-  //
   return (
     <div className="grid-2-2">
       { items.map((item, index) => React.createElement(element, { data: item, key: index, onClick: () => onEdit(index) }))}
     </div>
   )
 };
-
-
-DropzoneFileListPreview.defaultProps =
-{
-  draggable: true,
-  element: FileListGridRow,
-}
-
 
 export default DropzoneFileListPreview;

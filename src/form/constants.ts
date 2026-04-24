@@ -10,8 +10,7 @@ export const FORM_SCHEME_KEY = '_scheme';
  * @param  {string} value date
  * @return {string}       date extended with dash.
  */
-export const formatDate = (value, reduce) =>
-{
+export const formatDate = (value, reduce) => {
   // add dash after backspacing
   // if (/^[0-9]{5}$/.exec(value) || /^[0-9]{4}-1?[0-9]{1}$/.exec(value))
   // {
@@ -19,8 +18,7 @@ export const formatDate = (value, reduce) =>
   // }
   // add dashes
   // else 
-  if (!reduce && (/^[0-9]{4}$/.exec(value)))
-  {
+  if (!reduce && (/^[0-9]{4}$/.exec(value))) {
     return `${value}-`;
   }
   // elseif (!reduce &&  (/^[0-9]{4}-1?[0-9]{1}[0-9]{1}$/.exec(value)))
@@ -36,6 +34,8 @@ export const formatDate = (value, reduce) =>
   return value;
 };
 
+export const taxcodeRegex = /^([0-9]{8})-([1-5]{1})-([0-9]{2})$/
+
 
 /**
  * Automatically add dashes {8}-{1}-{2}.
@@ -43,21 +43,17 @@ export const formatDate = (value, reduce) =>
  * @param  {string} value taxcode
  * @return {string}       taxcode extended with dash.
  */
-const formatTaxcode = (value, reduce) =>
-{
+export const formatTaxcode = (value, reduce) => {
   // add dash after backspacing
-  if (/^[0-9]{9}$/.exec(value) || /^[0-9]{8}-[0-9]{2}$/.exec(value))
-  {
+  if (/^[0-9]{9}$/.exec(value) || /^[0-9]{8}-[0-9]{2}$/.exec(value)) {
     return `${value.substring(0, value.length - 1)}-${value.substring(value.length - 1, value.length)}`;
   }
   // add dashes
-  else if (!reduce && (/^[0-9]{8}$/.exec(value) || /^[0-9]{8}-[1-5]{1}$/.exec(value)))
-  {
+  else if (!reduce && (/^[0-9]{8}$/.exec(value) || /^[0-9]{8}-[1-5]{1}$/.exec(value))) {
     return `${value}-`;
   }
   // remove dashes when backspacing
-  else if (reduce && (/^[0-9]{8}-$/.exec(value) || /^[0-9]{8}-[1-5]{1}-$/.exec(value)))
-  {
+  else if (reduce && (/^[0-9]{8}-$/.exec(value) || /^[0-9]{8}-[1-5]{1}-$/.exec(value))) {
     return value.substring(0, value.length - 1);
   }
 
@@ -70,26 +66,21 @@ const formatTaxcode = (value, reduce) =>
  * @param  {string} value phone
  * @return {string}       phone extended with gap.
  */
-const formatPhone = (value, reduce) =>
-{
+const formatPhone = (value, reduce) => {
   // add dash after backspacing
-  if (/^[0-9]{3}$/.exec(value) || /^[0-9]{2} [0-9]{4}$/.exec(value))
-  {
+  if (/^[0-9]{3}$/.exec(value) || /^[0-9]{2} [0-9]{4}$/.exec(value)) {
     return `${value.substring(0, value.length - 1)} ${value.substring(value.length - 1, value.length)}`;
   }
   // add dashes
-  else if (!reduce && (/^[0-9]{2}$/.exec(value) || /^[0-9]{2} [0-9]{3}$/.exec(value)))
-  {
+  else if (!reduce && (/^[0-9]{2}$/.exec(value) || /^[0-9]{2} [0-9]{3}$/.exec(value))) {
     return `${value} `;
   }
   // remove dashes when backspacing
-  else if (reduce && (/^[0-9]{2} $/.exec(value) || /^[0-9]{2} [0-9]{3} $/.exec(value)))
-  {
+  else if (reduce && (/^[0-9]{2} $/.exec(value) || /^[0-9]{2} [0-9]{3} $/.exec(value))) {
     return value.substring(0, value.length - 1);
   }
   // paste or load value without space
-  else if (/^[0-9]+$/.exec(value))
-  {
+  else if (/^[0-9]+$/.exec(value)) {
     return value.replace(/^([0-9]{2})([0-9]{3})([0-9]+)$/, "$1 $2 $3");
   }
 
@@ -223,7 +214,7 @@ export const DEFAULT_FIELDS = {
     label: 'field.newsletter',
     data: [{ id: '1', title: 'field.newsletter.data' }],
     format: value => +(value[0] !== undefined),
-    stateFormat: value => value ? [value.toString()]: [],
+    stateFormat: value => value ? [value.toString()] : [],
   },
   pid: {
     id: 'pid',
@@ -402,18 +393,18 @@ export const DEFAULT_SCHEME = {
  */
 export const getFields = fetchFields =>
   fetchFields.reduce((result, field) =>
-    ({
-      ...result,
-      [field]: DEFAULT_FIELDS[field],
-    }),
+  ({
+    ...result,
+    [field]: DEFAULT_FIELDS[field],
+  }),
     {},
   );
 
 export const getScheme = fetchFields =>
   fetchFields.reduce((result, field) =>
-    ({
-      ...result,
-      [field]: DEFAULT_SCHEME[field],
-    }),
+  ({
+    ...result,
+    [field]: DEFAULT_SCHEME[field],
+  }),
     {},
   );

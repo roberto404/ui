@@ -35,14 +35,10 @@ const defaultProps =
    * @example
    * ['male', 'femail']
    */
-  reducer: (result, record, id) =>
-  {
-    if (Array.isArray(record[id]))
-    {
-      record[id].forEach((field) =>
-      {
-        if (result.indexOf(field) === -1)
-        {
+  reducer: (result, record, id) => {
+    if (Array.isArray(record[id])) {
+      record[id].forEach((field) => {
+        if (result.indexOf(field) === -1) {
           result.push(field);
         }
       });
@@ -50,8 +46,7 @@ const defaultProps =
     else if (
       ['string', 'number'].indexOf(typeof record[id]) !== -1
       && result.indexOf(record[id].toString()) === -1
-    )
-    {
+    ) {
       result.push(record[id].toString());
     }
     return result;
@@ -76,16 +71,14 @@ type PropTypes = Partial<typeof defaultProps> &
   ?grid="robot"
 />
 */
-const GridFieldGroupBy = (props: PropTypes) =>
-{
+const GridFieldGroupBy = (props: PropTypes) => {
   const { id, reducer } = props;
 
   const context = useContext(GridContext);
   const dispatch = useDispatch();
   const store = useStore();
 
-  const fetchData = () =>
-  {
+  const fetchData = () => {
     const helper = typeof props.helper === 'function' ? props.helper() : props.helper || [];
     const grid = store.getState().grid[context.grid] || {};
 
@@ -95,13 +88,13 @@ const GridFieldGroupBy = (props: PropTypes) =>
         (result, record) => reducer(result, record, id),
         [],
       )
-      .map(
-        item => ({
-          id: item,
-          title: (helper.find(({ id }) => id.toString() === item.toString()) || {}).title || item.toString(),
-        }),
-      )
-      .sort((a, b) => a.title.localeCompare(b.title))
+        .map(
+          item => ({
+            id: item,
+            title: (helper.find(({ id }) => id.toString() === item.toString()) || {}).title || item.toString(),
+          }),
+        )
+        .sort((a, b) => a.title.localeCompare(b.title))
     );
   };
 

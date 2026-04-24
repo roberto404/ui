@@ -79,6 +79,7 @@ const ViewMultiple = ({}, { store }) =>
                   children:
                     <div>
                       <View
+                        key='foo'
                         settings={{
                           groups: {
                             insideTab: [
@@ -87,7 +88,7 @@ const ViewMultiple = ({}, { store }) =>
                             ],
                           },
                         }}
-                        nested
+                        // nested
                       >
                         <div data-view="insideTab1">insideTab1</div>
                         <div data-view="insideTab2">insideTab2</div>

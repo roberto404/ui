@@ -24,7 +24,6 @@ import {
 
 /* !- React Elements */
 
-import CalendarMonthInterval from '../../../src/form/pure/calendarMonthInterval';
 import IconLogout from '../../../src/icon/mui/action/lock';
 import Tooltip from '../../../src/layer/tooltip';
 import Info from '../../../src/layer/info';
@@ -46,18 +45,15 @@ const DialogComponent = () =>
 /**
  * Example Component
  */
-const Example = () =>
-{
+const Example = () => {
   const dispatch = useDispatch();
 
-  const onClickPreloadHandler = (element) =>
-  {
+  const onClickPreloadHandler = (element) => {
     dispatch(preload(element));
     setTimeout(() => dispatch(hide()), 3 * 1000);
   }
 
-  const onClickMenuHandler = ({ id, title }) =>
-  {
+  const onClickMenuHandler = ({ id, title }) => {
     console.log(id, title);
     dispatch(flush());
   };
@@ -89,7 +85,8 @@ const Example = () =>
   };
 
   const sidebarProps = {
-    position: 'right'
+    position: 'right',
+    className: 'no-padding',
   };
 
   return (
@@ -121,8 +118,16 @@ const Example = () =>
       <button
         className="outline gray w-auto"
         onClick={() => dispatch(sidebar(
-          <div className="bg-red" style={{ width: '200px' }}>right</div>,
-          sidebarProps,
+          <div
+            style={{
+              // width: '200px',
+              height: '100vh',
+            }}
+          >
+            {/* <iframe width="100%" height="100%" src="https://singlecolorimage.com/get/7bef04/5000x5000" /> */}
+            <iframe width="100%" height="100%" src="https://forms.gle/5nhRpafJWVDaDWBy7" />
+          </div>,
+          sidebarProps
         ))}
       >
         Sidebar
@@ -136,7 +141,7 @@ const Example = () =>
       <h2>Fullscreen</h2>
       <button className="outline gray w-auto" onClick={() => dispatch(fullscreen(DialogComponent))}>Fullscreen</button>
 
-      
+
 
       <h2>Popover</h2>
       <button
@@ -162,7 +167,7 @@ const Example = () =>
         Popover
       </button>
 
-      
+
 
       <h2>Tooltip</h2>
       <button

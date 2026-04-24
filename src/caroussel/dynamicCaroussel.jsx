@@ -30,18 +30,15 @@ export const CAROUSSEL_SETTINGS = {
  * @param  {array} data static data
  * @return {array}      active three data
  */
-const fetchData = (page = 0, data, visibleSlides) =>
-{
+const fetchData = (page = 0, data, visibleSlides) => {
   const items = [];
   const length = data.length;
 
-  if (!length)
-  {
+  if (!length) {
     return [];
   }
 
-  for (let i = 0; i < 3 * visibleSlides; i += 1)
-  {
+  for (let i = 0; i < 3 * visibleSlides; i += 1) {
     /**
     * infinite loop determine current loop position
     */
@@ -53,12 +50,10 @@ const fetchData = (page = 0, data, visibleSlides) =>
     * index === -1
     * => data[length + index] // data last element.
     */
-    if (index < 0)
-    {
+    if (index < 0) {
       items.push(data[length + index]);
     }
-    else
-    {
+    else {
       items.push(data[index]);
     }
   }
@@ -100,31 +95,26 @@ const fetchData = (page = 0, data, visibleSlides) =>
  *  }}
  * />
  */
-class DynamicCaroussel extends Component
-{
-  UNSAFE_componentWillMount()
-  {
+class DynamicCaroussel extends Component {
+
+  UNSAFE_componentWillMount() {
     // Enable caroussel settings and create datas if it is non-static
     this.updateSlides();
   }
 
-  UNSAFE_componentWillReceiveProps(props)
-  {
+  UNSAFE_componentWillReceiveProps(props) {
     this.updateSlides(props);
   }
 
-  componentWillUnmount()
-  {
+  componentWillUnmount() {
     this.context.store.dispatch(flush(this.props.id));
   }
 
-  updateSlides = (props = this.props) =>
-  {
+  updateSlides = (props = this.props) => {
     /**
      * Length of data less than necessary number of items
      */
-    if (props.data.length && props.data.length < 3 * props.visibleSlides)
-    {
+    if (props.data.length && props.data.length < 3 * props.visibleSlides) {
       this.context.store.dispatch(
         setData(
           props.data,
@@ -138,15 +128,12 @@ class DynamicCaroussel extends Component
         ),
       );
     }
-    else
-    {
+    else {
 
       const data =
         props.fetchData(this.carousselPage || 0, props.data, props.visibleSlides)
-          .map(i =>
-          {
-            if (typeof i.slide === undefined)
-            {
+          .map(i => {
+            if (i.slide === undefined) {
               return i;
             }
 
@@ -170,28 +157,26 @@ class DynamicCaroussel extends Component
 
   carousselPage = 0;
 
-  transitionEndListener = () =>
-  {
+  transitionEndListener = () => {
+
     const page = this.context.store.getState().grid[this.props.id]?.page;
 
-    if (typeof page === undefined)
-    {
+    if (page === undefined) {
       this.carousselPage = 0;
       return;
     }
 
     const nextPage = this.carousselPage + page - 2;
+    // const nextPage = page - 1;
 
-    if (this.carousselPage !== nextPage)
-    {
+    if (this.carousselPage !== nextPage) {
       this.carousselPage = nextPage;
       this.updateSlides();
     }
   }
 
 
-  render()
-  {
+  render() {
     return (
       <Caroussel
         {...this.props}

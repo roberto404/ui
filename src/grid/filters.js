@@ -1,6 +1,7 @@
 
 import slugify from '@1studio/utils/string/slugify';
 import UserError from '@1studio/utils/error/userError';
+import getValueByPath from '@1studio/utils/object/getValueByPath';
 
 const DEFAULT_COMPARE = '_default';
 
@@ -89,9 +90,12 @@ export const OPERATOR_REGEX = `(${OPERATOR_KEYS
 //   .replace(/\*/g, '\\$&');
 export const OPERATOR_UNIQUE = "=~!\*^$><";
 
+// attachemnt[piper]2023 <= [piper]
+export const CUSTOM_OPERATOR = "[[A-Za-z öüóőúéáűí0-9]+]";
+
 export const LOGICAL_REGEX = '[|&]{1,2}';
 
-export const FIELD_CHARS = '0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ_';
+export const FIELD_CHARS = '0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ_.';
 
 /**
  * (field and operator)?value <=== JSON data, but we don't use ',' coma, because coma separated expression not working
@@ -147,7 +151,7 @@ export const filtersToQuery = filters =>
  * // =>
  * [field, >, 2]
  */
-export const REGEX_QUERY_LEVEL2 = new RegExp(`^([${FIELD_CHARS}]+)(([${OPERATOR_UNIQUE}]{1}[!]{0,1}[=]{0,2})|([[a-z öüóőúéáűí]+]))(.+)$`);
+export const REGEX_QUERY_LEVEL2 = new RegExp(`^([${FIELD_CHARS}]+)(([${OPERATOR_UNIQUE}]{1}[!]{0,1}[=]{0,2})|([[A-Za-z öüóőúéáűí0-9]+]))(.*)$`);
 
 let SEARCH_CACHE = [];
 
@@ -171,6 +175,7 @@ let SEARCH_CACHE = [];
  * "category=186&category=190"
  */
 export const search = (props) => {
+
   const { record, value, helpers, hooks, index = 0 } = props;
 
   /**
@@ -274,18 +279,8 @@ export const search = (props) => {
   return SEARCH_CACHE.some(cache => cache.every(({ columns, handlerIndex, term }) =>
     columns.some(
       (column) => {
+
         const compareMethod = props.compare?.[handlerIndex] ? props.compare : compare;
-
-        if (typeof record[column] === 'undefined') {
-          return false;
-        }
-
-        let subject = record[column];
-
-        if (typeof subject === 'object') {
-          subject = JSON.stringify(subject);
-        }
-
 
         if (typeof compareMethod[handlerIndex] === 'undefined') {
           throw new UserError(
@@ -295,6 +290,27 @@ export const search = (props) => {
               dev: { handlerIndex },
             },
           );
+        }
+
+        let subject = record[column];
+
+        if (column.includes('.')) {
+
+          const partOfColumn = column.split('.');
+
+          if (Array.isArray(record[partOfColumn[0]])) {
+            return record[partOfColumn[0]].some(item => compareMethod[handlerIndex]?.(item[partOfColumn[1]], term, record))
+          }
+
+          subject = getValueByPath(record, column);
+        }
+
+        if (typeof subject === 'object') {
+          subject = JSON.stringify(subject);
+        }
+
+        if (typeof subject === 'undefined') {
+          return false;
         }
 
         if (compareMethod[handlerIndex]?.(subject, term, record) === true) {
@@ -386,3 +402,28 @@ export const dateTo = (record, value) => {
   const recordDate = new Date(record.date).getTime();
   return recordDate < parseInt(value);
 };
+
+
+/**
+ * Split sring by comma and search individual more time
+ *
+ * @param {array} fields ['id', 'title'] searching these field of record
+ */
+/**
+ * Split sring by comma and search individual more time
+ *
+ * @param {array} fields ['id', 'title'] searching these field of record
+ */
+export const SEARCH_MULTIPLE_HANDLER = fields => (record, terms) =>
+  terms
+    .split(/[,]+/g)
+    .some(term =>
+      term
+        .split(/[ ]+/g)
+        .every(word =>
+          fields.some(field =>
+            record[field] !== undefined
+            && (record[field] || '').toString().toLowerCase().indexOf(word.toString().toLowerCase()) >= 0,
+          ),
+        ),
+    );

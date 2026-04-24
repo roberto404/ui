@@ -18,10 +18,8 @@ import produceNumericArray from '@1studio/utils/array/produceNumericArray';
 const defaultProps =
 {
   id: '',
-  onChange: () =>
-  {},
-  UI: () =>
-  {},
+  onChange: () => { },
+  UI: () => { },
   uiProps: {},
   // listen: 'data',
   children: undefined,
@@ -76,17 +74,19 @@ type PropTypes = Partial<typeof defaultProps> & {
  * @param stateIndex Custom id of reducer state like grid[id]
  * @returns 
  */
-const getState = (state, stateId, stateIndex) =>
-{
+const getState = (state, stateId, stateIndex) => {
   let observedState = state[stateId];
 
-  if (stateIndex)
-  {
+  if (stateIndex) {
     observedState = observedState[stateIndex];
   }
 
   return clone(observedState) || {};
 }
+
+const getNestedState = (state, listen) => {
+  return listen.split('.').reduce((acc, key) => acc?.[key], state);
+};
 
 
 /**
@@ -116,8 +116,8 @@ const getState = (state, stateId, stateIndex) =>
  *    onChange={(state, prevState) => console.log(state.totalPage)}
  *   />
  */
-const Connect = (props: PropTypes) =>
-{
+const Connect = (props: PropTypes) => {
+
   const context = useAppContext();
 
   // form, grid...
@@ -131,8 +131,7 @@ const Connect = (props: PropTypes) =>
 
   // componentWillMount => constructor
   useMemo(
-    () =>
-    {
+    () => {
       const state = getState(context.store.getState(), stateId, stateIndex);
 
       isNotLoadedYet.current = stateId === 'grid' ?
@@ -142,31 +141,25 @@ const Connect = (props: PropTypes) =>
   );
 
   const state = useSelector(
-    (store) =>
-    {
+    (store) => {
       const state = getState(store, stateId, stateIndex);
       const listen = props.listen || Object.keys(state);
       const listens = Array.isArray(listen) ? listen : [listen];
 
       const nextState = {};
 
-      listens.forEach(listen => nextState[listen] = state[listen])
-
+      listens.forEach(listen => nextState[listen] = getNestedState(state, listen));
       return nextState;
     },
-    (prev, next) =>
-    {
+    (prev, next) => {
       const isNoChanges = isEqual(prev, next);
 
-      if (isNoChanges === false ) 
-      {
-        if (isNotLoadedYet.current === true)
-        {
+      if (isNoChanges === false) {
+        if (isNotLoadedYet.current === true) {
           isNotLoadedYet.current = false;
         }
-        
-        if (typeof props.onChange === 'function')
-        {
+
+        if (typeof props.onChange === 'function') {
           props.onChange(next, prev);
         }
       }
@@ -175,7 +168,7 @@ const Connect = (props: PropTypes) =>
     },
   );
 
-  
+
   const {
     id,
     UI,
@@ -192,26 +185,28 @@ const Connect = (props: PropTypes) =>
     ...uiProps,
   };
 
-  if (isNotLoadedYet.current && skeleton)
-  {
+  if (isNotLoadedYet.current && skeleton) {
     const SkeletonComponent = (
       <div>
-        { produceNumericArray(1, skeletonRepeat).map(i => React.cloneElement(skeleton, { key: i }) ) }
+        {produceNumericArray(1, skeletonRepeat).map(i => React.cloneElement(skeleton, { key: i }))}
       </div>
     );
 
-    if (props.store === 'grid')
-    {
+    if (props.store === 'grid') {
       nextProps.noResults = SkeletonComponent;
     }
-    else
-    {
+    else {
       return SkeletonComponent;
     }
   }
 
-  return children ?
-    React.cloneElement(children, nextProps) : React.createElement(UI, nextProps);
+  const memoizedElement = useMemo(() => {
+    return children
+      ? React.cloneElement(children, nextProps)
+      : React.createElement(UI, nextProps);
+  }, [JSON.stringify(state)]);
+
+  return memoizedElement;
 };
 
 Connect.defaultProps = defaultProps;

@@ -1,24 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 
 import Form,
 {
   Dropzone
 }
-from '../../../src/form/intl';
+  from '@1studio/ui/form/intl';
 
-import IconFavorite from '../../../src/icon/mui/action/favorite';
+import IconFavorite from '@1studio/ui/icon/mui/action/favorite';
 
-import { setValues } from '../../../src/form/actions';
-import FileList from '../../../src/form/pure/dropzoneFileList';
+import { setValues } from '@1studio/ui/form//actions';
+import FileList from '@1studio/ui/form/components/dropzoneFileList';
 
-import DefaultPreview from '../../../src/form/pure/dropzoneFileListPreview';
-import DefaultPreviewItem from '../../../src/grid/pure/gridRows/filelist';
-import DefaultEditor from '../../../src/form/pure/dropzoneCardEditor';
+import DefaultPreview from '@1studio/ui/form/components/dropzoneFileListPreview';
+import DefaultPreviewItem from '@1studio/ui/grid/components/gridRows/filelist';
+import DefaultEditor from '@1studio/ui/form/components/dropzoneCardEditor';
 
-import Editor from '../../../src/form/pure/dropzoneImageEditor';
-import Preview from '../../../src/form/pure/dropzoneImagePreview';
+import Editor from '@1studio/ui/form/components/dropzoneImageEditor';
+import Preview from '@1studio/ui/form/components/dropzoneImagePreview';
+import { useDispatch } from 'react-redux';
 
 
 /* !- Constants */
@@ -27,8 +27,7 @@ const Sidebar = ({
   id,
   status,
   onChange,
-}) =>
-{
+}) => {
   return (
     <div style={{ minWidth: 600 }}>
       <input
@@ -58,12 +57,14 @@ const imageSizes = [
 ];
 
 
-const Example = (props, { store }) =>
-{
-  store.dispatch(setValues({
+const Example = () => {
+
+  const dispatch = useDispatch();
+
+  dispatch(setValues({
     images: [{
       ext: "jpg",
-      id: "879",
+      id: "8800",
       // markers: [
       //   {
       //     category: 'heading',
@@ -73,7 +74,7 @@ const Example = (props, { store }) =>
       // ],
       title: 'A',
       status: 0,
-    },{
+    }, {
       ext: "jpg",
       id: "8800",
       // markers: [
@@ -93,13 +94,15 @@ const Example = (props, { store }) =>
       //     settings: 'sku',
       //   },
       // ],
-    },{
+    }, {
       ext: "jpg",
-      id: "8802",
+      id: "8800",
       title: 'B',
       status: 1,
     }],
   }, 'example'));
+
+
 
   return (
     <Form
@@ -110,6 +113,10 @@ const Example = (props, { store }) =>
         url={`http://localhost/api/v3/file/upload?resize=${JSON.stringify(imageSizes)}`}
         maxFilesSize={10}
         id="images"
+        editorProps={{
+          className: 'card shadow-outer-2',
+        }}
+        placeholder="upload"
       />
 
       <h2>Custom: Default</h2>
@@ -121,16 +128,18 @@ const Example = (props, { store }) =>
         <FileList
           draggable={false}
           preview={DefaultPreview}
-          previewProps={{ element: (props) => (
-            <div className="relative">
-              { props.data.status !== undefined && parseInt(props.data.status) === 0 &&
-              <div className="absolute bg-black p-1/2 no-events" style={{ zIndex: 1, bottom: '4rem', right: '2rem' }}>
-                <IconFavorite className="w-2 h-2 fill-white" />
+          previewProps={{
+            element: (props) => (
+              <div className="relative">
+                {props.data.status !== undefined && parseInt(props.data.status) === 0 &&
+                  <div className="absolute bg-black p-1/2 no-events" style={{ zIndex: 1, bottom: '4rem', right: '2rem' }}>
+                    <IconFavorite className="w-2 h-2 fill-white" />
+                  </div>
+                }
+                <DefaultPreviewItem {...props} />
               </div>
-              }
-              <DefaultPreviewItem {...props} />
-            </div>
-          )}}
+            )
+          }}
           editor={DefaultEditor}
           editorProps={{ Sidebar }}
         />

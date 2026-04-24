@@ -11,6 +11,7 @@ const defaultProps =
   width: 0,
   height: 0,
   initWidth: 200,
+  className: '',
 };
 
 type PropTypes = Partial<typeof defaultProps> & {
@@ -27,22 +28,20 @@ type PropTypes = Partial<typeof defaultProps> & {
  * @example
  * <Resize>{width => <svg width={width} />}</Resize>
  */
-const Resize = (props: PropTypes) =>
-{
+const Resize = (props: PropTypes) => {
   const element = useRef(null);
   const forceUpdate = useForceUpdate();
 
   // componentDidMount
   useEffect(
-    () =>
-    {
+    () => {
       forceUpdate();
     },
     [],
   );
 
   const width = element.current && !props.width ?
-  element.current.offsetWidth : props.width || props.initWidth;
+    element.current.offsetWidth : props.width || props.initWidth;
 
   const height = element.current && !props.height ?
     element.current.offsetHeight : props.height || width;
@@ -51,6 +50,7 @@ const Resize = (props: PropTypes) =>
     <div
       style={{ width: '100%', height: props.height || '100%' }}
       ref={element}
+      className={props.className}
     >
       {React.cloneElement(props.children, { width, height })}
     </div>

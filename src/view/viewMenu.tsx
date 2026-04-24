@@ -45,7 +45,7 @@ const ViewMenuComponent = ({
 {
   const views = useSelector(({ view }) =>
     view.active !== undefined ?
-      view.groups[group || state.view.active] : []
+      view.groups[group || view.active] : []
   )
 
   const dispatch = useDispatch();

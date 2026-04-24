@@ -28,8 +28,7 @@ import Field from '../formField';
 *   data={[{ id, title }, ...]}
 * />
 */
-class Select extends Field
-{
+class Select extends Field {
   /* !- Handlers */
 
   /**
@@ -38,8 +37,7 @@ class Select extends Field
    * @param  {SytheticEvent} event
    * @return {void}
    */
-  onFocusHandler = (event) =>
-  {
+  onFocusHandler = (event) => {
     this.props.onFocus({ id: this.props.name, value: event.target.value });
   }
 
@@ -49,8 +47,7 @@ class Select extends Field
    * @param  {SytheticEvent} event
    * @return {void}
    */
-  onBlurHandler = (event) =>
-  {
+  onBlurHandler = (event) => {
     this.props.onBlur({ id: this.props.name, value: event.target.value });
   }
 
@@ -61,8 +58,7 @@ class Select extends Field
    * @param  {SytheticEvent} event
    * @return {void}
    */
-  onChangeSelectHandler = (event) =>
-  {
+  onChangeSelectHandler = (event) => {
     this.onChangeHandler(event.target.value);
   }
 
@@ -73,17 +69,16 @@ class Select extends Field
    * @override
    * @return {ReactElement}
    */
-  render()
-  {
+  render() {
     return super.render() || (
       <div className={this.getClasses('select')}>
 
-        { this.label }
+        {this.label}
 
         <div className="h-center">
 
-          { this.state.prefix &&
-          <div className="prefix">{this.state.prefix}</div>
+          {this.state.prefix &&
+            <div className="prefix">{this.state.prefix}</div>
           }
 
           <div className="w-full">
@@ -98,41 +93,40 @@ class Select extends Field
 
               disabled={this.props.disabled}
 
-              ref={(ref) =>
-              {
+              ref={(ref) => {
                 this.element = ref;
               }}
               data-name={this.props.name}
             >
-              { ((this.state.placeholder && !find(this.data, i => i.id === 0)) || !find(this.data, i => i.id == this.state.value)) &&
-              <option value="">{this.state.placeholder || this.state.value}</option>
+              {((this.state.placeholder && !find(this.data, i => i.id === 0 || i.id === '')) || !find(this.data, i => i.id == this.state.value)) &&
+                <option value="">{this.state.placeholder || this.state.value}</option>
               }
 
-              { this.data.map(item =>
-                (
-                  <option
-                    key={item.id}
-                    value={item.id}
-                  >
-                    {
-                      this.props.intl && this.props.dataTranslate ?
-                        this.props.intl.formatMessage({ id: item.title, default: item.title })
-                        : item.title
-                    }
-                  </option>
-                ),
+              {this.data.map(item =>
+              (
+                <option
+                  key={item.id}
+                  value={item.id}
+                >
+                  {
+                    this.props.intl && this.props.dataTranslate ?
+                      this.props.intl.formatMessage({ id: item.title, default: item.title })
+                      : item.title
+                  }
+                </option>
+              ),
               )}
             </select>
           </div>
 
-          { this.props.postfix &&
-          <div className="postfix">{this.state.postfix}</div>
+          {this.props.postfix &&
+            <div className="postfix">{this.state.postfix}</div>
           }
 
         </div>
 
 
-        { this.state.error &&
+        {this.state.error &&
           <div className="error">{this.state.error}</div>
         }
       </div>
@@ -185,10 +179,8 @@ Select.defaultProps =
   ...Select.defaultProps,
   placeholder: '',
   data: [],
-  onBlur()
-  {},
-  onFocus()
-  {},
+  onBlur() { },
+  onFocus() { },
 };
 
 

@@ -11,6 +11,7 @@ import { remove } from './actions';
 /* !-- Components */
 
 import IconClose from '../icon/mui/navigation/close';
+import ProgressBar from './progressBar';
 
 
 /* !-- Constants */
@@ -24,13 +25,18 @@ export type PropTypes = {
   children: React.ReactNode,
   disableClose?: boolean,
   closeOnChangeLocation?: boolean,
+  autoClose?: true | number,
 };
 
 
 /**
 *
 */
-const NotificationItemWrapper = ({ id, children, disableClose, closeOnChangeLocation }: PropTypes) => {
+const NotificationItemWrapper = ({ id, children, disableClose, closeOnChangeLocation, ...props }: PropTypes) => {
+
+
+
+  const autoClose = props.autoClose === true ? 5 : (props.autoClose ?? 0);
 
   const dispatch = useDispatch();
   const { count } = useUrlChange();
@@ -55,12 +61,15 @@ const NotificationItemWrapper = ({ id, children, disableClose, closeOnChangeLoca
 
         <div className='grow'>
           {children}
+          {autoClose !== undefined &&
+            <ProgressBar percentTime={autoClose} onClose={onClose} color="white" />
+          }
         </div>
 
 
         {/* Close */}
 
-        {onClose && disableClose !== true &&
+        {onClose !== undefined && disableClose !== true &&
           <div className='p-1'>
             <IconClose
               onClick={onClose}

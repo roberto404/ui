@@ -25,13 +25,11 @@ const SLIDES = [
   { id: 7, slide: <div>7</div> },
 ];
 
-const fetchData = (page) =>
-{
+const fetchData = (page) => {
   const items = [];
   const length = 2;
 
-  for (let i = 0; i < 3; i += 1)
-  {
+  for (let i = 0; i < 3; i += 1) {
     /**
     * infinite loop determine current loop position
     */
@@ -43,12 +41,10 @@ const fetchData = (page) =>
     * index === -1
     * => data[length + index] // data last element.
     */
-    if (index < 0)
-    {
+    if (index < 0) {
       items.push({ id: index, slide: <div>{length + index}</div> });
     }
-    else
-    {
+    else {
       items.push({ id: index, slide: <div>{index}</div> });
     }
   }
@@ -66,16 +62,16 @@ const Example = ({ setData }) =>
 
     <h2>Static data infinite loop</h2>
 
-    <DynamicCaroussel
+    {/* <DynamicCaroussel
       data={SLIDES}
       id="sample1"
-    />
+    /> */}
 
     {/* <DynamicCaroussel
       data={SLIDES}
       id="sample1b"
       visibleSlides={2}
-      // autoplay={3}
+    // autoplay={3}
     /> */}
 
     {/* <h2>Not enough static data for loop</h2> */}
@@ -84,32 +80,30 @@ const Example = ({ setData }) =>
       data={SLIDES}
       id="sample1c"
       visibleSlides={4}
-      // autoplay={3}
+    // autoplay={3}
     /> */}
 
-    {/* <h2>Dynamic data load</h2> */}
-    {/* <DynamicCaroussel
+    <h2>Dynamic data load</h2>
+    <DynamicCaroussel
       id="sample2"
-      fetchData={(page) =>
-      {
+      fetchData={(page) => {
         const items = [];
 
-        for (let i = 0; i < 3; i += 1)
-        {
+        for (let i = 0; i < 3; i += 1) {
           items.push({ id: i, slide: <div>{page + i}</div> });
         }
         return items;
       }}
-    /> */}
+    />
 
-  {/* <h2>Dynamic only two slide</h2> */}
-    {/* <DynamicCaroussel
+    {/* <h2>Dynamic only two slide</h2>
+    <DynamicCaroussel
       id="sample3"
       fetchData={fetchData}
-    /> */}
-    {/* <div
+    />
+    <div
       className="mt-4 underline pointer text-blue-dark"
-      onClick={() => setData(SLIDES.map(({ id }) => ({ id, slide: `-#{id}-`})), 'sample3')}
+      onClick={() => setData(SLIDES.map(({ id }) => ({ id, slide: `-#{id}-` })), 'sample3')}
     >toggle data</div> */}
   </div>
 );

@@ -49,8 +49,7 @@ import Field from '../formField';
 * },
 * ]
 */
-class Dropdown extends Field
-{
+class Dropdown extends Field {
   /* !- Handlers */
 
   /**
@@ -59,8 +58,7 @@ class Dropdown extends Field
    * @param  {SytheticEvent} event
    * @return {void}
    */
-  onFocusHandler = (event) =>
-  {
+  onFocusHandler = (event) => {
     this.props.onFocus({ id: this.props.name, value: event.target.value });
   }
 
@@ -70,8 +68,7 @@ class Dropdown extends Field
    * @param  {SytheticEvent} event
    * @return {void}
    */
-  onBlurHandler = (event) =>
-  {
+  onBlurHandler = (event) => {
     this.props.onBlur({ id: this.props.name, value: event.target.value });
   }
 
@@ -84,24 +81,20 @@ class Dropdown extends Field
    * @param  {Object} item { id, title }
    * @return {void}
    */
-  onChangeDropdownHandler = ({ id }) =>
-  {
+  onChangeDropdownHandler = ({ id }) => {
     this.context.store.dispatch(close());
 
-    if (this.props.multiple &&!id && this.props.placeholder && !find(this.data, i => i.id === 0))
-    {
+    if (this.props.multiple && !id && this.props.placeholder && !find(this.data, i => i.id === 0)) {
       this.onChangeHandler([]);
     }
-    else
-    {
+    else {
       this.onChangeHandler(
         this.props.multiple ? this.createMultipleValueHelper(this.state.value, id) : id,
       );
     }
   }
 
-  onClickButtonHandler = (event) =>
-  {
+  onClickButtonHandler = (event) => {
     event.preventDefault();
 
     const value = this.state.value;
@@ -111,8 +104,7 @@ class Dropdown extends Field
 
     const data = [...this.data];
 
-    if (this.props.placeholder && !find(this.data, i => i.id === 0))
-    {
+    if (this.props.placeholder && this.data.some(({ id }) => !id) === false) {
       data.unshift({
         id: 0,
         title: this.props.intl ?
@@ -124,15 +116,15 @@ class Dropdown extends Field
     this.context.store.dispatch(menu(
       {
         items: data.map(item =>
-          ({
-            ...item,
-            title: this.props.intl && this.props.dataTranslate ?
-              capitalizeFirstLetter(this.props.intl.formatMessage({ id: item.title, default: item.title }))
-              : item.title,
-            className: item.className + (isActive(item.id) ? ' active' : ''),
-            handler: item.handler ?
-              item.handler(this.onChangeDropdownHandler) : this.onChangeDropdownHandler,
-          }),
+        ({
+          ...item,
+          title: this.props.intl && this.props.dataTranslate ?
+            capitalizeFirstLetter(this.props.intl.formatMessage({ id: item.title, default: item.title }))
+            : item.title,
+          className: item.className + (isActive(item.id) ? ' active' : ''),
+          handler: item.handler ?
+            item.handler(this.onChangeDropdownHandler) : this.onChangeDropdownHandler,
+        }),
         ),
       },
       {
@@ -149,8 +141,7 @@ class Dropdown extends Field
    * @override
    * @return {ReactElement}
    */
-  render()
-  {
+  render() {
     let value = this.state.value || [];
     value = Array.isArray(value) ? value : [value];
 
@@ -159,12 +150,10 @@ class Dropdown extends Field
       : this.props.placeholder;
 
     const valueText = value
-      .map(id =>
-      {
+      .map(id => {
         const title = (this.data.find(item => item.id.toString() === id.toString()) || {}).title;
 
-        if (title)
-        {
+        if (title) {
           return this.props.intl && this.props.dataTranslate ?
             capitalizeFirstLetter(this.props.intl.formatMessage({ id: title, default: title }))
             : title;
@@ -180,34 +169,33 @@ class Dropdown extends Field
         onClick={this.onClickButtonHandler}
       >
 
-        { this.label }
+        {this.label}
 
         <div className="h-center">
 
-          { this.state.prefix &&
-          <div className="prefix">{this.state.prefix}</div>
+          {this.state.prefix &&
+            <div className="prefix">{this.state.prefix}</div>
           }
 
           <button
             className={`value ${this.props.buttonClassName}`}
             onClick={this.onClickButtonHandler}
-            ref={(ref) =>
-            {
+            ref={(ref) => {
               this.element = ref;
             }}
           >
-            { valueText || placeholder }
+            {valueText || placeholder}
           </button>
 
-          { this.props.postfix &&
-          <div className="postfix">{this.state.postfix}</div>
+          {this.props.postfix &&
+            <div className="postfix">{this.state.postfix}</div>
           }
 
         </div>
 
-        
 
-        { this.state.error &&
+
+        {this.state.error &&
           <div className="error">{this.state.error}</div>
         }
       </div>

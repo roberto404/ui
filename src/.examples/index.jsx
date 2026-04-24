@@ -38,6 +38,16 @@ require('../../assets/style/index.scss');
 
 const root = ReactDOM.createRoot(document.getElementById("Application"));
 
+function handleIntlError(err) {
+  if (err.code === 'MISSING_TRANSLATION') {
+    // Csak a hiányzó fordítás figyelmeztetéseket hagyjuk figyelmen kívül
+    return;
+  }
+  // Más hibákat, figyelmeztetéseket továbbra is megjelenítünk
+  console.error(err);
+}
+
+
 new Application({
   store,
   config: {
@@ -54,7 +64,10 @@ new Application({
         // 
         root.render(
           <ReduxProvider store={store}>
-            <IntlProvider locale="en">
+            <IntlProvider
+              locale="en"
+              onError={handleIntlError} 
+            >
               <Example
                 // config={config}
                 app={App}

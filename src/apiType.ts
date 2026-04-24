@@ -8,12 +8,13 @@ type CommonResponse = {
   version: '3.0.0';
 };
 
-export type SuccessResponse = CommonResponse & {
+export type SuccessResponse<T = any, C = {}> = CommonResponse & {
   status: Status.SUCCESS;
-  config: {};
+  config: C;
   count: number;
-  records: [];
+  records: T;
 };
+
 
 export type ErrorResponse = CommonResponse & {
   status: Status.ERROR;
@@ -24,26 +25,29 @@ export type ErrorResponse = CommonResponse & {
   }
 };
 
-export type Response = SuccessResponse | ErrorResponse;
+export type Response<T, C = undefined> = SuccessResponse<T, C> | ErrorResponse;
+
+export type ApiResponse<T, C = undefined> = Response<T, C>
 
 
-export type ApiResponse<T> = Response & {
-  records: T;
+export type ApiSuccessResponse<T = any, C = {}> = SuccessResponse<T, C> & {
+  config?: C;
 };
 
-export type ApiSuccessResponse<T> = SuccessResponse & {
-  records: T;
-};
 
+export type ApiType = <T, C = undefined>(props: { url: string; payload?: {} }) => Promise<ApiResponse<T, C>>;
 
-export type ApiType = <T>(props: { url: string; payload?: {} }) => Promise<ApiResponse<T>>;
-
-export type useApiReturnType<T> = [
-  data: ApiResponse<T> | undefined,
+export type useApiReturnType<T, C = undefined> = [
+  data: ApiSuccessResponse<T, C>,
   loading: boolean,
-  error: boolean | undefined,
+  error: ErrorResponse | undefined,
 ];
 
 // @todo use api type
-export type argsType = [string] | [string, {}];
+export type argsType<T> = [string] | [string, {}] | [{
+  url: string,
+  payload?: {},
+  onLoad?: (response: ApiResponse<T>) => void,
+  skip?: boolean,
+}];
 

@@ -29,6 +29,8 @@ import IconBack from '../../icon/mui/navigation/arrow_back';
 import IconNext from '../../icon/mui/navigation/arrow_forward';
 import IconPrev from '../../icon/mui/navigation/arrow_back';
 
+import Sidebar from './dropzoneCardEditorSidebar';
+
 
 
 // TODO
@@ -46,63 +48,12 @@ const DEFAULT_STATE =
   tag: '',
 };
 
-const Sidebar = ({
-  title,
-  subTitle,
-  url,
-  tag,
-  onChange,
-}) =>
-{
-  const onChangeInputHandler = onChange;
-
-  return (
-    <div>
-      <input
-        value={title}
-        id="title"
-        onChange={onChangeInputHandler}
-        placeholder="Kép címe"
-        className="mb-1"
-      />
-      <textarea
-        value={subTitle}
-        id="subTitle"
-        onChange={onChangeInputHandler}
-        placeholder="Kép alcíme"
-        className="mb-1"
-      />
-      <input
-        value={url}
-        id="url"
-        onChange={onChangeInputHandler}
-        placeholder="Hivatkozott weboldal"
-        className="mb-1"
-      />
-      <input
-        value={tag}
-        id="tag"
-        onChange={onChangeInputHandler}
-        placeholder="Címkék"
-      />
-  </div>
-);
-}
-
-Sidebar.defaultProps =
-{
-  title: '',
-  subTitle: '',
-  url: '',
-  tag: '',
-}
 
 
 
-export class CardEditor extends Component
-{
-  constructor(props)
-  {
+
+export class CardEditor extends Component {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -114,10 +65,8 @@ export class CardEditor extends Component
     this.initialItems = [...props.items];
   }
 
-  componentDidMount()
-  {
-    if (this.context.addShortcuts)
-    {
+  componentDidMount() {
+    if (this.context.addShortcuts) {
       this.context.addShortcuts(
         [
           {
@@ -131,8 +80,7 @@ export class CardEditor extends Component
     }
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps)
-  {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
       ...DEFAULT_STATE,
       marker: ((nextProps.item?.id !== this.state.id) ? DEFAULT_STATE : this.state).marker,
@@ -140,47 +88,39 @@ export class CardEditor extends Component
     });
   }
 
-  shouldComponentUpdate(nextProps, nextState)
-  {
+  shouldComponentUpdate(nextProps, nextState) {
     return (JSON.stringify(nextState) !== JSON.stringify(this.state));
   }
 
-  componentDidUpdate()
-  {
+  componentDidUpdate() {
     this.props.onChange(this.state, false);
   }
 
-  componentWillUnmount()
-  {
+  componentWillUnmount() {
     this.context.store.dispatch(unsetValues({ id: ID }, this.context.form));
 
-    if (this.context.removeShortcuts)
-    {
+    if (this.context.removeShortcuts) {
       this.context.removeShortcuts('dropzoneCardEditorCollection');
     }
   }
 
   /* !- Listener */
 
-  onClickSettingsHandler = (event) =>
-  {
+  onClickSettingsHandler = (event) => {
     event.preventDefault();
     this.setState({ visibleSettings: !this.state.visibleSettings });
   }
 
-  onDragMarkerListener = ({ index, x, y }) =>
-  {
+  onDragMarkerListener = ({ index, x, y }) => {
     let markers = [];
 
-    if (Math.min(x, y) < 0 || Math.max(x, y) > 100)
-    {
+    if (Math.min(x, y) < 0 || Math.max(x, y) > 100) {
       markers = [
         ...this.state.markers.slice(0, parseInt(index)),
         ...this.state.markers.slice(parseInt(index) + 1),
       ];
     }
-    else
-    {
+    else {
       markers = [...this.state.markers];
 
       markers[index] =
@@ -194,15 +134,13 @@ export class CardEditor extends Component
     this.setState({ markers });
 
     const layer = this.context.store.getState().layer;
-    
-    if (layer.method === 'popover')
-    {
+
+    if (layer.method === 'popover') {
       this.context.store.dispatch(flush());
     }
   }
 
-  onClickHandler = category => () =>
-  {
+  onClickHandler = category => () => {
     const settings = this.context.store.getState().form.markerSetting;
 
     const marker = {
@@ -219,18 +157,16 @@ export class CardEditor extends Component
 
   /* !- Handlers */
 
-  onClickMarkerHandler = (event) =>
-  {
+  onClickMarkerHandler = (event) => {
     event.preventDefault();
 
     const category = event.currentTarget.dataset.id;
 
 
-    if (this.context.store.getState().layer.active)
-    {
+    if (this.context.store.getState().layer.active) {
       let settings = prompt("Létrehozom:", "");
 
-       const marker = {
+      const marker = {
         category,
         settings,
         position: [50, 50],
@@ -239,8 +175,7 @@ export class CardEditor extends Component
       this.setState({ markers: [...(this.state.markers || []), marker] });
 
     }
-    else
-    {
+    else {
       this.context.store.dispatch(dialog(
         <div>
           <Input id="markerSetting" />
@@ -250,26 +185,22 @@ export class CardEditor extends Component
     }
   }
 
-  onClickSaveHandler = (event) =>
-  {
+  onClickSaveHandler = (event) => {
     event.preventDefault();
     this.props.onChange(this.state);
   }
 
-  onClickCancelHandler = (event) =>
-  {
+  onClickCancelHandler = (event) => {
     event.preventDefault();
     this.props.onChange(this.initialItems);
   }
 
-  onClickDeleteHandler = (event) =>
-  {
+  onClickDeleteHandler = (event) => {
     event.preventDefault();
     this.props.onChange();
   }
 
-  onUploadCompleteHandler = (files) =>
-  {
+  onUploadCompleteHandler = (files) => {
     const { id, ext } = files[files.length - 1];
 
     this.setState({
@@ -278,8 +209,7 @@ export class CardEditor extends Component
     });
   }
 
-  onChangeInputHandler = (event) =>
-  {
+  onChangeInputHandler = (event) => {
     const { id, value } = event.target || event;
 
     this.setState({ [id]: value });
@@ -299,8 +229,7 @@ export class CardEditor extends Component
     ));
 
 
-  render()
-  {
+  render() {
     const Sidebar = this.props.Sidebar;
 
     return (

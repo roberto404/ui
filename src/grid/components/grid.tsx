@@ -17,9 +17,14 @@ import findLastIndex from 'lodash/findLastIndex';
 import { setValues, unsetValues } from '../../form/actions';
 
 
+/* !- Components */
+
+import GridRowCheckboxHeader from './gridRowCheckboxHeader';
+
+
 /* !- Constants */
 
-import { FORM_PREFIX, SHORTCUTS_NAME } from '../constants';
+import { FORM_PREFIX, SHORTCUTS_NAME, COL_POSTFIX } from '../constants';
 
 
 /* !- React Elements */
@@ -36,13 +41,13 @@ type HookFormatType = {
 }
 
 type HookType =
-{
-  title: string,
-  format?: (a: HookFormatType) => JSX.Element | string,
-  sort?: (a: {}, b: {}) => boolean,
-  status?: number,
-  width?: string,
-}
+  {
+    title: string,
+    format?: (a: HookFormatType) => JSX.Element | string,
+    sort?: (a: {}, b: {}) => boolean,
+    status?: number,
+    width?: string,
+  }
 
 const defaultProps =
 {
@@ -58,16 +63,12 @@ const defaultProps =
   orderDirection: '',
   orderColumn: '',
   noResults: <div className='v-center py-1/2 text-gray'>No Results.</div>,
-  rowElement: ({ children, onClick, data, className }) =>
+  rowElement: ({ children, onClick, data, className, isActive }) =>
     <div className={className} onClick={onClick}>{children}</div>,
-  onClickCell()
-  {},
-  onDoubleClickCell()
-  {},
-  onContextClickCell()
-  {},
-  onChangeOrder()
-  {},
+  onClickCell() { },
+  onDoubleClickCell() { },
+  onContextClickCell() { },
+  onChangeOrder() { },
   className: 'grid column',
   headClassName: 'thead',
   bodyClassName: 'tbody',
@@ -75,9 +76,10 @@ const defaultProps =
   height: '',
   freezeHeader: false,
   infinity: false,
+  shortcuts: [],
 };
 
-type PropTypes = Partial<typeof defaultProps> & 
+type PropTypes = Partial<typeof defaultProps> &
 {
   id: string,
   /**
@@ -217,6 +219,10 @@ type PropTypes = Partial<typeof defaultProps> &
   */
   selectable: boolean,
   /**
+   * If selectable true, you can navigate col with left/right arrow
+   */
+  colSelect: boolean,
+  /**
    * Enable select more than one item from grid
    */
   multipleSelect: boolean,
@@ -302,7 +308,8 @@ type PropTypes = Partial<typeof defaultProps> &
 */
 export const Grid = ({
   id,
-  data,
+  data = [],
+  rawData = [],
   showHeader,
   selectable,
   expandSelect,
@@ -327,40 +334,78 @@ export const Grid = ({
   height,
   freezeHeader,
   infinity,
-}: PropTypes) =>
-{
+  shortcuts,
+}: PropTypes) => {
+
+  const dispatch = useDispatch();
+  const { store } = useContext(ReactReduxContext);
+
   const {
     addShortcuts,
     removeShortcuts,
     addListener,
     removeListener,
   } = useAppContext();
-  
-  const { store } = useContext(ReactReduxContext);
 
-  const dispatch = useDispatch();
 
-  const element = useRef(null);
-  const elementBody = useRef(null);
-  const prevSelectedItemId = useRef(null);
+  const element = useRef<HTMLDivElement>(null);
+  const elementBody = useRef<HTMLDivElement>(null);
+  const prevSelectedItemId = useRef<number | null>(null);
 
   const [focus, setFocus] = useState(true);
 
+  const [highlightId, setHighlightId] = useState([]);
+  const prevIdsRef = useRef([]);
+
+
+
+  // highlight
+  useEffect(() => {
+
+    if (!rawData.length) {
+      return;
+    }
+
+    const prevIds = prevIdsRef.current;
+    const newIds = rawData.map(r => r.id);
+
+    // első load → csak elmentjük, de NEM highlightolunk
+    // ha az elemszám nem nőtt → nem új elem → kilépünk
+    if (!prevIds.length || newIds.length <= prevIds.length) {
+      prevIdsRef.current = newIds;
+      return;
+    }
+
+    // új elem érkezett → ID keresése
+    const added = newIds.filter(id => !prevIds.includes(id));
+
+    if (added.length > 0) {
+      // @todo limit loader
+      const id = [added[0]];
+      setHighlightId(id);
+
+      setTimeout(() => setHighlightId([]), 3000);
+    }
+
+    prevIdsRef.current = newIds;
+  }, [rawData.length]); // 🔥 csak length változásra fut le
+
   useEffect(
-    () =>
-    {
-      if (focus)
-      {
+    () => {
+      if (!selectable) {
+        return;
+      }
+
+      if (focus) {
         addShortcutsListeners();
       }
-      else
-      {
+      else {
         removeShortcuts(SHORTCUTS_NAME);
       }
     },
     [focus],
   );
-  
+
 
   /**
    * Grid props which store in redux Form with this key
@@ -378,37 +423,22 @@ export const Grid = ({
    * Rows of table is clickable
    * @type {Boolean}
    */
-  let isClickRows = false;
-
-
-  // componentWillMount => constructor
-  useMemo(
-    () =>
-    { 
-      //@todo context
-      //gridId = id || context.grid || '';
-
-      isClickRows =
-        selectable || onClickCell.toString() !== defaultProps.onClickCell.toString();
-    },
-    [],
+  const isClickRows = useMemo(
+    () => selectable || onClickCell.toString() !== defaultProps.onClickCell.toString(),
+    [selectable, onClickCell]
   );
 
   // componentDidMount, componentWillUnmount
   useEffect(
-    () =>
-    {
+    () => {
       // componentDidMount
-      if (addListener)
-      {
+      if (addListener) {
         addListener('click', onFocusListener);
       }
 
       // componentWillUnmount
-      return () =>
-      {
-        if (removeListener)
-        {
+      return () => {
+        if (removeListener) {
           removeListener(onFocusListener);
           removeShortcuts(SHORTCUTS_NAME);
         }
@@ -417,42 +447,41 @@ export const Grid = ({
     [],
   );
 
+  /**
+   * If the grid is selectable, watch the selected items in Redux form state
+   * and automatically scroll the grid to keep the last selected item visible.
+   */
   useSelector(
-    (state) =>
-    {
+    (state) => {
       const gridSelectedItemIds = state.form[formId];
 
-      if (gridSelectedItemIds && elementBody.current)
-      {
+      if (gridSelectedItemIds && elementBody.current) {
         const nextSelectedItemId = gridSelectedItemIds[gridSelectedItemIds.length - 1];
-  
-        if (prevSelectedItemId.current !== nextSelectedItemId)
-        {
+
+        if (prevSelectedItemId.current !== nextSelectedItemId) {
           prevSelectedItemId.current = nextSelectedItemId;
-  
+
           const nextSelectedItemIndex = getData()
             .findIndex(({ id }) => id === nextSelectedItemId);
-  
+
           const itemHeight = infinity ?
             elementBody.current.children[0].children[0].children[0].children[0].offsetHeight :
             elementBody.current.children[0].offsetHeight;
-  
+
           const bodyHeight = element.current.offsetHeight;
-  
+
           const itemScrollTop = itemHeight * nextSelectedItemIndex;
-  
-          if (nextSelectedItemIndex === -1)
-          {
+
+          if (nextSelectedItemIndex === -1) {
             element.current.scrollTop = 0;
           }
           else if
-          (
+            (
             // out bottom
             (element.current.scrollTop + bodyHeight < itemScrollTop + itemHeight)
             // out top
             || (element.current.scrollTop > itemScrollTop)
-          )
-          {
+          ) {
             element.current.scrollTop = itemScrollTop - (bodyHeight / 2) + (itemHeight / 2);
           }
         }
@@ -465,15 +494,12 @@ export const Grid = ({
   /**
    * Handling the grid is on focus
    */
-  const onFocusListener = (event, focus) =>
-  {
-    if (!elementBody.current)
-    {
+  const onFocusListener = (event, focus) => {
+    if (!elementBody.current) {
       return;
     }
 
     const isFocus = elementBody.current.contains(event.target);
-
     setFocus(isFocus);
   }
 
@@ -483,29 +509,25 @@ export const Grid = ({
    * @param  {integer} direction +1 or -1
    * @return {function}           handler
    */
-  const onKeyArrowHandler = direction => event =>
-  {
-    event.preventDefault();
-    const state = store.getState();
-    const gridData = getData();
+  const onKeyVerticalArrowHandler = (direction: number) => (event: KeyboardEvent) => {
 
-    const activeRecords = state.form[formId];
+    event.preventDefault();
+
+    const activeRecords: number[] = store.getState().form[formId];
+    const gridData = getData();
 
     let nextActiveRecord;
 
-    if (!activeRecords || activeRecords.length === 0)
-    {
+    if (!activeRecords || activeRecords.length === 0) {
       nextActiveRecord = gridData[0];
     }
-    else
-    {
+    else {
       const lastRecordIndex =
         gridData.findIndex(({ id }) => id === activeRecords[activeRecords.length - 1]);
 
       const nextRecordIndex = lastRecordIndex + direction;
 
-      if (nextRecordIndex < 0 || nextRecordIndex >= gridData.length)
-      {
+      if (nextRecordIndex < 0 || nextRecordIndex >= gridData.length) {
         return false;
       }
 
@@ -513,35 +535,77 @@ export const Grid = ({
     }
 
     setActiveRecords(nextActiveRecord);
-
     return true;
   };
 
-  const onKeySelectAllHandler = (event) =>
-  {
+  const onKeyHorizontalArrowHandler = (direction: number) => (event: KeyboardEvent) => {
+
+    event.preventDefault();
+
+    const state = store.getState();
+    const gridData = getData();
+
+    const { hook } = store.getState().grid?.[gridId] || {};
+
+    const activeRecords: number[] = state.form[formId];
+
+    if (!activeRecords || activeRecords.length === 0) {
+      onKeyVerticalArrowHandler(1)(event);
+    }
+
+    const activeRecordField: string = state.form[formId + COL_POSTFIX];
+
+    let nextRecordField: string;
+
+    const firstRecord = gridData[0] || {};
+    const fields = Object.keys(hook || firstRecord);
+
+    if (!activeRecordField) {
+      nextRecordField = fields[0];
+    }
+    else {
+
+      const recordFieldIndex = fields.findIndex(field => field === activeRecordField);
+
+      nextRecordField = fields[recordFieldIndex + direction];
+    }
+
+    if (nextRecordField) {
+      setActiveCol(nextRecordField);
+    }
+  }
+
+  const onKeySelectAllHandler = (event: KeyboardEvent) => {
+
     event.preventDefault();
     event.stopPropagation();
 
     const gridData = getData();
 
-    if (gridData)
-    {
+    if (gridData) {
       setActiveRecords(gridData);
     }
   }
 
-  const setActiveRecords = (records) =>
-  {
+  const setActiveRecords = (records: any[]) => {
+
     const recordsArray = Array.isArray(records) ? records : [records];
 
     dispatch(setValues({
       id: formId,
-      value: recordsArray.map(({ id }) => id),
+      value: (recordsArray || []).map(({ id }) => id),
     }));
   }
 
-  const getData = () =>
-  {
+  const setActiveCol = (recordField: string) => {
+
+    dispatch(setValues({
+      id: formId + COL_POSTFIX,
+      value: recordField,
+    }))
+  }
+
+  const getData = () => {
     return store.getState().grid?.[gridId]?.data || data;
   }
 
@@ -551,19 +615,15 @@ export const Grid = ({
   * @example
   * // => [id, title, status]
   */
-  const getColumns = () =>
-  {
-    if (hook && Object.keys(hook).length > 0)
-    {
+  const getColumns = () => {
+    if (hook && Object.keys(hook).length > 0) {
       return reduce(
         hook,
-        (result, value, index) =>
-        {
+        (result, value, index) => {
           if (
             typeof value === 'string' ||
             value.status !== 0
-          )
-          {
+          ) {
             return [...result, index];
           }
           return result;
@@ -572,8 +632,7 @@ export const Grid = ({
       );
     }
 
-    if (data.length)
-    {
+    if (data.length) {
       return Object.keys(data[0]);
     }
 
@@ -584,32 +643,34 @@ export const Grid = ({
   /**
    * Add necessary keyboard shortcuts
    */
-  const addShortcutsListeners = () =>
-  {
-    if (addShortcuts)
-    {
-      addShortcuts(
-        [
-          {
-            keyCode: 'ArrowUp',
-            handler: onKeyArrowHandler(-1),
-            description: 'Grid Arrow Up',
-          },
-          // {
-          //   keyCode: 'ArrowLeft',
-          //   handler: onKeyArrowHandler(-1),
-          //   description: 'Grid Arrow Left',
-          // },
-          {
-            keyCode: 'ArrowDown',
-            handler: onKeyArrowHandler(+1),
-            description: 'Grid Arrow Down',
-          },
-          // {
-          //   keyCode: 'ArrowRight',
-          //   handler: onKeyArrowHandler(+1),
-          //   description: 'Grid Arrow Right',
-          // },
+  const addShortcutsListeners = () => {
+    if (addShortcuts) {
+
+      const defaultShortcuts = [
+        {
+          keyCode: 'ArrowUp',
+          handler: onKeyVerticalArrowHandler(-1),
+          description: 'Grid Arrow Up',
+        },
+        {
+          keyCode: 'ArrowLeft',
+          handler: onKeyHorizontalArrowHandler(-1),
+          description: 'Grid Arrow Left',
+        },
+        {
+          keyCode: 'ArrowDown',
+          handler: onKeyVerticalArrowHandler(+1),
+          description: 'Grid Arrow Down',
+        },
+        {
+          keyCode: 'ArrowRight',
+          handler: onKeyHorizontalArrowHandler(+1),
+          description: 'Grid Arrow Right',
+        },
+      ];
+
+      if (multipleSelect) {
+        defaultShortcuts.push(
           {
             keyCode: 'CTRL+A',
             handler: onKeySelectAllHandler,
@@ -619,7 +680,35 @@ export const Grid = ({
             keyCode: 'META+A',
             handler: onKeySelectAllHandler,
             description: 'Grid Select All',
-          },
+          }
+        );
+      }
+
+
+      addShortcuts(
+        [
+          ...defaultShortcuts,
+          ...shortcuts.map(shortcut => ({
+            ...shortcut,
+            handler: (event: KeyboardEvent) => {
+
+              event.preventDefault();
+              event.stopPropagation();
+
+              const column = store.getState().form[formId + COL_POSTFIX];
+              const helper = store.getState().grid?.[gridId]?.helper;
+
+              shortcut.handler({
+                records:
+                  getData().filter(({ id }) => store.getState().form[formId].includes(id)),
+                column,
+                data: getData(),
+                helper,
+                formId,
+                event,
+              });
+            }
+          })),
         ],
         SHORTCUTS_NAME,
       );
@@ -633,17 +722,14 @@ export const Grid = ({
   * @private
   * @return {ReactElement} SVG icon
   */
-  const renderOrderArrow = () =>
-  {
+  const renderOrderArrow = () => {
     const direction = orderDirection;
 
-    if (direction === 'asc')
-    {
+    if (direction === 'asc') {
       return <div className="up" />;
     }
 
-    else if (direction === 'desc')
-    {
+    else if (direction === 'desc') {
       return <div className="down" />;
     }
 
@@ -656,8 +742,7 @@ export const Grid = ({
       .map(id => parseInt((hook[id].width || '').replace('%', '')) || 0)
       .filter(width => width > 0);
 
-  const getRestColumnWidthByHook = (hook) =>
-  {
+  const getRestColumnWidthByHook = (hook) => {
     const colWidths = getColumnsWidthByHook(hook);
     return Math.floor((100 - sum(colWidths)) / (Object.keys(hook).length - colWidths.length))
   }
@@ -667,21 +752,17 @@ export const Grid = ({
   * @private
   * @return {ReactElement} TableRow dom node
   */
-  const renderHeaders = () =>
-  {
+  const renderHeaders = () => {
     const getRestColumnWidth = getRestColumnWidthByHook(hook);
 
-    const nodeTableHeaderColumns = getColumns().map((column) =>
-    {
+    const nodeTableHeaderColumns = getColumns().map((column) => {
       let title = column;
       let columnHook = {};
 
-      if (Object.keys(hook).length > 0)
-      {
+      if (Object.keys(hook).length > 0) {
         columnHook = hook[column] || {};
 
-        if (typeof columnHook.title !== 'undefined')
-        {
+        if (typeof columnHook.title !== 'undefined') {
           title = columnHook.title;
 
           // if (typeof columnHook.tooltip === 'function')
@@ -705,8 +786,7 @@ export const Grid = ({
           //   );
           // }
         }
-        else
-        {
+        else {
           title = columnHook;
         }
       }
@@ -718,58 +798,23 @@ export const Grid = ({
           style={{
             width: (typeof columnHook.width !== 'undefined') ?
               columnHook.width : `${getRestColumnWidth}%`,
+            textAlign: (typeof columnHook.align !== 'undefined') ?
+              columnHook.align : undefined,
+            padding: (typeof columnHook.align !== 'undefined') ?
+              '0.85em' : undefined,
           }}
-          className={orderColumn === column ? 'active' : ''}
+          className={orderColumn === column ? 'active' : ''
+          }
         >
           <div>{title}</div>
           {orderColumn === column && renderOrderArrow()}
-        </div>
+        </div >
       );
     });
 
     // insert checkbox first row
-    if (selectable && checkboxSelect)
-    {
-      // onClick header checkbox
-      const onClickHeaderCheckboxHandler = () =>
-      {
-        const state = store.getState();
-        const form = state.form[formId] || [];
-
-        if (form.length)
-        {
-          dispatch(unsetValues({ id: formId }));
-        }
-        else
-        {
-          const gridData = getData();
-
-          dispatch(setValues({
-            id: formId,
-            value: gridData.map(({ id }) => id),
-          }));
-        }
-      };
-
-      const Checkbox = connect(
-        ({ grid, form }) =>
-        {
-          const formLength = form[formId] ? form[formId].length : 0;
-          const gridLength = grid[gridId] ? grid[gridId].data.length : 0;
-
-          return ({
-            status: formLength && Math.floor((formLength + gridLength) / gridLength),
-          });
-        },
-      )(({ status }) => (
-        <div
-          className={`checkbox ${['empty', 'fragment', 'full'][status]}`}
-          onClick={onClickHeaderCheckboxHandler}
-        />
-      ));
-
-
-      nodeTableHeaderColumns.unshift(<Checkbox key="checkbox" />);
+    if (selectable && checkboxSelect) {
+      nodeTableHeaderColumns.unshift(<GridRowCheckboxHeader key="checkbox" />);
     }
 
     return (
@@ -777,22 +822,21 @@ export const Grid = ({
         className={headClassName}
       >
         <div>
-          { nodeTableHeaderColumns }
+          {nodeTableHeaderColumns}
         </div>
       </div>
     );
   };
 
-  const renderCell = (record, index, column) =>
-  {
+  const renderCell = (record, index, column, isActive) => {
+
     let value = record[column];
     const columnHook = hook[column] || {};
 
     const getRestColumnWidth = getRestColumnWidthByHook(hook);
 
     // format value of field
-    if (typeof columnHook.format === 'function')
-    {
+    if (typeof columnHook.format === 'function') {
       value = columnHook.format({
         value,
         helper,
@@ -808,6 +852,7 @@ export const Grid = ({
     return (
       <div
         key={column}
+        className={classNames({ 'bg-yellow-dark': isActive })}
         onClick={event => onClickCell(record, column, event)}
         onDoubleClick={event => onDoubleClickCell(record, column, event)}
         onContextMenu={event => onContextClickCell(record, column, event)}
@@ -824,19 +869,36 @@ export const Grid = ({
     );
   }
 
-  const renderRow = (record, index, columns) =>
-  {
+  const CellComponent = React.memo(({ isActive, renderCell, record, index, column }) => {
+    return renderCell(record, index, column, isActive);
+  });
+
+  const ConnectedCell = connect((state, { record, column }) => {
+    const isActiveRow = (state.form[formId] || []).includes(record.id);
+    const isActive = isActiveRow && state.form[formId + COL_POSTFIX] === column;
+    return { isActive };
+  })(CellComponent);
+
+
+
+  const renderRow = (record, index, columns) => {
+
     /**
      * All cell of row
      * (all field of record)
      * @type {ReactElement}
      */
-    const nodeTableRowColumns = columns.map(column => renderCell(record, index, column));
+    // const nodeTableRowColumns = columns.map(column => renderCell(record, index, column));
+
+    const nodeTableRowColumns = columns.map(column =>
+      selectable
+        ? React.createElement(ConnectedCell, { renderCell, record, index, column })
+        : renderCell(record, index, column)
+    );
 
 
     // insert checkbox first row
-    if (selectable && checkboxSelect)
-    {
+    if (selectable && checkboxSelect) {
       nodeTableRowColumns.unshift(<div className="checkbox" key="checkbox" />);
     }
 
@@ -845,8 +907,7 @@ export const Grid = ({
      * @param  {Function} selectable if the grid is selectable
      * @return {Function}            [description]
      */
-    const onClickTableRowHandler = (!selectable) ? undefined : (event) =>
-    {
+    const onClickTableRowHandler = (!selectable) ? undefined : (event) => {
       const prevSelection = store.getState().form[formId] || [];
 
       let nextSelection = [record.id];
@@ -858,12 +919,10 @@ export const Grid = ({
       const isExpandable =
         multipleSelect && (expandSelect || (event.ctrlKey || event.metaKey) || event.shiftKey);
 
-      if (isExpandable)
-      {
+      if (isExpandable) {
         const isNewItem = prevSelection.indexOf(record.id) === -1;
 
-        if (event.shiftKey)
-        {
+        if (event.shiftKey) {
           const grid = store.getState().grid[gridId];
           const gridData = grid ? grid.data : data;
           const index = gridData.findIndex(({ id }) => id === record.id);
@@ -874,11 +933,11 @@ export const Grid = ({
           );
 
           const max = isNewItem ?
-          Math.max(
-            findLastIndex(gridData, ({ id }) => prevSelection.indexOf(id) !== -1),
-            index,
-          )
-          : index;
+            Math.max(
+              findLastIndex(gridData, ({ id }) => prevSelection.indexOf(id) !== -1),
+              index,
+            )
+            : index;
 
           nextSelection = gridData.slice(min, max + 1).map(({ id }) => id)
 
@@ -933,14 +992,12 @@ export const Grid = ({
           //   nextSelection = prevSelection.filter(x => nextSelection.indexOf(x) === -1);
           // }
         }
-        else
-        {
+        else {
           nextSelection = isNewItem ? prevSelection.concat(nextSelection) : prevSelection.filter(i => i !== record.id);
         }
       }
 
-      if (!isEqual(prevSelection, nextSelection))
-      {
+      if (!isEqual(prevSelection, nextSelection)) {
         dispatch(setValues({
           id: formId,
           value: nextSelection,
@@ -948,21 +1005,20 @@ export const Grid = ({
       }
     };
 
+    const ConnectedRowElement = connect(({ form }, { highlighted }) => {
+      const isActive = (form[formId] || []).indexOf(record.id) !== -1;
+      return {
+        className: classNames({
+          'active': isActive,
+          'highlight': highlighted,
+        }),
+        isActive,
+      };
+    })(rowElement);
+
     // if the grid selectable use connected rowElement componet
     return React.createElement(
-      selectable ?
-        connect(
-          ({ form }) =>
-          {
-            const isActive = (form[formId] || []).indexOf(record.id) !== -1;
-
-            return {
-              className: isActive ? 'active' : '',
-            };
-          },
-        )(rowElement)
-        :
-        rowElement,
+      selectable ? ConnectedRowElement : rowElement,
       {
         key: record.id,
         data: record,
@@ -970,8 +1026,9 @@ export const Grid = ({
         onClickCell,
         onClick: onClickTableRowHandler,
         dispatch: dispatch,
+        highlighted: Array.isArray(highlightId) && highlightId.includes(record.id),
       },
-      nodeTableRowColumns,
+      nodeTableRowColumns
     );
   }
 
@@ -980,15 +1037,15 @@ export const Grid = ({
   * @private
   * @return {ReactElement} Table Row dom node
   */
-  const renderRows = () =>
-  {
-    if (Array.isArray(data) && data.length)
-    {
+  const renderRows = () => {
+
+    if (Array.isArray(data) && data.length) {
+
       const columns = getColumns();
+
       let nodeTableRows;
 
-      if (infinity)
-      {
+      if (infinity) {
         nodeTableRows = (
           <ReactList
             length={data.length}
@@ -997,8 +1054,7 @@ export const Grid = ({
           />
         );
       }
-      else
-      {
+      else {
         nodeTableRows = data.map((record, index) => renderRow(record, index, columns));
       }
 
@@ -1020,7 +1076,7 @@ export const Grid = ({
     }
 
     return (
-      <div>{ noResults }</div>
+      <div>{noResults}</div>
     );
   };
 
@@ -1038,8 +1094,8 @@ export const Grid = ({
       style={{ height, ...style }}
       ref={element}
     >
-      { showHeader === true && renderHeaders() }
-      { renderRows() }
+      {showHeader === true && renderHeaders()}
+      {renderRows()}
     </div>
   );
 }

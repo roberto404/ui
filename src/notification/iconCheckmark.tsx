@@ -7,6 +7,9 @@ interface IconCheckmarkProps {
   className?: string;
 }
 
+// Item class overwrite default classes
+export const IconCheckmarkWrapper = () => <IconCheckmark />;
+
 const IconCheckmark: React.FC<IconCheckmarkProps> = ({
   size = 20,
   duration = 1.5,

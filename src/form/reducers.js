@@ -168,6 +168,16 @@ export default (state = {}, action = {}) => {
         return state;
       }
 
+    case 'FORM_CLEAR':
+      {
+        return ({
+          ...state,
+          [action.form]: Object.fromEntries(
+            Object.keys(state[action.form]).map(key => [key, undefined])
+          ),
+        });
+      }
+
     case 'FORM_FLUSH':
       {
         const newState = { ...state };
@@ -187,3 +197,15 @@ export default (state = {}, action = {}) => {
       return state;
   }
 };
+
+
+export const GET_FORM = (id, field) => (state => {
+
+  const form = state.form?.[id];
+
+  if (!field) {
+    return form
+  }
+
+  return form?.[field];
+});

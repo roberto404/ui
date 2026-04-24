@@ -366,4 +366,16 @@ const reducers = (state = {}, action = {}) => {
   return state;
 };
 
+export const GET_GRID_DATA = (id) => ({ grid }) => grid[id]?.data || [];
+export const GET_GRID_LENGTH = (id) => ({ grid }) => (grid[id]?.data || []).length;
+export const GET_GRID_SELECTION = (id) => ({ grid, form }) => {
+
+  const selection = form[`grid@${id}`] || [];
+  const data = grid[id]?.data || [];
+
+  return data.filter(record => selection.indexOf(record.id) > -1);
+};
+
+
+
 export default reducers;

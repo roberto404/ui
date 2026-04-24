@@ -6,25 +6,24 @@
 import PropTypes, { checkPropTypes } from '@1studio/utils/propType';
 
 
-import
-{
+import {
   FORM_ERRORS_KEY,
   FORM_SCHEME_KEY,
 }
-from './constants';
+  from './constants';
 
 type ActionType =
-{
-  type: string,
-  items?: {},
-  form?: string,
-};
+  {
+    type: string,
+    items?: {},
+    form?: string,
+  };
 
 type ItemsType =
-{
-  id?: string,
-  value?: string | number
-}
+  {
+    id?: string,
+    value?: string | number
+  } | { [key: string]: string | number }
 
 /**
  * Create form (or sub form) key/value store.
@@ -35,9 +34,9 @@ type ItemsType =
  * @param {object} items state items { status: 1, name: 'foo', ... }
  * @param {string} [form] state form group (alias sub form)
  * @example
- * setValue({ id: 'status', value: 1 })
+ * setValues({ id: 'status', value: 1 })
  * or
- * setValue({ status: 1, options: [1, 2] }, 'sample');
+ * setValues({ status: 1, options: [1, 2] }, 'sample');
  * // => {
  * form: {
  *    sample: {
@@ -45,20 +44,18 @@ type ItemsType =
  *      options: [1, 2],
  * }}}
  */
-export const setValues = (items: ItemsType, form?: string): ActionType =>
-{
+export const setValues = (items: ItemsType, form?: string): ActionType => {
   let transformItems = {};
 
   // Transform { id: status, value: 1 } => { status: 1 }
   //
-  if (!checkPropTypes(items, PropTypes.object.isRequired) && Object.keys(items).length)
-  {
+  if (!checkPropTypes(items, PropTypes.object.isRequired) && Object.keys(items).length) {
     transformItems =
       Object
         .keys(items)
         .every(key =>
           ['id', 'value'].indexOf(key) > -1) ?
-            { [items.id]: items.value } : items || {};
+        { [items.id]: items.value } : items || {};
   }
 
   const response = {
@@ -67,8 +64,7 @@ export const setValues = (items: ItemsType, form?: string): ActionType =>
     form: '',
   };
 
-  if (form)
-  {
+  if (form) {
     response.form = form;
   }
 
@@ -78,8 +74,7 @@ export const setValues = (items: ItemsType, form?: string): ActionType =>
 /**
  * Similar like setValues, but prev values will be destroy
  */
-export const setForm = (items: ItemsType, form?: string): ActionType =>
-{
+export const setForm = (items: ItemsType, form?: string): ActionType => {
   return ({
     ...setValues(items, form),
     type: 'FORM_SET_FORM',
@@ -113,18 +108,18 @@ export const setForm = (items: ItemsType, form?: string): ActionType =>
  * }}}
  */
 export const unsetValues = (items: ItemsType, form?: string): ActionType =>
- ({ ...setValues(items, form), type: 'FORM_UNSET_VALUES' });
+  ({ ...setValues(items, form), type: 'FORM_UNSET_VALUES' });
 
- /**
- * Set values asynchronous.
- * Use Promise.then method, when then invoke
- * the results will be set to Store.
- *
- * @since 1.0.0
- * @memberof Actions/Form
- * @param  {function} fetchApi Promise method
- * @param  {string} [form]
- */
+/**
+* Set values asynchronous.
+* Use Promise.then method, when then invoke
+* the results will be set to Store.
+*
+* @since 1.0.0
+* @memberof Actions/Form
+* @param  {function} fetchApi Promise method
+* @param  {string} [form]
+*/
 export const fetchValues = (fetchApi: Function, form?: string) =>
   fetchApi(form).then(response =>
     setValues(response, form),
@@ -144,7 +139,7 @@ export const fetchValues = (fetchApi: Function, form?: string) =>
  * setScheme({...}, 'form_id');
  */
 export const setScheme = (scheme: {}, form?: string): ActionType =>
- setValues({ [FORM_SCHEME_KEY]: scheme }, form);
+  setValues({ [FORM_SCHEME_KEY]: scheme }, form);
 
 
 /**
@@ -160,7 +155,7 @@ export const setScheme = (scheme: {}, form?: string): ActionType =>
  * setErrors({ status: 1, ... }, 'form_id')
  */
 export const setErrors = (errors: {}, form?: string): ActionType =>
- setValues({ [FORM_ERRORS_KEY]: errors }, form);
+  setValues({ [FORM_ERRORS_KEY]: errors }, form);
 
 
 export const validate = (form?: string): ActionType =>
@@ -168,6 +163,15 @@ export const validate = (form?: string): ActionType =>
   type: 'FORM_VALIDATE',
   form,
 });
+
+/**
+ * Keep form fields but set undefined every keys
+ */
+export const reset = (form?: string): ActionType =>
+({
+  type: 'FORM_CLEAR',
+  form,
+})
 
 /**
  * Flush complete form or sub-form.

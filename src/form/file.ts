@@ -10,8 +10,7 @@ const FILE_PATTERN = /^(([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})[a-f
 /**
  * File model
  */
-export class File
-{
+export class File {
   baseFolder = '/library/'
 
   /**
@@ -19,8 +18,7 @@ export class File
   * @private
   * @param  {integer} hash
   */
-  constructor(file = {})
-  {
+  constructor(file = {}) {
     // if ()
     // {
     //   throw new Error('File construct error.');
@@ -30,22 +28,37 @@ export class File
     this.name = file.name;
     this.ext = file.ext || 'jpg';
     this.key = 'f4cDFa';
+    this.mimeMajor = '';
+
+    this.setMajor(file);
+
+    return this;
   }
 
-  setName = () =>
-  {
+  setName = () => {
     this.name = md5(this.key + this.id).toString();
+  }
+
+  setMajor = (file) => {
+
+    if (file.mimeMajor) {
+
+      this.mimeMajor = file.mimeMajor;
+    }
+
+    else if (file.ext && ['jpg', 'png', 'jpeg'].includes(file.ext.toLowerCase())) {
+      this.mimeMajor = 'image';
+    }
+
+    return this.mimeMajor;
   }
 
 
   /* !- Getter Setter */
 
-  getUrl = (size, devicePixelRatio) =>
-  {
-    if (!this.name || !FILE_PATTERN.exec(this.name))
-    {
-      if (!this.id)
-      {
+  getUrl = (size, devicePixelRatio) => {
+    if (!this.name || !FILE_PATTERN.exec(this.name)) {
+      if (!this.id) {
         return '';
         // throw new Error('File hash error.');
       }
@@ -55,8 +68,7 @@ export class File
 
     let sizePrefix = '';
 
-    if (size)
-    {
+    if (size) {
       sizePrefix = `_${size}`;
     }
 
@@ -66,8 +78,8 @@ export class File
     return `${this.baseFolder + path + sizePrefix + dpr}.${this.ext}`;
   }
 
-  getThumbnail = () => this.getUrl('250x250')
-  getAvatar = () => this.getUrl('32x32')
+  getThumbnail = () => this.getUrl('250x250');
+  getAvatar = () => this.getUrl('32x32');
 }
 
 export default File;

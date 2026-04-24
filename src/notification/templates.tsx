@@ -1,7 +1,9 @@
 import ItemProgress from './itemProgress';
+import ItemApi from './itemApi';
 
 export const templates = {
   ItemProgress,
+  ItemApi,
 } as const;
 
 export type Templates = keyof typeof templates;

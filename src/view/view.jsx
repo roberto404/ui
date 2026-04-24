@@ -55,26 +55,22 @@ import { SCHEME } from './constans';
  *  ]
  * }
  */
-export const initSettings = (props) =>
-{
+export const initSettings = (props) => {
   let settings = { ...props.settings };
 
-  if (!settings.groups && typeof props.children === 'object')
-  {
+  if (!settings.groups && typeof props.children === 'object') {
     const children = (Array.isArray(props.children)) ?
       props.children :
       [props.children];
 
-    const group = children.map((child, index) =>
-    {
+    const group = children.map((child, index) => {
       let item = {
         id: child.props['data-view'] || index.toString(),
         status: parseInt(child.props['data-view-status'] || 1),
         pos: index,
       };
 
-      if (typeof child.props['data-view'] === 'object')
-      {
+      if (typeof child.props['data-view'] === 'object') {
         item = {
           ...item,
           ...child.props['data-view'],
@@ -91,27 +87,24 @@ export const initSettings = (props) =>
       },
     });
   }
-  else if (typeof settings.groups === 'object')
-  {
+  else if (typeof settings.groups === 'object') {
     // forEach(settings.groups, (items, groupId) =>
     // {
-      // nested miatt ertelmetlen
-      // settings.groups[groupId] = remove(items, item =>
-      //   (isNaN(item.id) && find(props.children, child => child.props['data-view'] === item.id)) ||
-      //   (!isNaN(item.id) && props.children.length > parseInt(item.id)),
-      // );
-      //
-      // if (!settings.groups[groupId].length)
-      // {
-      //   delete settings.groups[groupId];
-      // }
+    // nested miatt ertelmetlen
+    // settings.groups[groupId] = remove(items, item =>
+    //   (isNaN(item.id) && find(props.children, child => child.props['data-view'] === item.id)) ||
+    //   (!isNaN(item.id) && props.children.length > parseInt(item.id)),
+    // );
+    //
+    // if (!settings.groups[groupId].length)
+    // {
+    //   delete settings.groups[groupId];
+    // }
     // });
   }
 
-  if (!isEmpty(settings))
-  {
-    if (!settings.active)
-    {
+  if (!isEmpty(settings)) {
+    if (!settings.active) {
       settings.active = Object.keys(settings.groups)[0];
     }
   }
@@ -155,10 +148,8 @@ export const initSettings = (props) =>
  *</View>
  * >
  */
-class View extends Component
-{
-  constructor(props, context)
-  {
+class View extends Component {
+  constructor(props, context) {
     super(props);
 
     this.settings = initSettings({
@@ -168,52 +159,45 @@ class View extends Component
 
     this.props.addSettings(this.settings);
 
-    if (this.props.defaultView)
-    {
+    if (this.props.defaultView) {
       this.props.switchGroup(this.props.defaultView);
     }
 
     this.views = this.getActiveViews(context);
   }
 
-  componentDidMount = () =>
-  {
+  componentDidMount = () => {
     // listen changes
-    if (this.context.store)
-    {
+    if (this.context.store) {
       this.unsubscribe = this.context.store.subscribe(() => this.onChangeListener());
     }
   }
 
-  componentWillUnmount()
-  {
-    if (this.unsubscribe)
-    {
+  componentWillUnmount() {
+    if (this.unsubscribe) {
       this.unsubscribe();
     }
 
-    this.props.removeSettings(initSettings({
-      settings: this.props.settings,
-      children: this.props.children,
-    }));
+    // this.props.removeSettings(initSettings({
+    //   settings: this.props.settings,
+    //   children: this.props.children,
+    // }));
   }
 
-  onChangeListener()
-  {
+  onChangeListener() {
     const views = this.getActiveViews();
 
-    if (!isEqual(views, this.views))
-    {
-      const prev = { ...this.views };
+    if (!isEqual(views, this.views)) {
+
+      const prev = Array.isArray(this.views) ? [...this.views] : { ...this.views };
       this.views = views;
 
-      if (this.props.onChange)
-      {
+      if (this.props.onChange) {
+
         this.props.onChange(views, prev);
 
         // if props.OnChange modify views
-        if (!isEqual(views, this.getActiveViews()))
-        {
+        if (!isEqual(views, this.getActiveViews())) {
           return;
         }
       }
@@ -229,39 +213,32 @@ class View extends Component
    * @example
    * [{ id, pos, title, children, status }]
    */
-  getActiveViews(context = this.context)
-  {
+  getActiveViews(context = this.context) {
     const viewState = context.store.getState().view;
 
-    if (this.props.nested)
-    {
+    if (this.props.nested) {
       return viewState.groups;
     }
 
     return viewState.active === undefined ? [] : viewState.groups[viewState.active] || [];
   }
 
-  getGroupViews(group)
-  {
+  getGroupViews(group) {
     const viewState = this.context.store.getState().view;
     return viewState.groups[group];
   }
 
-  getFilteredChildren = (view = [], children = []) =>
-  {
-    if (!Array.isArray(children) && typeof children === 'object')
-    {
+  getFilteredChildren = (view = [], children = []) => {
+    if (!Array.isArray(children) && typeof children === 'object') {
       children = [children];
     }
 
-    if (!Array.isArray(view) || !Array.isArray(children))
-    {
+    if (!Array.isArray(view) || !Array.isArray(children)) {
       return [];
     }
 
     return view.reduce(
-      (result, item) =>
-      {
+      (result, item) => {
         /**
          * Filter all dom child by status and data-view
          * @type {array} child elements
@@ -270,7 +247,7 @@ class View extends Component
           (child, index) =>
             (item.status || !this.props.lazyload)
             && typeof child !== 'string'
-            && 
+            &&
             (
               (typeof child.props['data-view'] === 'undefined' && index === parseInt(item.id))
               || (typeof child.props['data-view'] === 'object' && child.props['data-view'].id === item.id)
@@ -278,26 +255,21 @@ class View extends Component
             ),
         );
 
-        if (itemChildren.length)
-        {
+        if (itemChildren.length) {
           let newResult = [];
 
           // not lazyload
-          if (this.props.lazyload === false)
-          {
+          if (this.props.lazyload === false) {
             newResult.push(itemChildren.map((child, n) => <div key={n} className={item.status ? '' : 'hidden'}>{child}</div>))
           }
           // lazyload
-          else
-          {
+          else {
             newResult.push(itemChildren[0]);
           }
 
           // nested
-          if (this.props.nested && this.getGroupViews(item.id))
-          {
-            newResult = newResult.map(child =>
-            {
+          if (this.props.nested && this.getGroupViews(item.id)) {
+            newResult = newResult.map(child => {
               const filteredChildren =
                 this.getFilteredChildren(this.getGroupViews(item.id), child.props.children);
 
@@ -323,10 +295,8 @@ class View extends Component
 
   /* !- React lifecycle */
 
-  render()
-  {
-    if (this.props.children === undefined)
-    {
+  render() {
+    if (this.props.children === undefined) {
       return <div>Child of View component not defined.</div>;
     }
 

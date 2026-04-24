@@ -2,7 +2,32 @@ import React from 'react';
 
 import Card from '../../../src/card/card';
 
-const Example = () =>
+const Example = () => (
+  <div>
+    <div className='relative'>
+
+      <div className='col-7-12'>
+        <Card
+          image="https://picsum.photos/700/500"
+          border
+        />
+      </div>
+      <div className='col-6-12 absolute pin-r pin-t my-4' style={{ height: 'calc(100% - 12rem)' }}>
+
+        <Card
+          color="#FFFFFF"
+          title="Lorem ipsum dolor"
+          subTitle="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+          classNameCaption='p-4 w-full'
+          classNameTitle="text-black text-xl bold mb-2"
+          button="Title of Button"
+        />
+      </div>
+    </div>
+  </div>
+)
+
+const Example2 = () =>
 (
   <div>
     <div className="heavy text-xxl pb-1">Lorem ipsum dolor</div>
@@ -17,11 +42,20 @@ const Example = () =>
         />
       </div>
       <div className="col-1-3">
-        <Card
+        {/* <Card
           image="https://picsum.photos/700/500"
           title="DominoGo"
           subTitle="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
           border
+        /> */}
+        <Card
+          color="#00853E"
+          title="DominoGo"
+          subTitle="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
+          // border
+          classNameCaption='p-2 w-full'
+          classNameTitle="text-white text-xl bold"
+          button="title"
         />
       </div>
       <div className="col-1-3">
