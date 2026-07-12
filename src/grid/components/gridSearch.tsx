@@ -381,6 +381,9 @@ const GridSearch = (props: PropTypes) => {
   };
 
   const onFocusHandler = (payload, event) => {
+    if (!lazyLoad) {
+      return;
+    }
 
     addShortcuts(
       [

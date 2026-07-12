@@ -1,5 +1,4 @@
-import React from 'react';
-
+import React from "react";
 
 // import Component from './example/component';
 // import Example from './example/lifecycle';
@@ -18,16 +17,15 @@ import React from 'react';
 // import FormCollection from './form/collection';
 // import FormSlider from './form/slider';
 // import FormDropzone from './form/dropzone';
-import FormCalendar from './form/calendar';
+import FormCalendar from "./form/calendar";
 // import FormToggle from './form/toggle';
 // import FormConfig from './form/config';
 // import FormWysiwyg from './form/wysiwyg';
 
-
 /* !- Example: Grid */
 
-import GridStatic from './grid/static';
-import GridSummary from './grid/summary';
+import GridStatic from "./grid/static";
+import GridSummary from "./grid/summary";
 // import GridConnect from './grid/connect';
 // import GridDynamic from './grid/dynamic';
 // import GridPaginate from './grid/paginate';
@@ -48,84 +46,72 @@ import GridSummary from './grid/summary';
 // import GridSkeleton from './grid/skeleton';
 // import GridFreezePanes from './grid/freezePanes';
 
-
 /* !- Example: Card */
 
-import CardCard from './card/card';
+import CardCard from "./card/card";
 // import CardMarker from './card/marker';
 // import CardResponsible from './card/responsible';
 
-
 /* !- Example: Layer */
 
-import LayerActions from './layer/actions';
+import LayerActions from "./layer/actions";
 // import LayerModals from './layer/modals';
 // import LayerPopover from './layer/popover';
 
-
 /* !- Example: Caroussel */
 
-import CarousselSlides from './caroussel/slides';
+import CarousselSlides from "./caroussel/slides";
 // import CarousselCaroussel from './caroussel/caroussel';
-import CarousselDynamic from './caroussel/dynamic';
-
-
+import CarousselDynamic from "./caroussel/dynamic";
 
 /* !- Example: Calendar */
 
 // import CalendarStatic from './calendar/static';
 // import CalendarWeek from './calendar/week';
 // import CalendarDynamic from './calendar/dynamic';
-import CalendarCaroussel from './calendar/caroussel';
+import CalendarCaroussel from "./calendar/caroussel";
 // import CalendarFilters from './calendar/filters';
-
 
 /* !- Example: Chart */
 
-import ChartCoordinate from './chart/coordinate';
-import ChartLine from './chart/line';
+import ChartCoordinate from "./chart/coordinate";
+import ChartLine from "./chart/line";
 // import ChartComplex from './chart/complex';
-import ChartBar from './chart/barChart';
+import ChartBar from "./chart/barChart";
 // import ChartDonut from './chart/donut';
 // import ChartPie from './chart/pie';
 // import ChartGithub from './chart/github';
-import ChartBoxPlot from './chart/boxPlot';
-
+import ChartBoxPlot from "./chart/boxPlot";
 
 /* !- Example: Print */
 
-import PrintTable from './print/table';
-
+import PrintTable from "./print/table";
 
 /* !- Example: Stepper */
 
 // import Stepper from './stepper/stepper';
 
-
-
 /* !- Example: View */
 
-import ViewBasic from './view/basic';
-import ViewTab from './view/tab';
-import ViewNested from './view/nested';
-import ViewMultiple from './view/multiple';
-
+import ViewBasic from "./view/basic";
+import ViewTab from "./view/tab";
+import ViewNested from "./view/nested";
+import ViewMultiple from "./view/multiple";
 
 /* !- Example: Notification */
 
-import Notification from './notification';
-
+import Notification from "./notification";
 
 /* !- Example: Standalone */
 
 // import Resize from './resize';
 // import Connect from './connect';
 
-import IconMui from './icon/mui';
+import IconMui from "./icon/mui";
 
 export default {
   form: {
-    // fields: FormCalendar,
+    fields: FormCalendar,
     // fields: CalendarCaroussel,
     // fields: CarousselSlides,
     // fields: CarousselDynamic,
@@ -149,6 +135,6 @@ export default {
     // fields: ViewMultiple,
     // fields: GridFileIconlist,
     // fields: FormDropzone,
-    fields: LayerActions,
+    // fields: LayerActions,
   },
 };

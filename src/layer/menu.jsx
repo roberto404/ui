@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import { ReactReduxContext } from 'react-redux';
+import { close } from './actions';
 
 
 /* !- Constants */
@@ -102,6 +104,7 @@ Item.defaultProps =
  * @example
  * <Menu
  *  label='menu header'
+ *  autoClose
  *  items=[{
  *    id: 1,
  *    title: 'one',
@@ -114,9 +117,13 @@ Item.defaultProps =
  */
 class Menu extends Component
 {
+  static contextType = ReactReduxContext;
+
   constructor(props)
   {
     super(props);
+
+    this.closeTimer = null;
 
     this.state = {
       label: props.label,
@@ -132,12 +139,32 @@ class Menu extends Component
     });
   }
 
+  componentWillUnmount()
+  {
+    clearTimeout(this.closeTimer);
+  }
+
+  onMouseLeaveHandler = () =>
+  {
+    this.closeTimer = setTimeout(() => this.context.store.dispatch(close()), 1000);
+  };
+
+  onMouseEnterHandler = () =>
+  {
+    clearTimeout(this.closeTimer);
+  };
+
   render()
   {
+    const { autoClose } = this.props;
     const { label, items } = this.state;
 
     return (
-      <div className="menu">
+      <div
+        className="menu"
+        onMouseLeave={autoClose ? this.onMouseLeaveHandler : undefined}
+        onMouseEnter={autoClose ? this.onMouseEnterHandler : undefined}
+      >
         { label &&
           <div
             className="label"
@@ -179,11 +206,13 @@ Menu.propTypes =
   items: PropTypes.arrayOf(
     PropTypes.shape(Item.propTypes),
   ).isRequired,
+  autoClose: PropTypes.bool,
 };
 
 Menu.defaultProps =
 {
   label: '',
+  autoClose: false,
 };
 
 export default Menu;

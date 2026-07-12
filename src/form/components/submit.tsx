@@ -11,6 +11,7 @@ import reduce from 'lodash/reduce';
 import { flush as formFlush } from '../actions';
 import { close, modal, preload } from '../../layer/actions';
 import { removeRecord, setData } from '../../grid/actions';
+import { addApi } from '../../notification/actions';
 
 
 /* !- Constants */
@@ -44,6 +45,16 @@ type PropTypes = Partial<typeof defaultProps> &
    */
   method: string,
   children: JSX.Element,
+  /** Disables the button when false */
+  enabled?: boolean,
+  /** When provided, dispatches addApi notification instead of layer preload */
+  notification?: Record<string, unknown> & {
+    title?: string;
+    caption?: string;
+    /** Caption shown when API response status is not SUCCESS */
+    captionError?: string;
+  },
+  onFinish?: (response: unknown) => void,
 }
 
 
@@ -102,15 +113,9 @@ const Submit = (props: PropTypes) => {
       }
     }
 
-    const onStart = props.onStart || formContext.onStart;
-    const onFinish = props.onFinish || formContext.onFinish;
     const onError = props.onError || formContext.onError;
 
     const form = context.store.getState().form || {};
-
-    // start
-    //
-    onStart();
 
     let errors = {};
 
@@ -119,14 +124,37 @@ const Submit = (props: PropTypes) => {
     }
 
     if (isEmpty(errors)) {
-      api({
-        method: props.method || id,
-        payload: reduce(
-          form[id],
-          (results, item, index) => [FORM_ERRORS_KEY, FORM_SCHEME_KEY].indexOf(index) !== -1 ? results : { ...results, [index]: item },
-          {},
-        ),
-      })
+      const payload = reduce(
+        form[id],
+        (results, item, index) => [FORM_ERRORS_KEY, FORM_SCHEME_KEY].indexOf(index) !== -1 ? results : { ...results, [index]: item },
+        {},
+      );
+
+      if (props.notification) {
+        const { captionError, caption, ...notificationRest } = props.notification;
+        const resolvedCaption = captionError
+          ? (respond) => (respond !== null && respond?.status !== 'SUCCESS') ? captionError : caption
+          : caption;
+
+        dispatch(addApi({
+          ...notificationRest,
+          caption: resolvedCaption,
+          payload: {
+            api: () => api({ method: props.method || id, payload }),
+            onLoad: (response) => {
+              props.onFinish?.(response);
+            },
+          },
+        }));
+        return;
+      }
+
+      const onStart = props.onStart || formContext.onStart;
+      const onFinish = props.onFinish || formContext.onFinish;
+
+      onStart();
+
+      api({ method: props.method || id, payload })
         .then((response) => {
           onFinish(response);
         });
@@ -206,6 +234,7 @@ const Submit = (props: PropTypes) => {
       <button
         className={`button ${props.buttonClassName}`}
         onClick={onClickButtonHandler}
+        disabled={props.enabled === false}
       >
         {props.icon}
         {label}
