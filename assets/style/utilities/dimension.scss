@@ -1,3 +1,13 @@
+.w-em {
+  width: 1em;
+  flex-shrink: 0;
+}
+
+.h-em {
+  height: 1em;
+  flex-shrink: 0;
+}
+
 .h-0 {
   height: 0px;
 }
@@ -178,9 +188,8 @@
   width: 83.33333%;
 }
 
-.w-640,
-{
-width: 640px;
+.w-640 {
+  width: 640px;
 }
 
 .w-768,
@@ -192,7 +201,6 @@ width: 640px;
 .w-xga {
   width: 1024px;
 }
-
 
 @include respond-to(mobile) {
   .mobile\:w-auto {

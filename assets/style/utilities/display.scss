@@ -18,6 +18,10 @@
   gap: 1rem;
 }
 
+.gap-1\/2 {
+  gap: 0.5rem;
+}
+
 .gap-1px {
   gap: 1px;
 }
@@ -82,17 +86,16 @@
   display: contents;
 }
 
-
 .table {
   display: table;
   width: 100%;
 
-  >* {
+  > * {
     display: table-cell;
     vertical-align: top;
   }
 
-  &.v-center>* {
+  &.v-center > * {
     vertical-align: middle;
   }
 }
@@ -142,7 +145,7 @@ table {
 }
 
 .selectable,
-.selectable>* {
+.selectable > * {
   user-select: initial;
 }
 
@@ -158,8 +161,8 @@ table {
   pointer-events: none;
 }
 
-g.no-child-events>*:first-child,
-g.no-child-events g>*:first-child {
+g.no-child-events > *:first-child,
+g.no-child-events g > *:first-child {
   pointer-events: auto;
 }
 
@@ -183,7 +186,6 @@ g.no-child-events g>*:first-child {
   @include aspect-ratio(1, 1.41);
 }
 
-
 .flip-vertical {
   transform: scale(-1, 1);
 }
@@ -192,6 +194,11 @@ g.no-child-events g>*:first-child {
   transform: scaleX(-1);
   filter: FlipH;
   -ms-filter: "FlipH";
+}
+
+// true vertical mirror (top<->bottom); e.g. a trending-up icon flipped to trend down
+.flip-y {
+  transform: scaleY(-1);
 }
 
 .pin,
@@ -310,7 +317,6 @@ g.no-child-events g>*:first-child {
 }
 
 @include respond-to(mobile) {
-
   .mobile\:hidden,
   .mobile\:hide {
     display: none !important;
@@ -354,8 +360,6 @@ g.no-child-events g>*:first-child {
     display: block;
   }
 
-
-
   .mobile\:pin-l {
     left: 0;
   }
@@ -386,7 +390,6 @@ g.no-child-events g>*:first-child {
     display: flex;
   }
 }
-
 
 @include orient-to(landscape) {
   .landscape\:hidden {

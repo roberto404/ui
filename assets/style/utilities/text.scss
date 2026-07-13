@@ -6,12 +6,20 @@
   font-weight: bold;
 }
 
+.thin {
+  font-weight: 100;
+}
+
 .light {
   font-weight: 300;
 }
 
 .heavy {
   font-weight: 900;
+}
+
+.medium {
+  font-weight: 500;
 }
 
 .normal {
@@ -74,7 +82,7 @@
 }
 
 .colon:after {
-  content: ':';
+  content: ":";
   display: inline-block;
   margin-right: 0.3em;
 }
@@ -149,7 +157,15 @@ h3,
   color: $green;
 }
 
+.text-green-dark {
+  color: $green-dark;
+}
+
 .text-yellow {
+  color: $yellow;
+}
+
+.hover\:text-yellow:hover {
   color: $yellow;
 }
 
@@ -246,14 +262,13 @@ h3,
   line-height: 0;
 
   &::after {
-    content: 'Drop here!';
+    content: "Drop here!";
     visibility: visible;
     display: block;
     text-indent: 0;
     line-height: initial;
   }
 }
-
 
 li.disc,
 li.decimal {
@@ -269,7 +284,6 @@ li.disc {
 li.decimal {
   list-style-type: decimal;
 }
-
 
 @include respond-to(mobile) {
   .mobile\:text-left {
