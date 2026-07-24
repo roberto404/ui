@@ -40,6 +40,7 @@ module.exports = {
     });
 
     config.resolve.alias['@1studio/ui'] = path.join(__dirname, '../src');
+    config.resolve.alias['@1studio/utils'] = path.join(__dirname, '../../utils/src');
 
 
     // {

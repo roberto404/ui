@@ -1,6 +1,5 @@
 
-import React, { useRef, useEffect } from 'react';
-import { useForceUpdate } from './hooks';
+import React, { useRef, useState, useLayoutEffect } from 'react';
 
 
 
@@ -22,29 +21,50 @@ type PropTypes = Partial<typeof defaultProps> & {
 /**
  * Resize component
  *
- * Calculate parent element dimension and
- * push width and height props to children
+ * Measures its container (live, via ResizeObserver) and passes the real pixel
+ * `width` / `height` to its child, so the child re-renders at the actual size
+ * instead of being scaled up/down — text, markers and strokes stay crisp and
+ * readable at any size.
  *
  * @example
- * <Resize>{width => <svg width={width} />}</Resize>
+ * <Resize><svg /></Resize>              // fluid width + height
+ * <Resize height={340}><svg /></Resize> // fluid width, fixed height
  */
 const Resize = (props: PropTypes) => {
-  const element = useRef(null);
-  const forceUpdate = useForceUpdate();
+  const element = useRef<HTMLDivElement>(null);
+  const [size, setSize] = useState({ width: 0, height: 0 });
 
-  // componentDidMount
-  useEffect(
+  useLayoutEffect(
     () => {
-      forceUpdate();
+      const node = element.current;
+
+      if (!node) {
+        return undefined;
+      }
+
+      const measure = () => setSize((prev) => {
+        const width = node.offsetWidth;
+        const height = node.offsetHeight;
+
+        return (prev.width === width && prev.height === height) ? prev : { width, height };
+      });
+
+      measure();
+
+      if (typeof ResizeObserver === 'undefined') {
+        return undefined;
+      }
+
+      const observer = new ResizeObserver(measure);
+      observer.observe(node);
+
+      return () => observer.disconnect();
     },
     [],
   );
 
-  const width = element.current && !props.width ?
-    element.current.offsetWidth : props.width || props.initWidth;
-
-  const height = element.current && !props.height ?
-    element.current.offsetHeight : props.height || width;
+  const width = props.width || size.width || props.initWidth;
+  const height = props.height || size.height || width;
 
   return (
     <div
@@ -55,7 +75,7 @@ const Resize = (props: PropTypes) => {
       {React.cloneElement(props.children, { width, height })}
     </div>
   );
-}
+};
 
 Resize.defaultProps = defaultProps;
 

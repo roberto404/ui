@@ -14,6 +14,7 @@ export const Groups = injectIntl(Fields.Groups);
 export const Submit = injectIntl(Fields.Submit);
 export const SubmitButtons = injectIntl(Fields.SubmitButtons);
 export const Select = injectIntl(Fields.Select);
+export const Segment = injectIntl(Fields.Segment);
 export const Dropzone = injectIntl(Fields.Dropzone);
 export const Controllers = injectIntl(Fields.Controllers);
 export const CalendarMonth = injectIntl(Fields.CalendarMonth);

@@ -22,6 +22,7 @@ import Field from './components/field';
 import Plain from './components/plain';
 import Collection from './components/collection';
 import Autocomplete from './components/autocomplete';
+import Segment from './components/segment';
 
 
 export {
@@ -48,6 +49,7 @@ export {
   Field,
   Collection,
   Autocomplete,
+  Segment,
 };
 
 export default Form;

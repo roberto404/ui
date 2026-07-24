@@ -51,9 +51,10 @@ export const Bar = ({ x, y, canvas, coord, id, seriesIndex, seriesLength, point 
 
 
 
-const ChartBar = ({ data, width, height, className, yAxisValueMin, margin }) => (
+const ChartBar = ({ data, width, height, className, yAxisValueMin, margin, ...props }) => (
   <Coordinate
     id="bar"
+    {...props}
     className={className || "chart bar rounded"}
     width={width}
     height={height}

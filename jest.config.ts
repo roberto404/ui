@@ -90,6 +90,10 @@ export default {
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
     '^@1studio/ui/(.*)$': '<rootDir>/src/$1',
+    // resolve utils to the live workspace source (like webpack / storybook), not the
+    // stale node_modules copy — keeps new modules (e.g. series) visible and transformable
+    '^@1studio/utils/(.*)$': '<rootDir>/../utils/src/$1',
+    '^@1studio/utils$': '<rootDir>/../utils/src',
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader

@@ -60,6 +60,7 @@
   "dependencies": {
     "@1studio/utils": "5.7.0",
     "@dnd-kit/modifiers": "7.0.0",
+    "@emotion/is-prop-valid": "^1.4.0",
     "@reduxjs/toolkit": "1.9.2",
     "@storybook/addon-essentials": "7.6.20",
     "classnames": "2.3.2",

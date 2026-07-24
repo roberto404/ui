@@ -21,7 +21,7 @@ export type StatValueProps = {
   value?: React.ReactNode;
   // signed percentage; sign drives colour + arrow direction
   change?: number;
-  size?: keyof typeof SIZE_CLASS;
+  size?: keyof typeof SIZE_CLASS | "";
   align?: "left" | "right";
   // change under the value (stacked) or next to it (inline)
   changePosition?: "below" | "inline";
@@ -56,8 +56,7 @@ export const ChangeBadge = ({
   >
     {change !== 0 && (
       <IconTrending
-        className={classNames({ "flip-y": change < 0 })}
-        style={{ height: "1em", width: "1em", flexShrink: 0 }}
+        className={classNames({ "w-em h-em": true, "flip-y": change < 0 })}
       />
     )}
     {format(change)}
@@ -73,14 +72,14 @@ export const ChangeBadge = ({
 const StatValue = ({
   value,
   change,
-  size = "xl",
+  // size = "xl",
+  size = "",
   align = "right",
   changePosition = "below",
   format = (number) => number.toLocaleString(),
   changeFormat,
 }: StatValueProps) => {
   const inline = changePosition === "inline";
-  const rendered = typeof value === "number" ? format(value) : value;
 
   return (
     <div
@@ -90,8 +89,8 @@ const StatValue = ({
         !inline && (align === "right" ? "h-bottom" : "h-top"),
       )}
     >
-      <div className={classNames("medium text-black", SIZE_CLASS[size])}>
-        {rendered}
+      <div className={classNames("medium text-black nowrap", SIZE_CLASS[size])}>
+        {format(value)}
       </div>
       {typeof change === "number" && (
         <ChangeBadge

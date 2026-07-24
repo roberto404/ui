@@ -27,6 +27,8 @@ export interface PropTypes {
   qMax: number,
   qMin: number,
   mode?: number[],
+  width?: number,
+  height?: number,
 }
 
 

@@ -106,18 +106,20 @@ class Collection extends Field
 
       const keys = this.state.value.length ? this.state.value[0] : def[0];
 
-      Object.keys(keys).forEach((key) =>
+      if (keys)
       {
-        if (key === 'id')
+        Object.keys(keys).forEach((key) =>
         {
-          item.id = this.state.value.length + 1;
-        }
-        else
-        {
-          item[key] = (def.length && typeof def[0][key] !== 'undefined') ?
-            def[0][key] : keys[key];
-        }
-      });
+          if (key === 'id')
+          {
+            item.id = this.state.value.length + 1;
+          }
+          else
+          {
+            item[key] = null;
+          }
+        });
+      }
     }
 
     this.onChangeHandler([...this.state.value, item]);
@@ -182,7 +184,7 @@ class Collection extends Field
           this.renderElement(record, index)
         )}
 
-        { (this.state.value.length > 0 || this.props.value) &&
+        {
           <button className="initial h-center bg-green rounded-l fill-white text-white p-1/4 px-1/2 pr-1 text-xs pointer" onClick={this.onClickAddHandler} style={{ width: 'auto' }}>
             <IconAdd className="w-2 h-2 mr-1/2 no-events" />
             <div className="no-events">{Array.isArray(this.state.value?.[0]) ? 'VAGY': 'ÉS'}</div>

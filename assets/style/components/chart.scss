@@ -110,47 +110,71 @@
       font-size: 0.65em;
     }
 
-    g#points // bar chart
-
-      {
-      path {
-        stroke-width: 4;
-        stroke: $gray;
+    g#points {
+      // line colour comes from the `color` prop (inline); width here, area overrides it
+      path.line {
+        fill: none;
+        stroke-width: 2.5;
       }
+    }
 
-      circle {
-        stroke-width: 3;
-        stroke: $gray;
-        fill: $gray-light;
-        r: 9,
+    // --- Gradient area below the line (opt-in via the `area` prop) ---
+    &.area {
+      g#points {
+        // colour (line + gradient) comes from the `color` prop (inline); width stays here
+        path.line {
+          stroke-width: 3;
+        }
 
-
-        // &.fill-red
-        // {
-        //   fill: $red;
-        // }
-
-
-        // &.helper
-        // {
-        //   stroke-width: 1;
-        //   stroke: $gray;
-        //   fill: $gray-light;
-        //   r: 3,
-        // }
+        path.area {
+          stroke: none;
+        }
       }
+    }
 
-      circle.helper {
-        stroke-width: 1;
-        stroke: $gray;
-        fill: $gray-light;
-        r: 3,
-      }
+    // --- Hover marker: dot + vertical dashed guide + value box (opt-in via the `hover` prop) ---
+    &.hover {
+      g#points {
+        path {
+          pointer-events: none;
+        }
 
+        .hover-target {
+          fill: transparent;
+          pointer-events: all;
+        }
 
+        .hover-marker {
+          pointer-events: none;
+          transition: transform 0.15s ease, opacity 0.15s ease;
+        }
 
-      text {
-        fill: $gray;
+        .marker-point,
+        .hover-dot {
+          transition: transform 0.15s ease;
+        }
+
+        .marker-guide {
+          stroke: $gray;
+          stroke-width: 1;
+          stroke-dasharray: 4 4;
+        }
+
+        .marker-dot {
+          r: 5;
+          fill: $blue-dark;
+          stroke: $white-light;
+          stroke-width: 2;
+        }
+
+        .marker-box {
+          fill: $black;
+        }
+
+        .marker-value {
+          fill: $white-light;
+          font-weight: bold;
+        }
       }
     }
   }
@@ -219,5 +243,26 @@
         stroke: $blue-dark;
       }
     }
+  }
+}
+
+
+// --- Chart card colour theming (opt-in via the `color` prop) ---
+// On a coloured card the primary/value text is white and the muted text
+// (labels, title, footer) is a light tint of the card colour. The component
+// sets `--card-fg` / `--card-fg-muted` inline from the `color` prop.
+.chart-card.on-color {
+  color: var(--card-fg, #fff);
+
+  #title span,
+  #footer,
+  .text-gray-dark,
+  .text-gray {
+    color: var(--card-fg-muted, rgba(255, 255, 255, 0.72));
+  }
+
+  .text-black,
+  .text-white {
+    color: var(--card-fg, #fff);
   }
 }

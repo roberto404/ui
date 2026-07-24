@@ -63,6 +63,10 @@ export interface PropTypes {
   point?: React.FC<PointType>,
   children?: JSX.Element,
   className?: string,
+  // scale the svg to its container (width/height become the viewBox design units)
+  responsive?: boolean,
+  // only used when responsive; 'none' fills the box exactly (keeps hover x-mapping correct)
+  preserveAspectRatio?: string,
 }
 
 
@@ -100,6 +104,8 @@ const Coordinate: React.FC<PropTypes> = (
     point = Point,
     children,
     className = 'coordinate',
+    responsive = false,
+    preserveAspectRatio = 'none',
   }) => {
   const dataYValues = flattenDataCoord(data, 'y');
   const dataXValues = flattenDataCoord(data, 'x');
@@ -162,9 +168,10 @@ const Coordinate: React.FC<PropTypes> = (
   return (
     <svg
       id={id}
-      width={width}
-      height={height}
       className={className}
+      {...(responsive
+        ? { viewBox: `0 0 ${width} ${height}`, width: '100%', height: '100%', preserveAspectRatio }
+        : { width, height })}
     >
       <rect
         id={`${id}-bg`}
