@@ -95,6 +95,7 @@ const ViewTab = ({
         }}
         className={classNameChildren}
         // nested
+        standalone
         onChange={onChange}
       >
         {items.map((item, n) => (

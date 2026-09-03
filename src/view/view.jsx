@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect, ReactReduxContext } from 'react-redux';
 import isEmpty from 'lodash/isEmpty';
 import forEach from 'lodash/forEach';
+import omit from 'lodash/omit';
 import remove from 'lodash/remove';
 import find from 'lodash/find';
 import isEqual from 'lodash/isEqual';
@@ -157,7 +158,19 @@ class View extends Component {
       children: this.props.children,
     });;
 
-    this.props.addSettings(this.settings);
+    /**
+     * Own view group of this instance
+     * @type {string}
+     */
+    this.group = this.settings.active || Object.keys(this.settings.groups || {})[0];
+
+    /**
+     * standalone: do not overwrite the globally active group,
+     * otherwise every other (page level) View lost its children
+     */
+    this.props.addSettings(
+      this.props.standalone ? omit(this.settings, 'active') : this.settings,
+    );
 
     if (this.props.defaultView) {
       this.props.switchGroup(this.props.defaultView);
@@ -218,6 +231,10 @@ class View extends Component {
 
     if (this.props.nested) {
       return viewState.groups;
+    }
+
+    if (this.props.standalone) {
+      return viewState.groups[this.group] || [];
     }
 
     return viewState.active === undefined ? [] : viewState.groups[viewState.active] || [];
@@ -348,6 +365,14 @@ View.propTypes =
   onChange: PropTypes.func,
   lazyload: PropTypes.bool,
   nested: PropTypes.bool,
+  /**
+   * Render own view group instead of the globally active one, and keep
+   * the global active group untouched on mount.
+   *
+   * Useful when the View is not the page itself, but a self contained widget
+   * (tab, dialog content), which would hide the children of the page level View.
+   */
+  standalone: PropTypes.bool,
 };
 
 /**
@@ -361,6 +386,7 @@ View.defaultProps =
   className: '',
   lazyload: true,
   nested: false,
+  standalone: false,
 };
 
 /**
