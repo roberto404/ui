@@ -1,10 +1,10 @@
 
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import reduce from 'lodash/reduce';
 import findIndex from 'lodash/findIndex';
 import { GridContext } from '../context';
-import { useDispatch, useStore } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 
 
 /* !- Actions */
@@ -54,6 +54,13 @@ type PropTypes = Partial<typeof defaultProps> &
    * Change dropdown id to title from helper object
    */
   helper?: [{}],
+  /**
+   * Initial value.
+   * Function form is resolved from the collected (async loaded) grid data.
+   * @example
+   * value={data => data.sort((a, b) => b.id - a.id)[0]?.id}
+   */
+  value?: string | number | ((data: { id: string, title: string }[]) => string | number | undefined),
 }
 
 
@@ -70,6 +77,12 @@ type PropTypes = Partial<typeof defaultProps> &
   id="category"
   label="Category"
   ?grid="robot"
+/>
+*
+* @example initial value from the loaded data
+<GridSelectGroupBy
+  id="couponId"
+  value={data => data.sort((a, b) => b.id - a.id)[0]?.id}
 />
 */
 const GridSelectGroupBy = (props: PropTypes) => {
@@ -103,6 +116,45 @@ const GridSelectGroupBy = (props: PropTypes) => {
     );
   };
 
+  /**
+   * Resolve the initial value from the loaded data, when `value` is a function.
+   *
+   * The grid data arrives async, so the first non empty rawData is awaited,
+   * then the resolved value is dispatched to the form store,
+   * otherwise only the dropdown would display it, without filtering the grid.
+   *
+   * Applied only once and never overwrites an already set filter value.
+   */
+  const isDefaultValueApplied = useRef(false);
+  const rawDataLength = useSelector(state => (state.grid[context.grid] || {}).rawData?.length || 0);
+
+  useEffect(
+    () => {
+      if (
+        typeof props.value !== 'function'
+        || isDefaultValueApplied.current
+        || rawDataLength === 0
+      ) {
+        return;
+      }
+
+      if (store.getState().form[id] !== undefined) {
+        isDefaultValueApplied.current = true;
+        return;
+      }
+
+      const value = props.value(fetchData());
+
+      if (value === undefined || value === null) {
+        return;
+      }
+
+      isDefaultValueApplied.current = true;
+      dispatch(setValues({ [id]: value }));
+    },
+    [rawDataLength],
+  );
+
   return (
     <Connect
       listen="rawData"
@@ -112,6 +164,8 @@ const GridSelectGroupBy = (props: PropTypes) => {
         data: fetchData,
         onChange: ({ value }) => dispatch(setValues({ [id]: value })),
         dataTranslate: false,
+        // resolved value comes from the form store, see the effect above
+        value: typeof props.value === 'function' ? undefined : props.value,
       }}
     />
   );
