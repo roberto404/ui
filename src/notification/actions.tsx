@@ -6,6 +6,7 @@ import React from 'react';
 
 import IconError from '../icon/mui/alert/error';
 import { IconCheckmarkWrapper } from './iconCheckmark';
+import ItemApiMessage from './itemApiMessage';
 
 
 /* !- Types */
@@ -13,6 +14,17 @@ import { IconCheckmarkWrapper } from './iconCheckmark';
 import { Item } from './reducers';
 import { TemplatesType } from './templates';
 import { Button } from './item';
+import { PropTypes as ItemApiPromisePropTypes } from './itemApiPromise';
+import { PropTypes as ItemApiMessagePropTypes } from './itemApiMessage';
+
+type ApiPromiseItem =
+  Omit<Item, 'payload' | 'children' | 'title' | 'caption' | 'Icon'>
+  & Pick<ItemApiPromisePropTypes, 'payload' | 'title'>
+  & Partial<Pick<ItemApiPromisePropTypes, 'children' | 'caption' | 'Icon'>>;
+
+type ApiWithMessageItem = Omit<ApiPromiseItem, 'children'> & {
+  message?: Omit<ItemApiMessagePropTypes, 'onStart' | 'onClose'>,
+};
 
 
 /* !- Constants */
@@ -136,6 +148,61 @@ export const addApi = (item: Item) =>
     ...item,
   },
 });
+
+
+/**
+ * `addApi`, ami nem indul el automatikusan, csak a `children` által hívott `onStart` után.
+ * Az `onStart` paramétere összefésülődik az api hívás payloadjába (`payload.api(startPayload)`).
+ *
+ * @since 1.0.0
+ * @memberof Actions/Notification
+ * @example
+ * addApiPromise({
+ *   title: 'Kedvezmény hozzáadása...',
+ *   children: ({ onStart }) => <div className="button green" onClick={onStart}>mehet</div>,
+ *   payload: {
+ *     api: (payload) => apiSuccess({ url: 'order/addDiscount', payload: { id, ...payload } }),
+ *   },
+ * });
+ */
+export const addApiPromise = (item: ApiPromiseItem) =>
+({
+  type: 'ADD_NOTIFICATION',
+  item: {
+    template: TemplatesType.ItemApiPromise,
+    disableClose: false,
+    closeOnChangeLocation: true,
+    ...item,
+  },
+});
+
+
+/**
+ * `addApiPromise` előre elkészített `children`-nel: az api hívás csak akkor indul,
+ * ha az értesítésben megadtak egy üzenetet, ami `_log` kulccsal kerül a payloadba.
+ *
+ * @since 1.0.0
+ * @memberof Actions/Notification
+ * @example
+ * addApiWithMessage({
+ *   title: 'Kedvezmény hozzáadása...',
+ *   message: { placeholder: 'Kedvezmény indoklása' },
+ *   payload: {
+ *     api: (payload) => apiSuccess({ url: 'order/addDiscount', payload: { id, ...payload } }),
+ *   },
+ * });
+ */
+export const addApiWithMessage = (item: ApiWithMessageItem) => {
+
+  const { message, ...props } = item;
+
+  return addApiPromise({
+    ...props,
+    children: (childrenProps) => (
+      <ItemApiMessage {...childrenProps} {...message} />
+    ),
+  });
+};
 
 
 
