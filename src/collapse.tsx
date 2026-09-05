@@ -46,6 +46,10 @@ type PropTypes =
  * vagy alatta lévő tartalom is folyamatosan igazodik hozzá.
  * Csukott állapotban a gyerekek nincsenek a DOM-ban.
  *
+ * Flex konténerben `flex: 0 0 auto`, tehát a nyitott méret pontosan a `size`
+ * (vagy a tartalom) marad: a testvérek nem tudják összenyomni, és a maradék
+ * helyre sem nyúlik meg. Felülírható a `style` proppal.
+ *
  * @example
  * <Collapse open={isOpen}>
  *   <Stat />
@@ -81,7 +85,14 @@ const Collapse = ({
         <motion.div
           key="collapse"
           className={className}
-          style={{ overflow: 'hidden', ...style }}
+          style={{
+            overflow: 'hidden',
+            // a méretet a `size` (vagy a tartalom) adja, nem a flex elrendezés:
+            // a szülő flex konténer sem összenyomni, sem megnyújtani nem tudja
+            flexGrow: 0,
+            flexShrink: 0,
+            ...style,
+          }}
           initial={collapsed}
           animate={{ [axis]: size, opacity: 1 }}
           exit={collapsed}
