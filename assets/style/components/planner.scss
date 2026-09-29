@@ -6,6 +6,18 @@
 // A dialógus szélességét szándékosan NEM állítjuk: azt a réteg (layer) adja.
 .planner-summary
 {
+  /**
+   * A desktop dialógus `max-width: fit-content`, azaz a tartalomhoz nő, és a
+   * terv képe (1600px-es PNG) a `width: 100%` ellenére a természetes
+   * szélességével számítana bele. `width: 0` + `min-width: 100%`: a
+   * méretezésben 0, megjelenítéskor kitölti a hasábot.
+   */
+  .planner-summary-image
+  {
+    width: 0;
+    min-width: 100%;
+  }
+
   // a hosszú megnevezés ne tolja szét a sort (a teljes név az adatlapon látszik)
   .planner-summary-cell-title
   {

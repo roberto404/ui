@@ -42,6 +42,10 @@ export const DEFAULT_FIELD_PROPS =
     type: 'number',
     regexp: '[0-9]*',
   },
+  string:
+  {
+    component: 'Input',
+  },
   boolean:
   {
     component: 'Toggle',
