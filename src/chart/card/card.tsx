@@ -24,7 +24,7 @@ export type CardSlot =
   | React.ReactNode
   | ((api: CardApi) => React.ReactNode);
 
-const defaultProps = {
+export const defaultProps = {
   className: "bg-white-light rounded-xl shadow-outer-10",
   ratio: "16 / 9",
   filters: [] as FilterRegistration[],
@@ -130,9 +130,11 @@ const ChartCard = ({
   );
 
   const chartArea = (
+    // `aspectRatio` only applies with a definite width: full width when stacked,
+    // the remaining flex space (basis 0, so the svg can't inflate it) beside the header
     <div
       id="chart-area"
-      className="2w-full"
+      className={classNames({ "w-full": !isHorizontal })}
       style={{
         aspectRatio: ratio,
       }}
@@ -147,6 +149,7 @@ const ChartCard = ({
       className={classNames("chart-card column p-2 w-full", { "on-color": !!color }, className)}
       style={{
         boxSizing: "border-box",
+        breakInside: 'avoid',
         ...(color
           ? ({
               background: color,

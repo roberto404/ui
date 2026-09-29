@@ -268,6 +268,12 @@ class Form extends Component {
    * @param  {Object} error validate.js error object
    */
   onError = (error) => {
+    // a mezők alatti .error div-ek a .form.active osztálytól látszanak
+    if (this.props.inlineErrors) {
+      this.setState({ active: true });
+      return;
+    }
+
     this.context.store.dispatch(LayerActions.modal({
       title: this.props.intl.formatMessage({ id: this.props.onErrorTitle }),
       content:
@@ -494,6 +500,11 @@ Form.propTypes =
    * Modal's title when default OnError handler execute
    */
   onErrorTitle: PropTypes.string,
+  /**
+   * Scheme validation errors are shown under the fields instead of a modal.
+   * Useful when the form itself is in a dialog, which the modal would replace.
+   */
+  inlineErrors: PropTypes.bool,
 };
 
 /**
@@ -510,6 +521,7 @@ Form.defaultProps =
   children: null,
   onErrorTitle: 'global.error_form',
   flush: false,
+  inlineErrors: false,
   onLoad: () => null,
   onChange: () => null,
   // onSuccess: () => null,

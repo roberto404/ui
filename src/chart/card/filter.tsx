@@ -77,7 +77,7 @@ const FilterCard = ({
   id,
   title,
   data,
-  filter,
+  filter = [],
   multiple = false,
   defaultFilter,
   summary,

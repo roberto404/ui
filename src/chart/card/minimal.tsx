@@ -49,24 +49,23 @@ const MinimalCard = ({
     chart ? (
       chart(api.series, api)
     ) : (
-      <div className1="w-1/2">
-        <ChartLine
-          data={api.series}
-          responsive
-          edgeToEdge
-          width={320}
-          height={140}
-          area
-          hover={false}
-          marker={false}
-          color={color}
-          xAxis={false}
-          yAxis={false}
-          xGrid={false}
-          yGrid={false}
-          margin={{ top: 0, right: 0, bottom: -10, left: 0 }}
-        />
-      </div>
+      // no wrapper: the svg sizes to 100% of the card's aspect-ratio box
+      <ChartLine
+        data={api.series}
+        responsive
+        edgeToEdge
+        width={320}
+        height={140}
+        area
+        hover={false}
+        marker={false}
+        color={color}
+        xAxis={false}
+        yAxis={false}
+        xGrid={false}
+        yGrid={false}
+        margin={{ top: 0, right: 0, bottom: -10, left: 0 }}
+      />
     );
 
   return (

@@ -28,53 +28,44 @@
       font-size: 0.65em;
     }
 
-    g#points // bar chart
-
-      {
-      text {
-        fill: $white-light;
+    g#points {
+      // fills come from props (inline) — colour changes animate on hover
+      .bar-rect {
+        transition: fill .15s ease;
       }
 
-      g:first-child g // multiple chart first bar
+      .bar-value {
+        font-weight: 700;
 
-        {
-        rect {
-          fill: $green;
-        }
-
-        text.outside {
-          fill: $green-dark;
+        &.inside {
+          fill: $white-light;
         }
       }
 
-      g:nth-of-type(2) g {
-        rect {
-          fill: $black;
-        }
+      // x labels drawn by the series (opt-in via `barLabels`), highlightable
+      .bar-label {
+        fill: $gray-dark;
+        font-size: 14px;
 
-        text.outside {
-          fill: $black;
+        &.active {
+          font-weight: 700;
         }
       }
     }
 
-    &:not(.rounded) {
-      #points {
-        rect {
-          clip-path: inherit;
-        }
+    // hover model: a single transparent target over the plot drives the active
+    // bar; the visuals never steal the pointer (no flicker between bars)
+    &.hover g#points {
+      .bar-rect,
+      .bar-track,
+      .bar-value,
+      .bar-label {
+        pointer-events: none;
       }
-    }
 
-    &.yellow {
-      #points g:first-child g {
-        rect {
-          fill: $yellow;
-        }
-
-        text.outside {
-          fill: $yellow;
-        }
+      .bar-hover-target {
+        fill: transparent;
+        cursor: pointer;
       }
     }
   }

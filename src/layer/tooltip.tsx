@@ -15,6 +15,7 @@ import { useComponentDidMount, useComponentWillUnmount } from '../hooks';
 const defaultProps =
 {
   className: 'inline-block',
+  disabled: false,
 };
 
 type PropTypes =
@@ -26,6 +27,11 @@ type PropTypes =
      * Invoke ..
      */
     onClick?: () => void,
+    /**
+     * Ne legyen tooltip: csak a gyerek renderelődik, wrapper és listener nélkül.
+     * Érintőképernyőn (nincs hover) érdemes bekapcsolni.
+     */
+    disabled?: boolean,
 
   } & Partial<typeof defaultProps>;
 
@@ -34,7 +40,8 @@ const Tooltip = ({
   className,
   children,
   title,
-  onClick
+  onClick,
+  disabled = defaultProps.disabled,
 }: PropTypes) => {
   const dispatch = useDispatch();
 
@@ -82,6 +89,11 @@ const Tooltip = ({
       dispatch(flush());
     }
   };
+
+  // mintha a Tooltip ott sem lenne
+  if (disabled) {
+    return children;
+  }
 
   return (
     <div

@@ -239,9 +239,12 @@ const reducers = (
  * Active views of group or selected group by id
  */
 export const getViewGroup = (id?: string) =>
-  ({ view }: RootStateTypes): ViewItemType[] =>
-    typeof view.active !== 'undefined' ?
-      (view.groups[id || view.active] || []) : [];
+  ({ view }: RootStateTypes): ViewItemType[] => {
+    const groupId = id || view.active;
+
+    return typeof groupId !== 'undefined' ?
+      (view.groups[groupId] || []) : [];
+  };
 
 /**
  * Returns active view group items

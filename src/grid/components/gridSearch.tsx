@@ -55,6 +55,7 @@ const defaultProps =
   prefix: '',
   nested: false,
   lazyLoad: false,
+  autoFocus: true,
 };
 
 type PropTypes = Partial<typeof defaultProps> &
@@ -276,6 +277,7 @@ const GridSearch = (props: PropTypes) => {
     lazyLoad,
     responseParser,
     prefix,
+    autoFocus,
   } = props;
 
   let fields = props.fields;
@@ -443,7 +445,7 @@ const GridSearch = (props: PropTypes) => {
       postfix={postfix}
       onBlur={onBlurHandler}
       onFocus={onFocusHandler}
-      autoFocus
+      autoFocus={autoFocus}
     />
   );
 };

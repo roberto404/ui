@@ -1,0 +1,781 @@
+/*
+  Planner v2 — mobil-first bútorkonfigurátor (3d.html?v=2)
+  Komponens: @1studio/shared/3d/Planner/FurnitureCollection2
+  Design: dox/design_handoff_mobil_konfigurator/README.md
+
+  A layout / térköz / tipográfia az `assets/style/utilities` osztályaival megy.
+  Itt csak az marad, amire nincs (és ésszerűen nem is hozható létre) utility:
+  a handoff egyedi színei és méretei, a pszeudoelemek, az animációk és a
+  reszponzív viselkedés.
+ */
+
+.planner2
+{
+  // --> design tokenek (a paletta nem tartalmazza ezeket a színeket)
+  --p2-ink: #16233a;
+  --p2-muted: #5c6472;
+  --p2-line: #eef0f3;
+  --p2-line-strong: #e6e8ec;
+  --p2-surface: #ffffff;
+  --p2-surface-soft: #f2f3f5;
+  --p2-view: #fafbfc;
+  --p2-accent: #f09526;
+  --p2-active: #f8d53e;
+  --p2-shadow-float: 0 2px 12px rgba(22, 35, 58, 0.12);
+  --p2-shadow-sheet: 0 -12px 34px rgba(22, 35, 58, 0.14);
+
+  // --> mobil lap magasságok (snap pontok); csukva csak az ár-sáv + szegmens fér ki
+  --p2-sheet-open: 430px;
+  --p2-sheet-closed: 162px;
+
+  position: relative;
+  // a `column` utility nem használható: desktopon `row`-ra vált, és a
+  // utilities a components UTÁN töltődik, így azonos specificitásnál nyerne
+  display: flex;
+  flex-direction: column;
+  // a `h-screen` 100vh, mobilon a böngészősáv miatt a dvh kell
+  height: 100dvh;
+  color: var(--p2-ink);
+  background: var(--p2-view);
+  -webkit-tap-highlight-color: transparent;
+
+  *
+  {
+    box-sizing: border-box;
+  }
+
+  // a paletta legsötétebb szürkéje (#778ca2) nem éri el a 4.5:1 kontrasztot
+  .planner2-muted
+  {
+    color: var(--p2-muted);
+  }
+
+  // a keretek a handoff halvány vonalszínével
+  .border,
+  .border-bottom,
+  .border-top
+  {
+    border-color: var(--p2-line);
+  }
+}
+
+
+/* !- Nézet (canvas) */
+
+.planner2-view
+{
+  min-height: 0;
+  background: var(--p2-view);
+
+  // A three.js `renderer.setSize()` fix px-et ír a canvas inline stílusába,
+  // amitől a nézet nem tudna visszanőni a lap becsukásakor. A konténerhez
+  // kötött méret miatt a GL ResizeObserver-e látja a változást és újraméretez.
+  > canvas
+  {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+.planner2-header
+{
+  top: 12px;
+  left: 16px;
+  right: 16px;
+  z-index: 3;
+  pointer-events: none;
+
+  > *
+  {
+    pointer-events: auto;
+  }
+}
+
+.planner2-title
+{
+  letter-spacing: -0.01em;
+}
+
+.planner2-tools
+{
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  flex-direction: column;
+  gap: 12px;
+}
+
+// felhúzott lapnál kevés a hely: mobilon csak a legfelső eszköz marad
+@media only screen and (max-width: 767px)
+{
+  .planner2.is-sheet-open .planner2-tools > *:not(:first-child)
+  {
+    display: none;
+  }
+}
+
+
+/* !- Modell vezérlők a canvason (Planner v1 Controllers) */
+
+.planner2-controllers
+{
+  .controllers-bar
+  {
+    max-width: calc(100vw - 32px);
+  }
+
+  @media only screen and (max-width: 767px)
+  {
+    // a modell a nézet szélén is állhat, ezért vízszintesen középre rögzítjük
+    left: 50% !important;
+
+    .controllers-item
+    {
+      height: 4rem;
+      padding: 1rem;
+    }
+  }
+}
+
+
+/* !- Kör alakú lebegő gomb (fejléc + nézet-eszközök) */
+
+.planner2-circle
+{
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 10px rgba(22, 35, 58, 0.12);
+
+  svg
+  {
+    width: 20px;
+    height: 20px;
+  }
+
+  svg *
+  {
+    fill: var(--p2-ink);
+  }
+
+  &.is-tool
+  {
+    width: 46px;
+    height: 46px;
+    background: var(--p2-surface);
+    box-shadow: var(--p2-shadow-float);
+  }
+
+  // AR gomb: a helye akkor is megmarad, ha a készülék nem tud AR-t
+  &.planner2-ar
+  {
+    &.is-hidden
+    {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    // amíg készül az AR modell: halvány, de kattintható (visszajelzést ad)
+    &.is-loading
+    {
+      opacity: 0.5;
+    }
+  }
+
+  // aktív állapot (bekapcsolt eszköz) — az .is-tool után, hogy nyerjen
+  &.is-active
+  {
+    background: var(--p2-active);
+  }
+}
+
+
+/* !- Felhúzható lap */
+
+// Nem lebeg a nézet fölött: a flexben elvett hely miatt a canvas is szűkül,
+// ezért nyitáskor a 3D nézet átméreteződik (GL ResizeObserver).
+.planner2-sheet
+{
+  z-index: 4;
+  flex: none;
+  height: var(--p2-sheet-closed);
+  background: var(--p2-surface);
+  border-radius: 26px 26px 0 0;
+  box-shadow: var(--p2-shadow-sheet);
+  transition: height 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+
+  &.is-open
+  {
+    height: var(--p2-sheet-open);
+  }
+
+  &.is-dragging
+  {
+    transition: none;
+  }
+
+  // csukva csak az ár-sáv és a szegmens látszik, kiválasztott fül nélkül
+  // (csak mobilon: 768px felett a lap mindig nyitva van)
+  @media only screen and (max-width: 767px)
+  {
+    &:not(.is-open):not(.is-dragging)
+    {
+      .planner2-content
+      {
+        display: none;
+      }
+
+      .segment-thumb
+      {
+        opacity: 0;
+      }
+
+      .segment-item.active
+      {
+        color: var(--p2-muted);
+
+        svg *
+        {
+          fill: var(--p2-muted);
+        }
+      }
+    }
+  }
+}
+
+.planner2-handle
+{
+  position: relative;
+  // tableten/desktopon `display: none`, ezért itt sem lehet `flex` utility
+  display: flex;
+  justify-content: center;
+  flex: none;
+  padding: 10px 0 4px;
+  touch-action: none;
+
+  // A fogantyú vékony, ezért a kattintási területet láthatatlanul kiterjesztjük
+  // (~55px). Lefelé az ár-sáv szövege fölé lóg — az nem kattintható, a TOVÁBB
+  // gomb pedig z-indexszel a fogantyú fölé kerül.
+  &::before
+  {
+    content: '';
+    position: absolute;
+    top: -14px;
+    right: 0;
+    bottom: -22px;
+    left: 0;
+  }
+
+  &::after
+  {
+    content: '';
+    width: 44px;
+    height: 5px;
+    border-radius: 99px;
+    background: #dcdfe4;
+  }
+}
+
+
+/* !- Ár-sáv */
+
+.planner2-price
+{
+  flex: none;
+
+  // az ellipszishez a flex gyereknek zsugorodnia kell
+  .grow
+  {
+    min-width: 0;
+  }
+}
+
+.planner2-price-value
+{
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+
+  small
+  {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--p2-muted);
+  }
+}
+
+.planner2-cta
+{
+  // a fogantyú kiterjesztett kattintási területe fölé
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border: 0;
+  background: var(--p2-accent);
+  color: var(--p2-ink);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+
+  svg
+  {
+    width: 22px;
+    height: 22px;
+  }
+
+  svg *
+  {
+    fill: var(--p2-ink);
+  }
+}
+
+// mobilon csak a kör + nyíl, desktopon szöveges TOVÁBB gomb
+.planner2-cta-label
+{
+  display: none;
+}
+
+
+/* !- Szegmens vezérlő (@1studio/ui Segment) */
+
+.planner2-tabs
+{
+  flex: none;
+
+  .form,
+  .field
+  {
+    width: 100%;
+  }
+
+  .segment-track
+  {
+    display: flex;
+    width: 100%;
+    padding: 3px;
+    gap: 2px;
+    background: var(--p2-surface-soft);
+    border-radius: 12px;
+  }
+
+  // a kiválasztás-jelölő átcsúszik a másik fülre
+  .segment-thumb
+  {
+    top: 3px;
+    bottom: 3px;
+    border-radius: 10px;
+    background: var(--p2-ink);
+    box-shadow: 0 1px 3px rgba(22, 35, 58, 0.18);
+  }
+
+  .segment-item
+  {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 38px;
+    padding: 0 4px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--p2-muted);
+    background: transparent;
+    box-shadow: none;
+
+    svg
+    {
+      width: 15px;
+      height: 15px;
+    }
+
+    svg *
+    {
+      fill: var(--p2-muted);
+    }
+
+    // a hátteret a .segment-thumb adja; a globális button-stílus hover-en sárgára
+    // festené az ikont, ezért expliciten megadjuk
+    &.active,
+    &.active:hover,
+    &.active:focus
+    {
+      color: #ffffff;
+      background: transparent;
+      box-shadow: none;
+
+      svg *
+      {
+        fill: #ffffff;
+      }
+    }
+  }
+}
+
+
+/* !- Görgethető tartalom */
+
+.planner2-content
+{
+  min-height: 0;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar
+  {
+    width: 0;
+    height: 0;
+  }
+}
+
+
+/* !- Szövet: a Planner v1 teljes Textures panelje */
+
+// a panel saját belső paddingja jön a tartalom paddingjához, ezért annyit
+// visszaveszünk, hogy a swatch-sorok a szegmenssel egy vonalban legyenek
+.planner2-textures
+{
+  margin: 0 -10px;
+
+  // Mobilon (felhúzható lap) kevés a hely: cím, kereső és nagy előnézet nélkül.
+  // Explicit media query, mert a `respond-to(mobile)` a website2-ben `pointer:
+  // coarse`-t is vár, a kontakt2-ben nem — a tervezőnek mindkettőben ugyanúgy
+  // kell viselkednie.
+  @media only screen and (max-width: 1023px)
+  {
+    .textures-title,
+    .textures-search,
+    .textures-preview
+    {
+      display: none;
+    }
+
+    // a rejtett cím helyén maradt felső térköz
+    > div
+    {
+      padding-top: 0;
+    }
+  }
+}
+
+
+/* !- Elemek */
+
+// Két-, tabletnél háromoszlopos rács. A utility grid flex-alapú, ott nem lennének
+// egyforma magasak a kártyák, ezért marad a CSS grid.
+.planner2-elements
+{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.planner2-card
+{
+  border-radius: 16px;
+
+  &:hover
+  {
+    border-color: #dcdfe4;
+  }
+}
+
+.planner2-card-image
+{
+  img
+  {
+    display: block;
+    width: 100%;
+    height: 74px;
+    object-fit: contain;
+  }
+}
+
+.planner2-card-variants
+{
+  top: 0;
+  left: 0;
+  flex-direction: column;
+}
+
+.planner2-card-variant
+{
+  width: 26px;
+  height: 26px;
+  background: var(--p2-surface-soft);
+
+  svg
+  {
+    width: 14px;
+    height: 14px;
+  }
+
+  svg *
+  {
+    fill: var(--p2-ink);
+  }
+
+  // csökkentett üzemmódban csak jelzés: látszik, de nem kapcsolható
+  &.is-readonly
+  {
+    pointer-events: none;
+  }
+
+  // aktív extra (ágyazható, tároló, karfa) — a Planner v1-gyel egyezően kék
+  &.is-active
+  {
+    background: $blue-dark;
+
+    svg *
+    {
+      fill: #ffffff;
+    }
+  }
+}
+
+.planner2-card-footer
+{
+  margin-top: auto;
+}
+
+.planner2-add
+{
+  flex: none;
+  width: 32px;
+  height: 32px;
+  background: var(--p2-ink);
+
+  svg
+  {
+    width: 18px;
+    height: 18px;
+  }
+
+  svg *
+  {
+    fill: #ffffff;
+  }
+}
+
+
+/* !- Összeállítás */
+
+.planner2-part
+{
+  border-radius: 14px;
+
+  img
+  {
+    flex: none;
+    width: 46px;
+    height: 46px;
+    object-fit: contain;
+    border-radius: 10px;
+  }
+}
+
+.planner2-part-body
+{
+  min-width: 0;
+}
+
+.planner2-part-remove
+{
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-color: var(--p2-line-strong);
+
+  svg
+  {
+    width: 16px;
+    height: 16px;
+  }
+
+  svg *
+  {
+    fill: var(--p2-muted);
+  }
+
+  // a köztes elem nem törölhető, de a helye megmarad, hogy ne ugráljon a sor
+  &.is-hidden
+  {
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+
+/* !- Tablet: a lap fixen nyitva, 3 oszlopos elemrács */
+
+@media only screen and (min-width: 768px) and (max-width: 1023px)
+{
+  .planner2 .planner2-sheet
+  {
+    height: 50%;
+
+    &.is-open
+    {
+      height: 50%;
+    }
+  }
+
+  .planner2 .planner2-handle
+  {
+    display: none;
+  }
+
+  .planner2 .planner2-elements
+  {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+
+/* !- Desktop: jobb oldali 400px panel */
+
+@media only screen and (min-width: 1024px)
+{
+  .planner2
+  {
+    flex-direction: row;
+  }
+
+  .planner2 .planner2-header
+  {
+    top: 24px;
+    left: 28px;
+    right: auto;
+    justify-content: flex-start;
+  }
+
+  .planner2 .planner2-title
+  {
+    flex: none;
+    font-size: 16px;
+    text-align: left;
+  }
+
+  .planner2 .planner2-tools
+  {
+    flex-direction: row;
+    top: auto;
+    bottom: 28px;
+    left: 28px;
+    transform: none;
+  }
+
+  .planner2 .planner2-circle.is-tool
+  {
+    width: 48px;
+    height: 48px;
+  }
+
+  .planner2 .planner2-sheet,
+  .planner2 .planner2-sheet.is-open
+  {
+    position: static;
+    width: 400px;
+    height: auto;
+    flex: none;
+    border-radius: 0;
+    border-left: 1px solid var(--p2-line);
+    box-shadow: none;
+  }
+
+  .planner2 .planner2-handle
+  {
+    display: none;
+  }
+
+  .planner2 .planner2-tabs
+  {
+    order: 1;
+    margin: 20px 24px 12px;
+
+    .segment-item
+    {
+      height: 42px;
+      font-size: 12px;
+      gap: 6px;
+    }
+  }
+
+  .planner2 .planner2-content
+  {
+    order: 2;
+    padding: 6px 24px 20px;
+  }
+
+  .planner2 .planner2-elements
+  {
+    gap: 16px;
+  }
+
+  .planner2 .planner2-card
+  {
+    padding: 14px;
+  }
+
+  .planner2 .planner2-card-image img
+  {
+    height: 96px;
+    border-radius: 10px;
+  }
+
+  .planner2 .planner2-add
+  {
+    width: 34px;
+    height: 34px;
+  }
+
+  .planner2 .planner2-price
+  {
+    order: 3;
+    padding: 18px 24px;
+    border-top: 1px solid var(--p2-line);
+    border-bottom: 0;
+    gap: 16px;
+  }
+
+  .planner2 .planner2-price-value small
+  {
+    font-size: 14px;
+  }
+
+  .planner2 .planner2-cta
+  {
+    width: auto;
+    height: auto;
+    padding: 15px 28px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+
+    svg
+    {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .planner2 .planner2-cta-label
+  {
+    display: inline;
+  }
+
+  .planner2 .planner2-ar
+  {
+    display: none;
+  }
+}

@@ -115,6 +115,16 @@ export const initSettings = (props) => {
 
 
 /**
+ * Settings already in the view store (groups and active)
+ * @private
+ */
+const hasSettings = (state, settings) =>
+  (settings.active === undefined || state.active === settings.active)
+  && Object.keys(settings.groups || {})
+    .every(groupId => isEqual(state.groups[groupId], settings.groups[groupId]));
+
+
+/**
  * Manage view component visibility, similarly tab.
  *
  * Settings: If settings props not defined, component automatically generate via childs.
@@ -168,11 +178,18 @@ class View extends Component {
      * standalone: do not overwrite the globally active group,
      * otherwise every other (page level) View lost its children
      */
-    this.props.addSettings(
-      this.props.standalone ? omit(this.settings, 'active') : this.settings,
-    );
+    const settings = this.props.standalone ? omit(this.settings, 'active') : this.settings;
 
-    if (this.props.defaultView) {
+    /**
+     * Dispatch only when the store differs: this runs during render, and an
+     * unconditional dispatch restarts a concurrent render (new View, new dispatch),
+     * which ends in "Maximum update depth exceeded"
+     */
+    if (!hasSettings(context.store.getState().view, settings)) {
+      this.props.addSettings(settings);
+    }
+
+    if (this.props.defaultView && context.store.getState().view.active !== this.props.defaultView) {
       this.props.switchGroup(this.props.defaultView);
     }
 

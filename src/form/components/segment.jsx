@@ -13,32 +13,7 @@ import { bindFormContexts } from '../context';
 import Field from '../formField';
 
 
-/* !- Inline stílus (a Chat|Cowork pill-megjelenéshez; később CSS-be emelhető) */
-
-const styles = {
-  track: {
-    display: 'inline-flex',
-    padding: 2,
-    gap: 2,
-    background: '#ececec',
-    borderRadius: 999,
-  },
-  item: {
-    border: 0,
-    cursor: 'pointer',
-    borderRadius: 999,
-    padding: '4px 16px',
-    fontWeight: 600,
-    color: '#8a8a8a',
-    background: 'transparent',
-    lineHeight: 1.4,
-  },
-  itemActive: {
-    color: '#111',
-    background: '#fff',
-    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.12)',
-  },
-};
+/* !- Megjelenés: assets/style/components/segment.scss (.segment-track, .segment-item) */
 
 
 /**
@@ -53,6 +28,8 @@ const styles = {
 * />
 */
 class Segment extends Field {
+  trackRef = React.createRef();
+
   componentDidMount() {
     if (super.componentDidMount) {
       super.componentDidMount();
@@ -62,6 +39,55 @@ class Segment extends Field {
     if (typeof this.props.default === 'undefined' && !this.state.value && this.data.length) {
       this.onChangeHandler(this.data[0].id);
     }
+
+    this.updateThumb();
+
+    // a sáv szélessége változhat (reszponzív panel), ilyenkor újra kell mérni
+    if (typeof ResizeObserver !== 'undefined' && this.trackRef.current) {
+      this.resizeObserver = new ResizeObserver(() => this.updateThumb());
+      this.resizeObserver.observe(this.trackRef.current);
+    }
+  }
+
+  componentDidUpdate() {
+    if (super.componentDidUpdate) {
+      super.componentDidUpdate();
+    }
+
+    this.updateThumb();
+  }
+
+  componentWillUnmount() {
+    if (super.componentWillUnmount) {
+      super.componentWillUnmount();
+    }
+
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+  }
+
+  /**
+   * A kiválasztás-jelölő az aktív elem alá csúszik, ezért méretre van szükség.
+   * Mérés DOM-ból, hogy különböző szélességű elemeknél is pontos legyen.
+   */
+  updateThumb() {
+    const track = this.trackRef.current;
+
+    if (!track) {
+      return;
+    }
+
+    const item = track.querySelector('.segment-item.active');
+    const thumb = item ? { left: item.offsetLeft, width: item.offsetWidth } : null;
+
+    const { thumb: prev } = this.state;
+
+    if (prev?.left === thumb?.left && prev?.width === thumb?.width) {
+      return;
+    }
+
+    this.setState({ thumb });
   }
 
   onClickItemHandler = (id) => (event) => {
@@ -75,7 +101,18 @@ class Segment extends Field {
 
         {this.label}
 
-        <div className="segment-track" style={styles.track}>
+        <div className="segment-track" ref={this.trackRef}>
+
+          {this.state.thumb &&
+            <div
+              className="segment-thumb"
+              style={{
+                transform: `translateX(${this.state.thumb.left}px)`,
+                width: this.state.thumb.width,
+              }}
+            />
+          }
+
           {this.data.map((item) => {
             const active = item.id.toString() === (this.state.value ?? '').toString();
             const title = (this.props.intl && this.props.dataTranslate)
@@ -86,8 +123,7 @@ class Segment extends Field {
               <button
                 key={item.id}
                 type="button"
-                className={classNames('segment-item', { active })}
-                style={{ ...styles.item, ...(active ? styles.itemActive : {}) }}
+                className={classNames('segment-item initial', { active })}
                 onClick={this.onClickItemHandler(item.id)}
                 disabled={this.props.disabled}
               >

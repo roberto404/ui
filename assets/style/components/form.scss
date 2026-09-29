@@ -994,5 +994,10 @@ input:checked~label {
 
 &.gray-dark .field.active {
   background-color: $gray-dark;
+
+  button {
+    border:none;
+  }
 }
+
 }

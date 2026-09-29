@@ -1,0 +1,195 @@
+/*
+  3D tervező — Terv összefoglaló
+  Komponens: @1studio/shared/3d/Planner/FurnitureCollection/Summary
+ */
+
+// A dialógus szélességét szándékosan NEM állítjuk: azt a réteg (layer) adja.
+.planner-summary
+{
+  // a hosszú megnevezés ne tolja szét a sort (a teljes név az adatlapon látszik)
+  .planner-summary-cell-title
+  {
+    max-height: 3.5em;
+  }
+
+  @include respond-to(mobile)
+  {
+    // keskeny hasábban két sorba tördel, ott nem vágható a megnevezés
+    .planner-summary-cell-title
+    {
+      max-height: none;
+    }
+
+    // a terv képe, a végösszeg és a gombok előre; a terméklista alá kerül
+    .planner-summary-visual
+    {
+      order: -1;
+      margin-bottom: 1.5rem;
+    }
+
+    // a terv képe ne vigye el a fél képernyőt
+    .planner-summary-image
+    {
+      max-height: 40vw;
+      object-fit: contain;
+    }
+  }
+}
+
+
+/**
+ * A tervező rétegben nyíló panelek (elem adatlap, szövetkereső).
+ * Fix szélesség, de mobilon nem lóghat ki a képernyőről.
+ */
+.planner-popover
+{
+  width: 500px;
+  max-width: 100vw;
+}
+
+
+/**
+ * A terv elküldése utáni visszajelzés (`Planner/FurnitureCollection/SubmitSuccess`).
+ * Keskeny dialógus, mobilon teljes szélességben.
+ */
+.planner-success
+{
+  width: 420px;
+  max-width: 100vw;
+}
+
+
+/*
+  Teljes képernyős betöltő a 3D tervezőhöz.
+  Komponens: @1studio/shared/3d/Planner/Preloader
+  Design: dox/design_handoff_mobil_konfigurator/preloader-3a.html
+
+  A tervezőn KÍVÜL is renderelődik (még a `.planner2` mountolása előtt), ezért
+  a handoff színei itt literálként szerepelnek, nem a `--p2-*` változókból.
+ */
+
+.planner-preloader
+{
+  // A `fixed` és a `pin` utility is `z-index: 1`-et ad, és a utilities a
+  // components UTÁN töltődik — azonos specificitásnál nyernének. Ezért a
+  // pozicionálás is itt van.
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 9999;
+  gap: 34px;
+  background: #fafbfc;
+  color: #16233a;
+}
+
+.planner-preloader-stage
+{
+  width: 260px;
+  height: 200px;
+}
+
+.planner-preloader-shadow
+{
+  bottom: 24px;
+  width: 170px;
+  height: 16px;
+  border-radius: 50%;
+  background: #16233a;
+  filter: blur(7px);
+  animation: plannerPreloaderShadow 2.6s ease-in-out infinite;
+}
+
+.planner-preloader-block
+{
+  animation: plannerPreloaderRise 2.6s ease-in-out infinite;
+
+  &.is-second
+  {
+    animation-delay: 0.32s;
+  }
+
+  &.is-third
+  {
+    animation-delay: 0.64s;
+  }
+}
+
+.planner-preloader-guide
+{
+  animation: plannerPreloaderDraw 2.6s ease-in-out infinite;
+}
+
+.planner-preloader-title
+{
+  font-size: 15px;
+  letter-spacing: -0.01em;
+}
+
+.planner-preloader-meta
+{
+  font-size: 12px;
+  color: #5c6472;
+}
+
+.planner-preloader-track
+{
+  width: 190px;
+  height: 4px;
+  border-radius: 99px;
+  background: #e6e8ec;
+}
+
+.planner-preloader-bar
+{
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 55%;
+  border-radius: 99px;
+  background: #f09526;
+  animation: plannerPreloaderSweep 1.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes plannerPreloaderRise
+{
+  0% { opacity: 0; transform: translateY(26px); }
+  22%, 78% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-14px); }
+}
+
+@keyframes plannerPreloaderDraw
+{
+  0% { stroke-dashoffset: 520; }
+  55%, 100% { stroke-dashoffset: 0; }
+}
+
+@keyframes plannerPreloaderSweep
+{
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(120%); }
+}
+
+@keyframes plannerPreloaderShadow
+{
+  0%, 100% { transform: scaleX(0.82); opacity: 0.16; }
+  50% { transform: scaleX(1); opacity: 0.28; }
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+  .planner-preloader-block,
+  .planner-preloader-guide,
+  .planner-preloader-shadow,
+  .planner-preloader-bar
+  {
+    animation: none !important;
+    opacity: 1;
+  }
+
+  .planner-preloader-bar
+  {
+    width: 100%;
+  }
+}
