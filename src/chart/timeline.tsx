@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import Coordinate from './coordinate';
+import { integerAxis } from './coordinate/functions';
 
 import { tooltip, flush } from '../layer/actions';
 
@@ -26,11 +27,16 @@ export interface PropTypes {
   data: ITimelineItem[],
   // x-axis origin (minute 0); defaults to the earliest startDateTime
   start?: string | Date,
-  // x-axis range and division, in minutes relative to `start`
+  // ms of one x-axis unit (default: minute, e.g. hour: 3600000)
+  unit?: number,
+  // x-axis range and division in `unit`s relative to `start`;
+  // without `xAxisTo` the axis ends at the latest event end, rounded up to integer labels
   xAxisFrom?: number,
   xAxisTo?: number,
   xAxisStep?: number,
-  xAxisFormat?: (minute: number) => React.ReactNode,
+  // max divisions of the automatic axis
+  xAxisMaxSteps?: number,
+  xAxisFormat?: (value: number) => React.ReactNode,
   // when set, the hovered bar shows the ui (layer) tooltip with this content
   tooltipFormat?: (item: ITimelineItem, index: number) => React.ReactNode,
   // bar height in svg units (defaults to the plot height)
@@ -60,7 +66,7 @@ const toTime = (value: string | Date): number =>
  * Every bar of the timeline. Drawn once (on the first point) so a single
  * stateful component owns the hover.
  */
-const TimelineSeries = ({ data, canvas, barHeight, radius, minBarWidth, tooltipFormat }) => {
+const TimelineSeries = ({ data, canvas, unit, barHeight, radius, minBarWidth, tooltipFormat }) => {
   const dispatch = useDispatch();
   const [active, setActive] = React.useState<number | null>(null);
 
@@ -74,7 +80,7 @@ const TimelineSeries = ({ data, canvas, barHeight, radius, minBarWidth, tooltipF
     const color = item.color || COLORS[index % COLORS.length];
 
     const x1 = Math.max(left, x);
-    const x2 = Math.min(right, x + (canvas.colWidth * (item.duration / MINUTE)));
+    const x2 = Math.min(right, x + (canvas.colWidth * (item.duration / unit)));
     const barWidth = Math.max(minBarWidth, x2 - x1);
 
     return { item, index, color, x: x1, width: barWidth };
@@ -137,10 +143,12 @@ const Timeline: React.FC<PropTypes> = (props) => {
   const {
     data = [],
     start,
+    unit = MINUTE,
     xAxisFrom = 0,
-    xAxisTo = 15,
-    xAxisStep = 5,
-    xAxisFormat = (minute: number) => minute,
+    xAxisTo,
+    xAxisStep,
+    xAxisMaxSteps = 5,
+    xAxisFormat = (value: number) => value,
     tooltipFormat,
     barHeight = 0,
     radius = 4,
@@ -161,14 +169,24 @@ const Timeline: React.FC<PropTypes> = (props) => {
     ? toTime(start)
     : Math.min(...data.map(item => toTime(item.startDateTime)));
 
-  const element = Bar({ barHeight, radius, minBarWidth, tooltipFormat });
+  const element = Bar({ unit, barHeight, radius, minBarWidth, tooltipFormat });
 
   const points = data.map(item => ({
-    x: (toTime(item.startDateTime) - origin) / MINUTE,
+    x: (toTime(item.startDateTime) - origin) / unit,
     y: 0.5,
     item,
     element,
   }));
+
+  // latest event end
+  const end = Math.max(
+    xAxisFrom,
+    ...points.map(({ x, item }) => x + (item.duration / unit)),
+  );
+
+  const axis = typeof xAxisTo === 'undefined'
+    ? integerAxis(xAxisFrom, end, xAxisMaxSteps)
+    : { min: xAxisFrom, max: xAxisTo, step: xAxisStep || (xAxisTo - xAxisFrom) };
 
   const xAxisLabel = ({ value, x, y }) => (
     <text
@@ -191,9 +209,9 @@ const Timeline: React.FC<PropTypes> = (props) => {
       height={height}
       margin={margin}
       responsive={responsive}
-      xAxisValueMin={xAxisFrom}
-      xAxisValueMax={xAxisTo}
-      xAxisSteps={Math.max(1, Math.round((xAxisTo - xAxisFrom) / xAxisStep))}
+      xAxisValueMin={axis.min}
+      xAxisValueMax={axis.max}
+      xAxisSteps={Math.max(1, Math.round((axis.max - axis.min) / axis.step))}
       xAxisLabel={xAxisLabel}
       yAxisValueMin={0}
       yAxisValueMax={1}

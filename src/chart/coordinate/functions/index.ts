@@ -1,4 +1,5 @@
 import coordToPix from "./coordToPix";
+import integerAxis from "./integerAxis";
 
 
 /* !- Types */
@@ -41,4 +42,5 @@ export {
   findMinimumValueInSeries,
   flattenDataCoord,
   coordToPix,
+  integerAxis,
 };

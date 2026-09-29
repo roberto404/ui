@@ -28,6 +28,8 @@ export const defaultProps = {
   className: "bg-white-light rounded-xl shadow-outer-10",
   ratio: "16 / 9",
   filters: [] as FilterRegistration[],
+  // extra class of the active (e.g. selected filter) card
+  activeClassName: "",
 };
 
 export type ChartCardProps = Partial<typeof defaultProps> & {
@@ -49,6 +51,10 @@ export type ChartCardProps = Partial<typeof defaultProps> & {
   // theme / background colour; cascades to the text and (via api.theme) the chart
   color?: string;
   style?: React.CSSProperties;
+  // makes the whole card clickable (e.g. applies a grid filter)
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  // gets `activeClassName`
+  active?: boolean;
 };
 
 /* !- Helpers */
@@ -87,6 +93,9 @@ const ChartCard = ({
   headerAlign = "flex-start",
   color,
   style,
+  onClick,
+  active = false,
+  activeClassName = defaultProps.activeClassName,
 }: ChartCardProps) => {
   const api = useSeriesGrid(id, data, filters);
 
@@ -117,7 +126,7 @@ const ChartCard = ({
       }}
     >
       {title$ && (
-        <div id="title">
+        <div id="title" className="medium nowrap">
           {typeof title === "string" || typeof title === "number" ? (
             <span className="text-gray-dark text-s">{title$}</span>
           ) : (
@@ -146,7 +155,13 @@ const ChartCard = ({
   return (
     <div
       id="chart-card"
-      className={classNames("chart-card column p-2 w-full", { "on-color": !!color }, className)}
+      className={classNames(
+        "chart-card column p-2 w-full",
+        { "on-color": !!color, pointer: !!onClick },
+        className,
+        active && activeClassName,
+      )}
+      onClick={onClick}
       style={{
         boxSizing: "border-box",
         breakInside: 'avoid',
