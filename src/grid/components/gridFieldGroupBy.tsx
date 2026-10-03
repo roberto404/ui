@@ -30,6 +30,11 @@ const defaultProps =
   placeholder: '',
   helper: [],
   /**
+   * Collect only from the records matching the other active grid filters
+   * (the own filter is skipped, so the alternatives stay selectable)
+   */
+  dataOnly: false,
+  /**
    * Collect records from rawData of Grid
    * @return {array}        collected unique field name
    * @example
@@ -71,8 +76,26 @@ type PropTypes = Partial<typeof defaultProps> &
   ?grid="robot"
 />
 */
+/**
+ * Records of rawData passing every active filter except `skipId` (same as Data._filter).
+ */
+const filterRecords = (grid, skipId: string) => {
+  const filters = (grid.filters || []).filter(filter => filter.id !== skipId && filter.status !== false);
+
+  if (filters.length === 0) {
+    return grid.rawData;
+  }
+
+  const args = {};
+  (grid.filters || []).forEach(filter => args[filter.id] = filter.arguments); // eslint-disable-line
+
+  return (grid.rawData || []).filter((record, index) =>
+    filters.every(filter => filter.handler(record, ...filter.arguments, args, grid.model, index)),
+  );
+};
+
 const GridFieldGroupBy = (props: PropTypes) => {
-  const { id, reducer } = props;
+  const { id, reducer, dataOnly, ...uiProps } = props;
 
   const context = useContext(GridContext);
   const dispatch = useDispatch();
@@ -84,7 +107,7 @@ const GridFieldGroupBy = (props: PropTypes) => {
 
     return (
       reduce(
-        grid.rawData,
+        dataOnly ? filterRecords(grid, id) : grid.rawData,
         (result, record) => reducer(result, record, id),
         [],
       )
@@ -100,10 +123,11 @@ const GridFieldGroupBy = (props: PropTypes) => {
 
   return (
     <Connect
-      listen="rawData"
+      listen={dataOnly ? 'data' : 'rawData'}
       UI={Dropdown}
       uiProps={{
-        ...props,
+        id,
+        ...uiProps,
         data: fetchData,
         onChange: ({ value }) => dispatch(setValues({ [id]: value })),
         dataTranslate: false,

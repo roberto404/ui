@@ -157,6 +157,18 @@ table {
   cursor: pointer;
 }
 
+.cursor-zoom-in {
+  cursor: zoom-in;
+}
+
+.cursor-zoom-out {
+  cursor: zoom-out;
+}
+
+.touch-none {
+  touch-action: none;
+}
+
 .no-events {
   pointer-events: none;
 }

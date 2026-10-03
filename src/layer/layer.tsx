@@ -1,7 +1,7 @@
 "use client";
 
 
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useContext, useRef } from 'react';
 import { useSelector, useDispatch, useStore } from 'react-redux';
 import classNames from 'classnames';
 import isEqual from 'lodash/isEqual';
@@ -29,6 +29,10 @@ import { useAppContext } from '../context';
 import { useComponentDidMount } from '../hooks';
 
 
+// useLayoutEffect warns on server side
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+
+
 /**
  * Layer Component
  * Connect to layer state via Redux.
@@ -39,6 +43,8 @@ const Layer = () => {
   /* !- Hooks */
 
   const scrollTop = useRef(-1);
+  // scroll position has to restore after the layer closed
+  const isScrollSaved = useRef(false);
   const mouseDownElementTarget = useRef();
 
   useComponentDidMount(() => {
@@ -58,6 +64,17 @@ const Layer = () => {
   } = useSelector(getLayer, isEqual);
 
   const { className } = options || {};
+
+  /**
+   * Restore the scroll position after the page content is visible again
+   * (fullscreen layer hides the page, so the document is too short before)
+   */
+  useIsomorphicLayoutEffect(() => {
+    if (!active && isScrollSaved.current) {
+      isScrollSaved.current = false;
+      window.scrollTo(0, scrollTop.current);
+    }
+  }, [active]);
 
 
 
@@ -123,7 +140,11 @@ const Layer = () => {
 
   if (active) {
 
-    scrollTop.current = window.scrollY;
+    // save only on opening: later renders (ex. fullscreen) have scrolled page
+    if (!isScrollSaved.current) {
+      scrollTop.current = window.scrollY;
+      isScrollSaved.current = true;
+    }
 
     if (method === 'popover') {
       document.body.classList.add("layer-popover");
@@ -158,10 +179,6 @@ const Layer = () => {
   else {
     if (typeof document !== 'undefined') {
       document.body.className = '';
-    }
-
-    if (typeof window !== 'undefined') {
-      window.scrollTo(0, scrollTop.current);
     }
   }
 
