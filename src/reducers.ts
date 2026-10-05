@@ -6,6 +6,7 @@ import view, { StateTypes as ViewStateTypes } from './view/reducers'; // 4
 import layer from './layer/reducers'; // 33 Kbyte
 import user from './authentication/reducers'; // 65 Kbyte
 import notification from './notification/reducers';
+import tutorial from './tutorial/reducers';
 
 export type StateTypes =
   {
@@ -19,6 +20,7 @@ export const reducers = {
   layer,
   user,
   notification,
+  tutorial,
 };
 
 export default combineReducers(reducers);
