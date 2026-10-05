@@ -187,7 +187,7 @@ class Collection extends Field
         {
           <button className="initial h-center bg-green rounded-l fill-white text-white p-1/4 px-1/2 pr-1 text-xs pointer" onClick={this.onClickAddHandler} style={{ width: 'auto' }}>
             <IconAdd className="w-2 h-2 mr-1/2 no-events" />
-            <div className="no-events">{Array.isArray(this.state.value?.[0]) ? 'VAGY': 'ÉS'}</div>
+            <div className="no-events">{this.props.addLabel || (Array.isArray(this.state.value?.[0]) ? 'VAGY': 'ÉS')}</div>
           </button>
         }
 
@@ -208,6 +208,10 @@ Collection.propTypes =
 {
   ...Collection.propTypes,
   draggable: PropTypes.bool,
+  /**
+   * Hozzáadás gomb felirata (alapból szűrőkhöz: ÉS / VAGY)
+   */
+  addLabel: PropTypes.node,
   UI: PropTypes.func,
   value: PropTypes.array,
 };
