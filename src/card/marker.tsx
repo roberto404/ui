@@ -1,5 +1,5 @@
 
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import classNames from 'classnames';
 import { useDispatch, ReactReduxContext } from 'react-redux';
 
@@ -25,8 +25,14 @@ export const MARKER_ALIGNS = {
 };
 
 
+// the tooltip (popover) layer cannot open over these layers (layer reducer)
+const BLOCKING_LAYER_METHODS = ['dialog', 'fullscreen', 'sidebar'];
+
+
 /**
  * InfoBox Marker
+ * Over a dialog/fullscreen/sidebar layer (ex. Lightbox) the content opens inline, next to the marker.
+ *
  * @example
  * <MarkerInfoBox>
  *  <span>Hello</span>
@@ -37,8 +43,31 @@ export const MarkerInfoBox = ({ children }) =>
   const { store } = useContext(ReactReduxContext);
   const dispatch = useDispatch();
 
+  // inline content: false | 'left' | 'right'
+  const [inline, setInline] = useState<false | 'left' | 'right'>(false);
+
+  const isOnLayer = () =>
+  {
+    const { active, method } = store.getState().layer || {};
+
+    return active === true && BLOCKING_LAYER_METHODS.indexOf(method) !== -1;
+  };
+
+  const openInline = (event) =>
+  {
+    const { left } = event.currentTarget.getBoundingClientRect();
+
+    setInline(left > window.innerWidth / 2 ? 'left' : 'right');
+  };
+
   const onMouseHandler = (event) =>
   {
+    if (isOnLayer())
+    {
+      openInline(event);
+      return;
+    }
+
     dispatch(tooltip(children, event));
   };
 
@@ -46,6 +75,20 @@ export const MarkerInfoBox = ({ children }) =>
   {
     event.preventDefault();
     event.stopPropagation();
+
+    if (isOnLayer())
+    {
+      if (inline)
+      {
+        setInline(false);
+      }
+      else
+      {
+        openInline(event);
+      }
+
+      return;
+    }
 
     const layer = store.getState().layer;
 
@@ -65,12 +108,39 @@ export const MarkerInfoBox = ({ children }) =>
 
   return (
     <div
-      className="pointer overflow bg-black-20 fill-yellow circle hover:bg-yellow hover:fill-black hover:rotate-45 transition mobile:text-xxs"
-      style={{ width: '2.5em', height: '2.5em', padding: '0.5em' }}
-      onMouseEnter={onMouseHandler}
-      onClick={onClickHandler}
+      className="relative"
+      onMouseLeave={() => setInline(false)}
     >
-      <IconPlus />
+      <div
+        className="pointer overflow bg-black-20 fill-yellow circle hover:bg-yellow hover:fill-black hover:rotate-45 transition mobile:text-xxs"
+        style={{ width: '2.5em', height: '2.5em', padding: '0.5em' }}
+        onMouseEnter={onMouseHandler}
+        onClick={onClickHandler}
+      >
+        <IconPlus />
+      </div>
+
+      {inline &&
+        // transparent padding: the mouse can move to the content without leaving
+        <div
+          className="absolute px-1/2"
+          style={{
+            top: '50%',
+            [inline === 'right' ? 'left' : 'right']: '100%',
+            transform: 'translateY(-50%)',
+            zIndex: 2,
+          }}
+          onClick={event => event.stopPropagation()}
+        >
+          {/* like the tooltip layer content */}
+          <div
+            className="marker-info bg-white rounded shadow p-1"
+            style={{ width: 'max-content' }}
+          >
+            {children}
+          </div>
+        </div>
+      }
     </div>
   );
 };
