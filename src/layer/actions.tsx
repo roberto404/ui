@@ -11,60 +11,7 @@ import React from 'react';
 import Modal from './modal';
 import Preload from './preload';
 import Menu from './menu';
-
-
-/* !- Constants */
-
-const extendPositions = ({ left, top, width, height }) => {
-  const positions = { width, height, center: {}, screen: {} };
-
-  positions.left = left + window.pageXOffset;
-  positions.top = top + window.pageYOffset;
-  positions.center.x = positions.left + (positions.width / 2);
-  positions.center.y = positions.top + (positions.height / 2);
-  positions.screen.x = (positions.left - window.pageXOffset) / window.innerWidth;
-  positions.screen.y = (positions.top - window.pageYOffset) / window.innerHeight;
-
-  return positions;
-}
-
-const getPositionsElement = (target) => {
-  if (!target) {
-    return {};
-  }
-
-  const rect = target.getBoundingClientRect();
-  return extendPositions(rect)
-};
-
-const getDynamicPopoverStyle = (position) => {
-  const style = {};
-  const { screen, left, top, center, width, height } = position;
-
-  if (screen.x < 0.3) {
-    style.left = left;
-    style.transform = '';
-  }
-  else if (screen.x > 0.7) {
-    style.left = left + width;
-    style.transform = 'translateX(-100%)';
-  }
-  else {
-    style.left = `${center.x}px`;
-    style.transform = 'translateX(-50%)';
-  }
-
-  if (screen.y > 0.6) {
-    style.top = `${top - 6}px`;
-    style.transform += ' translateY(-100%)';
-  }
-  else {
-    style.top = `${top + height + 6}px`;
-  }
-
-  return style;
-};
-
+import { extendPositions, getPositionsElement, getDynamicPopoverStyle } from './position';
 
 
 /**

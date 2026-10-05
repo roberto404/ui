@@ -39,6 +39,8 @@ body.hide\:curtain .layer
     bottom: 0;
     width: 100vw;
     height: 100vh;
+    // mobile: visible height without the browser toolbars (100vh is taller)
+    height: 100dvh;
     display: flex;
 
     background-color: rgba(119, 140, 162, 0);

@@ -37,7 +37,8 @@ export default meta;
 type Story = StoryObj<typeof ZoomImage>;
 
 /**
- * Kattints egy pontra: oda nagyít, egérmozgatással pásztáz, újabb kattintásra kicsinyít.
+ * Egér: kattints egy pontra, oda nagyít, egérmozgatással pásztáz, újabb kattintásra kicsinyít.
+ * Érintés: csippentés, dupla koppintás, nagyítva egyujjas mozgatás.
  */
 export const Default: Story = {};
 
