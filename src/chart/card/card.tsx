@@ -1,6 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 
+import CardTitle from "./parts/title";
 import useSeriesGrid, {
   Series,
   FilterRegistration,
@@ -20,9 +21,7 @@ export type CardTheme = {
 // grid api handed to the render-props + the resolved card theme
 export type CardApi = SeriesGridApi & { theme: CardTheme };
 
-export type CardSlot =
-  | React.ReactNode
-  | ((api: CardApi) => React.ReactNode);
+export type CardSlot = React.ReactNode | ((api: CardApi) => React.ReactNode);
 
 export const defaultProps = {
   className: "bg-white-light rounded-xl shadow-outer-10",
@@ -38,6 +37,8 @@ export type ChartCardProps = Partial<typeof defaultProps> & {
   data: Series[];
   // string / number gets default headline styling; a node or render-prop is drawn as-is
   title?: CardSlot;
+  // description after the title: (i) icon with a tooltip
+  hint?: React.ReactNode;
   // top-right slot (period selector, search, big value …)
   header?: CardSlot;
   // bottom slot (summaries)
@@ -83,6 +84,7 @@ const ChartCard = ({
   id,
   data,
   title,
+  hint,
   header,
   footer,
   chart,
@@ -127,11 +129,16 @@ const ChartCard = ({
     >
       {title$ && (
         <div id="title" className="medium nowrap">
-          {typeof title === "string" || typeof title === "number" ? (
-            <span className="text-gray-dark text-s">{title$}</span>
-          ) : (
-            title$
-          )}
+          <CardTitle
+            title={
+              typeof title === "string" || typeof title === "number" ? (
+                <span className="text-gray-dark text-s">{title$}</span>
+              ) : (
+                title$
+              )
+            }
+            hint={hint}
+          />
         </div>
       )}
       {header$ && <div>{header$}</div>}
@@ -164,7 +171,7 @@ const ChartCard = ({
       onClick={onClick}
       style={{
         boxSizing: "border-box",
-        breakInside: 'avoid',
+        breakInside: "avoid",
         ...(color
           ? ({
               background: color,

@@ -7,5 +7,6 @@ export { default as SegmentedFilter } from './parts/segmentedFilter';
 export { default as PeriodCarousel } from './parts/periodCarousel';
 export { default as StatValue, ChangeBadge } from './parts/statValue';
 export { default as Summary } from './parts/summary';
+export { default as CardTitle } from './parts/title';
 
 export { default as useSeriesGrid } from './hooks/useSeriesGrid';

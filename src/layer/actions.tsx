@@ -284,6 +284,17 @@ export const menu = (props = {}, event: React.MouseEvent<HTMLElement> | {} = {},
   popover(<Menu {...props} />, event, { ...options, className: 'no-padding no-close' });
 
 
+/**
+ * Update the items of the visible menu, the position stays
+ * @example
+ * updateMenu({ items: [{ id, title, handler, className: 'focus' }] });
+ */
+export const updateMenu = (props = {}) =>
+({
+  type: 'SET_LAYER_ELEMENT',
+  element: <Menu {...props} />,
+});
+
 export const contextMenu = (props = {}, event: React.MouseEvent<HTMLElement> | {} = {}, options = {}) => {
   event.preventDefault();
   return menu(props, event, options);

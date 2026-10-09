@@ -3,6 +3,7 @@ import React from "react";
 import ChartCard from "./card";
 import ChartLine from "../line";
 import StatValue from "./parts/statValue";
+import CardTitle from "./parts/title";
 import { Series, SeriesGridApi } from "./hooks/useSeriesGrid";
 
 /* !- Types */
@@ -11,6 +12,8 @@ export type MinimalCardProps = {
   // redux grid id — one per card
   id: string;
   title?: React.ReactNode;
+  // description after the title: (i) icon with a tooltip
+  hint?: React.ReactNode;
   data: Series[];
   // headline value from the primary values, e.g. array `last` / `sum`
   summary?: (values: number[]) => React.ReactNode;
@@ -35,6 +38,7 @@ export type MinimalCardProps = {
 const MinimalCard = ({
   id,
   title,
+  hint,
   data,
   summary,
   change,
@@ -80,7 +84,9 @@ const MinimalCard = ({
 
         return (
           <div className="v-top column gap-1">
-            {title && <div className="medium">{title}</div>}
+            {title && (
+              <CardTitle title={title} hint={hint} className="medium" />
+            )}
             <StatValue
               value={summary ? summary(values) : undefined}
               change={change ? change(values) : undefined}

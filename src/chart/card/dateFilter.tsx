@@ -24,6 +24,8 @@ export type DateFilterCardProps = {
   // redux grid id — one per card
   id: string,
   title?: React.ReactNode,
+  // description after the title: (i) icon with a tooltip
+  hint?: React.ReactNode,
   data: Series[],
   // show the dynamic period selector (CalendarCarousel) top-right
   period?: boolean,
@@ -47,6 +49,7 @@ export type DateFilterCardProps = {
 const DateFilterCard = ({
   id,
   title,
+  hint,
   data,
   period = true,
   summaries,
@@ -81,6 +84,7 @@ const DateFilterCard = ({
       id={id}
       data={data}
       title={title}
+      hint={hint}
       className={className}
       ratio={ratio}
       headerAlign="center"

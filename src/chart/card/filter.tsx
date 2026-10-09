@@ -4,6 +4,7 @@ import ChartCard from "./card";
 import ChartLine from "../line";
 import SegmentedFilter, { Segment } from "./parts/segmentedFilter";
 import StatValue from "./parts/statValue";
+import CardTitle from "./parts/title";
 import {
   Series,
   SeriesGridApi,
@@ -30,6 +31,8 @@ export type FilterCardProps = {
   // redux grid id — one per card
   id: string;
   title?: React.ReactNode;
+  // description after the title: (i) icon with a tooltip
+  hint?: React.ReactNode;
   data: Series[];
   // segmented pills; each activates a pre-registered grid filter
   filter: FilterSegment[];
@@ -76,6 +79,7 @@ const latestDate = (data: Series[]): number => {
 const FilterCard = ({
   id,
   title,
+  hint,
   data,
   filter = [],
   multiple = false,
@@ -144,7 +148,7 @@ const FilterCard = ({
         <div
           style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}
         >
-          {title && <div className="medium">{title}</div>}
+          {title && <CardTitle title={title} hint={hint} className="medium" />}
           <SegmentedFilter api={api} segments={segments} multiple={multiple} />
         </div>
       )}
