@@ -318,6 +318,10 @@ hr {
   background-color: $blue-light;
 }
 
+.fill-black * {
+  fill: $black;
+}
+
 .fill-black-light * {
   fill: $black-light;
 }
@@ -376,6 +380,10 @@ hr {
 
 .hover\:fill-white:hover * {
   fill: $white;
+}
+
+.hover\:fill-red:hover * {
+  fill: $red !important;
 }
 
 

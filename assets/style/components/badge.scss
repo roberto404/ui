@@ -3,7 +3,8 @@
 .badge
 {
   position: absolute;
-  background: $red;
+  // background: #D23F36;
+  background: $red-dark;
   left: calc(100% + .5em);
   top: -40%;
   color: white;
