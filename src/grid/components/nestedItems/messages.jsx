@@ -6,6 +6,7 @@ import moment from 'moment';
 /* !- React Elements */
 
 import IconCheck from '../../../icon/mui/navigation/check';
+import Avatar from '../../../avatar';
 
 
 /* !- Constants */
@@ -93,9 +94,7 @@ const Messages = ({ index, children, level, items, isFirst, isLast, userId }) =>
 
         <div className="mr-1 w-4">
           { isFirstFromSender === true &&
-          <div className="avatar">
-            <span>{name ? name[0] : ''}</span>
-          </div>
+          <Avatar avatar={items.avatar} name={name || ''} />
           }
         </div>
 
