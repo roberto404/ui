@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 /* !- Contexts */
 
@@ -49,7 +50,7 @@ class Input extends Field {
 
         {this.label}
 
-        <div className="h-center">
+        <div className={classNames('h-center', { relative: this.props.suggestion })}>
 
           {this.state.prefix &&
             <div className="prefix">{this.state.prefix}</div>
@@ -78,6 +79,13 @@ class Input extends Field {
             }}
             data-name={this.props.name}
           />
+
+          {this.props.suggestion && typeof this.state.value === 'string' &&
+            <div className="suggestion" aria-hidden="true">
+              <span>{this.state.value}</span>
+              {this.props.suggestion.slice(this.state.value.length)}
+            </div>
+          }
 
           {this.state.postfix &&
             <div className="postfix">{this.state.postfix}</div>
@@ -125,6 +133,10 @@ Input.propTypes =
    * Special placeholder, when state.value type is array
    */
   multipleData: PropTypes.string,
+  /**
+   * Faded completion behind the value (starts with the value), see Autocomplete inlineSuggestion
+   */
+  suggestion: PropTypes.string,
 };
 
 /**

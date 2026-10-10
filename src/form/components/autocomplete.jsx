@@ -7,7 +7,7 @@ import { useAppContext } from '../../context';
 
 /* !- Redux Actions */
 
-import { popover, menu, flush } from '../../layer/actions';
+import { popover, menu, updateMenu, flush } from '../../layer/actions';
 import { setValues } from '../actions';
 
 
@@ -19,25 +19,38 @@ import IconArrowDown from '../../icon/mui/navigation/expand_more';
 import classNames from 'classnames';
 
 
-const Tags = (props) => {
-  const items = (props.items || []).filter(i => typeof i === 'object' && i.title);
+/**
+ * Tag: { id, title }
+ * Szabad szöveg (freeText): { text }
+ * Utolsó string elem: az input mező értéke, itt nem jelenik meg
+ */
+export const isTag = item => !!item && typeof item === 'object' && typeof item.text === 'undefined' && !!item.title;
+export const isText = item => !!item && typeof item === 'object' && typeof item.text === 'string';
 
-  return (
+const Tags = (props) => (
+  <div className='scroll' style={{ maxWidth: '100%' }}>
+    <div className="h-center nowrap no-select">
+      {
+        (props.items || []).map((item, index) => {
+          if (isText(item)) {
+            return <span className="text-gray-dark" key={`${index}-text`}>{item.text}</span>;
+          }
 
-    <div className='scroll' style={{ maxWidth: '100%' }}>
-      <div className="h-center nowrap no-select">
-        {
-          items.map(({ id, title }, index) => (
-            <div className="tag gray-light mx-1/2 rounded text-line-s v-center" key={`${index}-${id}`}>
-              <span className='text-gray-dark'>{title}</span>
+          if (!isTag(item)) {
+            return null;
+          }
+
+          return (
+            <div className="tag gray-light mx-1/2 rounded text-line-s v-center" key={`${index}-${item.id}`}>
+              <span className='text-gray-dark'>{item.title}</span>
               <IconClose className="w-1 h-1 fill-gray-dark pointer hover:fill-black" onClick={() => props.onClose(index)} />
             </div>
-          ))
-        }
-      </div>
+          );
+        })
+      }
     </div>
-  )
-};
+  </div>
+);
 
 export const TagsMenu = (props) => {
   const { store } = useAppContext();
@@ -82,34 +95,144 @@ export const TagsMenu = (props) => {
 
 
 /**
+ * freeText: a gépelt szöveg végén álló keresőszó (pl. "méret, szí" → "szí")
+ */
+const SEARCH_TERM_REGEX = /[^\s,.;:/()\-]*$/;
+
+const SHORTCUTS_NAME = 'autocomplete';
+
+const getSearchTerm = (value = '') => (value.match(SEARCH_TERM_REGEX) || [''])[0];
+
+
+/**
 * Autocomplete Component
+*
+* @example multiple: tagek, a gépelt szóból Enter/blur/';' után tag lesz
+* <Autocomplete id="options" data={[{ id, title }]} multiple />
+* // => [{ id, title }, ..., '<input value>']
+*
+* @example freeText: tagek és szabad szöveg vegyesen, a gépelt szó végére ajánl
+* <Autocomplete id="template" data={[{ id, title }]} multiple freeText />
+* // => [{ id, title }, { text: ', ' }, { id, title }, '<input value>']
+*
+* @example inlineSuggestion: faded first suggestion in the input, no menu
+* <Autocomplete id="search" data={[{ id, title }]} inlineSuggestion suggestionMenu={false} />
+*
+* @example format / stateFormat: store value <-> component value (like Field)
+* <Autocomplete
+*   id="template_subtitle"
+*   data={[{ id: '{features/10}', title: 'Szín' }]}
+*   stateFormat={value => parseTemplate(value, titles)}
+*   format={stringifyTemplate}
+*   multiple
+*   freeText
+* />
+* // => redux: '{features/10}, ...'
 */
 class Autocomplete extends Component {
   getForm = () =>
     this.props.form || this.context.form;
 
+  getStoreValue = () =>
+    (this.context.store.getState().form[this.getForm()] || {})[this.props.id] || this.props.value;
+
+  /**
+   * Store value -> component value (props.stateFormat like Field)
+   */
   getState = () =>
-    (this.context.store.getState().form[this.getForm()] || {})[this.props.id]
-    || this.props.value || (this.props.multiple ? [] : '');
+    this.props.stateFormat(this.getStoreValue()) || (this.props.multiple ? [] : '');
+
+  /**
+   * multiple: the tags (prefix) render from the store value -> rerender if it changes
+   * inlineSuggestion: the faded completion as well
+   */
+  componentDidMount() {
+    if ((this.props.multiple || this.props.inlineSuggestion) && this.context.store) {
+      this.storeValue = this.getStoreValue();
+
+      this.unsubscribe = this.context.store.subscribe(() => {
+        const storeValue = this.getStoreValue();
+
+        if (storeValue !== this.storeValue) {
+          this.storeValue = storeValue;
+          this.forceUpdate();
+        }
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+
+    this.removeShortcuts();
+  }
+
+  /**
+   * multiple: always a copy, never mutate redux state / props
+   */
+  getStateArray = () => {
+    const state = this.getState();
+
+    return Array.isArray(state) ? [...state] : [];
+  }
+
+  getInputValue = (state = this.getState()) => this.inputStateFormat(state);
+
+  getMenuItems = (inputValue = '') => {
+    const state = this.props.multiple ? this.getStateArray() : [];
+    const term = (this.props.freeText ? getSearchTerm(inputValue) : inputValue).toLowerCase();
+
+    return this.props.data
+      .filter(record =>
+        (this.props.multiple === false || !state.some(item => isTag(item) && item.id === record.id))
+        && (!term || record.title.toString().toLowerCase().indexOf(term) !== -1)
+      )
+      .slice(0, 10)
+      .map(i => ({ handler: this.onClickMenuHandler, ...i }));
+  }
+
+  /**
+   * inlineSuggestion: the first suggestion which starts with the input value
+   * @return {string} title of the suggestion or ''
+   */
+  getInlineSuggestion = (inputValue = this.getInputValue()) => {
+    if (!this.props.inlineSuggestion || this.props.multiple || typeof inputValue !== 'string' || !inputValue) {
+      return '';
+    }
+
+    const term = inputValue.toLowerCase();
+    const item = this.props.data.find(record => record.title.toString().toLowerCase().indexOf(term) === 0);
+
+    return item ? item.title.toString() : '';
+  }
 
 
   /* !- Handlers */
 
 
   onChangeHandler = (value, options) => {
-    if (value.length && this.stateFormat(value).slice(-1) === ';') {
+    if (
+      !this.props.freeText
+      && value.length
+      && (this.inputStateFormat(value) || '').slice(-1) === ';'
+    ) {
       this.submitInputValue();
       return;
     }
 
+    // component value -> store value (props.format like Field)
+    const formattedValue = this.props.format(value);
+
     if (typeof this.props.onChange === 'function') {
-      this.props.onChange({ id: this.props.id, value }, options);
+      this.props.onChange({ id: this.props.id, value: formattedValue }, options);
     }
     else {
-      this.context.store.dispatch(setValues({ [this.props.id]: value }, this.getForm()));
+      this.context.store.dispatch(setValues({ [this.props.id]: formattedValue }, this.getForm()));
     }
 
-    if (this.props.multiple) {
+    if (this.props.multiple || this.props.inlineSuggestion) {
       this.forceUpdate();
     }
   }
@@ -131,19 +254,28 @@ class Autocomplete extends Component {
     if (this.props.multiple) {
       const item = { id: props.id, title: props.title };
 
-      value = this.getState() || [];
+      value = this.getStateArray();
 
-      if (value.length && typeof value[value.length - 1] === 'object') {
-        value.push(item);
+      const lastValue = value[value.length - 1];
+
+      // [{id, title}..., <string>] input value replaced by the tag
+      if (typeof lastValue === 'string') {
+        value.pop();
+
+        // freeText: only the search term replaced, the text before it stays
+        if (this.props.freeText) {
+          const text = lastValue.slice(0, lastValue.length - getSearchTerm(lastValue).length);
+
+          if (text) {
+            value.push({ text });
+          }
+        }
       }
 
-      /**
-       * Empty yet or last value is string
-       * [{id, title}..., <string>]
-       */
-      value[(value.length || 1) - 1] = item;
+      value.push(item);
     }
 
+    this.menuItems = [];
     this.context.store.dispatch(flush());
 
     this.onChangeHandler(value);
@@ -152,20 +284,23 @@ class Autocomplete extends Component {
   onBlurHandler = () => {
 
     this.removeShortcuts();
+    this.menuItems = [];
 
     /** Workaround:
      * If Input has value and you click to auto suggestion item:
      * 1. onBlur run fist and submit Input value and flush layer
      * 2. Menu click not will trigger
     */
-    setTimeout(() => { this.submitInputValue(); }, 100);
+    if (!this.props.freeText) {
+      setTimeout(() => { this.submitInputValue(); }, 100);
+    }
   }
 
   onFocusHandler = (payload, event) => {
 
     this.addShortcuts();
 
-    if (event) {
+    if (event && (!this.props.freeText || getSearchTerm(this.getInputValue()))) {
       this.showMenu(payload, event);
     }
   }
@@ -174,118 +309,246 @@ class Autocomplete extends Component {
   /**
    */
   onChangeInputHandler = (payload, { event }) => {
-    this.showMenu(payload, event);
+    // freeText: menu only for a search term (not after space, comma...)
+    if (this.props.freeText && !getSearchTerm(this.inputStateFormat(payload.value))) {
+      this.menuItems = [];
+      this.context.store.dispatch(flush());
+    }
+    else {
+      this.showMenu(payload, event);
+    }
+
     this.onChangeHandler(payload.value);
   }
 
   onClickRemoveValueHandler = (index) => {
-    const stateValue = this.getState();
+    const stateValue = this.getStateArray();
 
     this.onChangeHandler([...stateValue.slice(0, index), ...stateValue.slice(index + 1)]);
   }
 
   onEnterListener = (event) => {
+    const focusedItem = this.isMenuVisible() && this.menuItems[this.menuIndex];
+
+    if (focusedItem) {
+      event.preventDefault();
+      this.onClickMenuHandler(focusedItem);
+      return;
+    }
+
+    // single: Enter not handled (form)
+    if (!this.props.multiple) {
+      return;
+    }
+
     event.preventDefault();
+
+    // freeText: Enter = first suggestion of the search term
+    if (this.props.freeText) {
+      const inputValue = this.getInputValue();
+      const [item] = getSearchTerm(inputValue) ? this.getMenuItems(inputValue) : [];
+
+      if (item) {
+        this.onClickMenuHandler(item);
+      }
+
+      return;
+    }
+
     this.submitInputValue();
   }
 
   onBackspaceListener = (event) => {
-    const state = this.getState();
-    const inputState = this.stateFormat(state);
+    const state = this.getStateArray();
 
-    if (!inputState && state.length) {
-      event.preventDefault();
-
-      this.context.store.dispatch(flush());
-      this.onChangeHandler(state.slice(0, -1));
+    if (this.getInputValue(state)) {
+      return;
     }
+
+    // empty input string
+    if (typeof state[state.length - 1] === 'string') {
+      state.pop();
+    }
+
+    if (!state.length) {
+      return;
+    }
+
+    event.preventDefault();
+
+    this.context.store.dispatch(flush());
+
+    state.pop();
+
+    // freeText: previous text back to the input
+    if (isText(state[state.length - 1])) {
+      state.push(state.pop().text);
+    }
+
+    this.onChangeHandler(state);
   }
 
 
-  showMenu = ({ value }, event) => {
-
-    const state = this.getState();
+  showMenu = ({ value } = {}, event) => {
+    if (!this.props.suggestionMenu) {
+      this.menuItems = [];
+      return;
+    }
 
     let inputValue = value;
 
-    if (this.props.multiple && inputValue) {
-      inputValue = typeof value[value.length - 1] === 'string' ? value[value.length - 1] : '';
+    if (this.props.multiple) {
+      inputValue = Array.isArray(value) ? this.inputStateFormat(value) : (typeof value === 'string' ? value : '');
     }
 
-    // menu items
-    const items = this.props.data
-      .filter(record =>
-        (this.props.multiple === false || !state.some(({ id }) => id === record.id))
-        && (!inputValue || record.title.indexOf(inputValue) !== -1)
-      )
-      .slice(0, 10)
-      .map(i => ({ handler: this.onClickMenuHandler, ...i }));
+    const items = this.getMenuItems(inputValue || '');
+
+    // the first item is focused by default -> Enter selects it
+    this.menuItems = items;
+    this.menuIndex = 0;
 
     if (items.length) {
-      this.context.store.dispatch(menu({ items }, event));
+      this.context.store.dispatch(menu({ items: this.getFocusedMenuItems() }, event));
     }
     else {
       this.context.store.dispatch(flush());
     }
   }
 
+  /**
+   * The menu of this component is visible
+   */
+  isMenuVisible = () => {
+    const { layer = {} } = this.context.store.getState();
+
+    return !!this.menuItems?.length && layer.active && layer.method === 'popover';
+  }
+
+  /**
+   * ArrowUp / ArrowDown: move the focus in the menu
+   * @param {number} direction -1 | +1
+   */
+  onArrowListener = direction => (event) => {
+    event.preventDefault();
+
+    // closed menu: open by the input field
+    if (!this.isMenuVisible()) {
+      this.showMenu({ value: this.getInputValue() }, { currentTarget: event.target });
+
+      return;
+    }
+
+    const length = this.menuItems.length;
+
+    this.menuIndex = (this.menuIndex + direction + length) % length;
+
+    this.context.store.dispatch(updateMenu({ items: this.getFocusedMenuItems() }));
+  }
+
+  /**
+   * Arrow icon: keep the focus of the input (mousedown would blur it -> shortcuts removed)
+   */
+  onMouseDownArrowHandler = (event) => {
+    event.preventDefault();
+  }
+
+  /**
+   * Arrow icon: focus the input (shortcuts: ArrowUp / ArrowDown / Enter) and show every suggestion
+   */
+  onClickArrowHandler = (event) => {
+    const input = event.currentTarget.closest('.field')?.querySelector('input');
+
+    if (input && document.activeElement !== input) {
+      input.focus();
+    }
+
+    this.showMenu({}, { currentTarget: input || event.currentTarget });
+  }
+
+  getFocusedMenuItems = () =>
+    this.menuItems.map((item, index) => ({
+      ...item,
+      className: classNames(item.className, { focus: index === this.menuIndex }),
+    }));
+
 
   addShortcuts = () => {
 
-    if (this.context.addShortcuts) {
-      if (this.props.multiple) {
-        this.removeShortcuts(); // force Update always invoke focus event
+    // no menu: no keyboard handling (Tab leaves the field as usual)
+    if (this.context.addShortcuts && this.props.data.length && !this.props.suggestionMenu) {
+      this.removeShortcuts();
+    }
+    else if (this.context.addShortcuts && this.props.data.length) {
+      this.removeShortcuts(); // force Update always invoke focus event
 
-        this.context.addShortcuts(
-          [
-            {
-              keyCode: 'Enter',
-              handler: this.onEnterListener,
-              description: 'Submit tag',
-            },
-            {
-              keyCode: 'Backspace',
-              handler: this.onBackspaceListener,
-              description: 'Remove last tag',
-            },
-          ],
-          'enter',
-        );
-      }
+      this.context.addShortcuts(
+        [
+          {
+            keyCode: 'ArrowDown',
+            handler: this.onArrowListener(+1),
+            description: 'Next suggestion',
+          },
+          {
+            keyCode: 'ArrowUp',
+            handler: this.onArrowListener(-1),
+            description: 'Previous suggestion',
+          },
+          {
+            keyCode: 'Enter',
+            handler: this.onEnterListener,
+            description: 'Select suggestion / submit tag',
+          },
+          ...(this.props.multiple ? [{
+            keyCode: 'Backspace',
+            handler: this.onBackspaceListener,
+            description: 'Remove last tag',
+          }] : []),
+        ],
+        SHORTCUTS_NAME,
+      );
+    }
+    else if (this.context.addShortcuts && this.props.multiple) {
+      this.removeShortcuts();
+
+      this.context.addShortcuts(
+        [
+          {
+            keyCode: 'Enter',
+            handler: this.onEnterListener,
+            description: 'Submit tag',
+          },
+          {
+            keyCode: 'Backspace',
+            handler: this.onBackspaceListener,
+            description: 'Remove last tag',
+          },
+        ],
+        SHORTCUTS_NAME,
+      );
     }
   }
 
   removeShortcuts = () => {
     if (this.context.removeShortcuts) {
-      this.context.removeShortcuts('enter');
+      this.context.removeShortcuts(SHORTCUTS_NAME);
     }
   }
 
   /**
-   * This return will pass to redux
-   * 
-   * In case of multiple, value contains only input field value
+   * Input field value -> component value
+   * (multiple: the input value is the last string item of the tokens)
    */
-  format = (value, reduce) => {
+  inputFormat = (value, reduce) => {
     if (this.props.multiple) {
-      const stateValue = this.getState();
+      const stateValue = this.getStateArray();
 
-      // empty state
-      if (!stateValue || !Array.isArray(stateValue)) {
-        return [value];
-      }
-
-      const lastValue = stateValue[stateValue.length - 1];
-
-      // state is not empty (visible some tags) and new word first char on input field
       if (typeof value === 'string') {
-        if (typeof lastValue === 'object' && lastValue.title) {
-          stateValue.push(value);
-        }
-        else {
+        // last item is the input value -> replace
+        if (typeof stateValue[stateValue.length - 1] === 'string') {
           stateValue.pop();
-          stateValue.push(value);
         }
+
+        stateValue.push(value);
       }
 
       return stateValue;
@@ -294,33 +557,46 @@ class Autocomplete extends Component {
     return value;
   }
 
-  stateFormat = (value) => {
+  inputStateFormat = (value) => {
     if (this.props.multiple) {
+      if (!Array.isArray(value)) {
+        return typeof value === 'string' ? value : '';
+      }
+
       const lastValue = value[value.length - 1];
 
-      return typeof lastValue === 'object' && typeof lastValue.title !== undefined ? '' : lastValue;
+      return typeof lastValue === 'string' ? lastValue : '';
     }
 
     return value;
   }
 
   submitInputValue = () => {
-    const state = this.getState();
-    const inputState = this.stateFormat(state);
+    // single: the value is the input string (getStateArray() would be [] -> value lost)
+    if (!this.props.multiple) {
+      const state = this.getState();
+
+      if (state) {
+        this.context.store.dispatch(flush());
+        this.onChangeHandler(state);
+      }
+
+      return;
+    }
+
+    const state = this.getStateArray();
+    const inputState = this.getInputValue(state);
 
     if (inputState) {
-      if (this.props.multiple) {
-        // remove ';' char
-        const title = inputState.slice(0, (inputState.slice(-1) === ';' ? -1 : undefined));
-        const item = { id: title, title };
+      // remove ';' char
+      const title = inputState.slice(0, (inputState.slice(-1) === ';' ? -1 : undefined));
+      const item = { id: title, title };
 
-        state[state.length - 1] = item;
-      }
+      state[state.length - 1] = item;
 
       this.context.store.dispatch(flush());
       this.onChangeHandler(state);
     }
-
   }
 
   /* !- Renders */
@@ -328,31 +604,64 @@ class Autocomplete extends Component {
   render() {
     const state = this.getState();
     const Prefix = this.props.tags;
+    const { freeText, inlineSuggestion, suggestionMenu, ...props } = this.props;
+    const hasMenuArrow = this.props.data.length && suggestionMenu;
 
     return (
       <Input
-        {...this.props}
+        {...props}
         className={classNames({
           [this.props.className]: true,
           "prefix-join": this.props.multiple,
-          "postfix-inside prefix-80": this.props.data.length,
+          "postfix-inside prefix-80": hasMenuArrow,
         })}
+        suggestion={inlineSuggestion ? this.getInlineSuggestion() : undefined}
         onChange={this.onChangeInputHandler}
         onFocus={this.onFocusHandler}
         onBlur={this.onBlurHandler}
-        format={this.format}
-        stateFormat={this.stateFormat}
+        format={this.inputFormat}
+        stateFormat={value => this.inputStateFormat(this.props.stateFormat(value))}
         prefix={
           this.props.multiple ?
             <Prefix items={state} onClose={this.onClickRemoveValueHandler} /> : this.props.prefix
         }
         postfix={
-          this.props.postfix || (this.props.data.length ? <IconArrowDown className="w-1 h-1 fill-gray" onClick={e => this.showMenu({}, e)} /> : undefined)
+          this.props.postfix || (hasMenuArrow ? <IconArrowDown
+              className="w-1 h-1 fill-gray pointer"
+              onMouseDown={this.onMouseDownArrowHandler}
+              onClick={this.onClickArrowHandler}
+            /> : undefined)
         }
       />
     );
   }
 }
+
+Autocomplete.propTypes =
+{
+  multiple: PropTypes.bool,
+  /**
+   * multiple mode: free text between the tags ({ text }), the search term is the last word of the input
+   */
+  freeText: PropTypes.bool,
+  /**
+   * Faded completion in the input: the first suggestion which starts with the value
+   * (only shown, single mode only)
+   */
+  inlineSuggestion: PropTypes.bool,
+  /**
+   * Show the suggestions in a popover menu (ArrowUp / ArrowDown / Enter)
+   */
+  suggestionMenu: PropTypes.bool,
+  /**
+   * component value -> store value
+   */
+  format: PropTypes.func,
+  /**
+   * store value -> component value
+   */
+  stateFormat: PropTypes.func,
+};
 
 /**
  * defaultProps
@@ -363,7 +672,12 @@ Autocomplete.defaultProps =
 {
   tags: Tags,
   multiple: false,
+  freeText: false,
+  inlineSuggestion: false,
+  suggestionMenu: true,
   data: [],
+  format: v => v,
+  stateFormat: v => v,
 };
 
 Autocomplete.contextType = MergedContexts;

@@ -66,6 +66,33 @@
     position: relative;
   }
 
+  /* !- Inline suggestion (Autocomplete inlineSuggestion): faded completion over the input */
+
+  .suggestion {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    // same box as the input -> the text overlaps
+    padding: 1em 0.8em;
+    border: 1px solid transparent;
+    font-size: .85em;
+    font-family: $font;
+    color: $gray;
+    opacity: .6;
+    white-space: pre;
+    overflow: hidden;
+    pointer-events: none;
+
+    // the typed part is shown by the input itself
+    span {
+      visibility: hidden;
+    }
+  }
+
   /* !- Button */
 
   &.button-field button {
@@ -541,7 +568,9 @@ input:checked~label {
 &.border-none {
 
   input:not([type="radio"]):not([type="checkbox"]),
-  select {
+  input:not([type="radio"]):not([type="checkbox"]):focus,
+  select,
+  .suggestion {
     border-width: 0px;
   }
 }
@@ -637,19 +666,44 @@ input:checked~label {
 }
 
 &.prefix-join {
+  // prefix (tags) and input same height, whatever the font size of the form
+  // full width of the row (flat form: next to the label)
+  >.h-center {
+    position: relative;
+    align-items: stretch;
+    flex-grow: 1;
+    min-width: 0;
+  }
+
+  // stretch moves the absolute postfix to the top -> full height, centered
+  .postfix {
+    top: 0;
+    bottom: 0;
+  }
+
   .prefix {
     position: initial;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
     @extend .rounded-left;
     border: 1px solid $gray-light;
     border-right-width: 0px;
-    padding: 1em 0.8em;
-    padding-right: 0;
+    padding: 0 0 0 0.8em;
     line-height: 1.33em;
     font-size: .85em;
     color: $gray;
-    max-height: 45.27px;
-    min-height: 45.27px;
+    background-color: $white-light;
     max-width: calc(100% - 4em);
+
+    // tags scroll inside the max-width
+    >* {
+      min-width: 0;
+    }
+
+    .tag {
+      margin-bottom: 0;
+    }
   }
 
   &.prefix-80 .prefix {
@@ -657,6 +711,8 @@ input:checked~label {
   }
 
   input:not([type="radio"]):not([type="checkbox"]) {
+    flex-grow: 1;
+    min-width: 8em;
     border-left-width: 0px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
@@ -714,7 +770,8 @@ input:checked~label {
 }
 
 &.small {
-  input:not([type="radio"]):not([type="checkbox"]) {
+  input:not([type="radio"]):not([type="checkbox"]),
+  .suggestion {
     padding: 0.3em 0.5em;
     font-size: .7em;
   }
