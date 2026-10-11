@@ -309,8 +309,12 @@ class Autocomplete extends Component {
   /**
    */
   onChangeInputHandler = (payload, { event }) => {
+    // no event: initial value on mount (FormField props.value / default) -> no menu
+    if (!event) {
+      this.menuItems = [];
+    }
     // freeText: menu only for a search term (not after space, comma...)
-    if (this.props.freeText && !getSearchTerm(this.inputStateFormat(payload.value))) {
+    else if (this.props.freeText && !getSearchTerm(this.inputStateFormat(payload.value))) {
       this.menuItems = [];
       this.context.store.dispatch(flush());
     }
