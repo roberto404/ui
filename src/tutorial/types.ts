@@ -17,8 +17,8 @@ export type TutorialStep = {
 
 export type Tutorial = {
   id: number,
-  /** 0 = inaktív, 1 = csak CTA, 2 = automatikusan is */
-  status: 0 | 1 | 2,
+  /** 0 = inaktív, 1 = aktív (Súgó gombra indul) */
+  status: 0 | 1,
   title: string,
   steps: TutorialStep[],
 };

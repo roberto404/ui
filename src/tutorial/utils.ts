@@ -3,8 +3,6 @@
  */
 export const ATTRIBUTE = 'data-tutorial';
 
-const SEEN_STORAGE_KEY = 'tutorialSeen';
-
 /**
  * A lépés `dom` mezőjéből CSS selector:
  * "order.filter" → [data-tutorial="order.filter"], ".foo" / "#bar" / "[x]" / "a > b" → változatlan
@@ -61,7 +59,7 @@ const normalizePath = (url: string) => {
 };
 
 /**
- * Url minta illesztése (az API Tutorials::matchUrl párja):
+ * Url minta illesztése (lépés átirányítás):
  * pontos egyezés, vagy a minta végén * = prefix. Üres minta = bárhol.
  */
 export const matchUrl = (pattern: string, path: string): boolean => {
@@ -79,32 +77,4 @@ export const matchUrl = (pattern: string, path: string): boolean => {
   }
 
   return normalizePath(value) === normalizePath(path);
-};
-
-/**
- * Látott (automatikusan már elindult) tutorialok — localStorage
- */
-const getSeen = (): number[] => {
-  try {
-    const seen = JSON.parse(localStorage.getItem(SEEN_STORAGE_KEY) || '[]');
-    return Array.isArray(seen) ? seen : [];
-  }
-  catch (error) {
-    return [];
-  }
-};
-
-export const isTutorialSeen = (id: number) => getSeen().includes(+id);
-
-export const setTutorialSeen = (id: number) => {
-  try {
-    const seen = getSeen();
-
-    if (!seen.includes(+id)) {
-      localStorage.setItem(SEEN_STORAGE_KEY, JSON.stringify([...seen, +id]));
-    }
-  }
-  catch (error) {
-    // private mode
-  }
 };
