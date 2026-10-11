@@ -88,6 +88,29 @@
   }
 }
 
+// quick appear (opacity 0 -> 1, once)
+.fading-in {
+  animation: fadein .3s ease-out both;
+}
+
+// "handwriting": the element fills from left to right (mask sweep, once) — login2 title, dashboard greeting
+.writing {
+  mask-image: linear-gradient(90deg, #000 44%, rgba(0, 0, 0, .35) 49%, transparent 56%);
+  mask-size: 240% 100%;
+  mask-repeat: no-repeat;
+  animation: write 1900ms cubic-bezier(.45, .05, .4, 1) both;
+}
+
+@keyframes write {
+  from {
+    mask-position: 100% 0;
+  }
+
+  to {
+    mask-position: 0 0;
+  }
+}
+
 .flipping {
   animation: flip 0.5s ease both;
 }
