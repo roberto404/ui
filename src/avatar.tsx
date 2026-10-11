@@ -27,6 +27,24 @@ type PropTypes = {
 };
 
 /**
+ * Load the resized profile image into the browser cache
+ * @return resolves when it is loaded (or failed / there is no image) -> it can be shown at once
+ */
+export const preloadAvatar = (avatar: AvatarFile | null | undefined, size = '128x128'): Promise<void> =>
+  new Promise((resolve) => {
+    if (!avatar?.id) {
+      resolve();
+      return;
+    }
+
+    const image = new Image();
+
+    image.onload = () => resolve();
+    image.onerror = () => resolve();
+    image.src = new File(avatar).getUrl(size);
+  });
+
+/**
  * Profile image (`.avatar`) or the monogram of the name
  *
  * @example
