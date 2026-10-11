@@ -47,6 +47,8 @@ export type ChartCardProps = Partial<typeof defaultProps> & {
   chart: (api: CardApi) => React.ReactNode;
   // stack header above the chart (vertical) or beside it (minimal / horizontal)
   layout?: "vertical" | "horizontal";
+  // chart area first, then the header (horizontal: chart on the left, vertical: chart on top)
+  reverse?: boolean;
   // vertical alignment of the title vs. the header slot
   headerAlign?: "center" | "flex-start";
   // theme / background colour; cascades to the text and (via api.theme) the chart
@@ -92,6 +94,7 @@ const ChartCard = ({
   ratio = defaultProps.ratio,
   filters = defaultProps.filters,
   layout = "vertical",
+  reverse = false,
   headerAlign = "flex-start",
   color,
   style,
@@ -128,7 +131,8 @@ const ChartCard = ({
       }}
     >
       {title$ && (
-        <div id="title" className="medium nowrap">
+        // chart first (beside the chart): the text may wrap
+        <div id="title" className={classNames("medium", { nowrap: !(isHorizontal && reverse) })}>
           <CardTitle
             title={
               typeof title === "string" || typeof title === "number" ? (
@@ -184,11 +188,13 @@ const ChartCard = ({
     >
       <div
         className={classNames({
-          "h-bottom v-justify gap-2": isHorizontal,
+          "h-bottom v-justify gap-2": isHorizontal && !reverse,
+          // chart first: the header right next to it, vertically centered
+          "h-center gap-2": isHorizontal && reverse,
         })}
       >
-        {head}
-        {chartArea}
+        {reverse ? chartArea : head}
+        {reverse ? head : chartArea}
       </div>
       {footer$ && <div id="footer">{footer$}</div>}
     </div>
