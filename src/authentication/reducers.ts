@@ -1,6 +1,7 @@
 import Storage from '@1studio/utils/models/storage'; // 64
 import random from '@1studio/utils/string/random';
 import omit from 'lodash/omit';
+import isEmpty from 'lodash/isEmpty';
 
 /**
  * User Model
@@ -32,6 +33,11 @@ const reducers = (state = createState({}), action = {}) => {
 
     case 'MODIFY-USER-DATA':
       {
+        // no (or expired) user: a late response must not create a half user (no name, permission …)
+        if (isEmpty(state.model.data)) {
+          return state;
+        }
+
         return reducers(
           state,
           {
