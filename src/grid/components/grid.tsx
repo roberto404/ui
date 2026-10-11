@@ -47,6 +47,8 @@ const defaultProps = {
   id: "",
   showHeader: true,
   selectable: false,
+  autoFocus: true,
+  colSelect: true,
   expandSelect: false,
   multipleSelect: true,
   checkboxSelect: false,
@@ -220,9 +222,19 @@ type PropTypes = Partial<typeof defaultProps> & {
    */
   selectable: boolean;
   /**
+   * The keyboard navigation (arrows) is active before the first click into the grid.
+   * false: only after a click (more selectable grids on the same screen)
+   */
+  autoFocus: boolean;
+  /**
    * If selectable true, you can navigate col with left/right arrow
+   * false: left/right steps the records like up/down (tiles in a row)
    */
   colSelect: boolean;
+  /**
+   * The body is focusable (Tab): the keyboard navigation is active while it has the focus
+   */
+  tabIndex?: number;
   /**
    * Enable select more than one item from grid
    */
@@ -312,6 +324,9 @@ export const Grid = ({
   rawData = [],
   showHeader,
   selectable,
+  autoFocus,
+  colSelect,
+  tabIndex,
   expandSelect,
   multipleSelect,
   checkboxSelect,
@@ -346,7 +361,7 @@ export const Grid = ({
   const elementBody = useRef<HTMLDivElement>(null);
   const prevSelectedItemId = useRef<number | null>(null);
 
-  const [focus, setFocus] = useState(true);
+  const [focus, setFocus] = useState(autoFocus);
 
   const [highlightId, setHighlightId] = useState([]);
   const prevIdsRef = useRef([]);
@@ -389,7 +404,7 @@ export const Grid = ({
     if (focus) {
       addShortcutsListeners();
     } else {
-      removeShortcuts(SHORTCUTS_NAME);
+      removeShortcuts(shortcutsName);
     }
   }, [focus]);
 
@@ -404,6 +419,11 @@ export const Grid = ({
    * @type {string}
    */
   let formId = FORM_PREFIX + gridId;
+
+  /**
+   * Own shortcut collection: the blur / unmount of an other grid can not remove it
+   */
+  const shortcutsName = gridId ? `${SHORTCUTS_NAME}-${gridId}` : SHORTCUTS_NAME;
 
   /**
    * Rows of table is clickable
@@ -421,13 +441,19 @@ export const Grid = ({
     // componentDidMount
     if (addListener) {
       addListener("click", onFocusListener);
+
+      // focusable body: Tab / Shift+Tab also changes the focus
+      if (tabIndex !== undefined) {
+        addListener("focusin", onFocusInListener);
+      }
     }
 
     // componentWillUnmount
     return () => {
       if (removeListener) {
         removeListener(onFocusListener);
-        removeShortcuts(SHORTCUTS_NAME);
+        removeListener(onFocusInListener);
+        removeShortcuts(shortcutsName);
       }
     };
   }, []);
@@ -486,6 +512,8 @@ export const Grid = ({
     const isFocus = elementBody.current.contains(event.target);
     setFocus(isFocus);
   };
+
+  const onFocusInListener = (event) => onFocusListener(event);
 
   /**
    * Handling KeyDown Arrow Up and down
@@ -635,7 +663,9 @@ export const Grid = ({
         },
         {
           keyCode: "ArrowLeft",
-          handler: onKeyHorizontalArrowHandler(-1),
+          handler: colSelect
+            ? onKeyHorizontalArrowHandler(-1)
+            : onKeyVerticalArrowHandler(-1),
           description: "Grid Arrow Left",
         },
         {
@@ -645,7 +675,9 @@ export const Grid = ({
         },
         {
           keyCode: "ArrowRight",
-          handler: onKeyHorizontalArrowHandler(+1),
+          handler: colSelect
+            ? onKeyHorizontalArrowHandler(+1)
+            : onKeyVerticalArrowHandler(+1),
           description: "Grid Arrow Right",
         },
       ];
@@ -690,7 +722,7 @@ export const Grid = ({
             },
           })),
         ],
-        SHORTCUTS_NAME,
+        shortcutsName,
       );
     }
   };
@@ -849,17 +881,39 @@ export const Grid = ({
     );
   };
 
-  const CellComponent = React.memo(
-    ({ isActive, renderCell, record, index, column }) => {
-      return renderCell(record, index, column, isActive);
-    },
+  /**
+   * Connected cell / row components: created ONCE (not on every render), otherwise every
+   * render of the Grid (e.g. focus) remounts all rows -> a click between mousedown and
+   * mouseup is lost, row effects (data loading) run again
+   */
+  const ConnectedCell = useMemo(
+    () =>
+      connect((state, { record, column }) => {
+        const isActiveRow = (state.form[formId] || []).includes(record.id);
+        const isActive = isActiveRow && state.form[formId + COL_POSTFIX] === column;
+        return { isActive };
+      })(
+        React.memo(({ isActive, renderCell, record, index, column }) =>
+          renderCell(record, index, column, isActive),
+        ),
+      ),
+    [formId],
   );
 
-  const ConnectedCell = connect((state, { record, column }) => {
-    const isActiveRow = (state.form[formId] || []).includes(record.id);
-    const isActive = isActiveRow && state.form[formId + COL_POSTFIX] === column;
-    return { isActive };
-  })(CellComponent);
+  const ConnectedRowElement = useMemo(
+    () =>
+      connect(({ form }, { data: record, highlighted }) => {
+        const isActive = (form[formId] || []).indexOf(record.id) !== -1;
+        return {
+          className: classNames({
+            active: isActive,
+            highlight: highlighted,
+          }),
+          isActive,
+        };
+      })(rowElement),
+    [formId, rowElement],
+  );
 
   const renderRow = (record, index, columns) => {
     /**
@@ -997,17 +1051,6 @@ export const Grid = ({
           }
         };
 
-    const ConnectedRowElement = connect(({ form }, { highlighted }) => {
-      const isActive = (form[formId] || []).indexOf(record.id) !== -1;
-      return {
-        className: classNames({
-          active: isActive,
-          highlight: highlighted,
-        }),
-        isActive,
-      };
-    })(rowElement);
-
     // if the grid selectable use connected rowElement componet
     return React.createElement(
       selectable ? ConnectedRowElement : rowElement,
@@ -1061,6 +1104,7 @@ export const Grid = ({
         {
           className: bodyClasses,
           ref: elementBody,
+          tabIndex,
           onChange: onSort,
         },
         nodeTableRows,
