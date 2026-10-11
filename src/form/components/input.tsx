@@ -46,7 +46,7 @@ class Input extends Field {
     const multipleDataText = () => intl ? intl.formatMessage({ id: multipleData }) : multipleData;
 
     return super.render() || (
-      <div className={this.getClasses('input')}>
+      <div className={this.getClasses('input')} data-tutorial={this.props['data-tutorial']}>
 
         {this.label}
 
