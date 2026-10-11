@@ -27,6 +27,9 @@ const meta = {
     strokeWidth: {
       control: { type: 'number', min: 1, max: 10, step: 1 },
     },
+    rounded: {
+      control: 'boolean',
+    },
     caption: {
       control: 'text',
     },
@@ -50,3 +53,19 @@ export const Donut1: Story = {
 }
 
 Donut1.storyName = 'Basic';
+
+
+
+/* !- Rounded: lekerekített ív-végek */
+
+export const Rounded: Story = {
+  args: {
+    percent: 68,
+    color: '#186eff',
+    ringColor: '#edf0f5',
+    strokeWidth: 4,
+    rounded: true,
+  },
+}
+
+Rounded.storyName = 'Rounded';

@@ -10,6 +10,8 @@ export interface PropTypes
   color?: string,
   caption?: string,
   strokeWidth?: number,
+  /** rounded ends of the arc */
+  rounded?: boolean,
   className?: string,
 }
 
@@ -23,6 +25,7 @@ const Donut: React.FC<PropTypes> = (
   color = '#00ffff',
   caption = '',
   strokeWidth = 3.5,
+  rounded = false,
   className = '',
 }) =>
 {
@@ -55,6 +58,7 @@ const Donut: React.FC<PropTypes> = (
           fill="transparent"
           strokeWidth={strokeWidth}
           strokeDasharray={`${percent} ${100-percent}`}
+          strokeLinecap={rounded && percent > 0 ? 'round' : undefined}
           strokeDashoffset="25"
         />
         <g>
