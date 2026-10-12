@@ -459,6 +459,13 @@ export const Grid = ({
   }, []);
 
   /**
+   * the selector below runs during render: must be declared before it (TDZ)
+   */
+  const getData = () => {
+    return store.getState().grid?.[gridId]?.data || data;
+  };
+
+  /**
    * If the grid is selectable, watch the selected items in Redux form state
    * and automatically scroll the grid to keep the last selected item visible.
    */
@@ -617,10 +624,6 @@ export const Grid = ({
         value: recordField,
       }),
     );
-  };
-
-  const getData = () => {
-    return store.getState().grid?.[gridId]?.data || data;
   };
 
   /**
