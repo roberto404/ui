@@ -128,13 +128,30 @@ const getSearchTerm = (value = '') => (value.match(SEARCH_TERM_REGEX) || [''])[0
 *   freeText
 * />
 * // => redux: '{features/10}, ...'
+*
+* @example custom menu: row, sticky header / footer, async data
+* <Autocomplete
+*   id="product"
+*   data={apiResults}
+*   filter={false}
+*   limit={5}
+*   rowElement={({ item, focus }) => <Row product={item} focus={focus} />}
+*   headerElement={({ records }) => <div>{records.length} találat</div>}
+*   footerElement={({ isAll, showAll }) => !isAll && <a onClick={showAll}>Összes</a>}
+*   menuFullWidth
+* />
 */
 class Autocomplete extends Component {
   getForm = () =>
     this.props.form || this.context.form;
 
-  getStoreValue = () =>
-    (this.context.store.getState().form[this.getForm()] || {})[this.props.id] || this.props.value;
+  getStoreValue = () => {
+    const form = this.getForm();
+    const state = this.context.store.getState().form;
+
+    // no form: the value is in the root of the form state (like FormField)
+    return ((form ? state[form] : state) || {})[this.props.id] || this.props.value;
+  }
 
   /**
    * Store value -> component value (props.stateFormat like Field)
@@ -161,6 +178,20 @@ class Autocomplete extends Component {
     }
   }
 
+  /**
+   * async data (ex. API search result) / limit changed -> the open menu follows it
+   */
+  componentDidUpdate(prevProps) {
+    // async data: no keyboard handling was added on focus while the data was empty
+    if (this.isFocused && !prevProps.data.length !== !this.props.data.length) {
+      this.addShortcuts();
+    }
+
+    if (prevProps.data !== this.props.data || prevProps.limit !== this.props.limit) {
+      this.refreshMenu();
+    }
+  }
+
   componentWillUnmount() {
     if (this.unsubscribe) {
       this.unsubscribe();
@@ -180,18 +211,39 @@ class Autocomplete extends Component {
 
   getInputValue = (state = this.getState()) => this.inputStateFormat(state);
 
-  getMenuItems = (inputValue = '') => {
-    const state = this.props.multiple ? this.getStateArray() : [];
-    const term = (this.props.freeText ? getSearchTerm(inputValue) : inputValue).toLowerCase();
+  /**
+   * Search term of the input value (freeText: the last word), lowercase
+   */
+  getTerm = (inputValue = '') =>
+    ((this.props.freeText ? getSearchTerm(inputValue) : inputValue) || '').toString().toLowerCase();
+
+  /**
+   * Every record of data which matches the input value (without limit)
+   */
+  getMatchedRecords = (inputValue = '') => {
+    const { multiple, filter } = this.props;
+    const state = multiple ? this.getStateArray() : [];
+    const term = this.getTerm(inputValue);
 
     return this.props.data
       .filter(record =>
-        (this.props.multiple === false || !state.some(item => isTag(item) && item.id === record.id))
-        && (!term || record.title.toString().toLowerCase().indexOf(term) !== -1)
-      )
-      .slice(0, 10)
-      .map(i => ({ handler: this.onClickMenuHandler, ...i }));
+        (multiple === false || !state.some(item => isTag(item) && item.id === record.id))
+        && (
+          filter === false
+          || !term
+          || (typeof filter === 'function' ?
+            filter(record, term) : record.title.toString().toLowerCase().indexOf(term) !== -1)
+        )
+      );
   }
+
+  getLimit = () =>
+    (this.isShowAll ? Infinity : this.props.limit);
+
+  getMenuItems = (inputValue = '', records = this.getMatchedRecords(inputValue)) =>
+    records
+      .slice(0, this.getLimit())
+      .map(i => ({ handler: this.onClickMenuHandler, ...i }));
 
   /**
    * inlineSuggestion: the first suggestion which starts with the input value
@@ -276,6 +328,7 @@ class Autocomplete extends Component {
     }
 
     this.menuItems = [];
+    this.isMenuPending = false;
     this.context.store.dispatch(flush());
 
     this.onChangeHandler(value);
@@ -283,6 +336,8 @@ class Autocomplete extends Component {
 
   onBlurHandler = () => {
 
+    this.isFocused = false;
+    this.isMenuPending = false;
     this.removeShortcuts();
     this.menuItems = [];
 
@@ -298,6 +353,7 @@ class Autocomplete extends Component {
 
   onFocusHandler = (payload, event) => {
 
+    this.isFocused = true;
     this.addShortcuts();
 
     if (event && (!this.props.freeText || getSearchTerm(this.getInputValue()))) {
@@ -309,6 +365,11 @@ class Autocomplete extends Component {
   /**
    */
   onChangeInputHandler = (payload, { event }) => {
+    // new search: the limit is back (showAll)
+    if (event) {
+      this.isShowAll = false;
+    }
+
     // no event: initial value on mount (FormField props.value / default) -> no menu
     if (!event) {
       this.menuItems = [];
@@ -316,6 +377,7 @@ class Autocomplete extends Component {
     // freeText: menu only for a search term (not after space, comma...)
     else if (this.props.freeText && !getSearchTerm(this.inputStateFormat(payload.value))) {
       this.menuItems = [];
+      this.isMenuPending = false;
       this.context.store.dispatch(flush());
     }
     else {
@@ -405,18 +467,90 @@ class Autocomplete extends Component {
       inputValue = Array.isArray(value) ? this.inputStateFormat(value) : (typeof value === 'string' ? value : '');
     }
 
-    const items = this.getMenuItems(inputValue || '');
+    const records = this.getMatchedRecords(inputValue || '');
+    const items = this.getMenuItems(inputValue || '', records);
 
     // the first item is focused by default -> Enter selects it
     this.menuItems = items;
+    this.menuRecords = records;
+    this.menuTerm = this.getTerm(inputValue || '');
     this.menuIndex = 0;
+    this.menuAnchor = this.getMenuAnchor(event);
+    // async data (ex. API search): the menu opens when the data arrives
+    this.isMenuPending = true;
 
     if (items.length) {
-      this.context.store.dispatch(menu({ items: this.getFocusedMenuItems() }, event));
+      this.openMenu();
     }
     else {
       this.context.store.dispatch(flush());
     }
+  }
+
+  /**
+   * The menu is positioned to this element
+   * menuFullWidth: the row of the input (prefix + input + postfix)
+   */
+  getMenuAnchor = (event = {}) => {
+    const target = event.currentTarget || event.target;
+
+    if (!this.props.menuFullWidth || !target || typeof target.closest !== 'function') {
+      return target;
+    }
+
+    const input = target.tagName === 'INPUT' ?
+      target : target.closest('.field')?.querySelector('input');
+
+    return input?.parentElement || target;
+  }
+
+  openMenu = () => {
+    const anchor = this.menuAnchor;
+    const options = this.props.menuFullWidth && anchor ?
+      { containerStyle: { width: anchor.offsetWidth } } : {};
+
+    this.context.store.dispatch(menu(this.getMenuProps(), { currentTarget: anchor }, options));
+  }
+
+  /**
+   * Data (ex. async API result) or limit changed: refresh the open menu,
+   * or open it if it waits for the data
+   */
+  refreshMenu = () => {
+    const isVisible = this.isMenuVisible();
+
+    if (!this.isFocused || !this.props.suggestionMenu || (!isVisible && !this.isMenuPending)) {
+      return;
+    }
+
+    const inputValue = this.getInputValue();
+    const records = this.getMatchedRecords(inputValue || '');
+    const items = this.getMenuItems(inputValue || '', records);
+
+    this.menuItems = items;
+    this.menuRecords = records;
+    this.menuTerm = this.getTerm(inputValue || '');
+    this.menuIndex = Math.min(this.menuIndex || 0, Math.max(items.length - 1, 0));
+
+    if (!items.length) {
+      if (isVisible) {
+        this.context.store.dispatch(flush());
+      }
+    }
+    else if (isVisible) {
+      this.context.store.dispatch(updateMenu(this.getMenuProps()));
+    }
+    else if (this.menuAnchor) {
+      this.openMenu();
+    }
+  }
+
+  /**
+   * Header / footer: show every matched record (no limit) until the next search
+   */
+  showAll = () => {
+    this.isShowAll = true;
+    this.refreshMenu();
   }
 
   /**
@@ -446,7 +580,7 @@ class Autocomplete extends Component {
 
     this.menuIndex = (this.menuIndex + direction + length) % length;
 
-    this.context.store.dispatch(updateMenu({ items: this.getFocusedMenuItems() }));
+    this.context.store.dispatch(updateMenu(this.getMenuProps()));
   }
 
   /**
@@ -469,11 +603,47 @@ class Autocomplete extends Component {
     this.showMenu({}, { currentTarget: input || event.currentTarget });
   }
 
-  getFocusedMenuItems = () =>
-    this.menuItems.map((item, index) => ({
-      ...item,
-      className: classNames(item.className, { focus: index === this.menuIndex }),
-    }));
+  /**
+   * Menu props: focused item, custom rows (rowElement), header / footer
+   * headerElement / footerElement props: the props of Autocomplete +
+   * { data, records (every match), items (visible), term, isAll, showAll }
+   */
+  getMenuProps = () => {
+    const {
+      rowElement: Row,
+      headerElement: Header,
+      footerElement: Footer,
+    } = this.props;
+
+    const term = this.menuTerm || '';
+
+    const items = this.menuItems.map((item, index) => {
+      const focus = index === this.menuIndex;
+
+      return {
+        ...item,
+        className: classNames(item.className, { focus }),
+        element: Row ? <Row item={item} index={index} focus={focus} term={term} /> : undefined,
+      };
+    });
+
+    const partProps = {
+      ...this.props,
+      records: this.menuRecords || [],
+      items: this.menuItems,
+      term,
+      isAll: this.menuItems.length >= (this.menuRecords || []).length,
+      showAll: this.showAll,
+    };
+
+    return {
+      items,
+      header: Header ? <Header {...partProps} /> : undefined,
+      footer: Footer ? <Footer {...partProps} /> : undefined,
+      // clicking the header / footer / scrollbar does not blur the input (-> no submit, menu stays)
+      keepFocus: !!(Row || Header || Footer),
+    };
+  }
 
 
   addShortcuts = () => {
@@ -608,7 +778,18 @@ class Autocomplete extends Component {
   render() {
     const state = this.getState();
     const Prefix = this.props.tags;
-    const { freeText, inlineSuggestion, suggestionMenu, ...props } = this.props;
+    const {
+      freeText,
+      inlineSuggestion,
+      suggestionMenu,
+      rowElement,
+      headerElement,
+      footerElement,
+      limit,
+      filter,
+      menuFullWidth,
+      ...props
+    } = this.props;
     const hasMenuArrow = this.props.data.length && suggestionMenu;
 
     return (
@@ -665,6 +846,35 @@ Autocomplete.propTypes =
    * store value -> component value
    */
   stateFormat: PropTypes.func,
+  /**
+   * Custom menu row: ({ item, index, focus, term }) => element
+   * item = the data record (+ handler)
+   */
+  rowElement: PropTypes.elementType,
+  /**
+   * Sticky menu header, props: the props of Autocomplete +
+   * { data, records (every match), items (visible), term, isAll, showAll() }
+   * @example ({ records }) => <div>{records.length} találat</div>
+   */
+  headerElement: PropTypes.elementType,
+  /**
+   * Sticky menu footer, props like headerElement
+   */
+  footerElement: PropTypes.elementType,
+  /**
+   * Max number of visible suggestions (showAll() removes it until the next search)
+   */
+  limit: PropTypes.number,
+  /**
+   * Filter of data by the search term
+   * true: title contains the term, false: no filter (ex. already filtered by the API),
+   * function: (record, term) => bool (term is lowercase)
+   */
+  filter: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+  /**
+   * The menu is as wide as the field (prefix + input + postfix)
+   */
+  menuFullWidth: PropTypes.bool,
 };
 
 /**
@@ -679,6 +889,9 @@ Autocomplete.defaultProps =
   freeText: false,
   inlineSuggestion: false,
   suggestionMenu: true,
+  limit: 10,
+  filter: true,
+  menuFullWidth: false,
   data: [],
   format: v => v,
   stateFormat: v => v,

@@ -1,0 +1,11 @@
+// keyboard key hint (ex. ↑ ↓ Enter Esc)
+.shortcut {
+  display: inline-block;
+  padding: .15em .5em;
+  border: 1px solid $gray-light;
+  border-radius: 4px;
+  background-color: white;
+  box-shadow: 0 1px 0 $gray-light;
+  color: $black;
+  line-height: 1.4;
+}

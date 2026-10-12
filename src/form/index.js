@@ -22,6 +22,7 @@ import Field from './components/field';
 import Plain from './components/plain';
 import Collection from './components/collection';
 import Autocomplete from './components/autocomplete';
+import { AutocompleteMenuHeader, AutocompleteMenuFooter, AutocompleteMenuRow } from './components/autocompleteMenu';
 import Segment from './components/segment';
 
 
@@ -49,6 +50,9 @@ export {
   Field,
   Collection,
   Autocomplete,
+  AutocompleteMenuHeader,
+  AutocompleteMenuFooter,
+  AutocompleteMenuRow,
   Segment,
 };
 

@@ -97,7 +97,7 @@ class FormField extends Component {
       && (!formState || !formState[this.props.id])
     ) {
       this.onChangeHandler(this.props.value);
-      this.onChangeListener(); // redux subscription has not yet occurred
+      this.onChangeListener(this.props, false); // redux subscription has not yet occurred
     }
 
     // Auto mandatory by _scheme.presence
@@ -271,8 +271,9 @@ class FormField extends Component {
    * Set State: value, error (if changed)
    *
    * @param  {object} [props=this.props]
+   * @param  {boolean} [sync=true] flushSync is not allowed in componentWillMount (SSR: React #449)
    */
-  onChangeListener = (props = this.props) => {
+  onChangeListener = (props = this.props, sync = true) => {
     const value = this.getStateValue(
       this.getValue(props),
       props,
@@ -289,9 +290,14 @@ class FormField extends Component {
       (typeof value !== 'undefined' && isChanged) ||
       this.state.error !== error
     ) {
-      flushSync(() => {
+      if (sync) {
+        flushSync(() => {
+          this.setState({ value, error });
+        });
+      }
+      else {
         this.setState({ value, error });
-      });
+      }
 
       // Promise.resolve().then(() => {
       //   flushSync(() => {

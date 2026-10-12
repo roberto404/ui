@@ -33,7 +33,7 @@ class Slider extends Field
     if (this.props.value.length === 0)
     {
       this.onChangeHandler([this.props.from, this.props.to]);
-      this.onChangeListener(); // redux subscription has not yet occurred
+      this.onChangeListener(this.props, false); // redux subscription has not yet occurred
     }
 
     super.UNSAFE_componentWillMount();

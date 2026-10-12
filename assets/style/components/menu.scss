@@ -44,12 +44,72 @@
       }
     }
 
-    svg
+    // icon (custom rows have their own icons)
+    &:not(.custom) svg
     {
       width: 2rem;
       height: 2rem;
       margin: -1rem 1rem -1rem 0;
       fill: $green;
+    }
+
+    // custom row (element): the row component has its own layout / colors
+    &.custom
+    {
+      display: block;
+      padding: 0;
+
+      &.clickable:hover,
+      &.clickable.focus
+      {
+        background-color: $blue-light;
+        color: inherit;
+      }
+    }
+  }
+
+  // header / footer stay visible while the items scroll (the popover container scrolls)
+  > .header,
+  > .footer
+  {
+    position: sticky;
+    z-index: 1;
+    background-color: white;
+  }
+
+  > .header
+  {
+    top: 0;
+    border-bottom: 1px solid $white-dark;
+  }
+
+  > .footer
+  {
+    bottom: 0;
+    border-top: 1px solid $white-dark;
+  }
+
+  // image of AutocompleteMenuRow: fits in the box
+  .menu-thumbnail
+  {
+    overflow: hidden;
+
+    img
+    {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  // keyboard navigation (scrollIntoView): not under the sticky header / footer
+  > .items > .item
+  {
+    scroll-margin: 6rem 0;
+
+    &:last-child
+    {
+      border-bottom: none;
     }
   }
 }

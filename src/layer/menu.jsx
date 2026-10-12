@@ -36,13 +36,28 @@ export const Item = (props) =>
     className,
     icon,
     childs,
+    element,
   } = props;
 
   const itemClasses = classNames({
     item: true,
     [className]: true,
     clickable: typeof handler === 'function',
+    custom: !!element,
   });
+
+  // custom row: the element renders the whole item
+  if (element) {
+    return (
+      <div
+        className={itemClasses}
+        onClick={(event) => handler(props, event)}
+        data-index={id}
+      >
+        {element}
+      </div>
+    );
+  }
 
   const Title = typeof title === 'function' ? React.createElement(title) : title;
 
@@ -85,6 +100,10 @@ Item.propTypes =
   ]),
   className: PropTypes.string,
   childs: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * Custom row instead of icon + title
+   */
+  element: PropTypes.element,
 };
 
 /**
@@ -139,10 +158,29 @@ class Menu extends Component
     });
   }
 
+  componentDidUpdate()
+  {
+    // keyboard navigation: the focused item stays visible in a long (scrolled) menu
+    const focused = this.element?.querySelector(':scope > .items > .item.focus, :scope > .item.focus');
+
+    if (focused && typeof focused.scrollIntoView === 'function')
+    {
+      focused.scrollIntoView({ block: 'nearest' });
+    }
+  }
+
   componentWillUnmount()
   {
     clearTimeout(this.closeTimer);
   }
+
+  /**
+   * keepFocus: clicking the menu does not blur the input which opened it
+   */
+  onMouseDownHandler = (event) =>
+  {
+    event.preventDefault();
+  };
 
   onMouseLeaveHandler = () =>
   {
@@ -156,14 +194,16 @@ class Menu extends Component
 
   render()
   {
-    const { autoClose } = this.props;
+    const { autoClose, header, footer, keepFocus, className } = this.props;
     const { label, items } = this.state;
 
     return (
       <div
-        className="menu"
+        className={classNames('menu', className)}
         onMouseLeave={autoClose ? this.onMouseLeaveHandler : undefined}
         onMouseEnter={autoClose ? this.onMouseEnterHandler : undefined}
+        onMouseDown={keepFocus ? this.onMouseDownHandler : undefined}
+        ref={(ref) => { this.element = ref; }}
       >
         { label &&
           <div
@@ -172,7 +212,16 @@ class Menu extends Component
             {label}
           </div>
         }
-        { renderItems(items) }
+        { header &&
+          <div className="header">{header}</div>
+        }
+        { (header || footer) ?
+          <div className="items">{renderItems(items)}</div>
+          : renderItems(items)
+        }
+        { footer &&
+          <div className="footer">{footer}</div>
+        }
       </div>
     );
   }
@@ -207,12 +256,26 @@ Menu.propTypes =
     PropTypes.shape(Item.propTypes),
   ).isRequired,
   autoClose: PropTypes.bool,
+  /**
+   * Sticky header above the items
+   */
+  header: PropTypes.element,
+  /**
+   * Sticky footer below the items
+   */
+  footer: PropTypes.element,
+  /**
+   * Prevent the blur of the focused input on click (ex. Autocomplete)
+   */
+  keepFocus: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 Menu.defaultProps =
 {
   label: '',
   autoClose: false,
+  keepFocus: false,
 };
 
 export default Menu;
