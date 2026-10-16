@@ -34,12 +34,22 @@ const resolveHighlight = (highlight, values) => {
 
 
 /**
+ * Pixel y of a value on the y axis (same mapping as coordinate/coordToPix).
+ */
+const valueToPix = (canvas, value) =>
+  canvas.svgHeight - canvas.margin.bottom - (canvas.rowHeight * (value - canvas.yAxisValueMin));
+
+
+/**
  * Pixel geometry of one bar from its resolved data point. Bars grow from the
- * baseline (the yAxisValueMin line) up to the point. `radius` stays raw here;
+ * baseline (the yAxisValueMin line) up to the point — or from the point's own
+ * `from` value (a floating bar, e.g. a waterfall step). `radius` stays raw here;
  * `barPath` clamps it once it knows whether the bottom is rounded too.
  */
 const barGeometry = (point, canvas, { gap, seriesIndex, seriesLength, radius }) => {
-  const baseline = canvas.margin.top + canvas.height;
+  const { from } = point.value;
+  const floating = typeof from === 'number';
+  const baseline = floating ? valueToPix(canvas, from) : canvas.margin.top + canvas.height;
 
   let width = canvas.colWidth * (1 - gap);
   let x = point.x - (width / 2);
@@ -53,7 +63,7 @@ const barGeometry = (point, canvas, { gap, seriesIndex, seriesLength, radius }) 
   const height = Math.abs(baseline - point.y);
   const r = radius === 'pill' ? width / 2 : radius;
 
-  return { x, width, top, height, baseline, radius: r, cx: x + (width / 2) };
+  return { x, width, top, height, baseline, floating, end: point.y, radius: r, cx: x + (width / 2) };
 };
 
 
@@ -165,6 +175,8 @@ const BarSeries = ({
   gap,
   labels,
   labelColor,
+  connector,
+  connectorColor,
 }) => {
   const [hovered, setHovered] = React.useState(null);
 
@@ -249,12 +261,31 @@ const BarSeries = ({
         );
       })}
 
+      {/* dashed step lines: from each bar's value to the next bar (waterfall look) */}
+      {connector && bars.slice(1).map(({ geo, i }) => {
+        const prev = bars[i - 1].geo;
+
+        return (
+          <line
+            key={`connector-${i}`}
+            className="bar-connector"
+            x1={prev.x + prev.width}
+            y1={prev.end}
+            x2={geo.x}
+            y2={prev.end}
+            stroke={connectorColor}
+            strokeWidth={2}
+            strokeDasharray="6 5"
+          />
+        );
+      })}
+
       {/* bars + per-bar decoration (e.g. a target tick) from the `marker` prop */}
       {bars.map(({ geo, i, active, fill, point }) => (
         <g key={`bar-${i}`}>
           <path
             className={`bar-rect${active ? ' active' : ''}`}
-            d={barPath(geo.x, geo.top, geo.width, geo.height, geo.radius, roundBottom)}
+            d={barPath(geo.x, geo.top, geo.width, geo.height, geo.radius, roundBottom || geo.floating)}
             fill={fill}
           />
           {marker && marker({
@@ -362,6 +393,10 @@ export const Bar = (options = {}) => ({ canvas, index, data, seriesIndex, series
  * @param {number|'pill'}   radius       corner radius ('pill' = stadium caps)
  * @param {boolean}         roundBottom  round the bottom corners too (default false: flat bottom, the plain look)
  * @param {boolean}         barLabels    draw the x labels inside the series (highlightable) instead of on the axis
+ * @param {boolean}         connector    dashed line from each bar's value to the next bar (waterfall)
+ *
+ * A series may carry `from: (number|null)[]` — the start value of each bar; a bar
+ * with a number there floats from that value to its own (waterfall step).
  */
 const ChartBar = ({
   data,
@@ -390,6 +425,8 @@ const ChartBar = ({
   marker,
   barLabels = false,
   labelColor,
+  connector = false,
+  connectorColor = '#9aa0aa',
   ...props
 }) => {
   const labels = data[0].xAxis || data[0].values;
@@ -426,11 +463,13 @@ const ChartBar = ({
             gap,
             labels: barLabels ? labels : null,
             labelColor,
+            connector,
+            connectorColor,
           });
 
           return {
             ...result,
-            [series.id]: series.values.map((v, idx) => ({ x: idx, y: v, element })),
+            [series.id]: series.values.map((v, idx) => ({ x: idx, y: v, from: series.from ? series.from[idx] : undefined, element })),
           };
         }, {})
       }

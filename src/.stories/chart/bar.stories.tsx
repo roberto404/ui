@@ -29,6 +29,10 @@ const data = [
 ];
 
 
+// hu-HU leaves 4-digit numbers ungrouped by default (1250 -> 1 250)
+const numberFormat = new Intl.NumberFormat('hu-HU', { useGrouping: 'always' } as Intl.NumberFormatOptions);
+
+
 /* perceived-luminance check, to flip the label colour on light / dark fills */
 const isDark = (hex: string): boolean => {
   const c = hex.replace('#', '');
@@ -303,3 +307,89 @@ export const Progress: Story = {
 };
 
 Progress.storyName = 'Progress (100% track + fixed labels)';
+
+
+/* !- Waterfall: gross -> discount -> net
+   ------------------------------------------------------------------
+   The discount bar floats (`from` on the series: it hangs from the gross value
+   down to the net), the dashed `connector` carries each level over to the next
+   bar. The labels print the change, not the bar value, through `tooltip`. */
+
+const waterfall = {
+  gross: 1250,
+  discount: 250,
+};
+
+const waterfallNet = waterfall.gross - waterfall.discount;
+const waterfallColors = ['#cbd0d8', '#d4803c', '#2f5ca8'];
+const waterfallLabels = [
+  waterfall.gross,
+  -waterfall.discount,
+  waterfallNet,
+];
+
+const waterfallValue = ({ index, x, y, color }: any) => (
+  <text
+    x={x}
+    y={y - 14}
+    textAnchor="middle"
+    fontSize={22}
+    fontWeight={700}
+    fill={index === 1 ? color : '#14161c'}
+  >
+    {waterfallLabels[index] < 0
+      ? `−${numberFormat.format(-waterfallLabels[index])}`
+      : numberFormat.format(waterfallLabels[index])}
+  </text>
+);
+
+const waterfallSize = {
+  width: 520,
+  height: 320,
+  margin: {
+    top: 56,
+    right: 20,
+    bottom: 50,
+    left: 20,
+  },
+};
+
+export const Waterfall: Story = {
+  args: {
+    data: [
+      {
+        id: 'waterfall',
+        values: [waterfall.gross, waterfallNet, waterfallNet],
+        from: [null, waterfall.gross, null],
+        xAxis: ['Bruttó', 'Kedvezmény', 'Nettó'],
+      },
+    ],
+    color: (_value: number, index: number) => waterfallColors[index],
+    radius: 6,
+    gap: 0.36,
+    showValue: 'always',
+    tooltip: waterfallValue,
+    connector: true,
+    barLabels: true,
+    labelColor: '#5f6470',
+    xAxis: false,
+    yAxis: false,
+    xGrid: false,
+    yAxisValueMin: 0,
+    yAxisValueMax: waterfall.gross,
+    ...waterfallSize,
+    // baseline under the bars
+    children: (
+      <line
+        x1={waterfallSize.margin.left}
+        x2={waterfallSize.width - waterfallSize.margin.right}
+        y1={waterfallSize.height - waterfallSize.margin.bottom}
+        y2={waterfallSize.height - waterfallSize.margin.bottom}
+        stroke="#c4c8d0"
+        strokeWidth={2}
+      />
+    ),
+  },
+};
+
+Waterfall.storyName = 'Waterfall (gross → discount → net)';
