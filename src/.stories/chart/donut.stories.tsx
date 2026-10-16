@@ -69,3 +69,33 @@ export const Rounded: Story = {
 }
 
 Rounded.storyName = 'Rounded';
+
+
+
+/* !- Target: cél jelölése a gyűrűn */
+
+export const Target: Story = {
+  args: {
+    percent: 20,
+    target: 25,
+    color: '#f2a65a',
+    ringColor: '#222',
+    fill: '#000',
+    textColor: '#fff',
+    caption: 'beváltási arány',
+    targetCaption: 'cél: 25 %',
+  },
+  argTypes: {
+    target: {
+      control: { type: 'number', min: 0, max: 100, step: 1 },
+    },
+    targetCaption: {
+      control: 'text',
+    },
+  },
+  decorators: [
+    (Story) => <div style={{ background: '#000', padding: 16, display: 'inline-block' }}><Story /></div>,
+  ],
+}
+
+Target.storyName = 'Target';
