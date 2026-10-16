@@ -263,6 +263,11 @@ type PropTypes = Partial<typeof defaultProps> & {
    * https://github.com/coderiety/react-list
    */
   infinity: boolean;
+  /**
+   * Ids of the rows to flash (`.highlight` animation, 3s), eg. the row a dialog was
+   * opened from, when the grid comes back
+   */
+  highlight?: Array<string | number>;
 };
 
 /**
@@ -350,6 +355,7 @@ export const Grid = ({
   freezeHeader,
   infinity,
   shortcuts,
+  highlight,
 }: PropTypes) => {
   const dispatch = useDispatch();
   const { store } = useContext(ReactReduxContext);
@@ -395,6 +401,19 @@ export const Grid = ({
 
     prevIdsRef.current = newIds;
   }, [rawData.length]); // 🔥 csak length változásra fut le
+
+  // highlight from outside (`highlight` prop)
+  useEffect(() => {
+    if (!highlight || !highlight.length) {
+      return;
+    }
+
+    setHighlightId(highlight);
+
+    const timeout = setTimeout(() => setHighlightId([]), 3000);
+
+    return () => clearTimeout(timeout);
+  }, [(highlight || []).join(",")]);
 
   useEffect(() => {
     if (!selectable) {
