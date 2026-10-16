@@ -38,6 +38,11 @@ class Toggle extends Field {
    */
   onChangeToggleHandler = (event) => {
     event.preventDefault();
+
+    if (this.props.disabled) {
+      return;
+    }
+
     this.onChangeHandler(typeof this.state.value === 'boolean' ? !this.state.value : !parseInt(this.state.value), event);
   }
 
@@ -50,12 +55,13 @@ class Toggle extends Field {
    */
   render() {
     return super.render() || (
-      <div className={this.getClasses('toggle')}>
+      <div className={classNames(this.getClasses('toggle'), { disabled: this.props.disabled })}>
 
         {this.label}
 
         <button
           onClick={this.onChangeToggleHandler}
+          disabled={this.props.disabled}
         />
 
         {this.state.error &&
