@@ -89,3 +89,24 @@ export const Pie3: Story = {
 
 Pie3.storyName = 'Minimal data';
 
+
+
+/* !- Ring: segments with gaps, content in the middle */
+
+export const Ring: Story = {
+  args: {
+    data: [
+      { id: 'fiona', percent: 45, color: '#186eff' },
+      { id: 'flat', percent: 33, color: '#e08543' },
+      { id: 'tina', percent: 22, color: '#5ab4e5' },
+    ],
+    thickness: 0.32,
+    gap: 1,
+    children: (
+      <>
+        <span className="text-xxl bold">20</span>
+        <span className="text-s text-gray-dark">db bútor</span>
+      </>
+    ),
+  },
+};
