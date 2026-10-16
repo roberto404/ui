@@ -34,7 +34,8 @@ export const defaultProps = {
 export type ChartCardProps = Partial<typeof defaultProps> & {
   // redux grid id — one per card (required: all card state lives in redux)
   id: string;
-  data: Series[];
+  // series of the card; charts without series (funnel, pie, bullet …) may omit it
+  data?: Series[];
   // string / number gets default headline styling; a node or render-prop is drawn as-is
   title?: CardSlot;
   // description after the title: (i) icon with a tooltip
@@ -45,8 +46,9 @@ export type ChartCardProps = Partial<typeof defaultProps> & {
   footer?: CardSlot;
   // the chart itself, e.g. (api) => <ChartLine data={api.series} color={api.theme.fg} … />
   chart: (api: CardApi) => React.ReactNode;
-  // stack header above the chart (vertical) or beside it (minimal / horizontal)
-  layout?: "vertical" | "horizontal";
+  // stack header above the chart (vertical), beside it (minimal / horizontal) or
+  // everything centered in one column, the chart at its natural size (centered)
+  layout?: "vertical" | "horizontal" | "centered";
   // chart area first, then the header (horizontal: chart on the left, vertical: chart on top)
   reverse?: boolean;
   // vertical alignment of the title vs. the header slot
@@ -58,7 +60,14 @@ export type ChartCardProps = Partial<typeof defaultProps> & {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   // gets `activeClassName`
   active?: boolean;
+  // empty state: when set, shown in place of the chart (the footer is hidden)
+  empty?: React.ReactNode;
 };
+
+/* !- Constants */
+
+// stable reference for the cards without series
+const NO_DATA: Series[] = [];
 
 /* !- Helpers */
 
@@ -84,7 +93,7 @@ const renderSlot = (
  */
 const ChartCard = ({
   id,
-  data,
+  data = NO_DATA,
   title,
   hint,
   header,
@@ -101,7 +110,10 @@ const ChartCard = ({
   onClick,
   active = false,
   activeClassName = defaultProps.activeClassName,
+  empty,
 }: ChartCardProps) => {
+  const isEmpty = empty !== undefined && empty !== null && empty !== false;
+
   const api = useSeriesGrid(id, data, filters);
 
   // on a coloured card: white primary text/chart, a light tint of the colour for muted text
@@ -114,25 +126,36 @@ const ChartCard = ({
   const cardApi: CardApi = { ...api, theme };
 
   const isHorizontal = layout === "horizontal";
+  const isCentered = layout === "centered";
 
   const title$ = renderSlot(title, cardApi);
   const header$ = renderSlot(header, cardApi);
-  const footer$ = renderSlot(footer, cardApi);
+  const footer$ = isEmpty ? null : renderSlot(footer, cardApi);
 
   const head = (title$ || header$) && (
     <div
       id="header"
       style={{
         display: "flex",
-        alignItems: isHorizontal ? "flex-start" : headerAlign,
-        justifyContent: "space-between",
+        alignItems: isCentered
+          ? "center"
+          : isHorizontal
+            ? "flex-start"
+            : headerAlign,
+        justifyContent: isCentered ? "center" : "space-between",
         gap: "1rem",
-        flexDirection: isHorizontal ? "column" : "row",
+        flexDirection: isHorizontal || isCentered ? "column" : "row",
+        textAlign: isCentered ? "center" : undefined,
       }}
     >
       {title$ && (
-        // chart first (beside the chart): the text may wrap
-        <div id="title" className={classNames("medium", { nowrap: !(isHorizontal && reverse) })}>
+        // chart first (beside the chart) or centered: the text may wrap
+        <div
+          id="title"
+          className={classNames("medium", {
+            nowrap: !(isHorizontal && reverse) && !isCentered,
+          })}
+        >
           <CardTitle
             title={
               typeof title === "string" || typeof title === "number" ? (
@@ -152,14 +175,20 @@ const ChartCard = ({
   const chartArea = (
     // `aspectRatio` only applies with a definite width: full width when stacked,
     // the remaining flex space (basis 0, so the svg can't inflate it) beside the header
+    // centered: the chart (icon, donut …) keeps its own size
     <div
       id="chart-area"
-      className={classNames({ "w-full": !isHorizontal })}
-      style={{
-        aspectRatio: ratio,
-      }}
+      className={classNames({
+        "w-full": !isHorizontal && !isCentered,
+        "flex v-center": isCentered,
+      })}
+      style={isCentered || isEmpty ? undefined : { aspectRatio: ratio }}
     >
-      {chart(cardApi)}
+      {isEmpty ? (
+        <div className="py-2 text-center text-gray">{empty}</div>
+      ) : (
+        chart(cardApi)
+      )}
     </div>
   );
 
@@ -188,6 +217,7 @@ const ChartCard = ({
     >
       <div
         className={classNames({
+          "column h-center gap-1": isCentered,
           "h-bottom v-justify gap-2": isHorizontal && !reverse,
           // chart first: the header right next to it, vertically centered
           "h-center gap-2": isHorizontal && reverse,

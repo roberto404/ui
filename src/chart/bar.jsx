@@ -7,6 +7,7 @@ import { findMinimumValueInSeries } from './coordinate/functions';
 const DEFAULT_COLOR = '#a8ea80';   // resting fill of a single series (green)
 const DEFAULT_ACTIVE = '#186eff';  // highlighted / hovered fill (blue-dark)
 const VALUE_COLOR = '#252631';     // the floating value label (black)
+const LABEL_COLOR = '#778ca2'; // $gray-dark, the x labels
 
 // default per-series fill when several series sit side by side and no explicit
 // `color` is set — keeps the old green / black double-bar look.
@@ -330,7 +331,8 @@ const BarSeries = ({
           x={geo.cx}
           y={bottom + 24}
           textAnchor="middle"
-          style={active ? { fill: labelColor || activeColor } : undefined}
+          // inline fill: a css rule of the host app cannot recolor it
+          style={{ fill: active ? labelColor || activeColor : LABEL_COLOR }}
         >
           {labels[i]}
         </text>
