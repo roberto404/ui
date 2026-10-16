@@ -123,15 +123,15 @@ export const AutocompleteMenuRow = ({
     <div className="grow column min-w-0">
       <div className={classNames('bold ellipsis', { 'text-blue-dark': focus })}>{title}</div>
       {subtitle &&
-        <div className="text-s text-gray-dark ellipsis">{subtitle}</div>
+        <div className="text-s text-gray mt-1/2 ellipsis">{subtitle}</div>
       }
       {(code || (meta && meta.length > 0)) &&
-        <div className="flex h-center gap-1/2 mt-1/2 text-s text-gray-dark nowrap">
+        <div className="flex h-center gap-1/2 mt-1 text-s text-gray-dark nowrap">
           {code &&
-            <span className="monospace mr-1/2">{code}</span>
+            <span className="monospace mr-1/2 text-s">{code}</span>
           }
           {(meta || []).filter(i => i).map((item, index) => (
-            <span key={index} className="bg-white-dark rounded px-1/2">{item}</span>
+            <span key={index} className="bg-white-dark rounded p-1/2 px-1 text-s">{item}</span>
           ))}
         </div>
       }
@@ -140,11 +140,11 @@ export const AutocompleteMenuRow = ({
     <div className="shrink-0 text-right">
       {badge &&
         <div>
-          <span className={classNames('tag rounded bold uppercase', badgeClassName)}>{badge}</span>
+          <span className={classNames('tag rounded uppercase text-xxs mb-1', badgeClassName)}>{badge}</span>
         </div>
       }
       {priceOrig &&
-        <div className="text-s text-gray strikethrough">{priceOrig}</div>
+        <div className="text-s text-gray strikethrough mb-1/2">{priceOrig}</div>
       }
       {price &&
         <div className="bold text-m nowrap">{price}</div>
