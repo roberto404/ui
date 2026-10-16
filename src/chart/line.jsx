@@ -448,6 +448,8 @@ export const Line = ({
  * Multiple series are supported. `bezier`, `marker`, `color` and `dashed` can be
  * set per series on the data (overriding the chart-level defaults); `area` and
  * `hover` always follow the primary — first — series and are chart-level only.
+ * A series with `hover: false` (e.g. an average / trend line) is left out of the
+ * hover, so a single remaining series keeps the single-line hover + `tooltip`.
  *
  * `marker` may be a boolean or a render function `({ id, x, y, value, index, color })
  * => element` — the same idea as `yAxisLabel`; it receives the series id so a
@@ -479,8 +481,8 @@ const ChartLine = ({
 
   const gradientId = `line-gradient-${props.data[0].id || '0'}`;
 
-  // every series' values + resolved colour + line shape, for the multi-line hover
-  const hoverSeries = props.data.map((s) => ({
+  // every hovered series' values + resolved colour + line shape, for the multi-line hover
+  const hoverSeries = props.data.filter((s) => s.hover !== false).map((s) => ({
     id: s.id,
     values: s.values,
     color: s.color || color,

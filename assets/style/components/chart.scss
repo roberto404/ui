@@ -167,6 +167,15 @@
           font-weight: bold;
         }
       }
+
+      // ChartLineHighlight: while the plot is hovered the hover box replaces the fixed highlight
+      .line-highlight {
+        transition: opacity 0.15s ease;
+      }
+
+      &:has(.hover-target:hover) .line-highlight {
+        opacity: 0;
+      }
     }
   }
 

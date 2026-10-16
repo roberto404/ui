@@ -28,6 +28,17 @@ import {
 import { LabelPropTypes } from './axisLabel';
 import { PointType } from './point';
 
+/**
+ * Api of the `underlay` / `children` render-props: the canvas and a data → pixel
+ * mapping (same as the points), to draw bands, reference lines, labels …
+ */
+export interface LayerApi {
+  canvas: ICanvas,
+  toPix: (x: number, y: number) => { x: number, y: number },
+}
+
+export type LayerSlot = React.ReactNode | ((api: LayerApi) => React.ReactNode);
+
 export interface PropTypes {
   // svg.ID
   id?: string,
@@ -61,7 +72,10 @@ export interface PropTypes {
   reverseAxis?: [], // ???
   margin?: IMargin,
   point?: React.FC<PointType>,
-  children?: JSX.Element,
+  // drawn over the points; may be a render-prop receiving the LayerApi
+  children?: LayerSlot,
+  // drawn under the points (after the grid and the axes); may be a render-prop
+  underlay?: LayerSlot,
   className?: string,
   // scale the svg to its container (width/height become the viewBox design units)
   responsive?: boolean,
@@ -103,6 +117,7 @@ const Coordinate: React.FC<PropTypes> = (
     },
     point = Point,
     children,
+    underlay,
     className = 'coordinate',
     responsive = false,
     preserveAspectRatio = 'none',
@@ -165,6 +180,17 @@ const Coordinate: React.FC<PropTypes> = (
     i => canvas.yAxisValueMin + ((canvas.yAxisValueDiff / canvas.yAxisSteps) * i),
   );
 
+  const layerApi: LayerApi = {
+    canvas,
+    toPix: (x, y) => {
+      const { x: pixX, y: pixY } = coordToPix(canvas)(x - canvas.xAxisValueMin, y - canvas.yAxisValueMin);
+      return { x: pixX, y: pixY };
+    },
+  };
+
+  const renderLayer = (layer: LayerSlot) =>
+    typeof layer === 'function' ? layer(layerApi) : layer;
+
   return (
     <svg
       id={id}
@@ -226,6 +252,8 @@ const Coordinate: React.FC<PropTypes> = (
         />
       }
 
+      {underlay && <g id={`${id}-underlay`}>{renderLayer(underlay)}</g>}
+
       {isEmpty(data) === false &&
         <Points
           coordToPix={coordToPix(canvas)}
@@ -235,7 +263,7 @@ const Coordinate: React.FC<PropTypes> = (
         />
       }
 
-      {children}
+      {renderLayer(children)}
     </svg>
   );
 };
