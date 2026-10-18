@@ -100,6 +100,35 @@ const HorizontalDemo = ({ open, children, ...props }: DemoPropTypes) => {
 };
 
 
+/**
+ * Lentről becsúszó panel fix magasságú oszlopban: a felette lévő tartalom a
+ * maradék helyet kapja, saját görgetéssel
+ */
+const BottomDemo = ({ open, children, ...props }: DemoPropTypes) => {
+
+  const [isOpen, setOpen] = useState(open);
+
+  return (
+    <div className="column gap-1" style={{ width: 640, height: 480 }}>
+      <Button
+        title={isOpen ? 'bezár' : 'kinyit'}
+        onClick={() => setOpen(!isOpen)}
+      />
+
+      <div className="card column grow h-0 mb-0 p-0">
+        <div className="grow h-0 scroll-y p-2">
+          Felette lévő tartalom: a panel húzásával nő / csökken a magassága.
+        </div>
+
+        <Collapse open={isOpen} {...props}>
+          <Panel title="Rendelések" onClose={() => setOpen(false)} />
+        </Collapse>
+      </div>
+    </div>
+  );
+};
+
+
 /* !- Stories */
 
 const meta = {
@@ -177,3 +206,23 @@ export const Horizontal: Story = {
 };
 
 Horizontal.storyName = 'Szélesség (oldalsó panel)';
+
+
+/* !- Húzható */
+
+/**
+ * Lentről becsúszó, a felső szélénél húzható panel (`draggable`): a szegélyre
+ * állva átvált a kurzor
+ */
+export const Draggable: Story = {
+  args: {
+    open: true,
+    axis: 'height',
+    size: '55%',
+    draggable: true,
+    dragEdge: 'start',
+  },
+  render: (args) => <BottomDemo {...args} />,
+};
+
+Draggable.storyName = 'Húzható (lentről)';
