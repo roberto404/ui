@@ -158,7 +158,18 @@ class Menu extends Component
     });
   }
 
+  componentDidMount()
+  {
+    // opened with a focused item (ex. Autocomplete selected value): scroll to it
+    this.scrollToFocused();
+  }
+
   componentDidUpdate()
+  {
+    this.scrollToFocused();
+  }
+
+  scrollToFocused = () =>
   {
     // keyboard navigation: the focused item stays visible in a long (scrolled) menu
     const focused = this.element?.querySelector(':scope > .items > .item.focus, :scope > .item.focus');

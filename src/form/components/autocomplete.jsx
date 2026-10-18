@@ -240,10 +240,37 @@ class Autocomplete extends Component {
   getLimit = () =>
     (this.isShowAll ? Infinity : this.props.limit);
 
-  getMenuItems = (inputValue = '', records = this.getMatchedRecords(inputValue)) =>
+  getMenuItems = (inputValue = '', records = this.getMatchedRecords(inputValue), minCount = 0) =>
     records
-      .slice(0, this.getLimit())
+      .slice(0, Math.max(this.getLimit(), minCount))
       .map(i => ({ handler: this.onClickMenuHandler, ...i }));
+
+  /**
+   * Records / items / focused index of the menu
+   * selectedValue (single, opening by focus / arrow): if it is the title of a record (selected value),
+   * every record is listed and the selected one is focused -> the menu opens at the same place
+   */
+  getMenuState = (inputValue = '', selectedValue) => {
+    if (!this.props.multiple && typeof selectedValue === 'string' && selectedValue) {
+      const records = this.getMatchedRecords('');
+      const value = selectedValue.toLowerCase();
+      const index = records.findIndex(record => record.title.toString().toLowerCase() === value);
+
+      if (index !== -1) {
+        return { records, items: this.getMenuItems('', records, index + 1), term: '', index, isSelected: true };
+      }
+    }
+
+    const records = this.getMatchedRecords(inputValue);
+
+    return {
+      records,
+      items: this.getMenuItems(inputValue, records),
+      term: this.getTerm(inputValue),
+      index: 0,
+      isSelected: false,
+    };
+  }
 
   /**
    * inlineSuggestion: the first suggestion which starts with the input value
@@ -329,6 +356,7 @@ class Autocomplete extends Component {
 
     this.menuItems = [];
     this.isMenuPending = false;
+    this.isSelectedMenu = false;
     this.context.store.dispatch(flush());
 
     this.onChangeHandler(value);
@@ -338,6 +366,7 @@ class Autocomplete extends Component {
 
     this.isFocused = false;
     this.isMenuPending = false;
+    this.isSelectedMenu = false;
     this.removeShortcuts();
     this.menuItems = [];
 
@@ -357,7 +386,7 @@ class Autocomplete extends Component {
     this.addShortcuts();
 
     if (event && (!this.props.freeText || getSearchTerm(this.getInputValue()))) {
-      this.showMenu(payload, event);
+      this.showMenu(payload, event, payload?.value);
     }
   }
 
@@ -455,7 +484,12 @@ class Autocomplete extends Component {
   }
 
 
-  showMenu = ({ value } = {}, event) => {
+  /**
+   * @param {object} payload { value } filter of the records
+   * @param {object} event
+   * @param {string} [selectedValue] opening (focus / arrow): the selected value is focused (see getMenuState)
+   */
+  showMenu = ({ value } = {}, event, selectedValue) => {
     if (!this.props.suggestionMenu) {
       this.menuItems = [];
       return;
@@ -467,14 +501,14 @@ class Autocomplete extends Component {
       inputValue = Array.isArray(value) ? this.inputStateFormat(value) : (typeof value === 'string' ? value : '');
     }
 
-    const records = this.getMatchedRecords(inputValue || '');
-    const items = this.getMenuItems(inputValue || '', records);
+    const { records, items, term, index, isSelected } = this.getMenuState(inputValue || '', selectedValue);
 
-    // the first item is focused by default -> Enter selects it
+    // the first (or the selected) item is focused by default -> Enter selects it
     this.menuItems = items;
     this.menuRecords = records;
-    this.menuTerm = this.getTerm(inputValue || '');
-    this.menuIndex = 0;
+    this.menuTerm = term;
+    this.menuIndex = index;
+    this.isSelectedMenu = isSelected;
     this.menuAnchor = this.getMenuAnchor(event);
     // async data (ex. API search): the menu opens when the data arrives
     this.isMenuPending = true;
@@ -524,13 +558,16 @@ class Autocomplete extends Component {
     }
 
     const inputValue = this.getInputValue();
-    const records = this.getMatchedRecords(inputValue || '');
-    const items = this.getMenuItems(inputValue || '', records);
+    const { records, items, term, isSelected } = this.getMenuState(
+      inputValue || '',
+      this.isSelectedMenu ? inputValue : undefined,
+    );
 
     this.menuItems = items;
     this.menuRecords = records;
-    this.menuTerm = this.getTerm(inputValue || '');
+    this.menuTerm = term;
     this.menuIndex = Math.min(this.menuIndex || 0, Math.max(items.length - 1, 0));
+    this.isSelectedMenu = isSelected;
 
     if (!items.length) {
       if (isVisible) {
@@ -571,7 +608,9 @@ class Autocomplete extends Component {
 
     // closed menu: open by the input field
     if (!this.isMenuVisible()) {
-      this.showMenu({ value: this.getInputValue() }, { currentTarget: event.target });
+      const inputValue = this.getInputValue();
+
+      this.showMenu({ value: inputValue }, { currentTarget: event.target }, inputValue);
 
       return;
     }
@@ -600,7 +639,7 @@ class Autocomplete extends Component {
       input.focus();
     }
 
-    this.showMenu({}, { currentTarget: input || event.currentTarget });
+    this.showMenu({}, { currentTarget: input || event.currentTarget }, this.getInputValue());
   }
 
   /**
