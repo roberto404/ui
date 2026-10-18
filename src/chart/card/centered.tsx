@@ -1,6 +1,6 @@
 import React from "react";
 
-import ChartCard, { CardApi } from "./card";
+import ChartCard, { CardApi, CardSlot } from "./card";
 import StatValue from "./parts/statValue";
 import CardTitle from "./parts/title";
 import { Series } from "./hooks/useSeriesGrid";
@@ -22,6 +22,8 @@ export type CenteredCardProps = {
   changeFormat?: (change: number) => React.ReactNode;
   // top element at its natural size: icon, donut, small chart …
   chart: (api: CardApi) => React.ReactNode;
+  // below the centered column (ChartCard footer), may be a render-prop
+  footer?: CardSlot;
   className?: string;
 };
 
@@ -40,6 +42,7 @@ const CenteredCard = ({
   format,
   changeFormat,
   chart,
+  footer,
   className,
 }: CenteredCardProps) => (
   <ChartCard
@@ -75,6 +78,7 @@ const CenteredCard = ({
       );
     }}
     chart={chart}
+    footer={footer}
   />
 );
 

@@ -100,13 +100,13 @@ const Donut: React.FC<PropTypes> = (
             <tspan x="50%" className="bold" textAnchor="middle" fontSize="0.5em">{`${percent}%`}</tspan>
           </text>
           { caption &&
-          <text y="60%" transform={`translate(0, ${2+shift})`}>
-            <tspan x="50%" textAnchor="middle" fontSize="0.12em">{caption}</tspan>
+          <text y="61%" transform={`translate(0, ${2+shift})`}>
+            <tspan x="50%" textAnchor="middle" fontSize="0.13em">{caption}</tspan>
           </text>
           }
           { targetCaption &&
           <text y="70%" transform={`translate(0, ${2+shift})`} opacity="0.6">
-            <tspan x="50%" textAnchor="middle" fontSize="0.1em">{targetCaption}</tspan>
+            <tspan x="50%" textAnchor="middle" fontSize="0.13em">{targetCaption}</tspan>
           </text>
           }
         </g>

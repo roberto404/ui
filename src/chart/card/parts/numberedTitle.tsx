@@ -13,7 +13,7 @@ export type NumberedTitleProps = {
  * Numbered card title: "02 Konverzió" — a muted number before a bold title
  */
 const NumberedTitle = ({ index, title }: NumberedTitleProps) => (
-  <span className="flex h-center gap-1">
+  <span className="flex h-center gap-1 mb-1">
     <span className="text-gray light">
       {String(index).padStart(2, "0")}
     </span>

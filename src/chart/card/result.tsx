@@ -1,6 +1,7 @@
 import React from "react";
 
 import CenteredCard from "./centered";
+import { CardSlot } from "./card";
 import TrendIcon from "./parts/trendIcon";
 
 /* !- Types */
@@ -15,6 +16,8 @@ export type ResultCardProps = {
   hint?: React.ReactNode;
   format?: (value: number) => React.ReactNode;
   changeFormat?: (change: number) => React.ReactNode;
+  // below the card content (ChartCard footer), may be a render-prop
+  footer?: CardSlot;
   className?: string;
 };
 
@@ -30,6 +33,7 @@ const ResultCard = ({
   hint,
   format,
   changeFormat = (value) => `${Math.abs(value)} %`,
+  footer,
   className,
 }: ResultCardProps) => (
   <CenteredCard
@@ -42,6 +46,7 @@ const ResultCard = ({
     format={format}
     changeFormat={changeFormat}
     chart={() => <TrendIcon change={change} />}
+    footer={footer}
     className={className}
   />
 );

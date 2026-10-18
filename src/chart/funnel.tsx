@@ -8,6 +8,19 @@ const COLORS = ["#2f5ca8", "#d4803c", "#55b45f", "#9b5de5"];
 const TEXT_COLOR = "#14161c";
 const MUTED_COLOR = "#5f6470";
 
+/**
+ * Font sizes in em: relative to the font-size of the wrapper (the body default 16px gives
+ * the original 17 / 20 / 24 px), so a wrapper class (eg. `text-s`) scales the texts
+ */
+const FONT_SIZE = {
+  // the drop on the connector, the label beside a narrow bar
+  muted: "1.0625em",
+  // the label inside a bar
+  label: "1.25em",
+  // the value
+  value: "1.5em",
+};
+
 /* !- Types */
 
 export interface IFunnelStep {
@@ -112,7 +125,7 @@ const FunnelSeries = ({
               y={(top + bottom) / 2}
               textAnchor="middle"
               dominantBaseline="central"
-              fontSize={17}
+              fontSize={FONT_SIZE.muted}
               fill={MUTED_COLOR}
             >
               {dropFormat(prev.step, next.step)}
@@ -138,7 +151,7 @@ const FunnelSeries = ({
                 x={bar.x + 24}
                 y={bar.y + height / 2}
                 dominantBaseline="central"
-                fontSize={20}
+                fontSize={FONT_SIZE.label}
                 fill="#fff"
               >
                 {bar.step.label}
@@ -148,7 +161,7 @@ const FunnelSeries = ({
                 y={bar.y + height / 2}
                 textAnchor="end"
                 dominantBaseline="central"
-                fontSize={24}
+                fontSize={FONT_SIZE.value}
                 fontWeight={700}
                 fill="#fff"
               >
@@ -161,7 +174,7 @@ const FunnelSeries = ({
                 x={bar.x + bar.width + 20}
                 y={bar.y + height * 0.36}
                 dominantBaseline="central"
-                fontSize={24}
+                fontSize={FONT_SIZE.value}
                 fontWeight={700}
                 fill={TEXT_COLOR}
               >
@@ -171,7 +184,7 @@ const FunnelSeries = ({
                 x={bar.x + bar.width + 20}
                 y={bar.y + height * 0.72}
                 dominantBaseline="central"
-                fontSize={17}
+                fontSize={FONT_SIZE.muted}
                 fill={MUTED_COLOR}
               >
                 {bar.step.label}
@@ -196,7 +209,8 @@ export const Step = (options) => (props) => {
  * Funnel Chart
  *
  * Conversion steps stacked vertically, bar width proportional to the value,
- * the drop-off printed on the connector between two steps.
+ * the drop-off printed on the connector between two steps. The texts are in em: the
+ * font-size of the wrapper sets their size (eg. `<div className="text-s"><Funnel /></div>`).
  */
 const Funnel: React.FC<PropTypes> = (props) => {
   const {

@@ -33,6 +33,8 @@ export type PropTypes = {
   afterColor?: string;
   width?: number;
   height?: number;
+  // space around the plot (the section titles above, the x labels below)
+  margin?: { top: number; right: number; bottom: number; left: number };
   // shown instead of the chart when every value is 0
   empty?: React.ReactNode;
 };
@@ -191,6 +193,7 @@ const ChartLineEffect = ({
   afterColor = COLORS.after,
   width = 820,
   height = 300,
+  margin = { top: 40, right: 10, bottom: 40, left: 40 },
   empty = "–",
 }: PropTypes) => {
   const peak = Math.max(0, ...values);
@@ -213,7 +216,7 @@ const ChartLineEffect = ({
       data={[{ id: "values", values }]}
       width={width}
       height={height}
-      margin={{ top: 40, right: 10, bottom: 40, left: 40 }}
+      margin={margin}
       responsive
       preserveAspectRatio="xMidYMid meet"
       edgeToEdge
