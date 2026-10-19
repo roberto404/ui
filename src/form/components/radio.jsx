@@ -85,6 +85,11 @@ class Radio extends Field
   {
     const uid = random(8);
 
+    // exact match: string indexOf would match "3" in "13"
+    const values = (Array.isArray(this.state.value) ? this.state.value : [this.state.value])
+      .filter(value => value !== undefined && value !== null && value !== '')
+      .map(value => value.toString());
+
     return super.render() || (
       <div className={this.getClasses('radio')}>
 
@@ -102,7 +107,7 @@ class Radio extends Field
                 id={`${slugify(this.props.label)}-${item.id}-${uid}`}
                 name={slugify(this.props.label)}
                 value={item.id}
-                checked={(this.state.value || []).indexOf(item.id.toString()) !== -1}
+                checked={values.indexOf(item.id.toString()) !== -1}
                 onChange={this.onChangeRadioHandler}
               />
 
