@@ -1,0 +1,43 @@
+// Chart colour collection — mirror of `src/chart/colors.ts`: change the two together.
+
+// categorical series, in this order
+$chart-series-1: #186eff;
+$chart-series-2: #e8792b;
+$chart-series-3: #9b5de5;
+$chart-series-4: #14a6b8;
+$chart-series-5: #c2410c;
+$chart-series-6: #e0569b;
+
+// status: mark colour, light background, text (≥ 4.5:1 on white and on the background)
+$chart-status: (
+  good: (color: #0bb96d, fill: #f3f9ef, text: #087a48),
+  warning: (color: #ffab2b, fill: #fef5e9, text: #8f5208),
+  bad: (color: #ea6c80, fill: #fbeded, text: #c42e4a),
+  neutral: (color: #98a9bc, fill: #edf0f3, text: #5f6470),
+);
+
+@each $name, $tone in $chart-status
+{
+  // text (and the icons in it)
+  .text-chart-#{$name}
+  {
+    color: map-get($tone, text);
+
+    svg
+    {
+      fill: currentColor;
+    }
+  }
+
+  // light background (pill, band)
+  .bg-chart-#{$name}
+  {
+    background-color: map-get($tone, fill);
+  }
+
+  // mark colour (dot, legend square)
+  .bg-chart-#{$name}-color
+  {
+    background-color: map-get($tone, color);
+  }
+}
