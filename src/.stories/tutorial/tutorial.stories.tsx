@@ -8,7 +8,9 @@ require('../../../assets/style/index.scss');
 
 /* !- Components */
 
-import Tutorial, { TutorialButton } from '../../tutorial';
+import Tutorial, { TutorialButton, TutorialView } from '../../tutorial';
+import View from '../../view/view';
+import ViewButton from '../../view/viewButton';
 import Notification from '../../notification';
 
 
@@ -162,3 +164,46 @@ export const CustomColor: Story = {
 };
 
 CustomColor.storyName = 'Egyedi szín';
+
+
+/* !- View-váltás: a gomb a nézethez tartozó tutorialt indítja, ahol nincs, ott eltűnik */
+
+const VIEW_SETTINGS = {
+  groups: {
+    tutorialDemo: [
+      { id: 'orders', title: 'Rendelések', status: 1 },
+      { id: 'log', title: 'Napló', status: 0 },
+    ],
+  },
+};
+
+const ViewPage = () => (
+  <div className="p-2" style={{ minHeight: 900 }}>
+    <Tutorial />
+
+    <div className="h-center mb-2">
+      <ViewButton id="orders" group="tutorialDemo" className="px-1 py-1/2 rounded-left border" recursive>Rendelések</ViewButton>
+      <ViewButton id="log" group="tutorialDemo" className="px-1 py-1/2 rounded-right border" recursive>Napló (nincs tutorial)</ViewButton>
+
+      <div className="ml-2">
+        <TutorialView group="tutorialDemo" ids={{ orders: TUTORIAL.id }} />
+      </div>
+    </div>
+
+    <View settings={VIEW_SETTINGS}>
+      <div data-view="orders">
+        <div className="flex h-center gap-1 mb-4">
+          <input data-tutorial="order.search" className="border rounded p-1/2 grow" placeholder="Keresés..." />
+          <button className="green" data-tutorial="order.add">Új rendelés</button>
+        </div>
+      </div>
+      <div data-view="log" className="text-gray">Napló nézet</div>
+    </View>
+  </div>
+);
+
+export const ViewSwitch: StoryObj<typeof ViewPage> = {
+  render: () => <ViewPage />,
+};
+
+ViewSwitch.storyName = 'View váltás (TutorialView)';

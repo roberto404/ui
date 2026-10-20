@@ -65,6 +65,10 @@ export const initSettings = (props) => {
       [props.children];
 
     const group = children.map((child, index) => {
+      if (!React.isValidElement(child)) {
+        return null;
+      }
+
       let item = {
         id: child.props['data-view'] || index.toString(),
         status: parseInt(child.props['data-view-status'] || 1),
@@ -79,7 +83,7 @@ export const initSettings = (props) => {
       }
 
       return item;
-    });
+    }).filter(Boolean);
 
     settings = ({
       active: '0',
@@ -280,7 +284,7 @@ class View extends Component {
         const itemChildren = children.filter(
           (child, index) =>
             (item.status || !this.props.lazyload)
-            && typeof child !== 'string'
+            && React.isValidElement(child)
             &&
             (
               (typeof child.props['data-view'] === 'undefined' && index === parseInt(item.id))
