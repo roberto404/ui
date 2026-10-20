@@ -247,6 +247,12 @@
 }
 
 
+// gauge: transparent coordinate background (also on a dark card)
+.chart.gauge rect#gauge-bg {
+  opacity: 0;
+}
+
+
 // --- Chart card colour theming (opt-in via the `color` prop) ---
 // On a coloured card the primary/value text is white and the muted text
 // (labels, title, footer) is a light tint of the card colour. The component
