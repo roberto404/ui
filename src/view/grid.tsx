@@ -1,5 +1,5 @@
 
-import React, { useMemo, useContext, useEffect, useRef, createContext, useId, useLayoutEffect } from 'react';
+import React, { useMemo, useContext, useEffect, useRef, createContext, useId } from 'react';
 import { useDispatch, useSelector, ReactReduxContext } from 'react-redux';
 import { useAppContext } from '../context';
 import isEqual from 'lodash/isEqual';
@@ -7,7 +7,6 @@ import forEach from 'lodash/forEach';
 import isEmpty from 'lodash/isEmpty';
 import getParam from '@1studio/utils/location/getParam';
 import { concatMultipleFormRecords } from './form';
-import { useComponentWillMount } from '../hooks';
 
 
 /* !- Context */
@@ -338,27 +337,6 @@ export const Grid = ({
   }
 
   /* !- React lifecycle */
-
-  // useComponentWillMount(() => {
-
-  //   // if (useWillMount === true) {
-  //   const settings = getSettings();
-
-  //   if (!isEmpty(settings) || data.length) {
-  //     dispatch(setData(data, settings, getId()));
-  //   }
-  //   // }
-  // });
-
-  // useLayoutEffect(() => {
-
-  //   const settings = getSettings();
-
-  //   if (!isEmpty(settings) || data.length) {
-  //     dispatch(setData(data, settings, getId()));
-  //   }
-  // }, [dispatch]);
-
 
   // componentDidMount, componentWillUnmount
   useEffect(
