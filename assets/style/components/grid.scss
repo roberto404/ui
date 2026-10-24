@@ -169,6 +169,37 @@
   }
 }
 
+// tree mode: --tree-level = depth of the row
+.grid-tree-cell {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  padding-left: calc(var(--tree-level, 0) * 1.5em);
+}
+
+.grid-tree-toggle {
+  flex: none;
+  width: 1.5em;
+  height: 1.5em;
+  margin-right: 0.25em;
+  fill: currentColor;
+}
+
+// tree search: ancestor of a match, not a match
+.grid-tree-context {
+  opacity: 0.5;
+}
+
+svg.grid-tree-toggle {
+  cursor: pointer;
+  transform: rotate(-90deg);
+  transition: transform 0.2s ease-out;
+
+  &.open {
+    transform: none;
+  }
+}
+
 }
 
 

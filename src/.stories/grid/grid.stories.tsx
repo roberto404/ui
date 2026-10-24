@@ -9,6 +9,11 @@ import Grid from '../../grid';
 import GridRow from '../../.examples/grid/row';
 
 
+/* !- Context (a Grid useAppContext-et hív: shortcutok, listenerek) */
+
+import withGridContext from './withGridContext';
+
+
 /* !- Constants */
 
 import { DATA, SETTINGS } from '../../.examples/grid/constants';
@@ -19,6 +24,7 @@ import { DATA, SETTINGS } from '../../.examples/grid/constants';
 const meta = {
   title: 'Grid/Grid',
   component: Grid,
+  decorators: [withGridContext],
 } satisfies Meta<typeof Grid>;
 
 export default meta;

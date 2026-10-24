@@ -10,6 +10,8 @@ import isEqual from "lodash/isEqual";
 import sum from "lodash/sum";
 import ReactList from "react-list";
 import findLastIndex from "lodash/findLastIndex";
+import flattenTree from "@1studio/utils/array/flattenTree";
+import filterTree from "@1studio/utils/array/filterTree";
 
 /* !- React Actions */
 
@@ -21,11 +23,17 @@ import GridRowCheckboxHeader from "./gridRowCheckboxHeader";
 
 /* !- Constants */
 
-import { FORM_PREFIX, SHORTCUTS_NAME, COL_POSTFIX } from "../constants";
+import {
+  FORM_PREFIX,
+  SHORTCUTS_NAME,
+  COL_POSTFIX,
+  EXPANDED_POSTFIX,
+} from "../constants";
 
 /* !- React Elements */
 
 import Sortable from "../../dragAndDrop/sortable";
+import IconArrow from "../../icon/mui/navigation/expand_more";
 
 /* !- Types */
 
@@ -268,6 +276,38 @@ type PropTypes = Partial<typeof defaultProps> & {
    * opened from, when the grid comes back
    */
   highlight?: Array<string | number>;
+  /**
+   * Tree mode: the records are nested by the parent key (id / pid), only the rows of
+   * the open nodes are visible and the keyboard navigation steps these rows.
+   * Left / right arrow: close / open the node, step to the parent / first child
+   * (instead of colSelect). The open nodes are stored in redux form: `grid@<id>@expanded`
+   * @example
+   * <Grid id="menu" data={[{ id: 1, title: 'A' }, { id: 2, pid: 1, title: 'A.1' }]} tree selectable />
+   * <Grid tree={{ parentKey: 'parentId', column: 'title', expanded: [1] }} />
+   */
+  tree?:
+    | boolean
+    | {
+        /**
+         * Parent id field of the record, default `pid`
+         */
+        parentKey?: string;
+        /**
+         * Indented column with the open / close arrow, default the first column
+         */
+        column?: string;
+        /**
+         * Initially open nodes (before the first toggle), true: every node
+         */
+        expanded?: Array<string | number> | true;
+        /**
+         * Search: only the matched records and their ancestors are visible (the
+         * ancestors open automatically and are faded). Keep the identity (useCallback)
+         * @example
+         * filter: ({ title }) => title.toLowerCase().includes(query)
+         */
+        filter?: (record: {}) => boolean;
+      };
 };
 
 /**
@@ -356,6 +396,7 @@ export const Grid = ({
   infinity,
   shortcuts,
   highlight,
+  tree,
 }: PropTypes) => {
   const dispatch = useDispatch();
   const { store } = useContext(ReactReduxContext);
@@ -445,6 +486,122 @@ export const Grid = ({
   const shortcutsName = gridId ? `${SHORTCUTS_NAME}-${gridId}` : SHORTCUTS_NAME;
 
   /**
+   * Tree mode: the visible rows of the open nodes
+   */
+  const treeOptions = tree ? (tree === true ? {} : tree) : undefined;
+  const expandedFormId = formId + EXPANDED_POSTFIX;
+
+  const expandedIds = useSelector(({ form }) =>
+    tree ? form[expandedFormId] : undefined,
+  );
+
+  /**
+   * Tree search: the matches with their ancestors
+   */
+  const treeFilter = treeOptions?.filter;
+
+  const filtered = useMemo(
+    () =>
+      treeOptions && typeof treeFilter === "function"
+        ? filterTree(data, treeFilter, { parentKey: treeOptions.parentKey })
+        : undefined,
+    [data, treeFilter, treeOptions?.parentKey],
+  );
+
+  const treeMatches = useMemo(
+    () => filtered && new Set(filtered.matches),
+    [filtered],
+  );
+
+  const treeNodes = useMemo(
+    () =>
+      treeOptions
+        ? flattenTree(filtered ? filtered.records : data, {
+            expanded: expandedIds || treeOptions.expanded || [],
+            parentKey: treeOptions.parentKey,
+          })
+        : undefined,
+    [
+      data,
+      filtered,
+      expandedIds,
+      !!tree,
+      treeOptions?.parentKey,
+      treeOptions?.expanded,
+    ],
+  );
+
+  const treeNodesById = useMemo(
+    () =>
+      (treeNodes || []).reduce((result, node) => {
+        result[node.record.id] = node;
+        return result;
+      }, {}),
+    [treeNodes],
+  );
+
+  const rows = useMemo(
+    () => (treeNodes ? treeNodes.map(({ record }) => record) : data),
+    [treeNodes, data],
+  );
+
+  /**
+   * the keyboard handlers are registered on focus: they read the current rows from refs
+   */
+  const treeNodesRef = useRef(treeNodes);
+  const rowsRef = useRef(rows);
+  const treeDataRef = useRef(data);
+  treeNodesRef.current = treeNodes;
+  rowsRef.current = rows;
+  treeDataRef.current = data;
+
+  /**
+   * Tree search: while searching the open nodes = the open nodes before the search + the
+   * path of the matches (recalculated on every change, not accumulated).
+   * After the search the previous state comes back + the path of the selected rows
+   * (the found record stays visible)
+   */
+  const preSearchExpandedRef = useRef<Array<string | number> | null>(null);
+  const treeSearchKey = filtered ? `search:${filtered.parents.join(",")}` : "";
+
+  useEffect(() => {
+    if (!tree) {
+      return;
+    }
+
+    const isSearching = preSearchExpandedRef.current !== null;
+
+    if (!filtered && !isSearching) {
+      return;
+    }
+
+    if (!isSearching) {
+      preSearchExpandedRef.current = getExpandedIds();
+    }
+
+    const baseIds = preSearchExpandedRef.current;
+
+    const openIds = filtered
+      ? filtered.parents
+      : getAncestorIds(store.getState().form[formId] || []);
+
+    if (!filtered) {
+      preSearchExpandedRef.current = null;
+    }
+
+    const value = [
+      ...baseIds,
+      ...openIds.filter(
+        (id) => !baseIds.some((baseId) => String(baseId) === String(id)),
+      ),
+    ];
+
+    // after the commit (before the paint): a dispatch inside the commit makes the
+    // flushSync of the form fields (formField onChangeListener) invalid
+    queueMicrotask(() => dispatch(setValues({ id: expandedFormId, value })));
+  }, [treeSearchKey]);
+
+  /**
    * Rows of table is clickable
    * @type {Boolean}
    */
@@ -485,6 +642,11 @@ export const Grid = ({
   };
 
   /**
+   * Rows of the keyboard navigation: in tree mode only the visible rows
+   */
+  const getNavData = () => (treeNodesRef.current ? rowsRef.current : getData());
+
+  /**
    * If the grid is selectable, watch the selected items in Redux form state
    * and automatically scroll the grid to keep the last selected item visible.
    */
@@ -498,7 +660,7 @@ export const Grid = ({
       if (prevSelectedItemId.current !== nextSelectedItemId) {
         prevSelectedItemId.current = nextSelectedItemId;
 
-        const nextSelectedItemIndex = getData().findIndex(
+        const nextSelectedItemIndex = getNavData().findIndex(
           ({ id }) => id === nextSelectedItemId,
         );
 
@@ -551,7 +713,7 @@ export const Grid = ({
       event.preventDefault();
 
       const activeRecords: number[] = store.getState().form[formId];
-      const gridData = getData();
+      const gridData = getNavData();
 
       let nextActiveRecord;
 
@@ -618,12 +780,144 @@ export const Grid = ({
     event.preventDefault();
     event.stopPropagation();
 
-    const gridData = getData();
+    const gridData = getNavData();
 
     if (gridData) {
       setActiveRecords(gridData);
     }
   };
+
+  /**
+   * Tree mode: ids of the open nodes (redux form, before the first toggle the `expanded` option)
+   */
+  const getExpandedIds = (): Array<string | number> => {
+    const stored = store.getState().form[expandedFormId];
+
+    if (stored) {
+      return stored;
+    }
+
+    if (treeOptions?.expanded === true) {
+      const parentKey = treeOptions.parentKey || "pid";
+      const parentIds = new Set(
+        treeDataRef.current.map((record) => String(record[parentKey])),
+      );
+
+      return treeDataRef.current
+        .filter(({ id }) => parentIds.has(String(id)))
+        .map(({ id }) => id);
+    }
+
+    return treeOptions?.expanded || [];
+  };
+
+  /**
+   * Tree mode: ids of the ancestors of the records (the nodes to open to show them)
+   */
+  const getAncestorIds = (ids: Array<string | number>) => {
+    const parentKey = treeOptions?.parentKey || "pid";
+    const byId = {};
+
+    treeDataRef.current.forEach((record) => {
+      byId[String(record.id)] = record;
+    });
+
+    const results: Array<string | number> = [];
+    const visited = new Set<string>();
+
+    ids.forEach((id) => {
+      let parent = byId[String(byId[String(id)]?.[parentKey])];
+
+      while (parent && !visited.has(String(parent.id))) {
+        visited.add(String(parent.id));
+        results.push(parent.id);
+        parent = byId[String(parent[parentKey])];
+      }
+    });
+
+    return results;
+  };
+
+  /**
+   * Tree mode: open / close a node. If the closed node hides the selection, the node
+   * itself will be selected
+   */
+  const setExpanded = (id: string | number, isOpen: boolean) => {
+    const nodes = treeNodesRef.current || [];
+
+    const ids = getExpandedIds().filter((i) => String(i) !== String(id));
+
+    dispatch(
+      setValues({
+        id: expandedFormId,
+        value: isOpen ? [...ids, id] : ids,
+      }),
+    );
+
+    if (!isOpen && selectable) {
+      const index = nodes.findIndex(({ record }) => record.id === id);
+      const descendants = [];
+
+      for (
+        let i = index + 1;
+        index !== -1 && i < nodes.length && nodes[i].level > nodes[index].level;
+        i += 1
+      ) {
+        descendants.push(nodes[i].record.id);
+      }
+
+      const activeRecords: number[] = store.getState().form[formId] || [];
+
+      if (activeRecords.some((activeId) => descendants.includes(activeId))) {
+        setActiveRecords(nodes[index].record);
+      }
+    }
+  };
+
+  /**
+   * Tree mode: KeyDown Arrow Left and Right
+   * right: open the node / step to the first child
+   * left: close the node / step to the parent
+   * @param  {integer} direction +1 or -1
+   */
+  const onKeyTreeArrowHandler =
+    (direction: number) => (event: KeyboardEvent) => {
+      event.preventDefault();
+
+      const nodes = treeNodesRef.current || [];
+      const activeRecords: number[] = store.getState().form[formId];
+
+      if (!activeRecords || activeRecords.length === 0) {
+        return onKeyVerticalArrowHandler(1)(event);
+      }
+
+      const index = nodes.findIndex(
+        ({ record }) => record.id === activeRecords[activeRecords.length - 1],
+      );
+      const node = nodes[index];
+
+      if (!node) {
+        return false;
+      }
+
+      if (direction > 0) {
+        if (node.hasChildren && !node.isExpanded) {
+          setExpanded(node.record.id, true);
+        } else if (node.isExpanded && nodes[index + 1]) {
+          setActiveRecords(nodes[index + 1].record);
+        }
+      } else if (node.isExpanded) {
+        setExpanded(node.record.id, false);
+      } else if (node.parentId !== undefined) {
+        const parent = nodes.find(({ record }) => record.id === node.parentId);
+
+        if (parent) {
+          setActiveRecords(parent.record);
+        }
+      }
+
+      return true;
+    };
 
   const setActiveRecords = (records: any[]) => {
     const recordsArray = Array.isArray(records) ? records : [records];
@@ -685,9 +979,11 @@ export const Grid = ({
         },
         {
           keyCode: "ArrowLeft",
-          handler: colSelect
-            ? onKeyHorizontalArrowHandler(-1)
-            : onKeyVerticalArrowHandler(-1),
+          handler: tree
+            ? onKeyTreeArrowHandler(-1)
+            : colSelect
+              ? onKeyHorizontalArrowHandler(-1)
+              : onKeyVerticalArrowHandler(-1),
           description: "Grid Arrow Left",
         },
         {
@@ -697,9 +993,11 @@ export const Grid = ({
         },
         {
           keyCode: "ArrowRight",
-          handler: colSelect
-            ? onKeyHorizontalArrowHandler(+1)
-            : onKeyVerticalArrowHandler(+1),
+          handler: tree
+            ? onKeyTreeArrowHandler(+1)
+            : colSelect
+              ? onKeyHorizontalArrowHandler(+1)
+              : onKeyVerticalArrowHandler(+1),
           description: "Grid Arrow Right",
         },
       ];
@@ -879,6 +1177,35 @@ export const Grid = ({
       });
     }
 
+    // tree mode: indent + open / close arrow
+    const node = treeNodes && treeNodesById[record.id];
+
+    if (node && column === (treeOptions.column || getColumns()[0])) {
+      value = (
+        <div
+          className={classNames("grid-tree-cell", {
+            "grid-tree-context": treeMatches && !treeMatches.has(record.id),
+          })}
+          style={{ "--tree-level": node.level } as React.CSSProperties}
+        >
+          {node.hasChildren ? (
+            <IconArrow
+              className={classNames("grid-tree-toggle", {
+                open: node.isExpanded,
+              })}
+              onClick={(event) => {
+                event.stopPropagation();
+                setExpanded(record.id, !node.isExpanded);
+              }}
+            />
+          ) : (
+            <span className="grid-tree-toggle" />
+          )}
+          <div className="grow">{value}</div>
+        </div>
+      );
+    }
+
     return (
       <div
         key={column}
@@ -948,6 +1275,7 @@ export const Grid = ({
     const nodeTableRowColumns = columns.map((column) =>
       selectable
         ? React.createElement(ConnectedCell, {
+            key: column,
             renderCell,
             record,
             index,
@@ -986,7 +1314,7 @@ export const Grid = ({
 
             if (event.shiftKey) {
               const grid = store.getState().grid[gridId];
-              const gridData = grid ? grid.data : data;
+              const gridData = treeNodes ? rows : grid ? grid.data : data;
               const index = gridData.findIndex(({ id }) => id === record.id);
 
               const min = Math.min(
@@ -1096,7 +1424,7 @@ export const Grid = ({
    * @return {ReactElement} Table Row dom node
    */
   const renderRows = () => {
-    if (Array.isArray(data) && data.length) {
+    if (Array.isArray(rows) && rows.length) {
       const columns = getColumns();
 
       let nodeTableRows;
@@ -1104,13 +1432,13 @@ export const Grid = ({
       if (infinity) {
         nodeTableRows = (
           <ReactList
-            length={data.length}
-            itemRenderer={(index) => renderRow(data[index], index, columns)}
+            length={rows.length}
+            itemRenderer={(index) => renderRow(rows[index], index, columns)}
             type="uniform"
           />
         );
       } else {
-        nodeTableRows = data.map((record, index) =>
+        nodeTableRows = rows.map((record, index) =>
           renderRow(record, index, columns),
         );
       }
