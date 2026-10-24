@@ -153,6 +153,11 @@ const Coordinate: React.FC<PropTypes> = (
     yAxisValues: [],
   };
 
+  // constant series (e.g. every value is 0): zero height range -> NaN coordinates
+  if (canvas.yAxisValueMax === canvas.yAxisValueMin) {
+    canvas.yAxisValueMax = canvas.yAxisValueMin + 1;
+  }
+
   canvas.xAxisValueDiff = canvas.xAxisValueMax - canvas.xAxisValueMin;
   canvas.yAxisValueDiff = canvas.yAxisValueMax - canvas.yAxisValueMin;
 
