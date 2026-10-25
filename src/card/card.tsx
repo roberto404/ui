@@ -72,6 +72,11 @@ type PropTypes = Partial<typeof defaultProps> & {
   heading?: number,
   color?: string,
   button?: string,
+  /**
+   * real pixel size of the image -> browser reserves the space before load (no layout shift)
+   */
+  imageWidth?: number,
+  imageHeight?: number,
 };
 
 
@@ -100,7 +105,11 @@ const Card = ({
   primary = false,
   item,
   isWideScreen = false,
+  imageWidth,
+  imageHeight,
 }: PropTypes) => {
+
+  const hasImageSize = imageWidth > 0 && imageHeight > 0;
 
   const { store } = useContext(ReactReduxContext);
   const dispatch = useDispatch();
@@ -249,10 +258,13 @@ const Card = ({
           }
           {ext !== 'mp4' &&
             <img
-              className="block m-auto w-auto h-auto"
+              className={classNames({
+                'block m-auto h-auto': true,
+                'w-auto': !hasImageSize,
+              })}
               src={image}
-              width="auto"
-              height="auto"
+              width={hasImageSize ? imageWidth : 'auto'}
+              height={hasImageSize ? imageHeight : 'auto'}
               style={{
                 maxWidth: '100%',
                 maxHeight: '100%',
