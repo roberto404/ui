@@ -216,6 +216,7 @@ const GridMultiSelect = ({
               {
                 items.map(item => (
                   <Item
+                    key={item.id}
                     formId={id}
                     {...item}
                     onClick={onClickFilterHandler}

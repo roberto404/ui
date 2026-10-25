@@ -344,14 +344,11 @@ export const Grid = ({
 
       // componentDidMount
 
-      // if (disableWillMount === true) {
-
       const nextSettings = getSettings();
 
       if (!isEmpty(settings) || data.length) {
         dispatch(setData(data, settings, getId()));
       }
-      // }
 
       // fetchDataViaApi();
 
