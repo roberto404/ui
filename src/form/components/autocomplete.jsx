@@ -232,7 +232,7 @@ class Autocomplete extends Component {
           filter === false
           || !term
           || (typeof filter === 'function' ?
-            filter(record, term) : record.title.toString().toLowerCase().indexOf(term) !== -1)
+            filter(record, term) : String(record.title ?? '').toLowerCase().indexOf(term) !== -1)
         )
       );
   }
@@ -254,7 +254,7 @@ class Autocomplete extends Component {
     if (!this.props.multiple && typeof selectedValue === 'string' && selectedValue) {
       const records = this.getMatchedRecords('');
       const value = selectedValue.toLowerCase();
-      const index = records.findIndex(record => record.title.toString().toLowerCase() === value);
+      const index = records.findIndex(record => String(record.title ?? '').toLowerCase() === value);
 
       if (index !== -1) {
         return { records, items: this.getMenuItems('', records, index + 1), term: '', index, isSelected: true };
@@ -282,9 +282,9 @@ class Autocomplete extends Component {
     }
 
     const term = inputValue.toLowerCase();
-    const item = this.props.data.find(record => record.title.toString().toLowerCase().indexOf(term) === 0);
+    const item = this.props.data.find(record => String(record.title ?? '').toLowerCase().indexOf(term) === 0);
 
-    return item ? item.title.toString() : '';
+    return item ? String(item.title) : '';
   }
 
 
