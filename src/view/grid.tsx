@@ -44,6 +44,7 @@ const defaultProps =
   flushFiltersUnmount: true,
   style: {},
   fetchPreload: false,
+  preloader: true,
 };
 
 type PropTypes = Partial<typeof defaultProps> & {
@@ -126,6 +127,10 @@ type PropTypes = Partial<typeof defaultProps> & {
    */
   recordParser: {},
   fetchPreload: boolean,
+  /**
+   * Show the layer preloader while loading (false: e.g. the view renders its own skeleton)
+   */
+  preloader: boolean,
 }
 
 
@@ -184,6 +189,7 @@ export const Grid = ({
   data = [],
   fetchPreload,
   onLayer,
+  preloader = true,
   query,
   header,
   onLoad,
@@ -431,7 +437,7 @@ export const Grid = ({
   /* !- Handlers */
 
   const onLoadHandler = (isPreloaded = false) => () => {
-    if (!onLayer) {
+    if (!onLayer && preloader) {
       dispatch(preload());
     }
 
@@ -445,7 +451,7 @@ export const Grid = ({
           if (response.modal) {
             dispatch(modal(response.modal));
           }
-          else if (store.getState().layer.method === 'preload') {
+          else if (preloader && store.getState().layer.method === 'preload') {
             dispatch(close());
           }
         }

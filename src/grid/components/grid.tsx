@@ -430,7 +430,9 @@ export const Grid = ({
     }
 
     // új elem érkezett → ID keresése
-    const added = newIds.filter((id) => !prevIds.includes(id));
+    // Set: nagy listánál (több ezer új sor) az includes négyzetes
+    const prevIdSet = new Set(prevIds);
+    const added = newIds.filter((id) => !prevIdSet.has(id));
 
     if (added.length > 0) {
       // @todo limit loader

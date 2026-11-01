@@ -140,12 +140,20 @@ const reducers = (state = {}, action = {}) => {
         }
 
         const data = [...model.data];
-        const ids = data.map(({ id }) => id);
+        // id → első előfordulás indexe (indexOf helyett, különben nagy listánál négyzetes)
+        const indexById = new Map();
+
+        data.forEach(({ id }, index) => {
+          if (!indexById.has(id)) {
+            indexById.set(id, index);
+          }
+        });
 
         action.records.forEach((record) => {
-          const index = ids.indexOf(record.id);
+          const index = indexById.get(record.id);
 
-          if (index === -1) {
+          if (index === undefined) {
+            indexById.set(record.id, data.length);
             data.push(record);
           }
           else {
