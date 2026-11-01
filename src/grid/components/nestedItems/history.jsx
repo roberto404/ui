@@ -7,6 +7,7 @@ import classNames from 'classnames';
 /* !- React Elements */
 
 import IconCheck from '../../../icon/mui/navigation/check';
+import HistoryChanges from './historyChanges';
 
 
 /* !- Constants */
@@ -55,6 +56,44 @@ const MessageGroup = ({ title, level, children }) => {
 
   /* messages */
   return <div>{children}</div>;
+};
+
+/**
+ * Field name from the dictionary: `<model>.field.<field>` (e.g. `products.field.price_purchase`),
+ * then the general `field.<field>` (e.g. `field.city`), at last the field itself
+ */
+const fieldTitle = (intl, model, field) =>
+{
+  const messages = intl.messages || {};
+  const id = [`${(model || '').toLowerCase()}.field.${field}`, `field.${field}`]
+    .find(key => messages[key] !== undefined);
+
+  return id ? intl.formatMessage({ id }) : field;
+};
+
+/**
+ * Title of a log entry without a caller title:
+ * create / delete, update: "Módosítás" or with one field "<Mező> módosítás"
+ */
+const getAutoTitle = (intl, model, crud, fields) =>
+{
+  if (crud === 'C') {
+    return 'Létrehozás';
+  }
+
+  if (crud === 'D') {
+    return 'Törlés';
+  }
+
+  if (crud !== 'U') {
+    return '';
+  }
+
+  if (fields.length === 1) {
+    return `${fieldTitle(intl, model, fields[0])} módosítás`;
+  }
+
+  return 'Módosítás';
 };
 
 /**
@@ -110,13 +149,34 @@ const History = ({
   let message = items.message || '';
   let tag = items.tag || [];
 
-  if (!tag.length && Array.isArray(recordFields)) {
-    tag = recordFields.map(field => ({
-      title: intl.formatMessage({ id: `${model.toLowerCase()}.field.${field}` }),
-      className: 'bg-gray-light',
-    }));
+  // only the changes (prepared by the caller from the previous snapshot)
+  const changes = Array.isArray(items.changes) && items.changes.length ?
+    items.changes.map(change => ({ ...change, title: change.title ?? fieldTitle(intl, model, change.field) })) :
+    null;
 
-    if (!message) {
+  // `changes: []` = computed, nothing really changed (ex. saved again): only the field names
+  const isDiffed = Array.isArray(items.changes);
+
+  // changed fields: the computed changes, otherwise the logged field list
+  const changedFields = changes ? changes.map(({ field }) => field) : (Array.isArray(recordFields) ? recordFields : []);
+
+  // no title from the caller: "Módosítás", one field "<Mező> módosítás" (then no field label below)
+  const isSingleField = !title && crud === 'U' && changedFields.length === 1;
+  const autoTitle = title ? '' : getAutoTitle(intl, model, crud, changedFields);
+
+  if (changes) {
+    tag = [];
+  }
+
+  if (!changes && !items.tag?.length && Array.isArray(recordFields)) {
+    if (!isSingleField) {
+      tag = recordFields.map(field => ({
+        title: fieldTitle(intl, model, field),
+        className: 'bg-gray-light',
+      }));
+    }
+
+    if (!message && !isDiffed) {
       message = recordFields.map(field => formatIfDate(record[field])).join(', ');
     }
   }
@@ -154,7 +214,7 @@ const History = ({
         {icon}
 
         <div className="bold zoom-1.1 grow pr-1 pl-1 firstcase">
-          {title && intlRegex.test(title) ? intl.formatMessage({ id: title }) : title}
+          {title && intlRegex.test(title) ? intl.formatMessage({ id: title }) : (title || autoTitle)}
         </div>
 
         <div className="light text-xs text-gray text-right">
@@ -182,9 +242,13 @@ const History = ({
           ))}
         </div>
 
-        <div className="pb-1 mt-1/2 italic text-s" style={{ whiteSpace: 'normal', overflowWrap: 'break-word' }}>
-          {message}
-        </div>
+        {changes && <HistoryChanges changes={changes} hideTitles={isSingleField} className="pb-1" />}
+
+        {(message || !changes) &&
+          <div className="pb-1 mt-1/2 italic text-s" style={{ whiteSpace: 'normal', overflowWrap: 'break-word' }}>
+            {message}
+          </div>
+        }
 
       </div>
     </div>

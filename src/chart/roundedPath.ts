@@ -91,7 +91,7 @@ const roundPathCorners = (pathString: string, radius: number, useFractionalRadiu
   const commands = getPathCommands(pathString);
   
   // Az eredményül kapott parancsok, szintén csoportosítva
-  const resultCommands = [];
+  let resultCommands = [];
   
   // Ha több mint egy parancs van
   if (commands.length > 1) {
