@@ -24,6 +24,7 @@ import Collection from './components/collection';
 import Autocomplete from './components/autocomplete';
 import { AutocompleteMenuHeader, AutocompleteMenuFooter, AutocompleteMenuRow } from './components/autocompleteMenu';
 import Segment from './components/segment';
+import LinkedInput from './components/linkedInput';
 
 
 export {
@@ -54,6 +55,7 @@ export {
   AutocompleteMenuFooter,
   AutocompleteMenuRow,
   Segment,
+  LinkedInput,
 };
 
 export default Form;

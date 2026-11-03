@@ -1,0 +1,114 @@
+/*
+  Két összekapcsolt szám-mező (pl. Ft ⇄ %, cm ⇄ col)
+  Component: src/form/components/linkedInput.tsx
+
+  A keret a közös `.linked-input` dobozon van, a két input keret nélküli,
+  középen ferde `.linked-input-separator` sáv az átváltás ikonnal.
+ */
+
+.field.linked-input-field
+{
+  .linked-input
+  {
+    @extend .rounded;
+    display: flex;
+    align-items: stretch;
+    overflow: hidden;
+    border: 1px solid $gray-light;
+    background-color: $white-light;
+
+    &:focus-within
+    {
+      border-color: $blue-dark;
+    }
+  }
+
+  .linked-input-side
+  {
+    display: flex;
+    align-items: center;
+    flex: 1 1 0;
+    min-width: 0;
+    cursor: text;
+  }
+
+  .linked-input input:not([type="radio"]):not([type="checkbox"])
+  {
+    flex-grow: 1;
+    min-width: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+
+    &:focus,
+    &:disabled
+    {
+      border: 0;
+      background: transparent;
+    }
+  }
+
+  .prefix,
+  .postfix
+  {
+    flex-shrink: 0;
+    font-size: .85em;
+    color: $gray;
+    white-space: nowrap;
+  }
+
+  .prefix
+  {
+    padding: 0 0 0 1em;
+  }
+
+  .postfix
+  {
+    padding: 0 1em 0 0;
+  }
+
+  .linked-input-separator
+  {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 4em;
+
+    // ferde sáv: a doboz overflow:hidden-je vágja le a tetejét/alját
+    &:before
+    {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: $blue-light;
+      transform: skewX(-15deg);
+    }
+
+    svg
+    {
+      position: relative;
+      width: 1.5em;
+      height: 1.5em;
+      fill: $blue-dark;
+    }
+  }
+
+  &.disabled .linked-input
+  {
+    background-color: $white;
+
+    .linked-input-side
+    {
+      cursor: default;
+    }
+
+    .linked-input-separator svg
+    {
+      fill: $gray;
+    }
+  }
+}
