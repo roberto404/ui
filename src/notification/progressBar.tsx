@@ -11,23 +11,26 @@ import React, { useEffect, useState } from 'react';
 
 /* !-- Types */
 
-import type { PropTypes as ItemPropTypes } from './item';
-
 export type PropTypes = {
   percent?: number,
-  color?: ItemPropTypes['color'];
+  /** másodperc: 0 → 100% alatt fut végig, a végén `onClose` */
   percentTime?: number;
-  onClose: () => void,
+  /** a kártya alján futó vékony visszaszámláló */
+  timer?: boolean;
+  /** százalék felirat a sáv mellett */
+  label?: boolean;
+  onClose?: () => void,
 };
 
 
 /**
-*
+* Progress sáv; színe a tónus `--notification-accent` változója.
 */
 const NotificationProgressBar = ({
   percent = 0,
   percentTime,
-  color = 'green',
+  timer = false,
+  label = false,
   onClose,
 }: PropTypes) => {
 
@@ -36,11 +39,12 @@ const NotificationProgressBar = ({
   useEffect(() => {
     if (!percentTime) {
       setInternalPercent(percent);
-      return;
+      return undefined;
     }
 
     setInternalPercent(0); // indulás
     const start = Date.now();
+    let raf: number;
 
     const tick = () => {
       const elapsed = Date.now() - start;
@@ -48,36 +52,38 @@ const NotificationProgressBar = ({
       setInternalPercent(newPercent);
 
       if (newPercent < 100) {
-        requestAnimationFrame(tick);
+        raf = requestAnimationFrame(tick);
       }
-      else {
+      else if (onClose) {
         onClose();
       }
     };
 
-    const raf = requestAnimationFrame(tick);
+    raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [percentTime, percent]);
 
-  return (
-    <div
-      className='full bg-white rounded-button'
-      style={{
-        height: '5px',
-        borderBottomLeftRadius: '10rem',
-        borderBottomRightRadius: '10rem',
-        overflow: 'hidden',
-      }}
-    >
+  const bar = (
+    <div className={timer ? 'notification-timer' : 'notification-progress'}>
       <div
-        key="progress-bar"
-        className={`h-full bg-${color}-dark`}
+        className='notification-progress-bar'
         style={{
           width: `${internalPercent}%`,
-          borderTopRightRadius: internalPercent === 100 ? '0' : '20px',
-          transition: !percentTime ? 'width 0.5s linear' : '',
+          transition: !percentTime ? 'width 0.5s linear' : undefined,
         }}
       />
+    </div>
+  );
+
+  if (!label) {
+    return bar;
+  }
+
+  return (
+    <div className='h-center gap-2 mt-1/2'>
+      {bar}
+      <div className='notification-title text-s nowrap'>{`${Math.round(internalPercent)}%`}</div>
     </div>
   );
 }

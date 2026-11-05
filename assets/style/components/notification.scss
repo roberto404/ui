@@ -1,0 +1,266 @@
+// Notification (ui/src/notification): kártya, ikon-doboz, címke, gombok, progress.
+// Szín: a `color` prop tónus-osztályt ad (.blue/.red/...), a `colors` prop a CSS változókat írja felül.
+// A változók öröklődnek: egy belső elem tónus-osztálya (pl. api válasz → .green) csak a saját részét színezi át.
+
+@mixin notification-tone($accent, $soft, $text)
+{
+  --notification-accent: #{$accent};
+  --notification-soft: #{$soft};
+  --notification-text: #{$text};
+}
+
+.notification-item,
+.notification-tone
+{
+  @include notification-tone($blue-dark, $blue-light, darken($blue-dark, 8%));
+
+  &.blue { @include notification-tone($blue-dark, $blue-light, darken($blue-dark, 8%)); }
+  &.red { @include notification-tone($red-dark, $red-light, darken($red-dark, 14%)); }
+  &.green { @include notification-tone($green-dark, $green-light, darken($green-dark, 12%)); }
+  &.yellow { @include notification-tone($yellow-dark, $yellow-light, darken($yellow-dark, 22%)); }
+  &.black,
+  &.gray { @include notification-tone($black, $gray-light, $black); }
+}
+
+.notification-item
+{
+  --notification-background: #{$white-light};
+  --notification-border: #{$gray-light};
+  --notification-title: #{$black};
+  --notification-caption: #{$gray-dark};
+  // --notification-icon-background / --notification-badge-background: nincs alapértéke,
+  // így egy belső tónus (--notification-soft) is átszínezi őket
+
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--notification-border);
+  border-radius: 10px;
+  background-color: var(--notification-background);
+  box-shadow: 0 4px 16px rgba(37, 38, 49, .06), 0 1px 2px rgba(37, 38, 49, .04);
+}
+
+.notification-icon
+{
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5em;
+  height: 3.5em;
+  border-radius: .9em;
+  background-color: var(--notification-icon-background, var(--notification-soft));
+
+  svg
+  {
+    width: 1.6em;
+    height: 1.6em;
+    fill: var(--notification-accent);
+
+    path { fill: var(--notification-accent); }
+  }
+}
+
+// animált pipa (iconCheckmark): körvonal, nem kitöltés
+.notification-icon .notification-checkmark path
+{
+  fill: none;
+  stroke: var(--notification-accent);
+}
+
+.notification-item.centered .notification-icon .notification-checkmark path
+{
+  fill: none;
+  stroke: $white-light;
+}
+
+.notification-badge
+{
+  display: inline-block;
+  padding: .35em .8em;
+  border-radius: 2em;
+  background-color: var(--notification-badge-background, var(--notification-soft));
+  color: var(--notification-text);
+  font-size: .7em;
+  font-weight: bold;
+  letter-spacing: .08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.notification-title
+{
+  color: var(--notification-title);
+  font-size: 1.175em;
+  font-weight: bold;
+  line-height: 1.25;
+}
+
+.notification-caption,
+.notification-hint
+{
+  color: var(--notification-caption);
+  line-height: 1.4;
+}
+
+.notification-caption { font-size: .85em; }
+.notification-hint { font-size: .8em; }
+
+.notification-close
+{
+  position: absolute;
+  top: .75em;
+  right: .75em;
+  width: 2em;
+  height: 2em;
+  padding: .4em;
+  border-radius: 100%;
+  cursor: pointer;
+  transition: background-color .2s;
+
+  path { fill: $gray-dark; }
+
+  &:hover
+  {
+    background-color: rgba(37, 38, 49, .06);
+
+    path { fill: $black; }
+  }
+}
+
+
+/* !- Button */
+
+.notification-button
+{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5em;
+  padding: .7em 1.3em;
+  border: 1px solid transparent;
+  border-radius: .5em;
+  font-size: .9em;
+  font-weight: bold;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color .2s, filter .2s, opacity .2s;
+
+  svg
+  {
+    width: 1.3em;
+    height: 1.3em;
+    fill: currentColor;
+
+    path { fill: currentColor; }
+  }
+
+  &.primary
+  {
+    background-color: var(--notification-accent);
+    color: $white-light;
+
+    &:hover { filter: brightness(.92); }
+  }
+
+  &.outline
+  {
+    border-color: var(--notification-accent);
+    background-color: $white-light;
+    color: var(--notification-text);
+
+    &:hover { background-color: var(--notification-soft); }
+  }
+
+  &.secondary
+  {
+    border-color: var(--notification-border);
+    background-color: $white-light;
+    color: var(--notification-title);
+
+    &:hover { background-color: $white-dark; }
+  }
+
+  &.disabled
+  {
+    opacity: .45;
+    cursor: default;
+    pointer-events: none;
+  }
+}
+
+
+/* !- Progress */
+
+.notification-progress
+{
+  flex-grow: 1;
+  height: 6px;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: $gray-light;
+}
+
+.notification-progress-bar
+{
+  height: 100%;
+  border-radius: inherit;
+  background-color: var(--notification-accent);
+}
+
+// automatikus bezárás visszaszámlálója a kártya alján
+.notification-timer
+{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  background-color: $gray-light;
+
+  .notification-progress-bar { border-radius: 0; }
+}
+
+.notification-spinner
+{
+  width: 1.6em;
+  height: 1.6em;
+  border: .2em solid rgba(37, 38, 49, .1);
+  border-top-color: var(--notification-accent);
+  border-radius: 100%;
+  animation: spin .9s infinite linear;
+}
+
+
+/* !- Centered */
+
+.notification-item.centered
+{
+  text-align: center;
+
+  .notification-icon
+  {
+    width: 3em;
+    height: 3em;
+    margin: .5em;
+    border-radius: 100%;
+    background-color: var(--notification-accent);
+    box-shadow: 0 0 0 .5em var(--notification-soft);
+
+    svg
+    {
+      width: 1.4em;
+      height: 1.4em;
+      fill: $white-light;
+
+      path { fill: $white-light; }
+    }
+  }
+
+  .notification-button
+  {
+    min-width: 60%;
+    border-radius: 2em;
+  }
+}

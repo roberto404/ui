@@ -4,7 +4,7 @@ import React from 'react';
 
 /* !- React Elements */
 
-import IconError from '../icon/mui/alert/error';
+import IconError from '../icon/mui/alert/error-outline';
 import { IconCheckmarkWrapper } from './iconCheckmark';
 import ItemApiMessage from './itemApiMessage';
 
@@ -65,7 +65,8 @@ export const dialog = (item: DialogItem) => {
 
   const normalizedButtons = [
     ...buttons,
-    ...[buttonSecondary, button].filter(Boolean),
+    ...(buttonSecondary ? [{ variant: 'secondary', ...buttonSecondary }] : []),
+    ...(button ? [{ variant: 'primary', ...button }] : []),
   ] as Button[];
 
   if (normalizedButtons.length < 1) {
@@ -76,13 +77,14 @@ export const dialog = (item: DialogItem) => {
     normalizedButtons.push({
       title: 'Mégsem',
       handler: (onClose) => onClose(),
-      className: 'button outline p-1/2',
+      variant: 'secondary',
     });
   }
 
   return add({
     closeOnChangeLocation: true,
     color: 'red',
+    badge: 'Megerősítés',
     autoClose,
     Icon: icon || IconError,
     ...props,
@@ -95,6 +97,7 @@ export const error = (item: Item | string) => {
 
   const errorItem = {
     color: 'red',
+    badge: 'Hiba',
     autoClose: true,
     Icon: IconError,
     title: (typeof item === 'string' ? item : ''),
@@ -118,6 +121,7 @@ export const addProgress = (item: Item) =>
   type: 'ADD_NOTIFICATION',
   item: {
     template: TemplatesType.ItemProgress,
+    badge: 'Folyamatban',
     disableClose: true,
     closeOnChangeLocation: true,
     ...item,
@@ -129,7 +133,8 @@ export const addComplete = (item: Item) =>
   type: 'ADD_NOTIFICATION',
   item: {
     closeOnChangeLocation: true,
-    color: 'black',
+    color: 'green',
+    badge: 'Sikeres',
     autoClose: true,
     Icon: IconCheckmarkWrapper,
     ...item,

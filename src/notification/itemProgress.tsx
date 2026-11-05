@@ -6,9 +6,8 @@ import React, { useEffect, useRef, useState } from 'react';
 /* !-- Components */
 
 import IconAnimatedCheckmark from './iconCheckmark';
-import Preload from '../layer/preload';
-import PreloadIcon from '../icon/preload';
 import ProgressBar from './progressBar';
+import NotificationLayout from './layout';
 
 
 /* !-- Constants */
@@ -19,12 +18,13 @@ import ProgressBar from './progressBar';
 export type PropTypes = {
   title: string | Record<number, string>,
   percent: number,
-  caption?: string,
+  caption?: string | ((state: { percent: number, remaining: number | null }) => React.ReactNode),
+  badge?: React.ReactNode,
+  /** címke 100%-nál */
+  badgeComplete?: React.ReactNode,
   onClose?: () => void,
 };
 
-
-// // caption="1.2Gb • About 2 seconds left."
 
 /**
 *
@@ -32,15 +32,9 @@ export type PropTypes = {
 const NotificationItemProgress = ({
   title = 'Loading data...',
   percent,
-  caption = ({ percent, remaining }) => {
-
-    let caption = `${percent} %`;
-
-    if (remaining) {
-      caption += ` • ${remaining} másodperc és kész.`;
-    }
-    return caption
-  },
+  caption = ({ remaining }) => (remaining ? `Kb. ${remaining} másodperc van hátra` : ''),
+  badge,
+  badgeComplete = 'Kész',
   onClose,
 }: PropTypes) => {
 
@@ -80,43 +74,17 @@ const NotificationItemProgress = ({
       .map(Number)
       .find(key => percent <= key)];
 
+  const complete = percent === 100;
+
   return (
-
-    <div>
-      <div className='flex pl-1'>
-
-        {/* Icon */}
-
-        <div
-          className='border-right p-2 mr-2 my-1'
-          style={{ alignSelf: 'center' }}
-        >
-          {percent < 100 &&
-            <div className='w-2 h-2 fill-gray-dark circle bg-gray-light'>
-              <PreloadIcon />
-            </div>
-          }
-          {percent === 100 &&
-            <IconAnimatedCheckmark />
-          }
-        </div>
-
-        {/* Message */}
-
-        <div className='py-1 text-line-s'>
-          <div
-            className="bold"
-          >
-            {currentTitle}
-          </div>
-          <div className='text-s text-gray mt-1 light'>
-            {typeof caption === 'string' ? caption : caption({ percent, remaining })}
-          </div>
-        </div>
-
-      </div>
-      <ProgressBar percent={percent} />
-    </div>
+    <NotificationLayout
+      color={complete ? 'green' : undefined}
+      icon={complete ? <IconAnimatedCheckmark className="notification-checkmark" /> : <div className="notification-spinner" />}
+      badge={badge && (complete ? badgeComplete : badge)}
+      title={currentTitle}
+      caption={typeof caption === 'function' ? caption({ percent, remaining }) : caption}
+      footer={<ProgressBar percent={percent} label />}
+    />
   );
 }
 

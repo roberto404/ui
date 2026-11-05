@@ -7,9 +7,9 @@ import React, { useEffect, useRef, useState } from "react";
 import IconAnimatedCheckmark from "./iconCheckmark";
 import IconError from "../icon/mui/alert/error";
 import IconInfo from "../icon/mui/action/info";
-import PreloadIcon from "../icon/preload";
 import Button, { PropTypes as ButtonPropTypes } from "./button";
 import ProgressBar from "./progressBar";
+import NotificationLayout from "./layout";
 import isEmpty from "lodash/isEmpty";
 
 /* !-- Constants */
@@ -33,6 +33,11 @@ export type PropTypes = {
   caption?: string | ((respond: Record<string, any>) => string);
   onClose?: () => void;
   Icon?: React.FC<{ className?: string }>;
+  /**
+   * Címke a cím fölött. Alapból az állapotot mutatja (Folyamatban / Sikeres / Hiba),
+   * `false` esetén nincs címke.
+   */
+  badge?: React.ReactNode;
   /**
    * Ha true, az api hívás azonnal indul (`addApi`), különben az `onStart`-ra vár (`addApiPromise`).
    */
@@ -74,6 +79,7 @@ const NotificationItemApiPromise = ({
   autoStart = false,
   children: Children,
   Icon = IconInfo,
+  badge,
 }: PropTypes) => {
   const [startPayload, setStartPayload] = useState<StartPayload | null>(
     autoStart ? {} : null,
@@ -127,66 +133,57 @@ const NotificationItemApiPromise = ({
     respond.status !== Status.ERROR &&
     (respond.records === undefined || !isEmpty(respond.records));
 
+  const stateColor = !respond ? undefined : success ? "green" : "red";
+
+  let icon: React.ReactNode = <Icon />;
+  let stateBadge: React.ReactNode = badge;
+
+  if (started && !respond) {
+    icon = <div className="notification-spinner" />;
+    stateBadge = "Folyamatban";
+  }
+  else if (respond && success) {
+    icon = <IconAnimatedCheckmark className="notification-checkmark" />;
+    stateBadge = "Sikeres";
+  }
+  else if (respond) {
+    icon = <IconError />;
+    stateBadge = "Hiba";
+  }
+
   return (
-    <div>
-      <div className="flex pl-1">
-        {/* Icon */}
-
-        <div
-          className="border-right p-2 mr-2 my-1"
-          style={{ alignSelf: "center" }}
-        >
-          {!started && (
-            <Icon className="w-2 h-2 p-1/4 bg-blue-dark fill-white circle" />
+    <NotificationLayout
+      color={stateColor}
+      icon={icon}
+      badge={badge === false ? undefined : stateBadge}
+      title={typeof title === "string" ? title : title(respond)}
+      caption={caption && (typeof caption === "string" ? caption : caption(respond))}
+      footer={
+        respond && (!success || !payload.button) && (
+          <ProgressBar
+            percentTime={payload.button ? 5 : 2}
+            onClose={onClose}
+            timer
+          />
+        )
+      }
+    >
+      {/* Indítás előtti tartalom */}
+      {!started && Children && (
+        <>
+          {typeof Children === "function" ? (
+            <Children onStart={onStart} onClose={onClose} />
+          ) : (
+            Children
           )}
-          {started && !respond && (
-            <div className="w-2 h-2 fill-gray-dark circle bg-gray-light">
-              <PreloadIcon />
-            </div>
-          )}
-          {respond && success && <IconAnimatedCheckmark />}
-          {respond && !success && (
-            <IconError className="w-2 h-2 p-1/4 bg-red-dark fill-white circle" />
-          )}
-        </div>
-
-        {/* Message */}
-
-        <div className="py-1 text-line-s grow pr-1">
-          <div className="bold">
-            {typeof title === "string" ? title : title(respond)}
-          </div>
-          {caption && (
-            <div className="text-s text-gray mt-1 light">
-              {typeof caption === "string" ? caption : caption(respond)}
-            </div>
-          )}
-
-          {/* Indítás előtti tartalom */}
-          {!started && Children && (
-            <>
-              {typeof Children === "function" ? (
-                <Children onStart={onStart} onClose={onClose} />
-              ) : (
-                Children
-              )}
-            </>
-          )}
-
-          {/* Button */}
-          {respond && success && payload.button && (
-            <Button {...payload.button} respond={respond} onClose={onClose} />
-          )}
-        </div>
-      </div>
-      {respond && (!success || !payload.button) && (
-        <ProgressBar
-          percentTime={payload.button ? 5 : 2}
-          onClose={onClose}
-          color="white"
-        />
+        </>
       )}
-    </div>
+
+      {/* Button */}
+      {respond && success && payload.button && (
+        <Button {...payload.button} respond={respond} onClose={onClose} />
+      )}
+    </NotificationLayout>
   );
 };
 

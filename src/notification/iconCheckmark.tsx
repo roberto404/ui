@@ -7,8 +7,8 @@ interface IconCheckmarkProps {
   className?: string;
 }
 
-// Item class overwrite default classes
-export const IconCheckmarkWrapper = () => <IconCheckmark />;
+// Értesítés ikon-dobozába: a pipa színe a tónus (`.notification-checkmark` a notification.scss-ben)
+export const IconCheckmarkWrapper = () => <IconCheckmark className="notification-checkmark" />;
 
 const IconCheckmark: React.FC<IconCheckmarkProps> = ({
   size = 20,

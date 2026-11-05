@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import classNames from "classnames";
 
 /* !-- Actions */
 
 /* !-- Components */
+
+import { NotificationButton } from "./layout";
 
 /* !-- Constants */
 
@@ -46,7 +47,7 @@ const NotificationItemApiMessage = ({
   };
 
   return (
-    <div className="mt-1">
+    <div>
       <div className="field textarea m-0">
         {label && <div className="label">{label}</div>}
         <textarea
@@ -59,16 +60,12 @@ const NotificationItemApiMessage = ({
       </div>
 
       <div className="v-right mt-1">
-        <div
-          className={classNames({
-            "button p-1/2 px-2": true,
-            green: enable,
-            disabled: !enable,
-          })}
+        <NotificationButton
+          title={buttonTitle}
+          variant="primary"
+          disabled={!enable}
           onClick={onClickStartHandler}
-        >
-          {buttonTitle}
-        </div>
+        />
       </div>
     </div>
   );

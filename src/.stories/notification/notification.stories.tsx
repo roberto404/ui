@@ -24,7 +24,13 @@ import {
 /* !- Components */
 
 import Notification from '../../notification';
+import NotificationItem from '../../notification/item';
 import IconDelete from '../../icon/mui/action/delete_forever';
+import IconTrash from '../../icon/mui/action/delete';
+import IconRefresh from '../../icon/mui/action/cached';
+import IconStar from '../../icon/mui/toggle/star';
+import IconError from '../../icon/mui/alert/error-outline';
+import { IconCheckmarkWrapper } from '../../notification/iconCheckmark';
 
 
 /* !- Context (az értesítések a redux store-hoz + AppContext-hez kötődnek) */
@@ -347,3 +353,120 @@ const ApiWithMessageDemo = () => {
 export const ApiWithMessage: Story = () => <ApiWithMessageDemo />;
 
 ApiWithMessage.storyName = 'addApiWithMessage';
+
+
+/* !- Design (statikus) */
+
+const DESIGN_ITEMS = {
+  error: {
+    color: 'red',
+    badge: 'Hiba',
+    Icon: IconError,
+    title: 'Nem sikerült menteni a megrendelést.',
+    caption: '[HIBA OKA – opcionális rövid magyarázat]',
+    autoClose: false,
+    buttons: [
+      { title: 'Újrapróbálás', icon: IconRefresh },
+    ],
+  },
+  success: {
+    color: 'green',
+    badge: 'Sikeres',
+    Icon: IconCheckmarkWrapper,
+    title: 'Mentés kész.',
+    caption: 'A megrendelés adatai frissültek.',
+    autoClose: 10,
+  },
+  progress: {
+    template: 'ItemProgress',
+    badge: 'Folyamatban',
+    title: 'Adatok betöltése...',
+    caption: '1,2 GB • Kb. 2 másodperc van hátra',
+    percent: 64,
+    disableClose: true,
+  },
+  confirm: {
+    color: 'red',
+    badge: 'Megerősítés',
+    Icon: IconTrash,
+    title: 'Biztosan törölni akarod?',
+    caption: 'A törlés nem visszavonható.',
+    autoClose: false,
+    buttons: [
+      { title: 'Törlés', icon: IconTrash, variant: 'primary' },
+      { title: 'Mégsem', variant: 'secondary' },
+    ],
+  },
+  centered: {
+    centered: true,
+    color: 'blue',
+    Icon: IconStar,
+    title: 'Új verzió érhető el',
+    caption: 'A rendszer frissült. A folytatáshoz töltsd újra az oldalt.',
+    disableClose: true,
+    autoClose: false,
+    buttons: [
+      { title: 'Frissítés most', icon: IconRefresh, variant: 'primary' },
+    ],
+  },
+  customColors: {
+    badge: 'Frissítés',
+    Icon: IconRefresh,
+    title: 'Új verzió érhető el',
+    caption: 'A rendszer frissült. A folytatáshoz töltsd újra az oldalt.',
+    hint: 'Csak néhány másodperc.',
+    disableClose: true,
+    autoClose: false,
+    colors: {
+      accent: '#0f766e',
+      text: '#0f766e',
+      background: '#e6f4f1',
+      border: '#d3ebe5',
+      title: '#0b2e2a',
+      caption: '#45615c',
+      iconBackground: '#ffffff',
+      badgeBackground: '#ffffff',
+    },
+    buttons: [
+      { title: 'Oldal frissítése', icon: IconRefresh, variant: 'primary' },
+    ],
+  },
+} as const;
+
+type DesignKey = keyof typeof DESIGN_ITEMS;
+
+/**
+ * Statikus előnézet + gomb, ami ugyanezt valódi értesítésként is feldobja.
+ */
+const DesignDemo = ({ keys }: { keys: DesignKey[] }) => {
+
+  const dispatch = useDispatch();
+
+  return (
+    <div className="column gap-2" style={{ maxWidth: 420 }}>
+      {keys.map((key) => (
+        <div key={key} className="column gap-1">
+          <NotificationItem id={`design-${key}`} {...(DESIGN_ITEMS[key] as any)} />
+          <DemoButton
+            title={`${key} feldobása`}
+            onClick={() => dispatch(add({ ...(DESIGN_ITEMS[key] as any) }))}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export const Design: Story = () => <DesignDemo keys={['error', 'success', 'progress', 'confirm']} />;
+
+Design.storyName = 'design: hiba | siker | folyamat | megerősítés';
+
+
+export const Centered: Story = () => <DesignDemo keys={['centered']} />;
+
+Centered.storyName = 'centered';
+
+
+export const CustomColors: Story = () => <DesignDemo keys={['customColors']} />;
+
+CustomColors.storyName = 'colors (egyedi színek)';

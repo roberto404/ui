@@ -10,8 +10,10 @@ import { remove } from './actions';
 
 /* !-- Components */
 
+import classNames from 'classnames';
 import IconClose from '../icon/mui/navigation/close';
 import ProgressBar from './progressBar';
+import { colorsToStyle } from './layout';
 
 
 /* !-- Constants */
@@ -19,24 +21,35 @@ import ProgressBar from './progressBar';
 
 /* !-- Types */
 
+import type { NotificationColor, NotificationColors } from './layout';
 
 export type PropTypes = {
   id: string | number,
   children: React.ReactNode,
   disableClose?: boolean,
   closeOnChangeLocation?: boolean,
-  autoClose?: true | number,
+  autoClose?: boolean | number,
+  color?: NotificationColor,
+  colors?: NotificationColors,
+  centered?: boolean,
 };
 
 
 /**
-*
+* Értesítés kártya: keret, háttér, tónus (`color` / `colors`), bezárás, automatikus bezárás időzítője.
 */
-const NotificationItemWrapper = ({ id, children, disableClose, closeOnChangeLocation, ...props }: PropTypes) => {
+const NotificationItemWrapper = ({
+  id,
+  children,
+  disableClose,
+  closeOnChangeLocation,
+  color = 'blue',
+  colors,
+  centered,
+  ...props
+}: PropTypes) => {
 
-
-
-  const autoClose = props.autoClose === true ? 5 : (props.autoClose ?? 0);
+  const autoClose = props.autoClose === true ? 5 : (Number(props.autoClose) || 0);
 
   const dispatch = useDispatch();
   const { count } = useUrlChange();
@@ -55,29 +68,20 @@ const NotificationItemWrapper = ({ id, children, disableClose, closeOnChangeLoca
 
   return (
     <div
-      className='shadow-outer-2 rounded bg-white-light'
+      className={classNames('notification-item', color, { centered })}
+      style={colorsToStyle(colors)}
     >
-      <div className='flex'>
+      {children}
 
-        <div className='grow'>
-          {children}
-          {autoClose !== undefined &&
-            <ProgressBar percentTime={autoClose} onClose={onClose} color="white" />
-          }
-        </div>
+      {autoClose > 0 &&
+        <ProgressBar percentTime={autoClose} onClose={onClose} timer />
+      }
 
+      {/* Close */}
 
-        {/* Close */}
-
-        {onClose !== undefined && disableClose !== true &&
-          <div className='p-1'>
-            <IconClose
-              onClick={onClose}
-              className="ml-2 w-2 h-2 p-1/4 bg-white-light fill-gray circle hover:fill-black hover:bg-gray-light pointer"
-            />
-          </div>
-        }
-      </div>
+      {disableClose !== true &&
+        <IconClose onClick={onClose} className="notification-close" />
+      }
     </div>
   );
 }

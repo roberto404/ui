@@ -7,6 +7,8 @@ import { useComponentDidMount, useComponentWillUnmount } from '../hooks';
 
 /* !-- Components */
 
+import { NotificationButton } from './layout';
+
 
 /* !-- Constants */
 
@@ -15,7 +17,10 @@ import { useComponentDidMount, useComponentWillUnmount } from '../hooks';
 
 export type PropTypes = {
   title?: string,
+  /** megadásakor a régi, teljesen egyedi osztály (variant nélkül) */
   className?: string,
+  icon?: React.FC<{ className?: string }>,
+  variant?: 'primary' | 'outline' | 'secondary',
   shortcut?: string,
   onClick?: (respond: Record<string, any>) => void,
   respond?: Record<string, any>,
@@ -28,7 +33,9 @@ export type PropTypes = {
 */
 const Button = ({
   title = 'Submit',
-  className = 'button green w-content p-1/2 px-2',
+  className,
+  icon,
+  variant,
   shortcut,
   onClick,
   respond,
@@ -72,10 +79,16 @@ const Button = ({
 
 
   return (
-    <div className='h-center mt-1'>
-      <div onClick={onClickHandler} className={className}>{title}</div>
+    <div className='h-center gap-1 mt-1/2'>
+      <NotificationButton
+        title={title}
+        icon={icon}
+        variant={variant || (className ? undefined : 'primary')}
+        className={className}
+        onClick={onClickHandler}
+      />
       {shortcut &&
-        <div className='light text-xs text-gray-dark ml-1'>{shortcut}</div>
+        <div className='notification-hint'>{shortcut}</div>
       }
     </div>
   );

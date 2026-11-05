@@ -10,6 +10,7 @@ import { remove } from './actions';
 import IconInfo from '../icon/mui/action/info';
 import { templates } from './templates';
 import NotificationItemWrapper from './itemWrapper';
+import NotificationLayout, { NotificationButton } from './layout';
 
 
 /* !-- Constants */
@@ -19,10 +20,15 @@ import NotificationItemWrapper from './itemWrapper';
 
 import { Templates } from './templates';
 import { useDispatch } from 'react-redux';
+import type { ButtonVariant, IconType, NotificationColor, NotificationColors } from './layout';
 
 export type Button = {
   title: React.ReactNode,
   handler?: (onClose: () => void) => void,
+  icon?: IconType,
+  /** primary = kitöltött, outline = körvonalas (alapértelmezett), secondary = semleges */
+  variant?: ButtonVariant,
+  /** variant nélkül teljesen egyedi osztály (régi gombok) */
   className?: string,
 };
 
@@ -30,8 +36,16 @@ export type PropTypes = {
   id?: string | number,
   title: React.ReactNode,
   caption?: React.ReactNode,
-  color?: 'blue' | 'yellow' | 'red' | 'green';
-  Icon?: React.FC;
+  color?: NotificationColor;
+  /** egyedi színek, felülírják a `color` tónust */
+  colors?: NotificationColors;
+  /** kis címke a cím fölött (pl. HIBA, SIKERES) */
+  badge?: React.ReactNode;
+  /** rövid megjegyzés a gombok mellett */
+  hint?: React.ReactNode;
+  /** középre zárt elrendezés (kör ikon, középre zárt szöveg és gomb) */
+  centered?: boolean;
+  Icon?: IconType;
   buttons?: Button[];
   template?: Templates,
   payload?: {},
@@ -68,76 +82,45 @@ const NotificationItem = (props: PropTypes) => {
   const {
     title = '',
     caption = '',
-    color = 'blue',
+    badge,
+    hint,
+    centered,
     Icon = IconInfo,
     buttons = [],
   } = props;
 
+  const actions = buttons.length > 0 && buttons.map((button, i) => (
+    <NotificationButton
+      key={i}
+      title={button.title}
+      icon={button.icon}
+      variant={button.variant || (button.className ? undefined : 'outline')}
+      className={button.className}
+      onClick={() => {
+        if (button.handler) {
+          button.handler(onClose);
+        }
 
-  const children = props.children || (
-    <>
-      <div
-        className={`bold text-${color}-dark`}
-      >
-        {title}
-      </div>
-      <div className='text-s text-gray mt-1 light'>
-        {caption}
-      </div>
-    </>
-  )
+        if (props.autoClose !== false) {
+          onClose();
+        }
+      }}
+    />
+  ));
 
   return (
     <NotificationItemWrapper {...props}>
-      <div className='flex p-1'>
-
-        {/* Icon */}
-
-        <div
-          className='border-right p-2 mr-2 my-1'
-          style={{ alignSelf: 'center' }}
-        >
-          <Icon
-            className={`w-2 h-2 p-1/4 bg-${color}-dark fill-white circle`}
-          />
-        </div>
-
-        {/* Message */}
-
-        <div
-          className='py-1 text-line-s grow'
-          style={{
-            alignSelf: 'center',
-          }}
-        >
-          {children}
-
-          {buttons.length > 0 &&
-            <div className='v-right gap-1 mt-1'>
-              {buttons.map((button, i) => (
-                <div
-                  key={i}
-                  className={button.className || `button outline red py-1/2 ${color}`}
-                  onClick={() => {
-                    if (button.handler) {
-                      button.handler(onClose);
-                    }
-
-                    if (props.autoClose !== false) {
-                      onClose();
-                    }
-                  }}
-                >
-                  {button.title}
-                </div>
-              ))}
-            </div>
-          }
-
-        </div>
-
-
-      </div>
+      <NotificationLayout
+        Icon={Icon}
+        badge={badge}
+        title={props.children ? undefined : title}
+        caption={props.children ? undefined : caption}
+        actions={actions || undefined}
+        hint={hint}
+        centered={centered}
+      >
+        {props.children}
+      </NotificationLayout>
     </NotificationItemWrapper>
   );
 }
