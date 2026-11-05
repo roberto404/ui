@@ -2,6 +2,11 @@
   color: $white;
 }
 
+// helyfoglaló szöveg (pl. skeleton): a méret megmarad, a betű nem látszik
+.text-transparent {
+  color: transparent !important;
+}
+
 .bold {
   font-weight: bold;
 }

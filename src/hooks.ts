@@ -223,3 +223,42 @@ export function useUrlChange(options: UseUrlChangeOptions = {}): UseUrlChangeRes
 
   return state;
 }
+
+/**
+ * Egyszer vált true-ra, amikor az elem a képernyő közelébe ér (utána nem figyel tovább).
+ * Lusta betöltéshez (pl. CSS háttérkép), amire a böngésző `loading="lazy"`-je nem hat.
+ * IntersectionObserver nélkül azonnal true.
+ */
+export function useInView<T extends Element = HTMLDivElement>(
+  rootMargin = '200px',
+): [React.RefObject<T>, boolean] {
+  const ref = useRef<T>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const element = ref.current;
+
+    if (inView || !element) return;
+
+    if (typeof IntersectionObserver === 'undefined') {
+      setInView(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some(({ isIntersecting }) => isIntersecting)) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin },
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, [inView, rootMargin]);
+
+  return [ref, inView];
+}

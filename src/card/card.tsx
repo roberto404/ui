@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, lazy, Suspense } from 'react';
 import { useDispatch, ReactReduxContext } from 'react-redux';
 import classNames from 'classnames';
 import { createMarkers } from './marker';
@@ -8,13 +8,15 @@ import isElement from 'lodash/isElement';
 /* !- React Actions */
 
 import { flush } from '../layer/actions';
-import ReactPlayer from 'react-player';
 
 
 /* !- Components */
 
 import IconArrow from '../icon/mui/navigation/arrow_forward';
 
+
+// csak mp4 kártyánál kell → külön csomag, a sima képes kártyák nem töltik le
+const ReactPlayer = lazy(() => import('react-player'));
 
 const Title = ({ heading, children, className, style }) => {
 
@@ -243,18 +245,20 @@ const Card = ({
         // style={{ fontSize: `${100 * 100 / titleZoom}%` }}
         >
           {ext === 'mp4' &&
-            <ReactPlayer
-              _playing={primary}
-              playing={true}
-              width="100%"
-              height="auto"
-              controls={false}
-              loop={true}
-              muted={true}
-              playsinline={true}
-              url={image}
-              wrapper={VideoWrapper({ item, isWideScreen })}
-            />
+            <Suspense fallback={null}>
+              <ReactPlayer
+                _playing={primary}
+                playing={true}
+                width="100%"
+                height="auto"
+                controls={false}
+                loop={true}
+                muted={true}
+                playsinline={true}
+                url={image}
+                wrapper={VideoWrapper({ item, isWideScreen })}
+              />
+            </Suspense>
           }
           {ext !== 'mp4' &&
             <img

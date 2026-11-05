@@ -51,21 +51,8 @@ import LinkForm, { Link, findLinkEntities } from './editor/link';
 /* !- Constants */
 
 
-const styleMap = {
-  STRIKETHROUGH: {
-    textDecoration: 'line-through',
-  },
-};
-
-const blockClassNames = {
-  'header-two': 'm-0 pb-1 heavy text-xxl mobile:text-m',
-  'header-three': 'light pb-1 text-line-m mobile:text-s m-0 text-black',
-  'blockquote': 'embed-blockquote italic text-line-xl text-l my-2 pt-4 px-4',
-  'caption': 'text-center light text-s',
-  'unstyle': 'text-line-l light',
-  'unordered-list-item': 'disc text-line-l light',
-  'ordered-list-item': 'decimal text-line-l light',
-}
+// közös a statikus (draft-js nélküli) megjelenítővel: ./static.tsx
+import { styleMap, blockClassNames } from './const';
 
 const getBlockStyle = block =>
   blockClassNames[block.getType()] || blockClassNames.unstyle;
