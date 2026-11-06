@@ -120,6 +120,8 @@ const SEARCH_TERM_REGEX = /[^\s,.;:/()\-]*$/;
 
 const SHORTCUTS_NAME = 'autocomplete';
 
+const TAG_MENU_MAX_HEIGHT = '300px';
+
 const getSearchTerm = (value = '') => (value.match(SEARCH_TERM_REGEX) || [''])[0];
 
 
@@ -464,7 +466,12 @@ class Autocomplete extends Component {
       return;
     }
 
-    this.context.store.dispatch(menu(this.getTagMenuProps(index, item), { currentTarget: event.currentTarget }));
+    // long option list: the popover container scrolls (the header stays sticky)
+    this.context.store.dispatch(menu(
+      this.getTagMenuProps(index, item),
+      { currentTarget: event.currentTarget },
+      { containerStyle: { maxHeight: TAG_MENU_MAX_HEIGHT } },
+    ));
   }
 
   /**
