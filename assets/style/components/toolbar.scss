@@ -1,0 +1,68 @@
+// Toolbar: a kilógó gombok a Több menübe kerülnek (ui/src/toolbar/toolbar.tsx)
+.toolbar-overflow
+{
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+
+  > .toolbar-item
+  {
+    flex: none;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  // mounted, measurable, but invisible under the Több button
+  > .toolbar-item-hidden
+  {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .toolbar-more-arrow
+  {
+    width: 1.2em;
+    height: 1.2em;
+    margin-left: 0.3rem;
+  }
+}
+
+.menu.toolbar-menu
+{
+  .item
+  {
+    padding-right: 2.4rem;
+
+    // active view button
+    &.active .title
+    {
+      font-weight: bold;
+    }
+
+    &.disabled
+    {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+  }
+
+  .toolbar-menu-icon
+  {
+    display: flex;
+
+    svg
+    {
+      fill: $gray-dark;
+    }
+  }
+
+  .item.clickable:hover .toolbar-menu-icon svg
+  {
+    fill: white;
+  }
+}
