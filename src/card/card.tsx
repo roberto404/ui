@@ -79,6 +79,20 @@ type PropTypes = Partial<typeof defaultProps> & {
    */
   imageWidth?: number,
   imageHeight?: number,
+  /**
+   * 'lazy' -> below-the-fold images (React adds no preload for them)
+   */
+  loading?: 'lazy' | 'eager',
+  /**
+   * 'high' -> LCP image (first visible image of the page)
+   */
+  fetchPriority?: 'high' | 'low' | 'auto',
+  /**
+   * modern formats of the image -> <picture>, the browser picks the first supported, image is the fallback.
+   * React does not preload an <img> inside <picture> -> the caller preloads the LCP image (react-dom preload)
+   * @example [{ srcSet: '/a.avif', type: 'image/avif' }, { srcSet: '/a.webp', type: 'image/webp' }]
+   */
+  sources?: { srcSet: string, type: string }[],
 };
 
 
@@ -109,6 +123,9 @@ const Card = ({
   isWideScreen = false,
   imageWidth,
   imageHeight,
+  loading,
+  fetchPriority,
+  sources,
 }: PropTypes) => {
 
   const hasImageSize = imageWidth > 0 && imageHeight > 0;
@@ -228,6 +245,26 @@ const Card = ({
 
   const ext = image.split('.').pop().split('?')[0];
 
+  const imageElement = (
+    <img
+      className={classNames({
+        'block m-auto h-auto': true,
+        'w-auto': !hasImageSize,
+      })}
+      src={image}
+      width={hasImageSize ? imageWidth : 'auto'}
+      height={hasImageSize ? imageHeight : 'auto'}
+      style={{
+        maxWidth: '100%',
+        maxHeight: '100%',
+      }}
+      alt={title}
+      loading={loading}
+      fetchPriority={fetchPriority}
+    // onError={this.onErrorImageListener}
+    />
+  );
+
   return (
     <div
       className={classes}
@@ -260,23 +297,13 @@ const Card = ({
               />
             </Suspense>
           }
-          {ext !== 'mp4' &&
-            <img
-              className={classNames({
-                'block m-auto h-auto': true,
-                'w-auto': !hasImageSize,
-              })}
-              src={image}
-              width={hasImageSize ? imageWidth : 'auto'}
-              height={hasImageSize ? imageHeight : 'auto'}
-              style={{
-                maxWidth: '100%',
-                maxHeight: '100%',
-              }}
-              alt={title}
-            // onError={this.onErrorImageListener}
-            />
+          {ext !== 'mp4' && sources?.length > 0 &&
+            <picture className="contents">
+              {sources.map(source => <source key={source.type} {...source} />)}
+              {imageElement}
+            </picture>
           }
+          {ext !== 'mp4' && !(sources?.length > 0) && imageElement}
           {markers ? createMarkers(onDragMarker ? markers.map(marker => ({ ...marker, draggable: true })) : markers) : children}
         </div>
       }

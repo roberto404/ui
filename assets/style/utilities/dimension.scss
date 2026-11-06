@@ -206,6 +206,10 @@
   width: 1024px;
 }
 
+.max-w-1024 {
+  max-width: 1024px;
+}
+
 @include respond-to(mobile) {
   .mobile\:w-auto {
     width: auto;

@@ -4,6 +4,8 @@ export { default as DateFilterCard } from './dateFilter';
 export { default as MinimalCard } from './minimal';
 export { default as CenteredCard } from './centered';
 export { default as ResultCard } from './result';
+export { default as ComparisonCard } from './comparison';
+export { default as MultiLineCard } from './multiLine';
 
 export { default as SegmentedFilter } from './parts/segmentedFilter';
 export { default as PeriodCarousel } from './parts/periodCarousel';

@@ -98,8 +98,9 @@ const barPath = (x, y, w, h, r, roundBottom) => {
 const HatchPattern = ({ id, color }) => (
   <defs>
     <pattern id={id} width={7} height={7} patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-      <rect width={7} height={7} fill="#fff" />
-      <line x1={0} y1={0} x2={0} y2={7} stroke={color} strokeWidth={3} />
+      {/* style, not attributes: the old kontakt2 app.css colours the rects of the bar chart */}
+      <rect width={7} height={7} style={{ fill: '#fff' }} />
+      <line x1={0} y1={0} x2={0} y2={7} style={{ stroke: color }} strokeWidth={3} />
     </pattern>
   </defs>
 );
@@ -256,8 +257,10 @@ const BarSeries = ({
             height={t.height}
             rx={trackR}
             ry={trackR}
+            // style, not only the attribute: the old kontakt2 app.css colours the rects of
+            // the bar chart (`.chart.bar g#points … rect`), it beats the fill attribute
             fill={usesHatch ? `url(#${hatchId})` : trackColor}
-            style={trackStyle}
+            style={{ fill: usesHatch ? `url(#${hatchId})` : trackColor, ...trackStyle }}
           />
         );
       })}

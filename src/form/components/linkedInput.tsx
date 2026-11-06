@@ -139,8 +139,9 @@ class LinkedInput extends Field {
       return;
     }
 
+    // üres mező: '' (mint az Input), hogy mentéskor a kulcs ne maradjon ki
     this.onChangeHandler(
-      typeof value === 'undefined' ? undefined : this.toStoreValue(side, value),
+      typeof value === 'undefined' ? '' : this.toStoreValue(side, value),
       event,
     );
   };

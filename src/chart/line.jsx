@@ -1,9 +1,13 @@
 import React from 'react';
+import { ReactReduxContext } from 'react-redux';
 
 import Coordinate from './coordinate';
+import { tooltip as layerTooltipAction, flush } from '../layer/actions';
 import { findMinimumValueInSeries } from './coordinate/functions';
 
 import roundPathCorners from './roundedPath';
+import AxisLabel from './coordinate/axisLabel';
+import { withXAxisHighlights, withYAxisMarks, renderYAxisMarks } from './axisMarks';
 
 
 const DEFAULT_COLOR = '#186eff';
@@ -105,8 +109,55 @@ const DefaultMarker = ({ x, y, color }) => (
  * `data` holds every point of the series already resolved to pixel coordinates
  * (`x`, `y`) plus the raw `value`, so no extra geometry math is needed here.
  */
-const HoverLayer = ({ data, canvas, valueFormat, color, tooltip, bezier }) => {
+/**
+ * `layerTooltip`: the hovered point's content in the ui layer tooltip (like the other
+ * charts), anchored to an invisible element on the point. Only the own tooltip is
+ * closed (leave / unmount), an other layer (e.g. a dialog) is left open.
+ */
+const useLayerTooltip = (layerTooltip, active, anchorRef, containerStyle) => {
+  // no hook-level dependency on a redux Provider: the chart works without one (ssr preview)
+  const { store } = React.useContext(ReactReduxContext) || {};
+  const dispatch = (action) => store && store.dispatch(action);
+  const isOpen = React.useRef(false);
+
+  React.useEffect(() => {
+    if (!layerTooltip) {
+      return;
+    }
+
+    if (active === null) {
+      if (isOpen.current) {
+        isOpen.current = false;
+        dispatch(flush());
+      }
+
+      return;
+    }
+
+    if (anchorRef.current) {
+      isOpen.current = true;
+      // pointer-events: none: the cursor can be anywhere in the column, also under the
+      // tooltip -> it must not take the hover away (leave / reopen flicker)
+      dispatch(layerTooltipAction(
+        layerTooltip(active),
+        { currentTarget: anchorRef.current },
+        { containerStyle: { ...containerStyle, pointerEvents: 'none' } },
+      ));
+    }
+  }, [active]);
+
+  React.useEffect(() => () => {
+    if (isOpen.current) {
+      dispatch(flush());
+    }
+  }, []);
+};
+
+const HoverLayer = ({ data, canvas, valueFormat, color, tooltip, layerTooltip, layerTooltipOffset = 6, layerTooltipStyle, bezier }) => {
   const [active, setActive] = React.useState(null);
+  const anchorRef = React.useRef(null);
+
+  useLayerTooltip(layerTooltip, active, anchorRef, layerTooltipStyle);
 
   // remember the last hovered point so the marker fades out in place
   const lastIndex = React.useRef(0);
@@ -170,6 +221,10 @@ const HoverLayer = ({ data, canvas, valueFormat, color, tooltip, bezier }) => {
         onMouseLeave={() => setActive(null)}
       />
 
+      {layerTooltip && (
+        <circle ref={anchorRef} className="hover-anchor" pointerEvents="none" cx={point.x} cy={dotY} r={layerTooltipOffset} fill="transparent" />
+      )}
+
       <g
         className="hover-marker"
         style={{ transform: `translateX(${point.x}px)`, opacity: active !== null ? 1 : 0 }}
@@ -194,6 +249,7 @@ const HoverLayer = ({ data, canvas, valueFormat, color, tooltip, bezier }) => {
               <line className="marker-guide" x1={0} y1={-10} x2={0} y2={bottom - dotY} />
               <circle className="marker-dot" cx={0} cy={0} r="5" style={{ fill: color }} />
 
+              {!layerTooltip &&
               <g className="marker-tooltip" transform={`translate(${boxLeft}, ${-boxH - 10})`}>
                 <rect className="marker-box" width={boxW} height={boxH} rx={boxH / 2} ry={boxH / 2} />
                 <text
@@ -206,7 +262,7 @@ const HoverLayer = ({ data, canvas, valueFormat, color, tooltip, bezier }) => {
                 >
                   {label}
                 </text>
-              </g>
+              </g>}
             </g>
           )}
       </g>
@@ -225,8 +281,20 @@ const HoverLayer = ({ data, canvas, valueFormat, color, tooltip, bezier }) => {
  * `data` (primary series, resolved to pixels) gives the x positions; `series`
  * holds every series' raw values + colour, from which the per-line y is derived.
  */
-const MultiHoverLayer = ({ data, canvas, valueFormat, series }) => {
+const MultiHoverLayer = ({
+  data,
+  canvas,
+  valueFormat,
+  series,
+  layerTooltip,
+  layerTooltipAnchor,
+  layerTooltipOffset = 6,
+  layerTooltipStyle,
+}) => {
   const [active, setActive] = React.useState(null);
+  const anchorRef = React.useRef(null);
+
+  useLayerTooltip(layerTooltip, active, anchorRef, layerTooltipStyle);
 
   const lastIndex = React.useRef(0);
   if (active !== null) {
@@ -278,6 +346,13 @@ const MultiHoverLayer = ({ data, canvas, valueFormat, series }) => {
     Math.min(canvas.x + canvas.width - px - boxW, -boxW / 2),
   );
 
+  // anchor of the layer tooltip (not in the sliding group): the point of the
+  // `layerTooltipAnchor` series, else the highest point; its radius is the distance of the tooltip
+  const anchorSeries = series.find((s) => s.id === layerTooltipAnchor);
+  const anchorY = anchorSeries
+    ? pixelY(anchorSeries.values[index])
+    : Math.min(...series.map((s) => pixelY(s.values[index])));
+
   return (
     <g className="hover-layer">
       <rect
@@ -290,14 +365,23 @@ const MultiHoverLayer = ({ data, canvas, valueFormat, series }) => {
         onMouseLeave={() => setActive(null)}
       />
 
+      {layerTooltip && (
+        <circle ref={anchorRef} className="hover-anchor" pointerEvents="none" cx={px} cy={anchorY} r={layerTooltipOffset} fill="transparent" />
+      )}
+
       <g
         className="hover-marker"
         style={{ transform: `translateX(${px}px)`, opacity: active !== null ? 1 : 0 }}
       >
-        {/* guide runs from the tooltip down to the axis, through every dot */}
-        <line className="marker-guide" x1={0} y1={boxTop + boxH} x2={0} y2={bottom} />
+        {/* guide runs from the tooltip (or the plot top) down to the axis, through every dot */}
+        <line className="marker-guide" x1={0} y1={layerTooltip ? canvas.margin.top : boxTop + boxH} x2={0} y2={bottom} />
 
         {series.map((s) => {
+          // no data (null value): no dot
+          if (s.gaps?.has(index)) {
+            return null;
+          }
+
           const cy = pixelY(s.values[index]);
 
           // put the dot on the bezier curve (under the guide), not at the cut-off vertex
@@ -318,6 +402,7 @@ const MultiHoverLayer = ({ data, canvas, valueFormat, series }) => {
           );
         })}
 
+        {!layerTooltip &&
         <g className="marker-tooltip" transform={`translate(${boxLeft}, ${boxTop})`}>
           <rect className="marker-box" width={boxW} height={boxH} rx={6} ry={6} />
           {series.map((s, si) => {
@@ -338,7 +423,7 @@ const MultiHoverLayer = ({ data, canvas, valueFormat, series }) => {
               </g>
             );
           })}
-        </g>
+        </g>}
       </g>
     </g>
   );
@@ -362,6 +447,8 @@ const MultiHoverLayer = ({ data, canvas, valueFormat, series }) => {
  * @param {string}           options.color        line + area + marker colour
  * @param {boolean}          options.dashed       dashed line (e.g. a trend line)
  * @param {Function}         options.valueFormat  format the value printed in the hover box
+ * @param {Function}         options.layerTooltip (index) => content of the ui layer tooltip (instead of the svg box)
+ * @param {object}           options.layerTooltipProps { anchor: series id, offset: px, style: container style }
  * @param {string}           options.gradientId   svg id of the area gradient (unique per chart)
  */
 export const Line = ({
@@ -369,6 +456,8 @@ export const Line = ({
   hover = false,
   hoverSeries,
   tooltip,
+  layerTooltip,
+  layerTooltipProps = {},
   bezier = true,
   marker = false,
   seriesId,
@@ -376,13 +465,19 @@ export const Line = ({
   dashed = false,
   valueFormat = (value) => value,
   gradientId = 'line-gradient',
+  // indexes without data (null values): the line breaks, no marker
+  gaps,
 } = {}) =>
   ({ x, y, canvas, index, value, data }) => {
 
     const isFirst = index === data[0].index;
 
-    const points = data.map((point, i) => `${i ? 'L' : 'M'}${point.x},${point.y}`).join(' ');
-    const linePath = bezier ? roundPathCorners(points, CORNER_RADIUS, false) : points;
+    // the line by its continuous parts (a gap starts a new part)
+    const points = data
+      .map((point, i) => (gaps?.has(i) ? null : `${i && !gaps?.has(i - 1) ? 'L' : 'M'}${point.x},${point.y}`))
+      .filter(Boolean)
+      .join(' ');
+    const linePath = bezier && !gaps?.size ? roundPathCorners(points, CORNER_RADIUS, false) : points;
 
     // chart bottom in pixel, used as the area fill baseline
     const baseline = canvas.margin.top + canvas.height;
@@ -398,7 +493,7 @@ export const Line = ({
      * points are placed on the rounded corner, not at the cut-off data vertex.
      */
     let markerNode = null;
-    if (marker) {
+    if (marker && !gaps?.has(index)) {
       const pos = (bezier && index > 0 && index < data.length - 1)
         ? curvePointAtX(data[index - 1], data[index], data[index + 1], index === 1, x)
         : { x, y };
@@ -434,8 +529,31 @@ export const Line = ({
 
         {isFirst && hover &&
           (hoverSeries && hoverSeries.length > 1
-            ? <MultiHoverLayer data={data} canvas={canvas} valueFormat={valueFormat} series={hoverSeries} />
-            : <HoverLayer data={data} canvas={canvas} valueFormat={valueFormat} color={color} tooltip={tooltip} bezier={bezier} />)
+            ? (
+              <MultiHoverLayer
+                data={data}
+                canvas={canvas}
+                valueFormat={valueFormat}
+                series={hoverSeries}
+                layerTooltip={layerTooltip}
+                layerTooltipAnchor={layerTooltipProps.anchor}
+                layerTooltipOffset={layerTooltipProps.offset}
+                layerTooltipStyle={layerTooltipProps.style}
+              />
+            )
+            : (
+              <HoverLayer
+                data={data}
+                canvas={canvas}
+                valueFormat={valueFormat}
+                color={color}
+                tooltip={tooltip}
+                layerTooltip={layerTooltip}
+                layerTooltipOffset={layerTooltipProps.offset}
+                layerTooltipStyle={layerTooltipProps.style}
+                bezier={bezier}
+              />
+            ))
         }
       </g>
     );
@@ -462,11 +580,25 @@ export const Line = ({
  * @param {string}           color        default line colour (per-series `color` overrides)
  * @param {Function}         xAxisFormat  (value, index) => label — format / hide an x-axis label
  * @param {Function}         valueFormat  format the value shown in the hover box
+ * @param {Function}         layerTooltip (index) => content: the hovered point in the ui layer
+ *                                        tooltip (like the other charts) instead of the svg box
+ * @param {string}           layerTooltipAnchor  the tooltip sits at this series' point (default: the highest point)
+ * @param {number}           layerTooltipOffset  distance of the tooltip from the point (px, default 6)
+ * @param {object}           layerTooltipStyle   style of the tooltip container (e.g. background, fontSize)
+ * @param {Array}            xAxisHighlights  [{ index, tooltip }]: highlighted x labels (rounded background,
+ *                                            bold), the tooltip tells why (ui layer)
+ * @param {Array}            yAxisMarks       [{ value, label, text, tooltip, color, line }]: own y labels at any
+ *                                            value (e.g. "átlag 123 M"), the axis labels near them are hidden
+ * @param {Function}         yAxisMarkFormat  default text of a y mark (default: valueFormat)
  */
 const ChartLine = ({
   area = false,
   hover = false,
   tooltip,
+  layerTooltip,
+  layerTooltipAnchor,
+  layerTooltipOffset,
+  layerTooltipStyle,
   bezier = true,
   marker = true,
   color = DEFAULT_COLOR,
@@ -476,15 +608,49 @@ const ChartLine = ({
   // true: the first point starts at the left edge and the last ends at the right
   // edge — the line/area fills the plot width (stat/stock cards).
   edgeToEdge = false,
+  xAxisHighlights,
+  yAxisMarks,
+  yAxisMarkFormat,
   ...props
 }) => {
+
+  // own axis labels: the label components are memoized (no remount on every render)
+  const highlightKey = JSON.stringify((xAxisHighlights || []).map(({ index }) => index));
+  const xAxisLabel = React.useMemo(
+    () => (xAxisHighlights?.length
+      ? withXAxisHighlights(props.xAxisLabel || AxisLabel.xAxisLabel, xAxisHighlights, edgeToEdge ? 0 : 1)
+      : props.xAxisLabel),
+    [props.xAxisLabel, highlightKey, edgeToEdge, xAxisHighlights],
+  );
+
+  const yAxisLabel = React.useMemo(
+    () => (yAxisMarks?.length
+      ? withYAxisMarks(props.yAxisLabel || AxisLabel.yAxisLabel, yAxisMarks)
+      : props.yAxisLabel),
+    [props.yAxisLabel, yAxisMarks],
+  );
+
+  // the marks under the series (beside an own underlay)
+  const underlay = yAxisMarks?.length
+    ? (api) => (
+      <>
+        {renderYAxisMarks(yAxisMarks, yAxisMarkFormat || valueFormat)(api)}
+        {typeof props.underlay === 'function' ? props.underlay(api) : props.underlay}
+      </>
+    )
+    : props.underlay;
 
   const gradientId = `line-gradient-${props.data[0].id || '0'}`;
 
   // every hovered series' values + resolved colour + line shape, for the multi-line hover
+  // null values: 0 on the coordinate, a gap of the line (no line, marker, hover dot)
+  const gapsOf = (values) => new Set(values.map((v, i) => (v === null || v === undefined ? i : -1)).filter((i) => i >= 0));
+  const valuesOf = (values) => values.map((v) => (v === null || v === undefined ? 0 : v));
+
   const hoverSeries = props.data.filter((s) => s.hover !== false).map((s) => ({
     id: s.id,
-    values: s.values,
+    values: valuesOf(s.values),
+    gaps: gapsOf(s.values),
     color: s.color || color,
     bezier: s.bezier !== undefined ? s.bezier : bezier,
   }));
@@ -514,6 +680,10 @@ const ChartLine = ({
 
       {...props}
 
+      xAxisLabel={xAxisLabel}
+      yAxisLabel={yAxisLabel}
+      underlay={underlay}
+
       className={props.className || `chart line rounded${area ? ' area' : ''}${hover ? ' hover' : ''}`}
       data={
         props.data.reduce((result, series, i) => {
@@ -524,6 +694,12 @@ const ChartLine = ({
             hover: hover && i === 0, // hover overlay driven by the primary series
             hoverSeries: (hover && i === 0) ? hoverSeries : undefined,
             tooltip: (hover && i === 0) ? tooltip : undefined,
+            layerTooltip: (hover && i === 0) ? layerTooltip : undefined,
+            layerTooltipProps: {
+              anchor: layerTooltipAnchor,
+              offset: layerTooltipOffset,
+              style: layerTooltipStyle,
+            },
             bezier: series.bezier !== undefined ? series.bezier : bezier,
             marker: showMarker ? (typeof marker === 'function' ? marker : true) : false,
             seriesId: series.id,
@@ -531,11 +707,12 @@ const ChartLine = ({
             dashed: !!series.dashed,
             valueFormat,
             gradientId,
+            gaps: gapsOf(series.values),
           });
 
           return {
             ...result,
-            [series.id]: series.values.map((v, idx) => ({ x: idx, y: v, element })),
+            [series.id]: valuesOf(series.values).map((v, idx) => ({ x: idx, y: v, element })),
           };
         }, {})
       }

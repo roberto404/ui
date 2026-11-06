@@ -27,8 +27,8 @@
 @import "badge";
 @import "tag";
 @import "shortcuts";
+@import "chartColors"; // before chart: it uses $chart-status
 @import "chart";
-@import "chartColors";
 @import "gant";
 @import "tab";
 @import "skeleton";

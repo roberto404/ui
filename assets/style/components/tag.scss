@@ -36,4 +36,10 @@
   {
     background-color: $gray-light;
   }
+
+  &.blue-light
+  {
+    background-color: $blue-light;
+    box-shadow: inset 0 0 0 1px $blue-dark;
+  }
 }

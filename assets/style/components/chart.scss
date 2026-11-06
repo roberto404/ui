@@ -180,6 +180,7 @@
   }
 
 
+  // github-like yearly calendar (chart/github.tsx): a box = `g.github-box.github-<color>`
   &.github {
     g#github-xaxis {
       text {
@@ -190,39 +191,58 @@
     }
 
     g#points {
-
-      g#weeks,
-      g#months {
+      .github-box {
         rect {
-          &.fill-red {
-            fill: $red;
-          }
-
-          &.fill-gray-light {
-            fill: $gray-light;
-          }
-
-          &.fill-green {
-            fill: $green;
-          }
-
-          &:hover {
-            stroke: $blue-dark;
-            stroke-width: 1;
-          }
+          fill: $gray-light;
+          transition: stroke .15s ease;
         }
 
         text {
           font-weight: bold;
+          fill: $black;
+        }
+
+        &.pointer:hover rect {
+          stroke: $blue-dark;
+          stroke-width: 1;
+        }
+
+        // legacy colour names (kontakt2 incomeGithub report)
+        &.github-gray-light rect {
+          fill: $gray-light;
+        }
+
+        &.github-red {
+          rect {
+            fill: $red;
+          }
+
+          text {
+            fill: $white;
+          }
+        }
+
+        &.github-green rect {
+          fill: $green;
+        }
+
+        // status colours of the chart colour collection (chartColors.scss)
+        @each $name, $tone in $chart-status {
+          &.github-#{$name} {
+            rect {
+              fill: map-get($tone, fill);
+            }
+
+            text {
+              fill: map-get($tone, text);
+            }
+          }
         }
       }
 
-      g#separator {
-        line {
-          stroke: $gray-light;
-        }
+      g#separator line {
+        stroke: $gray-light;
       }
-
     }
   }
 
@@ -271,4 +291,10 @@
   .text-white {
     color: var(--card-fg, #fff);
   }
+}
+// highlighted axis label (chart/axisMarks.tsx AxisHighlight): dark bold text on the
+// measured rounded background; !important: the axis text rules are id selectors
+.chart .axis-highlight text {
+  fill: var(--axis-highlight-color, $black) !important;
+  font-weight: 600 !important;
 }

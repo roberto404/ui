@@ -185,7 +185,7 @@ const BasicDemo = () => {
             if (percent >= 100) {
               clearInterval(timer);
             }
-          }, 300);
+          }, 3000);
         }}
       />
 

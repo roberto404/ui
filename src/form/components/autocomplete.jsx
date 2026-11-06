@@ -40,10 +40,29 @@ const Tags = (props) => (
             return null;
           }
 
+          // tagOptions: clickable tag, options menu; selected options -> other color
+          const isClickable = !!props.onClick && !!props.hasOptions?.(item);
+          const isFiltered = Array.isArray(item.options) && item.options.length > 0;
+
           return (
-            <div className="tag gray-light mx-1/2 rounded text-line-s v-center" key={`${index}-${item.id}`}>
-              <span className='text-gray-dark'>{item.title}</span>
-              <IconClose className="w-1 h-1 fill-gray-dark pointer hover:fill-black" onClick={() => props.onClose(index)} />
+            <div
+              className={classNames('tag mx-1/2 rounded text-line-s v-center', {
+                'gray-light': !isFiltered,
+                'blue-light': isFiltered,
+                pointer: isClickable,
+              })}
+              key={`${index}-${item.id}`}
+              onMouseDown={isClickable ? event => event.preventDefault() : undefined}
+              onClick={isClickable ? event => props.onClick(index, event) : undefined}
+            >
+              <span className={isFiltered ? 'text-blue-dark' : 'text-gray-dark'}>{item.title}</span>
+              <IconClose
+                className="w-1 h-1 fill-gray-dark pointer hover:fill-black"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  props.onClose(index);
+                }}
+              />
             </div>
           );
         })
@@ -414,6 +433,66 @@ class Autocomplete extends Component {
     }
 
     this.onChangeHandler(payload.value);
+  }
+
+  /**
+   * tagOptions: menu of the tag's options, checked = item.options
+   */
+  getTagMenuProps = (index, item) => {
+    const options = this.props.tagOptions(item) || [];
+    const selected = (Array.isArray(item.options) ? item.options : []).map(String);
+
+    return {
+      header: this.props.tagOptionsLabel ?
+        <div className="px-1 py-1/2 text-xs text-gray-dark">{this.props.tagOptionsLabel}</div> : undefined,
+      keepFocus: true,
+      items: options.map(option => ({
+        id: option.id,
+        title: option.title,
+        className: selected.indexOf(String(option.id)) !== -1 ? 'active' : '',
+        handler: () => this.onClickTagOptionHandler(index, option.id),
+      })),
+    };
+  }
+
+  hasTagOptions = item => !!this.props.tagOptions && (this.props.tagOptions(item) || []).length > 0
+
+  onClickTagHandler = (index, event) => {
+    const item = this.getStateArray()[index];
+
+    if (!isTag(item)) {
+      return;
+    }
+
+    this.context.store.dispatch(menu(this.getTagMenuProps(index, item), { currentTarget: event.currentTarget }));
+  }
+
+  /**
+   * Toggle an option of the tag, the menu stays open
+   */
+  onClickTagOptionHandler = (index, optionId) => {
+    const state = this.getStateArray();
+
+    if (!isTag(state[index])) {
+      return;
+    }
+
+    const id = String(optionId);
+    const selected = (Array.isArray(state[index].options) ? state[index].options : []).map(String);
+    const toggled = selected.indexOf(id) !== -1 ? selected.filter(i => i !== id) : [...selected, id];
+
+    // option order of the menu
+    const options = (this.props.tagOptions(state[index]) || [])
+      .map(option => String(option.id))
+      .filter(i => toggled.indexOf(i) !== -1);
+
+    const { options: _, ...tag } = state[index];
+    const item = options.length ? { ...tag, options } : tag;
+
+    state[index] = item;
+
+    this.onChangeHandler(state);
+    this.context.store.dispatch(updateMenu(this.getTagMenuProps(index, item)));
   }
 
   onClickRemoveValueHandler = (index) => {
@@ -827,6 +906,8 @@ class Autocomplete extends Component {
       limit,
       filter,
       menuFullWidth,
+      tagOptions,
+      tagOptionsLabel,
       ...props
     } = this.props;
     const hasMenuArrow = this.props.data.length && suggestionMenu;
@@ -847,7 +928,12 @@ class Autocomplete extends Component {
         stateFormat={value => this.inputStateFormat(this.props.stateFormat(value))}
         prefix={
           this.props.multiple ?
-            <Prefix items={state} onClose={this.onClickRemoveValueHandler} /> : this.props.prefix
+            <Prefix
+              items={state}
+              onClose={this.onClickRemoveValueHandler}
+              onClick={this.props.tagOptions ? this.onClickTagHandler : undefined}
+              hasOptions={this.hasTagOptions}
+            /> : this.props.prefix
         }
         postfix={
           this.props.postfix || (hasMenuArrow ? <IconArrowDown
@@ -914,6 +1000,16 @@ Autocomplete.propTypes =
    * The menu is as wide as the field (prefix + input + postfix)
    */
   menuFullWidth: PropTypes.bool,
+  /**
+   * multiple: options of a tag -> clicking the tag opens a checkbox menu,
+   * the checked ids are stored in the tag (item.options), a tag with options has other color
+   * @example item => [{ id: '1', title: 'fa' }, { id: '2', title: 'üveg' }]
+   */
+  tagOptions: PropTypes.func,
+  /**
+   * Label of the tag options menu
+   */
+  tagOptionsLabel: PropTypes.string,
 };
 
 /**

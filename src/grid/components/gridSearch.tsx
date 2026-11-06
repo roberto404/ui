@@ -185,7 +185,7 @@ export const NestedCollectionItem = ({
       draggable={draggable}
       value={record}
       onChange={onChangePropsFiltersHandler}
-      className="border shadow-outer-3 p-2 rounded w-full"
+      className="border shadow-outer-3 p-2 rounded w-full bg-white-light"
     />
   )
 }

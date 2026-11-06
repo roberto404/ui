@@ -56,7 +56,10 @@ export class File {
 
   /* !- Getter Setter */
 
-  getUrl = (size, devicePixelRatio) => {
+  /**
+   * @param ext other output format of a resized image (e.g. 'webp', 'avif'), default: original ext
+   */
+  getUrl = (size, devicePixelRatio, ext = this.ext) => {
     if (!this.name || !FILE_PATTERN.exec(this.name)) {
       if (!this.id) {
         return '';
@@ -75,7 +78,7 @@ export class File {
     const path = this.name.replace(FILE_PATTERN, '$2/$3/$4/$5/$1');
     const dpr = devicePixelRatio ? `@${devicePixelRatio}x` : '';
 
-    return `${this.baseFolder + path + sizePrefix + dpr}.${this.ext}`;
+    return `${this.baseFolder + path + sizePrefix + dpr}.${ext}`;
   }
 
   getThumbnail = () => this.getUrl('250x250');

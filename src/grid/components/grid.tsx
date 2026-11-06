@@ -59,6 +59,7 @@ const defaultProps = {
   colSelect: true,
   expandSelect: false,
   multipleSelect: true,
+  deselectable: false,
   checkboxSelect: false,
   sortable: false,
   hook: {},
@@ -248,6 +249,11 @@ type PropTypes = Partial<typeof defaultProps> & {
    */
   multipleSelect: boolean;
   /**
+   * A click on the only selected record deselects it (nothing is selected).
+   * Tree mode: shift + click selects the parent of the clicked record (single select)
+   */
+  deselectable: boolean;
+  /**
    * When select a new record it is automatically expand the selection list
    */
   expandSelect: boolean;
@@ -363,7 +369,27 @@ type PropTypes = Partial<typeof defaultProps> & {
  *   helper={gridSettings.helper}
  * />
  */
-export const Grid = ({
+export /**
+ * Scrolling element of the grid: the grid itself if it scrolls (height), else its
+ * nearest parent with a vertical scroll (overflow auto / scroll), else the grid
+ */
+const getScrollContainer = (grid: HTMLElement): HTMLElement => {
+  if (grid.scrollHeight > grid.clientHeight) {
+    return grid;
+  }
+
+  for (let node = grid.parentElement; node; node = node.parentElement) {
+    const { overflowY } = window.getComputedStyle(node);
+
+    if ((overflowY === "auto" || overflowY === "scroll") && node.scrollHeight > node.clientHeight) {
+      return node;
+    }
+  }
+
+  return grid;
+};
+
+const Grid = ({
   id,
   data = [],
   rawData = [],
@@ -374,6 +400,7 @@ export const Grid = ({
   tabIndex,
   expandSelect,
   multipleSelect,
+  deselectable,
   checkboxSelect,
   sortable,
   onSort,
@@ -666,25 +693,40 @@ export const Grid = ({
           ({ id }) => id === nextSelectedItemId,
         );
 
+        // infinity (uniform ReactList): root > translate > items > row
         const itemHeight = infinity
           ? elementBody.current.children[0].children[0].children[0].children[0]
               .offsetHeight
           : elementBody.current.children[0].offsetHeight;
 
-        const bodyHeight = element.current.offsetHeight;
+        // the body itself (freezeHeader: `scroll-y`), the grid (height) or its nearest
+        // scrolling parent (e.g. a tree in a scrolling column)
+        const body = elementBody.current;
+        const isBodyScroll = body.scrollHeight > body.clientHeight;
+        const container = isBodyScroll ? body : getScrollContainer(element.current);
+        const isOwnContainer = isBodyScroll || container === element.current;
+        const bodyHeight = container.clientHeight;
 
-        const itemScrollTop = itemHeight * nextSelectedItemIndex;
+        // the rows from the top of the scrolled content of the container
+        const bodyTop =
+          elementBody.current.getBoundingClientRect().top -
+          container.getBoundingClientRect().top +
+          container.scrollTop;
+
+        const itemScrollTop =
+          (isOwnContainer ? 0 : bodyTop) + itemHeight * nextSelectedItemIndex;
 
         if (nextSelectedItemIndex === -1) {
-          element.current.scrollTop = 0;
+          if (isOwnContainer) {
+            container.scrollTop = 0;
+          }
         } else if (
           // out bottom
-          element.current.scrollTop + bodyHeight < itemScrollTop + itemHeight ||
+          container.scrollTop + bodyHeight < itemScrollTop + itemHeight ||
           // out top
-          element.current.scrollTop > itemScrollTop
+          container.scrollTop > itemScrollTop
         ) {
-          element.current.scrollTop =
-            itemScrollTop - bodyHeight / 2 + itemHeight / 2;
+          container.scrollTop = itemScrollTop - bodyHeight / 2 + itemHeight / 2;
         }
       }
     }
@@ -1302,6 +1344,24 @@ export const Grid = ({
           const prevSelection = store.getState().form[formId] || [];
 
           let nextSelection = [record.id];
+
+          // tree, single select: shift + click → the parent of the record
+          if (treeNodes && !multipleSelect && event.shiftKey) {
+            const parentId = treeNodesById[record.id]?.parentId;
+
+            if (parentId !== undefined) {
+              nextSelection = [parentId];
+            }
+          }
+          // the only selected record again: deselect
+          else if (
+            deselectable &&
+            prevSelection.length === 1 &&
+            prevSelection[0] === record.id &&
+            !(multipleSelect && (event.ctrlKey || event.metaKey || event.shiftKey))
+          ) {
+            nextSelection = [];
+          }
 
           /**
            * IF multipleSelect = expand or reduce width new value (reduce if it is exist yet)

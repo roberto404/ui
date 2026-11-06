@@ -151,3 +151,35 @@ export const FreeTextTemplate: Story = {
 };
 
 FreeTextTemplate.storyName = 'Szabad szöveg (sablon)';
+
+
+/* !- Tag opciói: kattintásra pipálós menü, kipipált opcióknál más színű tag */
+
+// kategória-sablon: a jellemző csak a kipipált opcióknál jelenik meg ({features/1:2,3})
+const TAG_OPTIONS = {
+  '{features/1}': [
+    { id: '1', title: 'fa' },
+    { id: '2', title: 'üveg' },
+    { id: '3', title: 'kő' },
+  ],
+  '{features/10}': COLORS.map(({ id, title }) => ({ id: String(id), title })),
+};
+
+reduxStore.dispatch(
+  setValues({ template_title: '{features/1:2,3} {category}, {features/10}' }, FORM)
+);
+
+export const TagOptions: Story = {
+  args: {
+    id: 'template_title',
+    label: 'Név sablon',
+    data: TEMPLATE_VARIABLES,
+    freeText: true,
+    stateFormat: (value: string) => parseTemplate(value, TEMPLATE_VARIABLES),
+    format: stringifyTemplate,
+    tagOptions: (item: { id: string }) => TAG_OPTIONS[item.id],
+    tagOptionsLabel: 'Csak ezeknél az értékeknél jelenik meg',
+  },
+};
+
+TagOptions.storyName = 'Tag opciók (szűrő)';
