@@ -156,7 +156,8 @@ export const tooltip = (element: React.Element | string, event: {} = {}, options
     closeable: false,
     options: {
       ...options,
-      className: 'tooltip',
+      // saját osztály mellé (pl. `tooltip-dark`)
+      className: ['tooltip', options.className].filter(Boolean).join(' '),
     }
   });
 };

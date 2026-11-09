@@ -312,6 +312,29 @@ body.hide\:curtain .layer
       width: max-content;
     }
 
+    // sötét pirula (pl. ikongombok felirata): `<Tooltip layerClassName="tooltip-dark">`
+    &.tooltip-dark
+    {
+      pointer-events: none;
+
+      .container
+      {
+        padding: 0.7rem 1.4rem;
+        border-radius: 1.2rem;
+        color: #ffffff;
+        background: #23221f;
+        box-shadow: 0 6px 18px rgba(35, 34, 31, 0.18);
+        font-size: 1.4rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .container .content
+      {
+        padding: 0;
+      }
+    }
+
     &:not(.closeable) .close
     {
       display: none;

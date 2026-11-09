@@ -32,6 +32,10 @@ type PropTypes =
      * Érintőképernyőn (nincs hover) érdemes bekapcsolni.
      */
     disabled?: boolean,
+    /**
+     * A tooltip rétegének osztálya, pl. `tooltip-dark` (sötét pirula)
+     */
+    layerClassName?: string,
 
   } & Partial<typeof defaultProps>;
 
@@ -42,6 +46,7 @@ const Tooltip = ({
   title,
   onClick,
   disabled = defaultProps.disabled,
+  layerClassName,
 }: PropTypes) => {
   const dispatch = useDispatch();
 
@@ -61,7 +66,7 @@ const Tooltip = ({
     const isLayer = store.getState().layer.active === true;
 
     if (eventDataRef.current && isLayer) {
-      dispatch(tooltip(title, eventDataRef.current));
+      dispatch(tooltip(title, eventDataRef.current, { className: layerClassName }));
     }
   }, [title]);
 
@@ -78,12 +83,14 @@ const Tooltip = ({
     if (!isLayer) {
       // useRef cannot keep full event
       eventDataRef.current = { x: event.clientX, y: event.clientY, currentTarget: event.currentTarget };
-      dispatch(tooltip(title, event));
+      dispatch(tooltip(title, event, { className: layerClassName }));
     }
   };
 
   const onMouseLeaveHandler = () => {
-    const isTooltip = store.getState().layer.method === 'popover';
+    // csak a saját tooltipet zárja: a gombra kattintva nyílt popover (pl. kalkulátor) maradjon
+    const { method, options } = store.getState().layer;
+    const isTooltip = method === 'popover' && /(^|\s)tooltip(\s|$)/.test(options?.className || '');
 
     if (isTooltip) {
       dispatch(flush());
