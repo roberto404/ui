@@ -434,6 +434,8 @@ const Grid = ({
   const element = useRef<HTMLDivElement>(null);
   const elementBody = useRef<HTMLDivElement>(null);
   const prevSelectedItemId = useRef<number | null>(null);
+  /** the selected id is not in the data yet: scroll to it when it arrives */
+  const pendingSelectedItemId = useRef<number | null>(null);
 
   const [focus, setFocus] = useState(autoFocus);
 
@@ -686,52 +688,100 @@ const Grid = ({
       const nextSelectedItemId =
         gridSelectedItemIds[gridSelectedItemIds.length - 1];
 
-      if (prevSelectedItemId.current !== nextSelectedItemId) {
+      const isNewSelection = prevSelectedItemId.current !== nextSelectedItemId;
+
+      // selected before its row arrived (e.g. expand / setData in an effect): scroll once it is there
+      const nextSelectedItemIndex =
+        isNewSelection || pendingSelectedItemId.current === nextSelectedItemId
+          ? getNavData().findIndex(({ id }) => id === nextSelectedItemId)
+          : -1;
+
+      if (!isNewSelection && nextSelectedItemIndex !== -1) {
+        pendingSelectedItemId.current = null;
+        window.requestAnimationFrame(() => scrollToItem(nextSelectedItemIndex));
+      }
+
+      if (isNewSelection) {
         prevSelectedItemId.current = nextSelectedItemId;
+        pendingSelectedItemId.current =
+          nextSelectedItemIndex === -1 && nextSelectedItemId !== undefined
+            ? nextSelectedItemId
+            : null;
 
-        const nextSelectedItemIndex = getNavData().findIndex(
-          ({ id }) => id === nextSelectedItemId,
+        // the selector runs during render: measure after the commit (e.g. the
+        // selected row is rendered by the same update -> paginate, expand)
+        window.requestAnimationFrame(() =>
+          scrollToItem(nextSelectedItemIndex),
         );
-
-        // infinity (uniform ReactList): root > translate > items > row
-        const itemHeight = infinity
-          ? elementBody.current.children[0].children[0].children[0].children[0]
-              .offsetHeight
-          : elementBody.current.children[0].offsetHeight;
-
-        // the body itself (freezeHeader: `scroll-y`), the grid (height) or its nearest
-        // scrolling parent (e.g. a tree in a scrolling column)
-        const body = elementBody.current;
-        const isBodyScroll = body.scrollHeight > body.clientHeight;
-        const container = isBodyScroll ? body : getScrollContainer(element.current);
-        const isOwnContainer = isBodyScroll || container === element.current;
-        const bodyHeight = container.clientHeight;
-
-        // the rows from the top of the scrolled content of the container
-        const bodyTop =
-          elementBody.current.getBoundingClientRect().top -
-          container.getBoundingClientRect().top +
-          container.scrollTop;
-
-        const itemScrollTop =
-          (isOwnContainer ? 0 : bodyTop) + itemHeight * nextSelectedItemIndex;
-
-        if (nextSelectedItemIndex === -1) {
-          if (isOwnContainer) {
-            container.scrollTop = 0;
-          }
-        } else if (
-          // out bottom
-          container.scrollTop + bodyHeight < itemScrollTop + itemHeight ||
-          // out top
-          container.scrollTop > itemScrollTop
-        ) {
-          container.scrollTop = itemScrollTop - bodyHeight / 2 + itemHeight / 2;
-        }
       }
     }
     // return false;
   });
+
+  /**
+   * Scroll the grid (or its scrolling parent) to keep the item visible
+   * @param index index of the item in the navigation data, -1: nothing selected
+   */
+  const scrollToItem = (index: number) => {
+    const body = elementBody.current;
+
+    if (!body || !element.current) {
+      return;
+    }
+
+    // the body itself (freezeHeader: `scroll-y`), the grid (height) or its nearest
+    // scrolling parent (e.g. a tree in a scrolling column)
+    const isBodyScroll = body.scrollHeight > body.clientHeight;
+    const container = isBodyScroll ? body : getScrollContainer(element.current);
+    const isOwnContainer = isBodyScroll || container === element.current;
+    const bodyHeight = container.clientHeight;
+    const containerTop = container.getBoundingClientRect().top;
+
+    if (index === -1) {
+      if (isOwnContainer) {
+        container.scrollTop = 0;
+      }
+
+      return;
+    }
+
+    // one DOM element per row: its real position (rows side by side, e.g. `flex wrap`
+    // tiles, or different row heights), else estimated by the uniform row height
+    const rowElement =
+      !infinity && body.children.length === getNavData().length
+        ? (body.children[index] as HTMLElement | undefined)
+        : undefined;
+
+    let itemScrollTop: number;
+    let itemHeight: number;
+
+    if (rowElement) {
+      itemHeight = rowElement.offsetHeight;
+      itemScrollTop =
+        rowElement.getBoundingClientRect().top - containerTop + container.scrollTop;
+    } else {
+      // infinity (uniform ReactList): root > translate > items > row
+      const firstRow = infinity
+        ? body.children[0]?.children[0]?.children[0]?.children[0]
+        : body.children[0];
+
+      itemHeight = (firstRow as HTMLElement | undefined)?.offsetHeight || 0;
+
+      // the rows from the top of the scrolled content of the container
+      const bodyTop = body.getBoundingClientRect().top - containerTop + container.scrollTop;
+
+      itemScrollTop = (isOwnContainer ? 0 : bodyTop) + itemHeight * index;
+    }
+
+    if (
+      // out bottom
+      container.scrollTop + bodyHeight < itemScrollTop + itemHeight ||
+      // out top
+      container.scrollTop > itemScrollTop
+    ) {
+      container.scrollTop = itemScrollTop - bodyHeight / 2 + itemHeight / 2;
+    }
+  };
 
   /**
    * Handling the grid is on focus
