@@ -188,7 +188,19 @@ CalendarMonthIntervalCaroussel.defaultProps =
 
 
 
-const simplifyDateInterval = (fromDate, toDate) => {
+/**
+ * Short label of a date interval (moment objects)
+ * @example
+ * // 2026. november 5.
+ * // 2026. november 5-7.
+ * // 2026. nov. 5 - dec. 7.
+ * // 2025. dec. 5. - 2026. jan. 7.
+ */
+export const simplifyDateInterval = (fromDate, toDate) => {
+  if (fromDate.isSame(toDate, 'day')) {
+    return `${fromDate.format('YYYY')}. ${fromDate.format('MMMM')} ${fromDate.format('Do')}`;
+  }
+
   if (fromDate.format('YYYY') !== toDate.format('YYYY')) {
     return `${moment(fromDate, DATE_FORMAT_HTML5).format('ll')} - ${moment(toDate, DATE_FORMAT_HTML5).format('ll')}`;
   }

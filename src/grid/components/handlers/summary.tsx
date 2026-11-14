@@ -40,6 +40,24 @@ import { DATE_FORMAT, ONE_DAY } from '../../../calendar/constants';
 const simplifyArgs = [1000, ['', 'E', 'M', 'Mrd']];
 
 /**
+ * Title of the summary: the column title of the grid hook (a string one),
+ * `summaryTitle` overrides it when the title is ambiguous (eg. the same
+ * store column in two years)
+ *
+ * @example
+ * getSummaryTitle({ c0_0: { title: 'RS2' } }, 'c0_0') // => 'RS2 oszlop összegzés'
+ */
+export const getSummaryTitle = (hook = {}, column?: string) => {
+  const columnHook = hook[column] || {};
+  const title = columnHook.summaryTitle
+    ?? (typeof columnHook === 'string' ? columnHook : columnHook.title);
+
+  return typeof title === 'string' && title
+    ? `${title} oszlop összegzés`
+    : 'Oszlop statisztikai összegzés';
+};
+
+/**
  * 
  * @returns { SummaryHandler }
  */
@@ -47,7 +65,7 @@ export function useSummaryHandler() {
 
   const dispatch = useDispatch();
 
-  const SummaryHandler = ({ records, column, data, helper = {}, event }) => {
+  const SummaryHandler = ({ records, column, data, helper = {}, hook = {}, event }) => {
 
     if (!column) return;
 
@@ -279,7 +297,7 @@ export function useSummaryHandler() {
     dispatch(sidebar(
       <div className='p-2' style={{ width: 500 }}>
         <SummaryData
-          title='Oszlop statisztikai összegzés'
+          title={getSummaryTitle(hook, column)}
           subTitle='Részletek'
           {...summaryProps}
           helper={helper}

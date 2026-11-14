@@ -1,0 +1,204 @@
+/*
+  CalendarScroll — függőlegesen végtelenül görgethető naptár (calendarScroll.tsx)
+  Csak a szerkezet van itt (sticky fejléc/cím, sáv, elem-forma); a színek ui utility-k.
+  Minden méret em: a beágyazó betűmérete skálázza.
+ */
+
+@import '../../../assets/style/mixins';
+
+.root {
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  /* a görgetési pozíciót a komponens igazítja (horgony-blokk), a böngésző ne korrigáljon rá */
+  overflow-anchor: none;
+}
+
+/*
+  Típusonkénti méretek. Az elem és az időszak-sáv magassága közös (--calendar-scroll-item),
+  így a sáv vége pontosan az elembe fut; a sáv lekerekítése az elemé (--calendar-scroll-radius).
+ */
+.day {
+  --calendar-scroll-item: 2.4em;
+  --calendar-scroll-item-width: var(--calendar-scroll-item);
+  --calendar-scroll-cell: 2.8em;
+  --calendar-scroll-radius: calc(var(--calendar-scroll-item) / 2);
+}
+
+.month {
+  --calendar-scroll-item: 2.8em;
+  --calendar-scroll-item-width: calc(100% - 0.6em);
+  --calendar-scroll-cell: 3.6em;
+  --calendar-scroll-radius: 0.8em;
+}
+
+.quarter {
+  --calendar-scroll-item: 4em;
+  --calendar-scroll-item-width: calc(100% - 0.6em);
+  --calendar-scroll-cell: 4.8em;
+  --calendar-scroll-radius: 0.9em;
+}
+
+/* a napok neve görgetés közben is látszik (csak nap-nézetben) */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  border-bottom: 1px solid $gray-light;
+
+  > div {
+    flex: 1 1 0;
+    text-align: center;
+  }
+}
+
+/* az aktuális blokk címe a lista tetején tapad; a blokk végén a következő kitolja */
+.title {
+  position: sticky;
+  top: var(--calendar-scroll-header, 0);
+  z-index: 2;
+  /* az átmenet helye: nyugalmi helyzetben nem lóg az első sorra */
+  margin-bottom: 0.5em;
+
+  /* lágy átmenet a cím alatt elgörgő sorok felé */
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 0.5em;
+    background: linear-gradient(to bottom, $white-light, rgba($white-light, 0));
+    pointer-events: none;
+  }
+}
+
+/* „Egész hónap / év” gomb: csak a cím fölé víve látszik */
+.whole {
+  /* K2 globális `button { width: 100% }` ellen */
+  width: auto;
+  flex: 0 0 auto;
+  opacity: 0;
+  transition: opacity 0.15s;
+
+  .title:hover &,
+  &:focus-visible {
+    opacity: 1;
+  }
+
+  /* érintőképernyőn nincs hover → mindig látszik */
+  @media (hover: none) {
+    opacity: 1;
+  }
+}
+
+.wholeIcon {
+  width: 1.2em;
+  height: 1.2em;
+  /* a szöveg színét veszi át; a `fill-*` utility a material ikon átlátszó háttér-pathját is kiszínezné */
+  fill: currentColor;
+}
+
+.row {
+  display: flex;
+}
+
+/* hétszám-oszlop (nap-nézet, `weekNumbers`) */
+.week {
+  flex: 0 0 2.8em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid $gray-light;
+}
+
+.header > .weekHeader {
+  flex: 0 0 2.8em;
+  align-self: center;
+}
+
+.weekChip {
+  width: 2.2em;
+  height: 1.8em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+.cell {
+  position: relative;
+  flex: 1 1 0;
+  height: var(--calendar-scroll-cell);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* időszak-sáv az elem mögött, vele azonos magasságban; az időszak két végén csak a belső fele */
+.band {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: var(--calendar-scroll-item);
+  transform: translateY(-50%);
+}
+
+.bandStart {
+  left: 50%;
+}
+
+.bandEnd {
+  right: 50%;
+}
+
+/* a sáv lekerekített vége (sor széle, blokk széle) */
+.capLeft {
+  border-top-left-radius: var(--calendar-scroll-radius);
+  border-bottom-left-radius: var(--calendar-scroll-radius);
+}
+
+.capRight {
+  border-top-right-radius: var(--calendar-scroll-radius);
+  border-bottom-right-radius: var(--calendar-scroll-radius);
+}
+
+/* nap = kör, hónap/negyedév = lekerekített téglalap */
+.item {
+  position: relative;
+  z-index: 1;
+  width: var(--calendar-scroll-item-width);
+  height: var(--calendar-scroll-item);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--calendar-scroll-radius);
+  cursor: pointer;
+  transition: background-color 0.15s;
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.35;
+  }
+}
+
+.selected {
+  box-shadow: 0 0.3em 0.8em rgba($blue-dark, 0.35);
+}
+
+/* az aktuális hónap / negyedév: kék keret (belső árnyék, nem tolja el a méretet) */
+.current {
+  box-shadow: inset 0 0 0 2px $blue-dark;
+}
+
+.sentinel {
+  height: 1px;
+}

@@ -188,7 +188,10 @@ class GridFilters extends Component {
         return result;
       },
       [],
-    );
+    )
+      // format returns null: the tag is not shown (e.g. merged into another one)
+      .map(tag => ({ ...tag, formatted: this.props.format({ id: tag.id, value: tag.intlValues || tag.value }) }))
+      .filter(({ formatted }) => formatted !== null);
 
     if (tags.length === 0) {
       return Placeholder ? <Placeholder {...this.props} /> : <div />;
@@ -199,7 +202,7 @@ class GridFilters extends Component {
         {this.props.label}
         <div className={this.props.className}>
           {
-            tags.map(({ id, value, label, intlValues }) => (
+            tags.map(({ id, value, label, formatted }) => (
               <div
                 key={`${id}-${value}`}
                 className={this.props.tagClassName}
@@ -211,7 +214,7 @@ class GridFilters extends Component {
                   <div className="firstcase colon">{label}</div>
                 }
                 <div>
-                  {this.props.format({ id, value: intlValues || value })}
+                  {formatted}
                 </div>
                 <IconClose style={{ margin: '-2px 0px -1px 0' }} />
               </div>
@@ -231,7 +234,7 @@ GridFilters.propTypes =
 {
   onClick: PropTypes.func,
   /**
-   * Format field value.
+   * Format field value. Returning null hides the tag.
    */
   format: PropTypes.func,
   className: PropTypes.string,

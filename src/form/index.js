@@ -16,6 +16,8 @@ import CalendarMonth from './components/calendarMonth';
 import CalendarMonthButton from './components/calendarMonthButton';
 import CalendarMonthInterval from './components/calendarMonthInterval';
 import CalendarMonthCaroussel from './components/calendarMonthCaroussel';
+import CalendarScroll from './components/calendarScroll';
+import CalendarRange from './components/calendarRange';
 import DateTime from './components/datetime';
 import Slider from './components/slider';
 import Field from './components/field';
@@ -45,6 +47,8 @@ export {
   CalendarMonthButton,
   CalendarMonthInterval,
   CalendarMonthCaroussel,
+  CalendarScroll,
+  CalendarRange,
   Slider,
   DateTime,
   Plain,

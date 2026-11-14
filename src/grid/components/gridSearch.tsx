@@ -406,8 +406,9 @@ const GridSearch = (props: PropTypes) => {
 
 
 
+  // lazyLoad: a kereső ikon a sárga gombban van, a mező elé nem kell
   const prefixLabel = lazyLoad ?
-    <IconSearch className="w-2 h-auto fill-gray flip-horizontal" />
+    undefined
     :
     <div className="icon embed-search-gray">Keresés</div>;
 
@@ -427,10 +428,10 @@ const GridSearch = (props: PropTypes) => {
         }>
           <div
             onClick={onClickSearchHandler}
-            className='p-2 uppercase text-xs bold pointer'
+            className='p-1 h-center pointer'
             style={{ background: '#f8d53e' }}
           >
-            Keresés
+            <IconSearch className="w-2 h-2 fill-black flip-horizontal" />
           </div>
         </Tooltip>
       }

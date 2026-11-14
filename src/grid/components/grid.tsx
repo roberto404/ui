@@ -1072,6 +1072,8 @@ const Grid = ({
 
               const column = store.getState().form[formId + COL_POSTFIX];
               const helper = store.getState().grid?.[gridId]?.helper;
+              // the current columns (the hook of the store, the prop is stale here)
+              const gridHook = store.getState().grid?.[gridId]?.hook || hook;
 
               shortcut.handler({
                 records: getData().filter(({ id }) =>
@@ -1080,6 +1082,7 @@ const Grid = ({
                 column,
                 data: getData(),
                 helper,
+                hook: gridHook,
                 formId,
                 event,
               });

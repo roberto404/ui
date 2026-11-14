@@ -1,0 +1,179 @@
+/*
+  CalendarRange — időszak-választó popover (calendarRange.tsx)
+  Csak ami utility-vel nem megy: kártya-forma, rács, keretek; a színek ui utility-k.
+  Minden méret em: a beágyazó betűmérete skálázza.
+ */
+
+@import '../../../assets/style/mixins';
+
+/*
+  a layer popover-konténere: lekerekített kártya, saját bezáró gombbal
+  (`:global(.layer.popover)` a layer.scss `.layer.popover .container` szabályánál erősebb szelektorért)
+ */
+:global(.layer.popover).layer {
+  :global(.container) {
+    border-radius: 1.6em;
+    /* a bal oldali sáv háttere is kövesse a lekerekítést */
+    overflow: hidden;
+    box-shadow: 0 0.6em 2.4em rgba($black, 0.12);
+  }
+
+  :global(.close) {
+    display: none;
+  }
+}
+
+/* a fülek a teljes szélességet kitöltik, egyenlő részekben */
+.tabs {
+  :global(.segment-track) {
+    display: flex;
+    width: 100%;
+  }
+
+  :global(.segment-item) {
+    flex: 1 1 0;
+    white-space: nowrap;
+  }
+}
+
+/*
+  bal oldalt a gyorsgombok, jobbra a naptár.
+  A teljes panel mérete ebből az egy betűméretből skálázódik (minden méret em);
+  felülírható a `--calendar-range-size` CSS változóval (pl. a layer className-jén vagy egy ősön).
+ */
+.panel {
+  align-items: stretch;
+  font-size: var(--calendar-range-size, 0.8em);
+}
+
+.main {
+  width: 30em;
+}
+
+/* Ettől / Eddig */
+.fields {
+  padding: 0.25em;
+  border-radius: 1em;
+}
+
+.field {
+  flex: 1 1 0;
+  border-radius: 0.8em;
+  border: 2px solid transparent;
+}
+
+/* címke és érték között kis térköz */
+.fieldLabel {
+  margin-bottom: 0.3em;
+}
+
+.fieldActive {
+  border-color: $blue-dark;
+  background: $white-light;
+}
+
+.close {
+  flex: 0 0 auto;
+  width: 2.8em;
+  height: 2.8em;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  width: 1.2em;
+  height: 1.2em;
+  fill: currentColor;
+}
+
+/* gyorsgombok: bal oldali függőleges lista */
+.presets {
+  flex: 0 0 12em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+  border-right: 1px solid $gray-light;
+  letter-spacing: 0.01em;
+
+  > div:first-child {
+    letter-spacing: 0.08em;
+  }
+}
+
+.preset {
+  /* K2 globális button: középre igazít */
+  justify-content: flex-start;
+  gap: 0.6em;
+  padding: 0.75em 1em 0.75em 0.6em;
+  border-radius: 0.8em;
+  transition: background-color 0.15s, box-shadow 0.15s;
+
+  &:hover {
+    background: rgba($white-light, 0.6);
+  }
+}
+
+/* a kiválasztott gyorsgomb: fehér kártya */
+.presetActive,
+.presetActive:hover {
+  background: $white-light;
+  box-shadow: 0 1px 4px rgba($black, 0.1);
+}
+
+/* kék pont a kiválasztott elem előtt (a helye mindig megvan, így a szöveg nem ugrik) */
+.presetDot {
+  flex: 0 0 0.4em;
+  height: 0.4em;
+  border-radius: 50%;
+}
+
+/* keskeny képernyőn a lista a naptár fölé kerül, vízszintesen görgethető */
+@media (max-width: 44em) {
+  .panel {
+    flex-direction: column;
+  }
+
+  .main {
+    width: auto;
+  }
+
+  .presets {
+    flex: 0 0 auto;
+    flex-direction: row;
+    overflow-x: auto;
+    border-right: 0;
+    border-bottom: 1px solid $gray-light;
+
+    > div:first-child {
+      display: none;
+    }
+  }
+
+  .preset {
+    width: auto;
+  }
+}
+
+.footer {
+  border-top: 1px solid $gray-light;
+}
+
+/* K2 globális `button { width: 100% }` ellen (az `.initial` ezt nem nullázza) */
+.clear,
+.apply {
+  width: auto;
+  height: 3em;
+  border-radius: 0.9em;
+}
+
+.clear {
+  flex: 0 0 auto;
+  border: 1px solid $black-light;
+}
+
+.apply:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
