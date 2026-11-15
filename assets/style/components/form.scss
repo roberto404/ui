@@ -751,8 +751,18 @@ input:checked~label {
 
 
 &.complete {
-  input:not([type="radio"]):not([type="checkbox"]) {
+  input:not([type="radio"]):not([type="checkbox"]),
+  select {
     border-color: $green-dark;
+  }
+}
+
+// mandatory field without value
+&.incomplete {
+  input:not([type="radio"]):not([type="checkbox"]),
+  select,
+  textarea {
+    border-color: $yellow;
   }
 }
 

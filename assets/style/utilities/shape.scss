@@ -350,6 +350,10 @@ hr {
   fill: $yellow;
 }
 
+.fill-yellow-dark * {
+  fill: $yellow-dark;
+}
+
 .fill-blue * {
   fill: $blue;
 }
