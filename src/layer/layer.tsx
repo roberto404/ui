@@ -46,6 +46,16 @@ const Layer = () => {
   // scroll position has to restore after the layer closed
   const isScrollSaved = useRef(false);
   const mouseDownElementTarget = useRef();
+  // body classes added by the layer: on close only these are removed (not the page's own body classes)
+  const bodyClasses = useRef<string[]>([]);
+
+  const addBodyClass = (className: string) => {
+    document.body.classList.add(className);
+
+    if (bodyClasses.current.indexOf(className) === -1) {
+      bodyClasses.current.push(className);
+    }
+  };
 
   useComponentDidMount(() => {
     scrollTop.current = 0;
@@ -147,19 +157,15 @@ const Layer = () => {
     }
 
     if (method === 'popover') {
-      document.body.classList.add("layer-popover");
+      addBodyClass("layer-popover");
       document.onclick = documentOnClickListener;
     }
     else {
-      `overflow h-screen layer-${method}`.split(' ').forEach(className =>
-        document.body.classList.add(className)
-      );
+      `overflow h-screen layer-${method}`.split(' ').forEach(addBodyClass);
     }
 
     if (options.bodyClass) {
-      options.bodyClass.split(' ').forEach(className =>
-        document.body.classList.add(className)
-      );
+      options.bodyClass.split(' ').filter(className => className).forEach(addBodyClass);
     }
 
     if (closeable) {
@@ -177,8 +183,9 @@ const Layer = () => {
     }
   }
   else {
-    if (typeof document !== 'undefined') {
-      document.body.className = '';
+    if (typeof document !== 'undefined' && bodyClasses.current.length) {
+      bodyClasses.current.forEach(className => document.body.classList.remove(className));
+      bodyClasses.current = [];
     }
   }
 

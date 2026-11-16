@@ -220,6 +220,41 @@ button:not(.initial),
     @extend .red;
   }
 
+  // Lapos akciógomb, kisbetűs, félkövér (pl. szerkesztő fejléc: Elvetés / Mentés)
+  // .solid = fehér, .solid.accent = kék elsődleges
+  &.solid
+  {
+    padding: 0.9em 1.6em;
+    border-radius: 0.8rem;
+    font-size: 0.9em;
+    font-weight: bold;
+    text-transform: none;
+    white-space: nowrap;
+    color: $black;
+    background-color: $white-light;
+    box-shadow: 0 1px 3px rgba($black, 0.1);
+
+    &:hover
+    {
+      color: $blue-dark;
+    }
+
+    // ikon színe: fill-* osztállyal (pl. .solid.accent.fill-white), mint a többi gombnál
+
+    &.accent
+    {
+      color: $white-light;
+      background-color: $blue-dark;
+      box-shadow: 0 4px 12px rgba($blue-dark, 0.35);
+
+      &:hover
+      {
+        color: $white-light;
+        background-color: darken($blue-dark, 6%);
+      }
+    }
+  }
+
   &[disabled],
   &.disabled
   {
