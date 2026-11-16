@@ -186,7 +186,8 @@ h3,
   color: $blue;
 }
 
-.text-blue-dark {
+.text-blue-dark,
+.hover\:text-blue-dark:hover {
   color: $blue-dark;
 }
 
