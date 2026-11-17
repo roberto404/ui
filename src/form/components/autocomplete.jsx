@@ -378,7 +378,7 @@ class Autocomplete extends Component {
     this.menuItems = [];
     this.isMenuPending = false;
     this.isSelectedMenu = false;
-    this.context.store.dispatch(flush());
+    this.flushMenu();
 
     this.onChangeHandler(value);
   }
@@ -428,7 +428,7 @@ class Autocomplete extends Component {
     else if (this.props.freeText && !getSearchTerm(this.inputStateFormat(payload.value))) {
       this.menuItems = [];
       this.isMenuPending = false;
-      this.context.store.dispatch(flush());
+      this.flushMenu();
     }
     else {
       this.showMenu(payload, event);
@@ -557,7 +557,7 @@ class Autocomplete extends Component {
 
     event.preventDefault();
 
-    this.context.store.dispatch(flush());
+    this.flushMenu();
 
     state.pop();
 
@@ -603,7 +603,7 @@ class Autocomplete extends Component {
       this.openMenu();
     }
     else {
-      this.context.store.dispatch(flush());
+      this.flushMenu();
     }
   }
 
@@ -657,7 +657,7 @@ class Autocomplete extends Component {
 
     if (!items.length) {
       if (isVisible) {
-        this.context.store.dispatch(flush());
+        this.flushMenu();
       }
     }
     else if (isVisible) {
@@ -674,6 +674,19 @@ class Autocomplete extends Component {
   showAll = () => {
     this.isShowAll = true;
     this.refreshMenu();
+  }
+
+  /**
+   * Close the suggestion menu (popover) — never an other layer:
+   * the blur of a still focused input (ex. a dialog opened by Enter, then a click in it)
+   * submitted and flushed the dialog
+   */
+  flushMenu = () => {
+    const { layer = {} } = this.context.store.getState();
+
+    if (layer.method === 'popover') {
+      this.context.store.dispatch(flush());
+    }
   }
 
   /**
@@ -876,7 +889,7 @@ class Autocomplete extends Component {
       const state = this.getState();
 
       if (state) {
-        this.context.store.dispatch(flush());
+        this.flushMenu();
         this.onChangeHandler(state);
       }
 
@@ -893,7 +906,7 @@ class Autocomplete extends Component {
 
       state[state.length - 1] = item;
 
-      this.context.store.dispatch(flush());
+      this.flushMenu();
       this.onChangeHandler(state);
     }
   }
