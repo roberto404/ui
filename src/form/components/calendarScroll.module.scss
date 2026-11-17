@@ -102,6 +102,15 @@
   fill: currentColor;
 }
 
+/*
+  K2 a régi `public_html/kontakt2/app.css`-t is betölti, abban `.initial` kivétel nélkül
+  `button svg { margin }` és `button:not(.no-fill) svg path { fill }` van (utóbbit a `no-fill` kapcsolja ki).
+  A margó-szabály (0,2,2) fölé kell menni.
+ */
+.whole > .wholeIcon:first-child {
+  margin: 0;
+}
+
 .row {
   display: flex;
 }

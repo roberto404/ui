@@ -196,7 +196,7 @@ const Section = memo(
               type="button"
               onClick={() => onSelectAll(enabled[0], enabled[enabled.length - 1])}
               className={classNames(
-                'initial bg-blue-light text-blue-dark bold text-s rounded-l px-1 py-1/2 flex h-center gap-1/2 nowrap pointer',
+                'initial no-fill bg-blue-light text-blue-dark bold text-s rounded-l px-1 py-1/2 flex h-center gap-1/2 nowrap pointer',
                 styles.whole,
               )}
             >
