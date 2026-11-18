@@ -378,6 +378,15 @@ hr {
   fill: rgba(0, 0, 0, 0);
 }
 
+// tint: tetszőleges szín CSS változóból (style={{ '--tint': '#7b4fd6' }}), pl. konfigurálható kategória-szín
+.fill-tint * {
+  fill: var(--tint, $gray-dark);
+}
+
+.bg-tint {
+  background-color: color-mix(in srgb, var(--tint, $gray-dark) 12%, $white-light);
+}
+
 .hover\:fill-black:hover * {
   fill: $black !important;
 }

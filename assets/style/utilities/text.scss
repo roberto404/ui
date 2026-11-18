@@ -195,6 +195,11 @@ h3,
   color: $blue-light;
 }
 
+// tint: tetszőleges szín CSS változóból (lásd .bg-tint / .fill-tint)
+.text-tint {
+  color: var(--tint, $gray-dark);
+}
+
 .text-yellow-light {
   color: $yellow-light;
 }

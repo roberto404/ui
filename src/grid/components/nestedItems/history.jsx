@@ -8,6 +8,7 @@ import classNames from 'classnames';
 
 import IconCheck from '../../../icon/mui/navigation/check';
 import HistoryChanges from './historyChanges';
+import { getHistoryCategory } from './historyCategories';
 
 
 /* !- Constants */
@@ -104,6 +105,74 @@ let prevUserId;
 /**
  * [Messages description]
  */
+/**
+ * Tag colors: the API sends tag modifier names (green, red...) or utility classes
+ * (`border bg-white-light border-yellow text-yellow`): modifiers => utilities, missing parts => gray
+ */
+const TAG_TOKENS = {
+  green: 'bg-green-light border-green text-green-dark',
+  red: 'bg-red-light border-red text-red',
+  yellow: 'bg-yellow-light border-yellow text-yellow',
+  blue: 'bg-blue-light border-blue-dark text-blue-dark',
+  'blue-light': 'bg-blue-light border-blue-dark text-blue-dark',
+  gray: 'bg-gray border-gray',
+  'gray-light': 'bg-gray-light border-gray',
+};
+
+export const getTagClassName = (className = '') =>
+{
+  const tokens = className.split(/\s+/).filter(Boolean).map(token => TAG_TOKENS[token] || token).join(' ');
+
+  return classNames('inline-block border border-2 rounded px-1/2 mr-1/2 mb-1/2 text-xs text-line-l bold uppercase text-nowarp', tokens, {
+    'bg-gray-light': !/(^|\s)bg-/.test(tokens),
+    'border-gray': !/(^|\s)border-(?!2)[a-z]/.test(tokens),
+    'text-gray-dark': !/(^|\s)text-(?!xs)[a-z]/.test(tokens),
+  });
+};
+
+/**
+ * Tags of an entry
+ */
+const Tags = ({ tag }) =>
+{
+  if (!tag?.length) {
+    return null;
+  }
+
+  return (
+    <div>
+      {tag.map(({ title, className }, i) => (
+        <span key={i} className={getTagClassName(className)}>
+          {title}
+        </span>
+      ))}
+    </div>
+  );
+};
+
+/**
+ * Default icon of an uncategorized entry: blue dot (create: ring)
+ */
+const Dot = ({ crud }) => (
+  <div className="w-2 text-center">
+    <svg viewBox="0 0 12 12" className="w-1 h-1 fill-blue-dark">
+      {crud === 'C' &&
+        <path d="M6,12 C2.6862915,12 0,9.3137085 0,6 C0,2.6862915 2.6862915,0 6,0 C9.3137085,0 12,2.6862915 12,6 C12,9.3137085 9.3137085,12 6,12 Z M6,10 C8.209139,10 10,8.209139 10,6 C10,3.790861 8.209139,2 6,2 C3.790861,2 2,3.790861 2,6 C2,8.209139 3.790861,10 6,10 Z" />
+      }
+      {crud !== 'C' &&
+        <circle cx="6" cy="6" r="6" />
+      }
+    </svg>
+  </div>
+);
+
+/**
+ * History entry.
+ *
+ * With category (`items.category` or `defaultCategory`, see setHistoryCategories):
+ * the category icon in a tinted circle, gray timeline, under the title the category name and the user.
+ * Without category: the classic blue dot / blue line layout.
+ */
 const History = ({
   index,
   children,
@@ -113,6 +182,8 @@ const History = ({
   isLast,
   intl,
   onClick,
+  categories,
+  defaultCategory,
 }) => {
   if (children) {
     return (
@@ -128,21 +199,16 @@ const History = ({
   /* Message */
 
   const {
-    id,
     userId,
     crud,
     model,
-    recordId,
     recordFields,
     record,
-    ip,
     insertDateTime,
 
     userName,
     title,
   } = items;
-
-  const isFirstUser = prevUserId !== userId;
 
   prevUserId = userId;
 
@@ -162,7 +228,8 @@ const History = ({
 
   // no title from the caller: "Módosítás", one field "<Mező> módosítás" (then no field label below)
   const isSingleField = !title && crud === 'U' && changedFields.length === 1;
-  const autoTitle = title ? '' : getAutoTitle(intl, model, crud, changedFields);
+  const autoTitle = title ? '' :
+    (isSingleField && changes?.[0].title ? `${changes[0].title} módosítás` : getAutoTitle(intl, model, crud, changedFields));
 
   if (changes) {
     tag = [];
@@ -172,30 +239,73 @@ const History = ({
     if (!isSingleField) {
       tag = recordFields.map(field => ({
         title: fieldTitle(intl, model, field),
-        className: 'bg-gray-light',
+        className: '',
       }));
     }
 
-    if (!message && !isDiffed) {
+    if (!message && !isDiffed && record) {
       message = recordFields.map(field => formatIfDate(record[field])).join(', ');
     }
   }
 
-  const icon = items.icon || (
-    <div className="w-2 text-center">
-      <svg viewBox="0 0 12 12" className="w-1 h-1 fill-blue-dark">
-        {crud === 'C' &&
-          <path d="M6,12 C2.6862915,12 0,9.3137085 0,6 C0,2.6862915 2.6862915,0 6,0 C9.3137085,0 12,2.6862915 12,6 C12,9.3137085 9.3137085,12 6,12 Z M6,10 C8.209139,10 10,8.209139 10,6 C10,3.790861 8.209139,2 6,2 C3.790861,2 2,3.790861 2,6 C2,8.209139 3.790861,10 6,10 Z" />
-        }
-        {crud !== 'C' &&
-          <circle cx="6" cy="6" r="6" />
-        }
-      </svg>
-    </div>
-  )
-
+  const titleText = title && intlRegex.test(title) ? intl.formatMessage({ id: title }) : (title || autoTitle);
+  const time = moment(insertDateTime).format('k:mm');
   const onClickHanlder = items.onClick || onClick;
+  const category = getHistoryCategory(items.category, categories, defaultCategory);
 
+
+  /* Category entry */
+
+  if (category) {
+    const Icon = category.icon;
+
+    return (
+      <div
+        className={classNames('flex', {
+          'pointer': typeof onClickHanlder === 'function',
+        })}
+        // --tint: the category color for the text-tint / bg-tint / fill-tint utilities
+        style={category.color ? { '--tint': category.color } : undefined}
+        onClick={event => onClickHanlder?.(items, event)}
+      >
+        <div className="w-4 shrink-0 pt-1/4 text-s light text-gray-dark">
+          {time}
+        </div>
+
+        {/* icon + gray timeline to the end of the entry (not after the last entry of the day) */}
+        <div className="column h-center shrink-0 w-3 pb-1/2">
+          <div className="circle flex h-center v-center shrink-0 @w-2 @h-2 bg-tint fill-tint">
+            {items.icon || (Icon && <Icon className="@w-1 @h-1" />)}
+          </div>
+          {isLast === false && <div className="grow border-left border-2 border-gray-light mt-1/2" />}
+        </div>
+
+        <div className="grow min-w-0 pl-1 pb-2">
+          <div className="text-m text-line-m bold firstcase mb-1/4">
+            {titleText}
+          </div>
+
+          <div className="text-s text-line-l mb-1/2">
+            <span className="text-tint bold">{category.title}</span>
+            {userName && <span className="text-gray-dark">{` · ${userName}`}</span>}
+          </div>
+
+          <Tags tag={tag} />
+
+          {changes && <HistoryChanges changes={changes} hideTitles={isSingleField} className="pb-1/2" />}
+
+          {message &&
+            <div className="text-break">
+              {message}
+            </div>
+          }
+        </div>
+      </div>
+    );
+  }
+
+
+  /* Classic entry */
 
   return (
     <div
@@ -208,13 +318,13 @@ const History = ({
       <div className="h-center">
 
         <div className="text-xs w-4">
-          {moment(insertDateTime).format('k:mm')}
+          {time}
         </div>
 
-        {icon}
+        {items.icon || <Dot crud={crud} />}
 
         <div className="bold zoom-1.1 grow pr-1 pl-1 firstcase">
-          {title && intlRegex.test(title) ? intl.formatMessage({ id: title }) : (title || autoTitle)}
+          {titleText}
         </div>
 
         <div className="light text-xs text-gray text-right">
@@ -232,15 +342,7 @@ const History = ({
         style={{ marginLeft: `calc(5rem + ${(1 - (+!isLast * 2))}px)` }}
       >
 
-        <div>
-          {(tag || []).map(({ title, className }) => (
-            <div
-              className={`rounded tag mr-1 px-1 ${className}`}
-            >
-              {title}
-            </div>
-          ))}
-        </div>
+        <Tags tag={tag} />
 
         {changes && <HistoryChanges changes={changes} hideTitles={isSingleField} className="pb-1" />}
 
