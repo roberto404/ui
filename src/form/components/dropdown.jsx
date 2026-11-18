@@ -145,7 +145,8 @@ class Dropdown extends Field {
     let value = this.state.value || [];
     value = Array.isArray(value) ? value : [value];
 
-    const placeholder = this.props.intl && this.props.dataTranslate ?
+    // placeholder={false}: no placeholder (formatMessage requires an id)
+    const placeholder = this.props.intl && this.props.dataTranslate && typeof this.props.placeholder === 'string' ?
       this.props.intl.formatMessage({ id: this.props.placeholder, default: this.props.placeholder })
       : this.props.placeholder;
 

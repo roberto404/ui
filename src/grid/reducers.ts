@@ -196,28 +196,37 @@ const reducers = (state = {}, action = {}) => {
         // @todo record.id;
         const model = getModel(state, action);
 
-        const data = action.records.reduce(
-          (result, record) => {
-            const index = findIndex(result, item => item.id == record.id);
+        const data = [...model.data];
+        // id → first index (findIndex per record was quadratic: 20k records → 10 s+);
+        // string key like the former loose `==` (1 == '1'), null == undefined
+        const toKey = id => (id == null ? '\u0000null' : String(id));
+        const indexById = new Map();
 
-            const nextRecord = {
-              ...result[index],
+        data.forEach(({ id }, index) => {
+          const key = toKey(id);
+
+          if (!indexById.has(key)) {
+            indexById.set(key, index);
+          }
+        });
+
+        action.records.forEach((record) => {
+          const key = toKey(record.id);
+          const index = indexById.get(key);
+
+          if (index === undefined) {
+            if (action.options.enableAddRecord) {
+              indexById.set(key, data.length);
+              data.push({ ...record });
+            }
+          }
+          else {
+            data[index] = {
+              ...data[index],
               ...record,
             };
-
-            if (index === -1) {
-              if (action.options.enableAddRecord) {
-                result.push(nextRecord);
-              }
-            }
-            else {
-              result[index] = nextRecord;
-            }
-
-            return result;
-          },
-          [...model.data],
-        );
+          }
+        });
 
         model.data = data;
 

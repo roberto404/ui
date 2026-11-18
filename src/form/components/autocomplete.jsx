@@ -8,6 +8,7 @@ import { useAppContext } from '../../context';
 /* !- Redux Actions */
 
 import { popover, menu, updateMenu, flush } from '../../layer/actions';
+import Menu from '../../layer/menu';
 import { setValues } from '../actions';
 
 
@@ -679,12 +680,13 @@ class Autocomplete extends Component {
   /**
    * Close the suggestion menu (popover) — never an other layer:
    * the blur of a still focused input (ex. a dialog opened by Enter, then a click in it)
-   * submitted and flushed the dialog
+   * submitted and flushed the dialog — and never an other popover
+   * (ex. the blur of the search input by a click on a grid cell, which opens its own popover)
    */
   flushMenu = () => {
     const { layer = {} } = this.context.store.getState();
 
-    if (layer.method === 'popover') {
+    if (layer.method === 'popover' && layer.element?.type === Menu) {
       this.context.store.dispatch(flush());
     }
   }
@@ -695,7 +697,7 @@ class Autocomplete extends Component {
   isMenuVisible = () => {
     const { layer = {} } = this.context.store.getState();
 
-    return !!this.menuItems?.length && layer.active && layer.method === 'popover';
+    return !!this.menuItems?.length && layer.active && layer.method === 'popover' && layer.element?.type === Menu;
   }
 
   /**
