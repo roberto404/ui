@@ -156,6 +156,13 @@ export const REGEX_QUERY_LEVEL2 = new RegExp(`^([${FIELD_CHARS}]+)(([${OPERATOR_
 
 let SEARCH_CACHE = [];
 
+/**
+ * the query the SEARCH_CACHE was built from: a grid filter chain can skip the
+ * index 0 record (an earlier filter is false), then the cache would hold the
+ * query of another search() call
+ */
+let SEARCH_CACHE_KEY;
+
 /** operators of a negation: on a path through an array every value has to meet them */
 const NEGATIVE_OPERATORS = ['!=', '!==', '*!='];
 
@@ -190,7 +197,11 @@ export const search = (props) => {
    *  ...
    * ]
    */
-  if (index === 0) {
+  const cacheKey = `${props.cnf ? 1 : 0}:${value}`;
+
+  if (index === 0 || cacheKey !== SEARCH_CACHE_KEY) {
+    SEARCH_CACHE_KEY = cacheKey;
+
     /**
      * Split OR expressions
      */
