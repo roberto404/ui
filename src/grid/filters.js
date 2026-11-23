@@ -2,6 +2,7 @@
 import slugify from '@1studio/utils/string/slugify';
 import UserError from '@1studio/utils/error/userError';
 import getValueByPath from '@1studio/utils/object/getValueByPath';
+import getValuesByPath from '@1studio/utils/object/getValuesByPath';
 
 const DEFAULT_COMPARE = '_default';
 
@@ -155,6 +156,9 @@ export const REGEX_QUERY_LEVEL2 = new RegExp(`^([${FIELD_CHARS}]+)(([${OPERATOR_
 
 let SEARCH_CACHE = [];
 
+/** operators of a negation: on a path through an array every value has to meet them */
+const NEGATIVE_OPERATORS = ['!=', '!==', '*!='];
+
 /**
  * Query search
  * Search filters handler
@@ -190,10 +194,10 @@ export const search = (props) => {
     /**
      * Split OR expressions
      */
-    SEARCH_CACHE =
-      value
-        .split('|')
-        .map(valueOR => {
+    /**
+     * Terms of one OR alternative (they are joined by AND: `&`, space, comma)
+     */
+    const parseOr = (valueOR) => {
           /**
            * Split AND expressions
            *
@@ -262,8 +266,18 @@ export const search = (props) => {
 
             return ({ columns, handlerIndex, term });
           });
-        })
-        .filter(i => i.length);
+        };
+
+    /**
+     * [AND group: [OR alternative: [term, ...], ...], ...]
+     *
+     * default: `|` splits first, the `&` terms bind stronger: a&b|c = (a AND b) OR c
+     * cnf: `&` splits first, `|` inside a group: a|b&c = (a OR b) AND c, so a new
+     * AND term can be appended to any query
+     */
+    SEARCH_CACHE = (props.cnf ? value.split('&') : [value])
+      .map(groupValue => groupValue.split('|').map(parseOr).filter(i => i.length))
+      .filter(group => group.length);
   }
 
   // console.log(SEARCH_CACHE[0]);
@@ -276,7 +290,12 @@ export const search = (props) => {
    * Transfer the converted column value (alias subject)
    * to SearchHandler which compare term and subject
    */
-  return SEARCH_CACHE.some(cache => cache.every(({ columns, handlerIndex, term }) =>
+  // no term (empty query): no match, as before the AND groups
+  if (!SEARCH_CACHE.length) {
+    return false;
+  }
+
+  return SEARCH_CACHE.every(group => group.some(cache => cache.every(({ columns, handlerIndex, term }) =>
     columns.some(
       (column) => {
 
@@ -294,15 +313,22 @@ export const search = (props) => {
 
         let subject = record[column];
 
+        /**
+         * Path (products.productId, attachment.origin): arrays are walked at any
+         * depth, any of the values is enough (negation: none of them)
+         */
         if (column.includes('.')) {
-
-          const partOfColumn = column.split('.');
-
-          if (Array.isArray(record[partOfColumn[0]])) {
-            return record[partOfColumn[0]].some(item => compareMethod[handlerIndex]?.(item[partOfColumn[1]], term, record))
-          }
-
           subject = getValueByPath(record, column);
+
+          // the path goes through an array: every item continues the path (at any depth)
+          if (typeof subject === 'undefined') {
+            const values = getValuesByPath(record, column);
+            const isMatch = item =>
+              compareMethod[handlerIndex]?.(typeof item === 'object' ? JSON.stringify(item) : item, term, record) === true;
+
+            // negative operator: none of the values (products.productId!==RSENG000 = no such product)
+            return NEGATIVE_OPERATORS.includes(handlerIndex) ? values.every(isMatch) : values.some(isMatch);
+          }
         }
 
         if (typeof subject === 'object') {
@@ -336,7 +362,7 @@ export const search = (props) => {
 
         return compareMethod[handlerIndex](subject, term, record);
       },
-    )));
+    ))));
 };
 
 /**

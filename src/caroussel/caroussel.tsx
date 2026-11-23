@@ -35,6 +35,8 @@ const defaultProps =
   className: '',
   Slide,
   autoplay: 0,
+  /** start the autoplay at once (otherwise only after the first mouse out) */
+  forceStart: false,
   disablePages: false,
   pagerNextUI: <IconArrow />,
   pagerPrevUI: <IconArrow />,
@@ -78,6 +80,7 @@ const Caroussel = (
   height,
   className,
   autoplay,
+  forceStart,
   disablePages,
   pagerNextUI,
   pagerPrevUI,
@@ -148,6 +151,7 @@ const Caroussel = (
         stepSlides={stepSlides}
         Slide={Slide}
         autoplay={autoplay}
+        forceStart={forceStart}
         data={data}
       />
 

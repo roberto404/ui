@@ -762,7 +762,7 @@ input:checked~label {
   input:not([type="radio"]):not([type="checkbox"]),
   select,
   textarea {
-    border-color: $yellow;
+    border-color: $red;
   }
 }
 

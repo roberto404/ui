@@ -60,6 +60,9 @@ const defaultProps =
 
 type PropTypes = Partial<typeof defaultProps> &
 {
+  /** the advanced button opens this instead of the built-in field/operator dialog */
+  onAdvance?: () => void;
+  [key: string]: any;
 }
 
 
@@ -278,6 +281,7 @@ const GridSearch = (props: PropTypes) => {
     responseParser,
     prefix,
     autoFocus,
+    onAdvance,
   } = props;
 
   let fields = props.fields;
@@ -414,8 +418,9 @@ const GridSearch = (props: PropTypes) => {
 
   const postfix = (
     <div className='h-center'>
-      {fields.length > 0 &&
-        <button onClick={onClickSearchAdvanceHandler}>
+      {/* onAdvance: own advanced search (ex. GridSearchAdvanced dialog) instead of the field/operator rows */}
+      {(fields.length > 0 || onAdvance) &&
+        <button onClick={onAdvance || onClickSearchAdvanceHandler}>
           <IconAdvance />
         </button>
       }
