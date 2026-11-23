@@ -274,7 +274,7 @@ const History = ({
 
         {/* icon + gray timeline to the end of the entry (not after the last entry of the day) */}
         <div className="column h-center shrink-0 w-3 pb-1/2">
-          <div className="circle flex h-center v-center shrink-0 @w-2 @h-2 bg-tint fill-tint">
+          <div className={classNames('circle flex h-center v-center shrink-0 @w-2 @h-2', category.iconClassName || 'bg-tint fill-tint')}>
             {items.icon || (Icon && <Icon className="@w-1 @h-1" />)}
           </div>
           {isLast === false && <div className="grow border-left border-2 border-gray-light mt-1/2" />}
@@ -285,10 +285,13 @@ const History = ({
             {titleText}
           </div>
 
-          <div className="text-s text-line-l mb-1/2">
-            <span className="text-tint bold">{category.title}</span>
-            {userName && <span className="text-gray-dark">{` · ${userName}`}</span>}
-          </div>
+          {/* default category (record without category): no name, only in the filter */}
+          {(!category.isDefault || userName) &&
+            <div className="text-s text-line-l mb-1/2">
+              {!category.isDefault && <span className="text-tint bold">{category.title}</span>}
+              {userName && <span className="text-gray-dark">{category.isDefault ? userName : ` · ${userName}`}</span>}
+            </div>
+          }
 
           <Tags tag={tag} />
 

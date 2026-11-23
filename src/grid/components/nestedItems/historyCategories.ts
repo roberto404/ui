@@ -14,6 +14,8 @@ export type HistoryCategory = {
   filterIcon?: React.ComponentType<any>,
   // any css color: category name, icon and its tinted background
   color?: string,
+  // classes of the icon circle instead of the tinted one (`bg-tint fill-tint`), ex. `bg-black fill-white`
+  iconClassName?: string,
 };
 
 export type HistoryCategories = Record<string, HistoryCategory>;
@@ -48,9 +50,11 @@ export const getHistoryCategory = (
   categoryId: string | undefined,
   categories?: HistoryCategories,
   defaultCategory?: string,
-): (HistoryCategory & { id: string }) | null => {
+): (HistoryCategory & { id: string, isDefault: boolean }) | null => {
   const all = getHistoryCategories(categories);
-  const id = categoryId && all[categoryId] ? categoryId : defaultCategory;
+  const isOwn = !!(categoryId && all[categoryId]);
+  const id = isOwn ? categoryId : defaultCategory;
 
-  return id && all[id] ? { ...all[id], id } : null;
+  // isDefault: the record has no (known) category, the default one is used
+  return id && all[id] ? { ...all[id], id, isDefault: !isOwn } : null;
 };
