@@ -209,6 +209,13 @@ const Menu = (Tree, onClick, props = {}) => ({ index, children, level, items }) 
           })
       } />
       }
+
+      {/* own control on the right (eg. checkbox), its click does not select the item */}
+      { item.append && !minimalized &&
+        <div className="pl-1 h-center" onClick={event => event.stopPropagation()}>
+          {item.append}
+        </div>
+      }
     </div>
   );
 };
