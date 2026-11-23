@@ -9,7 +9,7 @@ import isEqual from 'lodash/isEqual';
 
 /* !- Actions */
 
-import { close, flush } from './actions';
+import { close, flush, unflipLayer } from './actions';
 import { getLayer, getActive } from './reducers';
 
 
@@ -61,7 +61,64 @@ const Layer = () => {
     closeable,
     containerStyle,
     options,
+    back,
   } = useSelector(getLayer, isEqual);
+
+  /**
+   * Flip of the dialog (flipLayer): the box turns to 90°, the side changes, then it turns back from -90°
+   * - side: the visible side, phase: running half of the turn
+   * - backElement: kept until the turn back finished (no empty back side during the animation)
+   */
+  const [side, setSide] = useState<'front' | 'back'>('front');
+  const [phase, setPhase] = useState<'out' | 'in' | null>(null);
+  const [backElement, setBackElement] = useState(null);
+  const targetSide = back ? 'back' : 'front';
+
+  // closed or another dialog: front side without animation
+  useEffect(() => {
+    setSide('front');
+    setPhase(null);
+    setBackElement(null);
+  }, [active, element]);
+
+  useEffect(() => {
+    if (!active) {
+      return;
+    }
+
+    if (back) {
+      setBackElement(back);
+    }
+
+    if (targetSide !== side && phase === null) {
+      setPhase('out');
+    }
+  }, [back]);
+
+  const onAnimationEndHandler = (event) => {
+    if (event.target !== event.currentTarget) {
+      return;
+    }
+
+    if (phase === 'out') {
+      setSide(targetSide);
+      setPhase('in');
+      return;
+    }
+
+    if (phase === 'in') {
+      setPhase(null);
+
+      if (side === 'front') {
+        setBackElement(null);
+      }
+
+      // changed during the turn
+      if (targetSide !== side) {
+        setPhase('out');
+      }
+    }
+  };
 
   const { className } = options || {};
 
@@ -115,6 +172,12 @@ const Layer = () => {
    * @return {void}
    */
   const onClickCloseHandler = () => {
+    // flipped dialog: turn back to the front side instead of closing
+    if (back) {
+      dispatch(unflipLayer());
+      return;
+    }
+
     removeShortcuts('layer');
 
     if (typeof options.onClose === 'function') {
@@ -198,9 +261,20 @@ const Layer = () => {
       onMouseDown={onMouseDownHandler}
     >
       <div
-        className="container"
+        className={classNames('container', {
+          'flip-out': phase === 'out',
+          'flip-in': phase === 'in',
+        })}
         style={containerStyle}
+        onAnimationEnd={onAnimationEndHandler}
       >
+        {/* back side (flipLayer): covers the front, which stays mounted under it */}
+        {side === 'back' && backElement && (
+          <div className="back">
+            {backElement}
+          </div>
+        )}
+
         <div
           className="close"
           onClick={onClickCloseHandler}
@@ -208,7 +282,7 @@ const Layer = () => {
           <IconClose />
         </div>
 
-        <div className="content">
+        <div className={classNames('content', { covered: side === 'back' && !!backElement })}>
           {element && (React.isValidElement(element) ? element : element())}
         </div>
 

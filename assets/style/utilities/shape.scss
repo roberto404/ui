@@ -39,6 +39,11 @@ hr {
   border-bottom-right-radius: .5rem;
 }
 
+// one corner, ex. a side panel next to the content (napló)
+.rounded-top-left {
+  border-top-left-radius: 1.6rem;
+}
+
 .circle {
   border-radius: 100%;
 }
@@ -175,6 +180,12 @@ hr {
 .bg-black,
 .hover\:bg-black:hover {
   background-color: $black;
+}
+
+
+.bg-black-light,
+.hover\:bg-black-light:hover {
+  background-color: $black-light;
 }
 
 .focus\:bg-black:focus {

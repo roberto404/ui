@@ -100,6 +100,15 @@ const reducers = (state = DEFAULT_STATE, action = {}) => {
         };
       }
 
+    // back side of the flipped dialog (flipLayer / unflipLayer)
+    case 'SET_LAYER_BACK':
+      {
+        return {
+          ...state,
+          back: action.back || null,
+        };
+      }
+
     case 'FLUSH_LAYER':
       {
         return { ...DEFAULT_STATE };
@@ -121,6 +130,7 @@ export const getLayer = (({ layer }) => {
     closeable,
     containerStyle,
     options,
+    back,
   } = layer;
 
   return {
@@ -130,6 +140,7 @@ export const getLayer = (({ layer }) => {
     closeable,
     containerStyle,
     options,
+    back,
   }
 });
 

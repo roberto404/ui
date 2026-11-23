@@ -107,6 +107,35 @@ body.hide\:curtain .layer
   }
 
 
+  // flipLayer: the dialog box turns over (two halves: the side changes at 90°)
+  .container.flip-out
+  {
+    animation: layer-flip-out 250ms ease-in forwards;
+  }
+
+  .container.flip-in
+  {
+    animation: layer-flip-in 250ms ease-out;
+  }
+
+  // back side: over the front content (it stays mounted with its state and scroll), same box and padding
+  .container > .back
+  {
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    z-index: 1;
+    box-sizing: border-box;
+    padding: inherit;
+    background-color: inherit;
+    border-radius: inherit;
+    overflow-y: auto;
+  }
+
+  .container > .content.covered
+  {
+    visibility: hidden;
+  }
+
   &.no-padding .container
   {
     padding: 0;
@@ -480,4 +509,17 @@ body.layer-fullscreen
       }
     }
   }
+}
+
+
+@keyframes layer-flip-out
+{
+  from { transform: perspective(2000px) rotateY(0deg); }
+  to { transform: perspective(2000px) rotateY(90deg); }
+}
+
+@keyframes layer-flip-in
+{
+  from { transform: perspective(2000px) rotateY(-90deg); }
+  to { transform: perspective(2000px) rotateY(0deg); }
 }

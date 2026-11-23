@@ -222,6 +222,32 @@ export const flush = () =>
 });
 
 
+/**
+ * Turn the dialog over (the dialog box itself flips) and show the element on the back side;
+ * the front content stays mounted (form state, scroll), the close button / Escape turns back.
+ *
+ * @memberof Actions/Layer
+ * @example
+ * dispatch(flipLayer(<Document id={1} />));
+ */
+export const flipLayer = (element: React.ReactNode) =>
+({
+  type: 'SET_LAYER_BACK',
+  back: element,
+});
+
+/**
+ * Turn the dialog back to the front side (the close button of the flipped dialog does the same)
+ *
+ * @memberof Actions/Layer
+ */
+export const unflipLayer = () =>
+({
+  type: 'SET_LAYER_BACK',
+  back: null,
+});
+
+
 /* !- Predefined actions */
 
 /**
